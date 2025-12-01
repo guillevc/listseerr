@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Settings } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Settings, CheckCircle2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,15 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
   const [userId, setUserId] = useState(config?.userId.toString() || '');
   const [testing, setTesting] = useState(false);
   const { toast } = useToast();
+
+  // Reset form when dialog opens or config changes
+  useEffect(() => {
+    if (open) {
+      setUrl(config?.url || '');
+      setApiKey(config?.apiKey || '');
+      setUserId(config?.userId.toString() || '');
+    }
+  }, [open, config]);
 
   const handleTest = async () => {
     if (!url || !apiKey) {
@@ -85,16 +94,31 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4" />
-          Configure Jellyseerr
+        <Button
+          variant={config ? "default" : "outline"}
+          size="sm"
+          className={config ? "bg-green-600 hover:bg-green-700" : ""}
+        >
+          {config ? (
+            <>
+              <CheckCircle2 className="h-4 w-4" />
+              Jellyseerr Configured
+            </>
+          ) : (
+            <>
+              <Settings className="h-4 w-4" />
+              Configure Jellyseerr
+            </>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Jellyseerr Configuration</DialogTitle>
           <DialogDescription>
-            Configure your Jellyseerr instance to enable automatic media requests.
+            {config
+              ? 'Update your Jellyseerr instance configuration.'
+              : 'Configure your Jellyseerr instance to enable automatic media requests.'}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
