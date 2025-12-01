@@ -24,6 +24,7 @@ export function AddListDialog({ onAdd }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
+  const [maxItems, setMaxItems] = useState('');
   const [urlError, setUrlError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -66,6 +67,7 @@ export function AddListDialog({ onAdd }: Props) {
       url: url.trim(),
       provider: result.provider,
       enabled: true,
+      maxItems: maxItems ? parseInt(maxItems) : undefined,
     });
 
     toast({
@@ -75,6 +77,7 @@ export function AddListDialog({ onAdd }: Props) {
 
     setName('');
     setUrl('');
+    setMaxItems('');
     setUrlError(null);
     setOpen(false);
   };
@@ -83,7 +86,7 @@ export function AddListDialog({ onAdd }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4" />
           Add List
         </Button>
       </DialogTrigger>
@@ -91,7 +94,7 @@ export function AddListDialog({ onAdd }: Props) {
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
-            Add a list from Trakt, Letterboxd, MDBList, IMDB, or TheMovieDB.
+            Add a public list from Trakt, Letterboxd, MDBList, IMDB, or TheMovieDB.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -99,7 +102,7 @@ export function AddListDialog({ onAdd }: Props) {
             <Label htmlFor="name">List Name</Label>
             <Input
               id="name"
-              placeholder="My Watchlist"
+              placeholder="My List"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -122,15 +125,51 @@ export function AddListDialog({ onAdd }: Props) {
               </p>
             )}
           </div>
-          <div className="text-xs text-muted-foreground space-y-1">
-            <p>Supported URL formats:</p>
-            <ul className="list-disc list-inside space-y-0.5">
-              <li>Trakt: https://trakt.tv/users/USER/lists/LIST</li>
-              <li>Letterboxd: https://letterboxd.com/USER/list/LIST/</li>
-              <li>MDBList: https://mdblist.com/lists/USER/LIST</li>
-              <li>IMDB: https://www.imdb.com/list/ls123456/</li>
-              <li>TheMovieDB: https://www.themoviedb.org/list/123</li>
-            </ul>
+          <div className="grid gap-2">
+            <Label htmlFor="maxItems">Max Items (optional)</Label>
+            <Input
+              id="maxItems"
+              type="number"
+              placeholder="Leave empty for all items"
+              value={maxItems}
+              onChange={(e) => setMaxItems(e.target.value)}
+              min="1"
+            />
+          </div>
+          <div className="rounded-md border bg-muted/50 p-3 space-y-2">
+            <p className="text-sm font-medium">Supported public lists:</p>
+            <div className="space-y-1.5 text-sm">
+              <div>
+                <span className="text-muted-foreground">Trakt:</span>
+                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
+                  https://trakt.tv/users/USER/lists/LIST
+                </code>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Letterboxd:</span>
+                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
+                  https://letterboxd.com/USER/list/LIST/
+                </code>
+              </div>
+              <div>
+                <span className="text-muted-foreground">MDBList:</span>
+                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
+                  https://mdblist.com/lists/USER/LIST
+                </code>
+              </div>
+              <div>
+                <span className="text-muted-foreground">IMDB:</span>
+                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
+                  https://www.imdb.com/list/ls123456/
+                </code>
+              </div>
+              <div>
+                <span className="text-muted-foreground">TheMovieDB:</span>
+                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
+                  https://www.themoviedb.org/list/123
+                </code>
+              </div>
+            </div>
           </div>
         </div>
         <DialogFooter>

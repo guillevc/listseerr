@@ -164,7 +164,7 @@ function App() {
             >
               <h1 className="text-4xl font-bold">Listseerr</h1>
               <p className="text-muted-foreground mt-1">
-                Sync your watchlists to Jellyseerr
+                Sync your lists to Jellyseerr
               </p>
             </motion.div>
             <div className="flex flex-wrap gap-2">
@@ -200,7 +200,7 @@ function App() {
                   disabled={!jellyseerrConfig || syncingLists.size > 0}
                 >
                   <RefreshCw
-                    className={`h-4 w-4 mr-2 ${
+                    className={`h-4 w-4 ${
                       syncingLists.size > 0 ? 'animate-spin' : ''
                     }`}
                   />
@@ -216,7 +216,7 @@ function App() {
                 <div className="text-center text-muted-foreground">
                   <p className="text-lg mb-2">No lists added yet</p>
                   <p className="text-sm">
-                    Click "Add List" to get started with syncing your watchlists
+                    Click "Add List" to get started with syncing your lists
                   </p>
                 </div>
               </CardContent>

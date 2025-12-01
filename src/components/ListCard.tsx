@@ -77,11 +77,18 @@ export function ListCard({ list, onSync, onDelete, onToggleEnabled, isSyncing }:
             </div>
           )}
 
-          {list.itemCount !== undefined && (
-            <div className="text-sm text-muted-foreground">
-              {list.itemCount} item{list.itemCount !== 1 ? 's' : ''} in list
-            </div>
-          )}
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            {list.itemCount !== undefined && (
+              <span>
+                {list.itemCount} item{list.itemCount !== 1 ? 's' : ''} synced
+              </span>
+            )}
+            {list.maxItems && (
+              <span className="text-xs bg-secondary px-2 py-0.5 rounded">
+                Max: {list.maxItems}
+              </span>
+            )}
+          </div>
 
           <div className="flex items-center gap-2">
             <Button
@@ -90,7 +97,7 @@ export function ListCard({ list, onSync, onDelete, onToggleEnabled, isSyncing }:
               onClick={() => onSync(list.id)}
               disabled={!list.enabled || isSyncing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
               Sync Now
             </Button>
             <Button

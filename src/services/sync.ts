@@ -14,7 +14,7 @@ export async function syncList(
   jellyseerrConfig: JellyseerrConfig
 ): Promise<SyncResult> {
   try {
-    const items = await fetchListItems(list.provider, list.url);
+    let items = await fetchListItems(list.provider, list.url);
 
     if (items.length === 0) {
       return {
@@ -22,6 +22,12 @@ export async function syncList(
         itemCount: 0,
         requestedCount: 0,
       };
+    }
+
+    const totalItems = items.length;
+
+    if (list.maxItems && list.maxItems > 0) {
+      items = items.slice(0, list.maxItems);
     }
 
     const jellyseerrService = new JellyseerrService(jellyseerrConfig);

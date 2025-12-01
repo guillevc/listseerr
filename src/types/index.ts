@@ -6,6 +6,7 @@ export interface MediaList {
   url: string;
   provider: ListProvider;
   enabled: boolean;
+  maxItems?: number;
   lastSync?: Date;
   lastSyncStatus?: 'success' | 'error' | 'syncing';
   lastSyncError?: string;

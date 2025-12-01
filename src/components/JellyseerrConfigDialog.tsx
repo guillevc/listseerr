@@ -86,7 +86,7 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4 mr-2" />
+          <Settings className="h-4 w-4" />
           Configure Jellyseerr
         </Button>
       </DialogTrigger>

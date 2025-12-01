@@ -9,11 +9,9 @@ interface ValidationResult {
 const providerPatterns: Record<ListProvider, RegExp[]> = {
   trakt: [
     /^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?$/i,
-    /^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/watchlist\/?$/i,
   ],
   letterboxd: [
     /^https?:\/\/(www\.)?letterboxd\.com\/[^/]+\/list\/[^/]+\/?$/i,
-    /^https?:\/\/(www\.)?letterboxd\.com\/[^/]+\/watchlist\/?$/i,
   ],
   mdblist: [
     /^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?$/i,
