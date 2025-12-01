@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, CheckCircle2 } from 'lucide-react';
+import { Settings, CheckCircle2, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import { useToast } from '../hooks/use-toast';
 
 interface Props {
   config: JellyseerrConfig | null;
-  onSave: (config: JellyseerrConfig) => void;
+  onSave: (config: JellyseerrConfig | null) => void;
 }
 
 export function JellyseerrConfigDialog({ config, onSave }: Props) {
@@ -91,17 +91,31 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
     setOpen(false);
   };
 
+  const handleRemove = () => {
+    onSave(null);
+
+    toast({
+      title: 'Configuration Removed',
+      description: 'Jellyseerr configuration has been removed',
+    });
+
+    setOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={config ? "default" : "outline"}
+          variant="outline"
           size="sm"
-          className={config ? "bg-green-600 hover:bg-green-700" : ""}
+          className={config ? "relative pl-8" : ""}
         >
           {config ? (
             <>
-              <CheckCircle2 className="h-4 w-4" />
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
               Jellyseerr Configured
             </>
           ) : (
@@ -112,7 +126,7 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Jellyseerr Configuration</DialogTitle>
           <DialogDescription>
@@ -152,11 +166,19 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
             />
           </div>
         </div>
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={handleTest} disabled={testing}>
-            {testing ? 'Testing...' : 'Test Connection'}
-          </Button>
-          <Button onClick={handleSave}>Save Configuration</Button>
+        <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
+          {config && (
+            <Button variant="destructive" onClick={handleRemove} className="w-full sm:w-auto sm:mr-auto">
+              <Trash2 className="h-4 w-4" />
+              Remove
+            </Button>
+          )}
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <Button variant="outline" onClick={handleTest} disabled={testing} className="w-full sm:w-auto">
+              {testing ? 'Testing...' : 'Test Connection'}
+            </Button>
+            <Button onClick={handleSave} className="w-full sm:w-auto">Save Configuration</Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
