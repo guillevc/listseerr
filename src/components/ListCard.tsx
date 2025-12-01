@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { MediaList } from '../types';
 import { getProviderName, getProviderColor } from '../lib/url-validator';
+import { getRelativeTime } from '../lib/utils';
 
 interface Props {
   list: MediaList;
@@ -77,10 +79,19 @@ export function ListCard({ list, onSync, onDelete, onToggleEnabled, isSyncing }:
         </div>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-4">
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
-            <span>{formatDate(list.lastSync)}</span>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-1.5 cursor-help">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>{getRelativeTime(list.lastSync)}</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{formatDate(list.lastSync)}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {list.itemCount !== undefined && (
             <div className="flex items-center gap-1.5">
               <span className="font-medium text-foreground">{list.itemCount}</span>
