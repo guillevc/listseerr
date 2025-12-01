@@ -71,11 +71,11 @@ export function getProviderName(provider: ListProvider): string {
 
 export function getProviderColor(provider: ListProvider): string {
   const colors: Record<ListProvider, string> = {
-    trakt: 'bg-red-500',
-    letterboxd: 'bg-green-500',
-    mdblist: 'bg-blue-500',
-    imdb: 'bg-yellow-500',
-    tmdb: 'bg-purple-500',
+    trakt: 'bg-flexoki-magenta',
+    letterboxd: 'bg-flexoki-orange',
+    mdblist: 'bg-flexoki-blue',
+    imdb: 'bg-flexoki-yellow',
+    tmdb: 'bg-flexoki-cyan',
   };
   return colors[provider];
 }
