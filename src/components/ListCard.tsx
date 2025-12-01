@@ -1,6 +1,8 @@
 import { RefreshCw, Trash2, ExternalLink, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
+import { Switch } from './ui/switch';
+import { Label } from './ui/label';
 import { MediaList } from '../types';
 import { getProviderName, getProviderColor } from '../lib/url-validator';
 
@@ -21,102 +23,103 @@ export function ListCard({ list, onSync, onDelete, onToggleEnabled, isSyncing }:
 
   const getStatusIcon = () => {
     if (isSyncing) {
-      return <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />;
+      return <RefreshCw className="h-4 w-4 animate-spin text-primary" />;
     }
     if (list.lastSyncStatus === 'success') {
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
+      return <CheckCircle className="h-4 w-4 text-flexoki-green" />;
     }
     if (list.lastSyncStatus === 'error') {
-      return <XCircle className="h-4 w-4 text-red-500" />;
+      return <XCircle className="h-4 w-4 text-destructive" />;
     }
-    return <Clock className="h-4 w-4 text-gray-500" />;
+    return <Clock className="h-4 w-4 text-muted-foreground" />;
   };
 
   return (
     <Card className={list.enabled ? '' : 'opacity-60'}>
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="space-y-1 flex-1">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-xl">{list.name}</CardTitle>
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-3">
+              <h3 className="text-xl font-semibold">{list.name}</h3>
               <span
-                className={`text-xs px-2 py-1 rounded text-white ${getProviderColor(
+                className={`text-xs px-2 py-1 rounded text-white flex-shrink-0 ${getProviderColor(
                   list.provider
                 )}`}
               >
                 {getProviderName(list.provider)}
               </span>
+              {getStatusIcon()}
             </div>
-            <CardDescription className="flex items-center gap-2 break-all">
-              <a
-                href={list.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline flex items-center gap-1"
-              >
-                {list.url.substring(0, 60)}
-                {list.url.length > 60 ? '...' : ''}
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm">
-            {getStatusIcon()}
-            <span className="text-muted-foreground">
-              Last sync: {formatDate(list.lastSync)}
-            </span>
+            <a
+              href={list.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 break-all"
+            >
+              {list.url.substring(0, 70)}
+              {list.url.length > 70 ? '...' : ''}
+              <ExternalLink className="h-3 w-3 flex-shrink-0" />
+            </a>
           </div>
 
-          {list.lastSyncError && (
-            <div className="text-sm text-red-500 bg-red-50 dark:bg-red-950 p-2 rounded">
-              {list.lastSyncError}
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <Label htmlFor={`enabled-${list.id}`} className="text-sm text-muted-foreground cursor-pointer">
+                {list.enabled ? 'Enabled' : 'Disabled'}
+              </Label>
+              <Switch
+                id={`enabled-${list.id}`}
+                checked={list.enabled}
+                onCheckedChange={() => onToggleEnabled(list.id)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-4">
+          <div className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            <span>{formatDate(list.lastSync)}</span>
+          </div>
+          {list.itemCount !== undefined && (
+            <div className="flex items-center gap-1.5">
+              <span className="font-medium text-foreground">{list.itemCount}</span>
+              <span>item{list.itemCount !== 1 ? 's' : ''}</span>
             </div>
           )}
-
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            {list.itemCount !== undefined && (
-              <span>
-                {list.itemCount} item{list.itemCount !== 1 ? 's' : ''} synced
-              </span>
-            )}
-            {list.maxItems && (
-              <span className="text-xs bg-secondary px-2 py-0.5 rounded">
-                Max: {list.maxItems}
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onSync(list.id)}
-              disabled={!list.enabled || isSyncing}
-            >
-              <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              Sync Now
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onToggleEnabled(list.id)}
-            >
-              {list.enabled ? 'Disable' : 'Enable'}
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={() => onDelete(list.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+          {list.maxItems && (
+            <div className="flex items-center gap-1.5">
+              <span>Max:</span>
+              <span className="font-medium text-foreground">{list.maxItems}</span>
+            </div>
+          )}
         </div>
-      </CardContent>
+
+        {list.lastSyncError && (
+          <div className="text-sm text-destructive bg-red-50 dark:bg-red-950 p-3 rounded mb-4">
+            {list.lastSyncError}
+          </div>
+        )}
+
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onSync(list.id)}
+            disabled={!list.enabled || isSyncing}
+          >
+            <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+            Sync Now
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => onDelete(list.id)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </Card>
   );
 }

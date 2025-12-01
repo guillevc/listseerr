@@ -177,13 +177,13 @@ function App() {
           </div>
 
           {!jellyseerrConfig && (
-            <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
+            <Card className="border-flexoki-orange bg-orange-50 dark:bg-orange-950">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
+                <CardTitle className="flex items-center gap-2 text-flexoki-orange">
                   <AlertCircle className="h-5 w-5" />
                   Configuration Required
                 </CardTitle>
-                <CardDescription className="text-yellow-700 dark:text-yellow-300">
+                <CardDescription className="text-muted-foreground">
                   Please configure your Jellyseerr instance to start syncing lists.
                 </CardDescription>
               </CardHeader>

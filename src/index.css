@@ -4,50 +4,54 @@
 
 @layer base {
   :root {
-    /* Flexoki Light Theme */
-    --background: 46 87% 97%;        /* paper #FFFCF0 */
-    --foreground: 60 6% 6%;          /* black #100F0F */
-    --card: 46 87% 97%;              /* paper #FFFCF0 */
-    --card-foreground: 60 6% 6%;     /* black #100F0F */
-    --popover: 46 87% 97%;           /* paper #FFFCF0 */
-    --popover-foreground: 60 6% 6%;  /* black #100F0F */
-    --primary: 177 62% 34%;          /* cyan-600 #24837B */
-    --primary-foreground: 46 87% 97%;/* paper #FFFCF0 */
-    --secondary: 45 20% 90%;         /* base-100 #E6E4D9 */
-    --secondary-foreground: 60 6% 6%;/* black #100F0F */
-    --muted: 45 36% 94%;             /* base-50 #F2F0E5 */
-    --muted-foreground: 30 2% 44%;   /* base-600 #6F6E69 */
-    --accent: 45 20% 90%;            /* base-100 #E6E4D9 (same as secondary) */
-    --accent-foreground: 60 6% 6%;   /* black #100F0F (same as secondary-foreground) */
-    --destructive: 9 58% 43%;        /* red-600 #AF3029 */
-    --destructive-foreground: 46 87% 97%; /* paper #FFFCF0 */
-    --border: 45 20% 90%;            /* base-100 #E6E4D9 */
-    --input: 48 16% 85%;             /* base-150 #DAD8CE */
-    --ring: 177 62% 34%;             /* cyan-600 #24837B */
+    /* Flexoki Light Theme - Following official mappings */
+    /* bg: paper, bg-2: base-50, ui: base-100, ui-2: base-150, ui-3: base-200 */
+    /* tx: black, tx-2: base-600, tx-3: base-500 */
+    --background: 48 100% 97%;       /* bg: paper #FFFCF0 */
+    --foreground: 0 3% 6%;           /* tx: black #100F0F */
+    --card: 51 33% 92%;              /* bg-2: base-50 #F2F0E5 */
+    --card-foreground: 0 3% 6%;      /* tx: black #100F0F */
+    --popover: 51 33% 92%;           /* bg-2: base-50 #F2F0E5 */
+    --popover-foreground: 0 3% 6%;   /* tx: black #100F0F */
+    --primary: 177 62% 34%;          /* cy-600: cyan #24837B */
+    --primary-foreground: 48 100% 97%;/* paper #FFFCF0 */
+    --secondary: 51 33% 92%;         /* bg-2: base-50 #F2F0E5 */
+    --secondary-foreground: 0 3% 6%; /* tx: black #100F0F */
+    --muted: 51 21% 88%;             /* ui: base-100 #E6E4D9 */
+    --muted-foreground: 30 2% 44%;   /* tx-2: base-600 #6F6E69 */
+    --accent: 51 21% 88%;            /* ui: base-100 #E6E4D9 */
+    --accent-foreground: 0 3% 6%;    /* tx: black #100F0F */
+    --destructive: 9 58% 43%;        /* re-600: red #AF3029 */
+    --destructive-foreground: 48 100% 97%; /* paper #FFFCF0 */
+    --border: 51 21% 88%;            /* ui: base-100 #E6E4D9 */
+    --input: 48 16% 85%;             /* ui-2: base-150 #DAD8CE */
+    --ring: 177 62% 34%;             /* cy-600: cyan #24837B */
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Flexoki Dark Theme */
-    --background: 60 6% 6%;          /* black #100F0F */
-    --foreground: 46 87% 97%;        /* paper #FFFCF0 */
-    --card: 20 6% 11%;               /* base-950 #1C1B1A */
-    --card-foreground: 46 87% 97%;   /* paper #FFFCF0 */
-    --popover: 20 6% 11%;            /* base-950 #1C1B1A */
-    --popover-foreground: 46 87% 97%;/* paper #FFFCF0 */
-    --primary: 177 48% 43%;          /* cyan-400 #3AA99F */
-    --primary-foreground: 60 6% 6%;  /* black #100F0F */
-    --secondary: 20 4% 20%;          /* base-850 #343331 */
-    --secondary-foreground: 46 87% 97%;/* paper #FFFCF0 */
-    --muted: 30 4% 16%;              /* base-900 #282726 */
-    --muted-foreground: 40 2% 52%;   /* base-500 #878580 */
-    --accent: 20 4% 20%;             /* base-850 #343331 (same as secondary) */
-    --accent-foreground: 46 87% 97%; /* paper #FFFCF0 (same as secondary-foreground) */
-    --destructive: 6 53% 54%;        /* red-400 #D14D41 */
-    --destructive-foreground: 60 6% 6%;/* black #100F0F */
-    --border: 20 4% 20%;             /* base-850 #343331 */
-    --input: 30 4% 25%;              /* base-800 #403E3C */
-    --ring: 177 48% 43%;             /* cyan-400 #3AA99F */
+    /* Flexoki Dark Theme - Following official mappings */
+    /* bg: black, bg-2: base-950, ui: base-850, ui-2: base-800, ui-3: base-700 */
+    /* tx: paper, tx-2: base-500, tx-3: base-600 */
+    --background: 0 3% 6%;           /* bg: black #100F0F */
+    --foreground: 48 100% 97%;       /* tx: paper #FFFCF0 */
+    --card: 30 4% 11%;               /* bg-2: base-950 #1C1B1A */
+    --card-foreground: 48 100% 97%;  /* tx: paper #FFFCF0 */
+    --popover: 30 4% 11%;            /* bg-2: base-950 #1C1B1A */
+    --popover-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
+    --primary: 177 48% 43%;          /* cy-400: cyan #3AA99F */
+    --primary-foreground: 0 3% 6%;   /* black #100F0F */
+    --secondary: 30 4% 11%;          /* bg-2: base-950 #1C1B1A */
+    --secondary-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
+    --muted: 40 3% 20%;              /* ui: base-850 #343331 */
+    --muted-foreground: 40 2% 52%;   /* tx-2: base-500 #878580 */
+    --accent: 40 3% 20%;             /* ui: base-850 #343331 */
+    --accent-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
+    --destructive: 6 53% 54%;        /* re-400: red #D14D41 */
+    --destructive-foreground: 0 3% 6%;/* black #100F0F */
+    --border: 40 3% 20%;             /* ui: base-850 #343331 */
+    --input: 30 4% 25%;              /* ui-2: base-800 #403E3C */
+    --ring: 177 48% 43%;             /* cy-400: cyan #3AA99F */
   }
 }
 

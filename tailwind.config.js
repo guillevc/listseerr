@@ -41,13 +41,14 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Flexoki color palette
+        // Flexoki color palette (using 600 for light mode)
         flexoki: {
-          magenta: '#CE5D97',
-          yellow: '#AD8301',
-          orange: '#BC5215',
-          cyan: '#24837B',
-          blue: '#205EA6',
+          magenta: '#A02F6F',    // magenta-600
+          yellow: '#AD8301',     // yellow-600
+          orange: '#BC5215',     // orange-600
+          green: '#66800B',      // green-600
+          cyan: '#24837B',       // cyan-600
+          blue: '#205EA6',       // blue-600
         },
       },
       borderRadius: {
