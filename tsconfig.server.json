@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -12,7 +11,6 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
@@ -24,9 +22,12 @@
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "@/client/*": ["./src/client/*"],
+      "@/server/*": ["./src/server/*"],
       "@/shared/*": ["./src/shared/*"]
-    }
+    },
+
+    /* Bun types */
+    "types": ["bun-types"]
   },
-  "include": ["src/client/**/*", "src/shared/**/*"]
+  "include": ["src/server/**/*", "src/shared/**/*"]
 }

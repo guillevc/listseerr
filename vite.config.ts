@@ -59,7 +59,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@/client': path.resolve(__dirname, './src/client'),
+      '@/shared': path.resolve(__dirname, './src/shared')
+    }
+  },
+  server: {
+    proxy: {
+      '/trpc': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
     }
   }
 })
