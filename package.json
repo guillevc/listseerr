@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "bun run dev:server & bun run dev:client",
+    "dev:client": "vite",
     "dev:server": "bun run --watch src/server/index.ts",
     "build": "bun run build:client && bun run build:server",
     "build:client": "vite build",

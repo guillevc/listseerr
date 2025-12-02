@@ -6,9 +6,10 @@ import { appRouter } from './trpc';
 import { createContext } from './trpc/trpc';
 
 const app = new Hono();
+const isDev = process.argv.includes('--watch') || import.meta.dir.includes('src/server');
 
 // CORS for development
-if (process.env.NODE_ENV !== 'production') {
+if (isDev) {
   app.use('/*', cors({
     origin: 'http://localhost:5173', // Vite dev server
     credentials: true,
@@ -30,10 +31,17 @@ app.use('/trpc/*', async (c) => {
   });
 });
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use('/*', serveStatic({ root: './dist/client' }));
-  app.get('*', serveStatic({ path: './dist/client/index.html' }));
+// Serve static files in production builds
+if (!isDev) {
+  console.log('📦 Serving static files from ./dist');
+  // Serve static assets
+  app.use('/assets/*', serveStatic({ root: './dist' }));
+  app.use('/vite.svg', serveStatic({ path: './dist/vite.svg' }));
+
+  // Serve index.html for all other routes (SPA fallback)
+  app.get('*', serveStatic({ path: './dist/index.html' }));
+} else {
+  console.log('⚠️  Development mode - static files served by Vite');
 }
 
 const port = process.env.PORT || 3000;
