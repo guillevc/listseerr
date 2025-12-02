@@ -8,6 +8,13 @@
       "when": 1764696599732,
       "tag": "0000_last_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1764717042931,
+      "tag": "0001_easy_logan",
+      "breakpoints": true
     }
   ]
 }

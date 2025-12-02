@@ -1,34 +1,88 @@
-import { useState } from 'react';
-import { Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
+import { trpc } from '../../lib/trpc';
+import { useToast } from '../../hooks/use-toast';
 
-// Placeholder component - will be connected to backend later
 export function ApiKeysSettings() {
   // Trakt.tv state
   const [traktClientId, setTraktClientId] = useState('');
-  const [traktClientSecret, setTraktClientSecret] = useState('');
-  const [showTraktSecret, setShowTraktSecret] = useState(false);
   const [isTraktEditing, setIsTraktEditing] = useState(false);
+  const { toast } = useToast();
 
-  // TMDB state
+  // TMDB state (placeholder for future)
   const [tmdbApiKey, setTmdbApiKey] = useState('');
   const [showTmdbKey, setShowTmdbKey] = useState(false);
   const [isTmdbEditing, setIsTmdbEditing] = useState(false);
 
-  // Mock saved state for demonstration
-  const hasSavedTraktKeys = false;
-  const hasSavedTmdbKey = false;
+  // Load Trakt config
+  const { data: traktConfig, isLoading: isTraktLoading, refetch: refetchTraktConfig } =
+    trpc.providerConfig.getTraktConfig.useQuery();
+
+  const hasSavedTraktKeys = !!traktConfig?.clientId;
+  const hasSavedTmdbKey = false; // TODO: Implement TMDB later
+
+  // Load existing config on mount
+  useEffect(() => {
+    if (traktConfig?.clientId) {
+      setTraktClientId(traktConfig.clientId);
+    }
+  }, [traktConfig]);
+
+  // Mutations
+  const saveTraktMutation = trpc.providerConfig.setTraktConfig.useMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Success',
+        description: 'Trakt.tv Client ID saved successfully',
+      });
+      setIsTraktEditing(false);
+      refetchTraktConfig();
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save Trakt.tv Client ID',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteTraktMutation = trpc.providerConfig.deleteTraktConfig.useMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Success',
+        description: 'Trakt.tv Client ID removed successfully',
+      });
+      setTraktClientId('');
+      setIsTraktEditing(false);
+      refetchTraktConfig();
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to remove Trakt.tv Client ID',
+        variant: 'destructive',
+      });
+    },
+  });
 
   // Trakt.tv handlers
   const handleTraktSave = () => {
-    // TODO: Connect to backend API
-    console.log('Saving Trakt.tv API keys:', { traktClientId, traktClientSecret });
-    setIsTraktEditing(false);
+    if (!traktClientId.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'Client ID is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+    saveTraktMutation.mutate({ clientId: traktClientId.trim() });
   };
 
   const handleTraktEdit = () => {
@@ -37,16 +91,18 @@ export function ApiKeysSettings() {
 
   const handleTraktCancel = () => {
     setIsTraktEditing(false);
-    setTraktClientId('');
-    setTraktClientSecret('');
+    // Restore original value
+    if (traktConfig?.clientId) {
+      setTraktClientId(traktConfig.clientId);
+    } else {
+      setTraktClientId('');
+    }
   };
 
   const handleTraktRemove = () => {
-    // TODO: Connect to backend API
-    console.log('Removing Trakt.tv API keys');
-    setTraktClientId('');
-    setTraktClientSecret('');
-    setIsTraktEditing(false);
+    if (confirm('Are you sure you want to remove the Trakt.tv Client ID?')) {
+      deleteTraktMutation.mutate();
+    }
   };
 
   // TMDB handlers
@@ -89,20 +145,23 @@ export function ApiKeysSettings() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base">Trakt.tv</CardTitle>
-              {hasSavedTraktKeys && !isTraktEditing && (
+              {isTraktLoading && (
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              )}
+              {hasSavedTraktKeys && !isTraktEditing && !isTraktLoading && (
                 <Badge variant="secondary" className="text-xs">
                   Configured
                 </Badge>
               )}
             </div>
-            {hasSavedTraktKeys && !isTraktEditing && (
+            {hasSavedTraktKeys && !isTraktEditing && !isTraktLoading && (
               <Button variant="outline" size="sm" onClick={handleTraktEdit}>
                 Edit
               </Button>
             )}
           </div>
           <CardDescription>
-            Required for syncing public Trakt.tv lists. Get your API keys from{' '}
+            Required for syncing public Trakt.tv lists. Get your Client ID from{' '}
             <a
               href="https://trakt.tv/oauth/applications"
               target="_blank"
@@ -114,7 +173,7 @@ export function ApiKeysSettings() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {(!hasSavedTraktKeys || isTraktEditing) && (
+          {(!hasSavedTraktKeys || isTraktEditing) && !isTraktLoading && (
             <>
               <div className="grid gap-2">
                 <Label htmlFor="trakt-client-id">Client ID</Label>
@@ -123,40 +182,29 @@ export function ApiKeysSettings() {
                   placeholder="Your Trakt.tv Client ID"
                   value={traktClientId}
                   onChange={(e) => setTraktClientId(e.target.value)}
+                  disabled={saveTraktMutation.isPending}
                 />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="trakt-client-secret">Client Secret</Label>
-                <div className="relative">
-                  <Input
-                    id="trakt-client-secret"
-                    type={showTraktSecret ? 'text' : 'password'}
-                    placeholder="Your Trakt.tv Client Secret"
-                    value={traktClientSecret}
-                    onChange={(e) => setTraktClientSecret(e.target.value)}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowTraktSecret(!showTraktSecret)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showTraktSecret ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
+                <p className="text-xs text-muted-foreground">
+                  Only the Client ID is required for reading public lists
+                </p>
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button onClick={handleTraktSave}>
-                  {hasSavedTraktKeys ? 'Update Keys' : 'Save Keys'}
+                <Button
+                  onClick={handleTraktSave}
+                  disabled={saveTraktMutation.isPending || !traktClientId.trim()}
+                >
+                  {saveTraktMutation.isPending && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  {hasSavedTraktKeys ? 'Update Client ID' : 'Save Client ID'}
                 </Button>
                 {isTraktEditing && (
-                  <Button variant="outline" onClick={handleTraktCancel}>
+                  <Button
+                    variant="outline"
+                    onClick={handleTraktCancel}
+                    disabled={saveTraktMutation.isPending}
+                  >
                     Cancel
                   </Button>
                 )}
@@ -164,17 +212,22 @@ export function ApiKeysSettings() {
             </>
           )}
 
-          {hasSavedTraktKeys && !isTraktEditing && (
+          {hasSavedTraktKeys && !isTraktEditing && !isTraktLoading && (
             <div className="flex items-center justify-between pt-2">
               <div className="text-sm text-muted-foreground">
-                API keys are configured and secure
+                Client ID is configured and secure
               </div>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={handleTraktRemove}
+                disabled={deleteTraktMutation.isPending}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                {deleteTraktMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
                 Remove
               </Button>
             </div>

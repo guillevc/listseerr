@@ -19,6 +19,17 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
+// Provider configurations (Trakt, MDBList, etc.)
+export const providerConfigs = sqliteTable('provider_configs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  provider: text('provider', { enum: ['trakt', 'letterboxd', 'mdblist', 'imdb', 'tmdb'] }).notNull(),
+  clientId: text('client_id'),
+  apiKey: text('api_key'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
 // Media lists
 export const mediaLists = sqliteTable('media_lists', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -60,12 +71,20 @@ export const listItemsCache = sqliteTable('list_items_cache', {
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   jellyseerrConfigs: many(jellyseerrConfigs),
+  providerConfigs: many(providerConfigs),
   mediaLists: many(mediaLists),
 }));
 
 export const jellyseerrConfigsRelations = relations(jellyseerrConfigs, ({ one }) => ({
   user: one(users, {
     fields: [jellyseerrConfigs.userId],
+    references: [users.id],
+  }),
+}));
+
+export const providerConfigsRelations = relations(providerConfigs, ({ one }) => ({
+  user: one(users, {
+    fields: [providerConfigs.userId],
     references: [users.id],
   }),
 }));
@@ -99,6 +118,9 @@ export type NewUser = typeof users.$inferInsert;
 
 export type JellyseerrConfig = typeof jellyseerrConfigs.$inferSelect;
 export type NewJellyseerrConfig = typeof jellyseerrConfigs.$inferInsert;
+
+export type ProviderConfig = typeof providerConfigs.$inferSelect;
+export type NewProviderConfig = typeof providerConfigs.$inferInsert;
 
 export type MediaList = typeof mediaLists.$inferSelect;
 export type NewMediaList = typeof mediaLists.$inferInsert;

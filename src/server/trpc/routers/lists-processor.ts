@@ -1,7 +1,10 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
-import { mediaLists, executionHistory, jellyseerrConfigs } from '../../db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { mediaLists, executionHistory, jellyseerrConfigs, providerConfigs } from '../../db/schema';
+import { eq, desc, and } from 'drizzle-orm';
+import { fetchTraktList } from '../../services/trakt/client';
+import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
+import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
 
 export const listsProcessorRouter = router({
   processList: publicProcedure
@@ -43,11 +46,50 @@ export const listsProcessorRouter = router({
         })
         .returning();
 
-      // TODO: Implement actual processing logic (check lists + request new media)
-      // For now, return a mock result
       try {
-        // Simulate processing
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Get Trakt client ID from provider configs
+        const [traktConfig] = await ctx.db
+          .select()
+          .from(providerConfigs)
+          .where(
+            and(
+              eq(providerConfigs.userId, 1),
+              eq(providerConfigs.provider, 'trakt')
+            )
+          )
+          .limit(1);
+
+        if (!traktConfig?.clientId) {
+          throw new Error('Trakt configuration not found. Please configure Trakt API credentials.');
+        }
+
+        // Fetch items from Trakt
+        console.log(`Fetching items from Trakt list: ${list.url}`);
+        const traktItems = await fetchTraktList(
+          list.url,
+          list.maxItems,
+          traktConfig.clientId
+        );
+
+        console.log(`Found ${traktItems.length} items from Trakt`);
+
+        // Load cache and filter out already-requested items
+        const cachedIds = await getAlreadyRequestedIds(ctx.db, list.id);
+        const newItems = traktItems.filter(
+          (item) => item.tmdbId && !cachedIds.has(item.tmdbId)
+        );
+
+        console.log(`${newItems.length} new items to request (${cachedIds.size} already cached)`);
+
+        // Request new items to Jellyseerr
+        const results = await requestItemsToJellyseerr(newItems, config);
+
+        console.log(
+          `Requested ${results.successful.length} items successfully, ${results.failed.length} failed`
+        );
+
+        // Cache successful requests
+        await cacheRequestedItems(ctx.db, list.id, results.successful);
 
         // Update execution history
         await ctx.db
@@ -55,15 +97,16 @@ export const listsProcessorRouter = router({
           .set({
             completedAt: new Date(),
             status: 'success',
-            itemsFound: 0,
-            itemsRequested: 0,
+            itemsFound: traktItems.length,
+            itemsRequested: results.successful.length,
           })
           .where(eq(executionHistory.id, executionEntry.id));
 
         return {
           success: true,
-          itemCount: 0,
-          requestedCount: 0,
+          itemsFound: traktItems.length,
+          itemsRequested: results.successful.length,
+          itemsFailed: results.failed.length,
         };
       } catch (error) {
         // Update execution history with error
@@ -76,10 +119,7 @@ export const listsProcessorRouter = router({
           })
           .where(eq(executionHistory.id, executionEntry.id));
 
-        return {
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        };
+        throw error;
       }
     }),
 
