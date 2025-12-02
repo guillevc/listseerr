@@ -6,7 +6,7 @@ import { Button } from './components/ui/button';
 import { ThemeToggle } from './components/theme-toggle';
 import { JellyseerrConfigDialog } from './components/JellyseerrConfigDialog';
 import { AddListDialog } from './components/AddListDialog';
-import { ListCard } from './components/ListCard';
+import { ListsTable } from './components/ListsTable';
 import { Toaster } from './components/ui/toaster';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useToast } from './hooks/use-toast';
@@ -222,23 +222,18 @@ function App() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-4">
-              {lists.map((list) => (
-                <motion.div
-                  key={list.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <ListCard
-                    list={list}
-                    onSync={handleSync}
-                    onDelete={handleDeleteList}
-                    onToggleEnabled={handleToggleEnabled}
-                    isSyncing={syncingLists.has(list.id)}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <ListsTable
+                lists={lists}
+                onSync={handleSync}
+                onDelete={handleDeleteList}
+                onToggleEnabled={handleToggleEnabled}
+                syncingLists={syncingLists}
+              />
+            </motion.div>
           )}
         </div>
       </div>
