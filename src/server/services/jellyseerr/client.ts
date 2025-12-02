@@ -5,11 +5,23 @@ import type {
   JellyseerrRequestResponse,
   ProcessingResult,
 } from './types';
+import { createLogger } from '../../lib/logger';
+
+const logger = createLogger('jellyseerr-client');
 
 export async function requestToJellyseerr(
   item: MediaItem,
   config: JellyseerrConfig
 ): Promise<boolean> {
+  logger.debug(
+    {
+      title: item.title,
+      year: item.year,
+      tmdbId: item.tmdbId,
+      mediaType: item.mediaType,
+    },
+    'Starting Jellyseerr request'
+  );
   try {
     const payload: JellyseerrRequestPayload = {
       mediaType: item.mediaType === 'tv' ? 'tv' : 'movie',
@@ -36,7 +48,16 @@ export async function requestToJellyseerr(
       const data: JellyseerrRequestResponse = await response.json();
       // Validate that the response matches our request
       if (data.media?.tmdbId === item.tmdbId) {
-        console.log(`Successfully requested "${item.title}" to Jellyseerr`);
+        logger.info(
+          {
+            title: item.title,
+            tmdbId: item.tmdbId,
+            mediaType: item.mediaType,
+            requestId: data.id,
+            status: data.status,
+          },
+          'Successfully requested media to Jellyseerr'
+        );
         return true;
       }
     }
@@ -50,13 +71,26 @@ export async function requestToJellyseerr(
           : '';
 
       if (errorMessage.toLowerCase().includes('already')) {
-        console.log(`Item "${item.title}" already requested, treating as success`);
+        logger.info(
+          {
+            title: item.title,
+            tmdbId: item.tmdbId,
+            mediaType: item.mediaType,
+          },
+          'Media already requested in Jellyseerr - treating as success'
+        );
         return true;
       }
 
       // Other 400 errors - log and fail (will retry next sync)
-      console.warn(
-        `Failed to request "${item.title}" (400): ${errorMessage || response.statusText} - will retry next sync`
+      logger.warn(
+        {
+          title: item.title,
+          tmdbId: item.tmdbId,
+          status: 400,
+          error: errorMessage || response.statusText,
+        },
+        'Request validation failed - will retry next sync'
       );
       return false;
     }
@@ -64,21 +98,38 @@ export async function requestToJellyseerr(
     // Handle 500-level errors - log and fail (will retry next sync)
     if (response.status >= 500) {
       const errorText = await response.text().catch(() => 'Unknown error');
-      console.warn(
-        `Jellyseerr server error for "${item.title}" (${response.status}): ${errorText} - will retry next sync`
+      logger.warn(
+        {
+          title: item.title,
+          tmdbId: item.tmdbId,
+          status: response.status,
+          error: errorText,
+        },
+        'Jellyseerr server error - will retry next sync'
       );
       return false;
     }
 
     // All other error status codes
-    console.warn(
-      `Failed to request "${item.title}" (${response.status} ${response.statusText}) - will retry next sync`
+    logger.warn(
+      {
+        title: item.title,
+        tmdbId: item.tmdbId,
+        status: response.status,
+        statusText: response.statusText,
+      },
+      'Request failed - will retry next sync'
     );
     return false;
   } catch (error) {
     // Network errors or other exceptions - log and fail (will retry next sync)
-    console.warn(
-      `Error requesting "${item.title}" to Jellyseerr: ${error instanceof Error ? error.message : 'Unknown error'} - will retry next sync`
+    logger.warn(
+      {
+        title: item.title,
+        tmdbId: item.tmdbId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      'Request error - will retry next sync'
     );
     return false;
   }
@@ -88,12 +139,24 @@ export async function requestItemsToJellyseerr(
   items: MediaItem[],
   config: JellyseerrConfig
 ): Promise<ProcessingResult> {
+  logger.info({ totalItems: items.length }, 'Starting batch Jellyseerr requests');
+
   const result: ProcessingResult = {
     successful: [],
     failed: [],
   };
 
-  for (const item of items) {
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    logger.debug(
+      {
+        progress: `${i + 1}/${items.length}`,
+        title: item.title,
+        mediaType: item.mediaType,
+      },
+      'Processing item'
+    );
+
     try {
       const success = await requestToJellyseerr(item, config);
 
@@ -106,12 +169,30 @@ export async function requestItemsToJellyseerr(
         });
       }
     } catch (error) {
+      logger.error(
+        {
+          title: item.title,
+          tmdbId: item.tmdbId,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
+        'Unexpected error processing item'
+      );
       result.failed.push({
         item,
         error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
+
+  logger.info(
+    {
+      total: items.length,
+      successful: result.successful.length,
+      failed: result.failed.length,
+      successRate: `${((result.successful.length / items.length) * 100).toFixed(1)}%`,
+    },
+    'Completed batch Jellyseerr requests'
+  );
 
   return result;
 }

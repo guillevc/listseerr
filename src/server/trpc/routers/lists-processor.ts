@@ -5,6 +5,9 @@ import { eq, desc, and } from 'drizzle-orm';
 import { fetchTraktList } from '../../services/trakt/client';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
 import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
+import { createLogger } from '../../lib/logger';
+
+const logger = createLogger('list-processor');
 
 export const listsProcessorRouter = router({
   processList: publicProcedure
@@ -47,6 +50,18 @@ export const listsProcessorRouter = router({
         .returning();
 
       try {
+        logger.info(
+          {
+            listId: list.id,
+            listName: list.name,
+            listUrl: list.url,
+            provider: list.provider,
+            maxItems: list.maxItems,
+            executionId: executionEntry.id,
+          },
+          '🚀 Started processing list'
+        );
+
         // Get Trakt client ID from provider configs
         const [traktConfig] = await ctx.db
           .select()
@@ -64,14 +79,19 @@ export const listsProcessorRouter = router({
         }
 
         // Fetch items from Trakt
-        console.log(`Fetching items from Trakt list: ${list.url}`);
         const traktItems = await fetchTraktList(
           list.url,
           list.maxItems,
           traktConfig.clientId
         );
 
-        console.log(`Found ${traktItems.length} items from Trakt`);
+        logger.info(
+          {
+            listId: list.id,
+            itemsFound: traktItems.length,
+          },
+          'Fetched items from Trakt'
+        );
 
         // Load cache and filter out already-requested items
         const cachedIds = await getAlreadyRequestedIds(ctx.db, list.id);
@@ -79,14 +99,18 @@ export const listsProcessorRouter = router({
           (item) => item.tmdbId && !cachedIds.has(item.tmdbId)
         );
 
-        console.log(`${newItems.length} new items to request (${cachedIds.size} already cached)`);
+        logger.info(
+          {
+            listId: list.id,
+            totalItems: traktItems.length,
+            cachedItems: cachedIds.size,
+            newItems: newItems.length,
+          },
+          'Deduplication complete'
+        );
 
         // Request new items to Jellyseerr
         const results = await requestItemsToJellyseerr(newItems, config);
-
-        console.log(
-          `Requested ${results.successful.length} items successfully, ${results.failed.length} failed`
-        );
 
         // Cache successful requests
         await cacheRequestedItems(ctx.db, list.id, results.successful);
@@ -102,6 +126,25 @@ export const listsProcessorRouter = router({
           })
           .where(eq(executionHistory.id, executionEntry.id));
 
+        logger.info(
+          {
+            listId: list.id,
+            listName: list.name,
+            executionId: executionEntry.id,
+            summary: {
+              totalFound: traktItems.length,
+              alreadyCached: cachedIds.size,
+              newItemsToRequest: newItems.length,
+              successfullyRequested: results.successful.length,
+              failed: results.failed.length,
+              successRate: newItems.length > 0
+                ? `${((results.successful.length / newItems.length) * 100).toFixed(1)}%`
+                : 'N/A',
+            },
+          },
+          '✅ Completed processing list successfully'
+        );
+
         return {
           success: true,
           itemsFound: traktItems.length,
@@ -109,6 +152,16 @@ export const listsProcessorRouter = router({
           itemsFailed: results.failed.length,
         };
       } catch (error) {
+        logger.error(
+          {
+            listId: list.id,
+            listName: list.name,
+            executionId: executionEntry.id,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          },
+          '❌ Failed to process list'
+        );
+
         // Update execution history with error
         await ctx.db
           .update(executionHistory)

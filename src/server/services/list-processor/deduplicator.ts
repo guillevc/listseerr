@@ -2,12 +2,17 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
 import { listItemsCache } from '../../db/schema';
 import type { MediaItem } from '../trakt/types';
+import { createLogger } from '../../lib/logger';
+
+const logger = createLogger('deduplicator');
 
 export async function getAlreadyRequestedIds(
   db: BunSQLiteDatabase<Record<string, never>>,
   listId: number
 ): Promise<Set<number>> {
   try {
+    logger.debug({ listId }, 'Fetching already requested IDs from cache');
+
     const cached = await db
       .select({ tmdbId: listItemsCache.tmdbId })
       .from(listItemsCache)
@@ -18,9 +23,23 @@ export async function getAlreadyRequestedIds(
       .map((item) => item.tmdbId)
       .filter((id): id is number => id !== null);
 
+    logger.debug(
+      {
+        listId,
+        cachedCount: ids.length,
+      },
+      'Retrieved cached IDs'
+    );
+
     return new Set(ids);
   } catch (error) {
-    console.error('Error fetching already requested IDs:', error);
+    logger.error(
+      {
+        listId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      'Error fetching already requested IDs'
+    );
     return new Set();
   }
 }
@@ -31,10 +50,19 @@ export async function cacheRequestedItems(
   items: MediaItem[]
 ): Promise<void> {
   if (items.length === 0) {
+    logger.debug({ listId }, 'No items to cache');
     return;
   }
 
   try {
+    logger.debug(
+      {
+        listId,
+        itemsToCache: items.length,
+      },
+      'Caching successfully requested items'
+    );
+
     // Insert items into cache
     // Using INSERT OR IGNORE to handle duplicates gracefully
     for (const item of items) {
@@ -52,9 +80,22 @@ export async function cacheRequestedItems(
         .onConflictDoNothing();
     }
 
-    console.log(`Cached ${items.length} successfully requested items`);
+    logger.info(
+      {
+        listId,
+        cachedCount: items.length,
+      },
+      'Successfully cached requested items'
+    );
   } catch (error) {
-    console.error('Error caching requested items:', error);
+    logger.error(
+      {
+        listId,
+        itemCount: items.length,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      'Error caching requested items'
+    );
     throw new Error('Failed to cache requested items');
   }
 }
