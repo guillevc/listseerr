@@ -25,3 +25,9 @@ dist-ssr
 
 # PWA
 dev-dist
+
+# Database files
+*.db
+*.db-wal
+*.db-shm
+data/
