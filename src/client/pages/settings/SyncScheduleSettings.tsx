@@ -194,17 +194,7 @@ export function SyncScheduleSettings() {
 
       <div className="space-y-4">
         <div className="grid gap-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="cron-expression">Cron Expression</Label>
-            <a
-              href="https://crontab.guru"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-primary hover:underline"
-            >
-              crontab.guru
-            </a>
-          </div>
+          <Label htmlFor="cron-expression">Cron Expression</Label>
           <Input
             id="cron-expression"
             placeholder="0 4 * * *"
@@ -219,7 +209,15 @@ export function SyncScheduleSettings() {
             }
           />
           <p className="text-xs text-muted-foreground">
-            Format: minute hour day month day-of-week
+            Format: minute hour day month day-of-week •{' '}
+            <a
+              href="https://crontab.guru"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium"
+            >
+              crontab.guru helper
+            </a>
           </p>
         </div>
 
