@@ -23,7 +23,7 @@ function validateAndParseCron(cronExpression: string): CronValidation {
   }
 
   try {
-    const job = Cron(cronExpression, { paused: true });
+    const job = new Cron(cronExpression, { paused: true });
 
     // Get next 3 run times
     const nextRuns: string[] = [];
