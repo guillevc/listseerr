@@ -28,7 +28,7 @@ export function SettingsSidebar({
   onCategoryChange,
 }: SettingsSidebarProps) {
   return (
-    <aside className="w-full md:w-64 space-y-1">
+    <aside className="w-full md:w-64 p-4 md:p-6 space-y-1">
       {settingsCategories.map((category) => {
         const isActive = category.id === activeCategory;
 
@@ -39,8 +39,8 @@ export function SettingsSidebar({
             className={cn(
               'w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors',
               isActive
-                ? 'bg-accent text-accent-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
             )}
           >
             {category.icon}

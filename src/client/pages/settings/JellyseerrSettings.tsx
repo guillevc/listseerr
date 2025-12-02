@@ -124,15 +124,15 @@ export function JellyseerrSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Jellyseerr Configuration</h2>
-        <p className="text-muted-foreground mt-1">
+        <h3 className="text-lg font-semibold">Jellyseerr Configuration</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Configure your Jellyseerr instance to enable automatic media requests.
         </p>
       </div>
 
       <Separator />
 
-      <div className="space-y-4 max-w-2xl">
+      <div className="space-y-4">
         <div className="grid gap-2">
           <Label htmlFor="url">Jellyseerr URL</Label>
           <Input
