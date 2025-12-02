@@ -7,10 +7,17 @@ import {
   createColumnHelper,
   SortingState,
 } from '@tanstack/react-table';
-import { RefreshCw, Trash2, ExternalLink, Clock, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { Button } from './ui/button';
-import { Switch } from './ui/switch';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { RefreshCw, Trash2, ExternalLink, Clock, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Switch } from '../ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { Badge } from '../ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -18,11 +25,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
-import { getProviderName, getProviderColor } from '../lib/url-validator';
-import { getRelativeTime } from '../lib/utils';
-import { trpc } from '../lib/trpc';
-import { useToast } from '../hooks/use-toast';
+} from '../ui/table';
+import { getProviderName } from '../../lib/url-validator';
+import { getRelativeTime } from '../../lib/utils';
+import { trpc } from '../../lib/trpc';
+import { useToast } from '../../hooks/use-toast';
 
 interface Props {
   lists: Array<{
@@ -96,13 +103,9 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
       columnHelper.accessor('provider', {
         header: 'Provider',
         cell: (info) => (
-          <span
-            className={`text-xs px-2 py-1 rounded text-white inline-block ${getProviderColor(
-              info.getValue()
-            )}`}
-          >
+          <Badge variant={info.getValue() as any}>
             {getProviderName(info.getValue())}
-          </span>
+          </Badge>
         ),
       }),
       columnHelper.accessor('url', {
@@ -177,25 +180,31 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
           const list = info.row.original;
           const isSyncing = syncingLists.has(list.id);
           return (
-            <div className="flex items-center justify-end gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onSync(list.id)}
-                disabled={!list.enabled || isSyncing}
-                className="w-9 h-9 p-0"
-              >
-                <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => deleteMutation.mutate({ id: list.id })}
-                disabled={deleteMutation.isPending}
-                className="w-9 h-9 p-0"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => onSync(list.id)}
+                    disabled={!list.enabled || isSyncing}
+                  >
+                    <RefreshCw className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+                    Sync
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => deleteMutation.mutate({ id: list.id })}
+                    disabled={deleteMutation.isPending}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           );
         },

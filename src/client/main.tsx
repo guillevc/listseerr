@@ -1,11 +1,12 @@
 import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
 import { ThemeProvider } from './components/ui/theme-provider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { trpc } from './lib/trpc'
+import { RouterProvider } from '@tanstack/react-router'
+import { router } from './lib/router'
 
 function Root() {
   const [queryClient] = useState(() => new QueryClient())
@@ -24,7 +25,7 @@ function Root() {
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <App />
+            <RouterProvider router={router} />
           </ThemeProvider>
         </QueryClientProvider>
       </trpc.Provider>
