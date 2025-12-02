@@ -6,9 +6,9 @@ export function SettingsPage() {
   const location = useLocation();
 
   // Extract the active category from the pathname
-  // e.g., /settings/jellyseerr -> jellyseerr
+  // e.g., /settings/general -> general
   const pathParts = location.pathname.split('/');
-  const activeCategory = pathParts[pathParts.length - 1] || 'jellyseerr';
+  const activeCategory = pathParts[pathParts.length - 1] || 'general';
 
   return (
     <div className="flex flex-col gap-6">

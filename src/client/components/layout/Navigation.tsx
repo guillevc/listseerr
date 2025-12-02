@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { ExternalLink, User } from 'lucide-react';
+import { User, Menu } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
+import { Button } from '../ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '../ui/sheet';
 import { cn } from '@/client/lib/utils';
 
 const navItems = [
@@ -13,10 +21,11 @@ const navItems = [
 export function Navigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="border-b bg-card">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-8">
@@ -71,15 +80,10 @@ export function Navigation() {
                   </Link>
                 );
               })}
-              <a
-                href="https://github.com/guillermoscript/listseerr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-colors inline-flex items-center gap-1.5"
-              >
+              <div className="px-4 py-2 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md inline-flex items-center gap-2">
                 Docs
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+                <span className="text-xs px-1.5 py-0.5 bg-muted rounded">Coming Soon</span>
+              </div>
             </div>
           </div>
 
@@ -89,9 +93,67 @@ export function Navigation() {
             <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors">
               <User className="h-4 w-4 text-muted-foreground" />
             </div>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Open menu</span>
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Navigation Sheet */}
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" className="w-64">
+          <SheetHeader>
+            <SheetTitle className="text-left">Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-2 mt-6">
+            {navItems.map((item) => {
+              const isActive = item.path === '/'
+                ? currentPath === '/'
+                : currentPath.startsWith(item.path);
+
+              if (item.disabled) {
+                return (
+                  <div
+                    key={item.path}
+                    className="px-4 py-3 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md"
+                  >
+                    {item.name}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'px-4 py-3 text-sm font-medium rounded-md transition-colors',
+                    isActive
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                  )}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+            <div className="px-4 py-3 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md flex items-center justify-between">
+              <span>Docs</span>
+              <span className="text-xs px-2 py-1 bg-muted rounded">Coming Soon</span>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </nav>
   );
 }

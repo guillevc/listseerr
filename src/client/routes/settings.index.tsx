@@ -6,7 +6,7 @@ export const settingsIndexRoute = createRoute({
   path: '/',
   beforeLoad: () => {
     throw redirect({
-      to: '/settings/jellyseerr',
+      to: '/settings/general',
     });
   },
 });

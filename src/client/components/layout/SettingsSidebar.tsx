@@ -1,4 +1,4 @@
-import { Settings, Key, Clock } from 'lucide-react';
+import { Settings, Key, Clock, SlidersHorizontal } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/client/lib/utils';
 
@@ -10,6 +10,12 @@ interface SettingsCategory {
 }
 
 const settingsCategories: SettingsCategory[] = [
+  {
+    id: 'general',
+    name: 'General',
+    icon: <SlidersHorizontal className="h-4 w-4" />,
+    path: '/settings/general',
+  },
   {
     id: 'jellyseerr',
     name: 'Jellyseerr',
@@ -23,10 +29,10 @@ const settingsCategories: SettingsCategory[] = [
     path: '/settings/api-keys',
   },
   {
-    id: 'sync-schedule',
-    name: 'Sync Schedule',
+    id: 'automatic-sync',
+    name: 'Automatic Sync',
     icon: <Clock className="h-4 w-4" />,
-    path: '/settings/sync-schedule',
+    path: '/settings/automatic-sync',
   },
   // Future categories can be added here:
   // { id: 'application', name: 'Application', icon: <Cog className="h-4 w-4" />, path: '/settings/application' },
@@ -38,7 +44,7 @@ interface SettingsSidebarProps {
 }
 
 export function SettingsSidebar({
-  activeCategory = 'jellyseerr',
+  activeCategory = 'general',
 }: SettingsSidebarProps) {
   return (
     <aside className="w-full md:w-64">

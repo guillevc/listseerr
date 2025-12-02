@@ -6,6 +6,8 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { Badge } from '../../components/ui/badge';
+import { Switch } from '../../components/ui/switch';
+import { Card, CardContent } from '../../components/ui/card';
 
 interface CronValidation {
   isValid: boolean;
@@ -159,17 +161,11 @@ export function SyncScheduleSettings() {
   }, [cronExpression]);
 
   const handleSave = () => {
-    if (!validation.isValid) {
+    if (isEnabled && !validation.isValid) {
       return;
     }
     // TODO: Connect to backend API
     console.log('Saving sync schedule:', { cronExpression, isEnabled });
-  };
-
-  const handleDisable = () => {
-    setIsEnabled(false);
-    // TODO: Connect to backend API
-    console.log('Disabling sync schedule');
   };
 
   const commonPatterns = [
@@ -184,101 +180,130 @@ export function SyncScheduleSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Sync Schedule</h3>
+        <h3 className="text-lg font-semibold">Automatic Sync</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Configure automatic synchronization schedule using cron expressions
+          Schedule automatic list synchronization
         </p>
       </div>
 
       <Separator />
 
-      <div className="space-y-4">
-        <div className="grid gap-2">
-          <Label htmlFor="cron-expression">Cron Expression</Label>
-          <Input
-            id="cron-expression"
-            placeholder="0 4 * * *"
-            value={cronExpression}
-            onChange={(e) => setCronExpression(e.target.value)}
-            className={
-              cronExpression
-                ? validation.isValid
-                  ? 'border-green-500 focus-visible:ring-green-500'
-                  : 'border-red-500 focus-visible:ring-red-500'
-                : ''
-            }
-          />
-          <p className="text-xs text-muted-foreground">
-            Format: minute hour day month day-of-week •{' '}
-            <a
-              href="https://crontab.guru"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium"
-            >
-              crontab.guru helper
-            </a>
-          </p>
-        </div>
-
-        {/* Validation feedback */}
-        {cronExpression && (
-          <div
-            className={`flex items-start gap-3 p-3 rounded-md ${
-              validation.isValid
-                ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
-                : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
-            }`}
-          >
-            {validation.isValid ? (
-              <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
-            ) : (
-              <AlertCircle className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
-            )}
-            <div className="flex-1">
-              <p className="text-sm font-medium leading-5">{validation.description}</p>
-              {validation.nextRun && (
-                <p className="text-xs mt-1">
-                  Next run: {validation.nextRun}
-                </p>
-              )}
+      {/* Enable/Disable Card */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="schedule-enabled" className="text-base">
+                Enable Automatic Sync
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Sync your lists automatically on a schedule
+              </p>
             </div>
+            <Switch
+              id="schedule-enabled"
+              checked={isEnabled}
+              onCheckedChange={setIsEnabled}
+            />
           </div>
-        )}
+        </CardContent>
+      </Card>
 
-        {/* Common patterns */}
-        <div>
-          <Label className="text-xs text-muted-foreground mb-2 block">
-            Common Patterns
-          </Label>
-          <div className="flex flex-wrap gap-2">
-            {commonPatterns.map((pattern) => (
-              <Badge
-                key={pattern.value}
-                variant="outline"
-                className="cursor-pointer hover:bg-accent"
-                onClick={() => setCronExpression(pattern.value)}
-              >
-                {pattern.label}
-              </Badge>
-            ))}
-          </div>
-        </div>
+      {isEnabled && (
+        <>
+          {/* Schedule Configuration Card */}
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <div>
+                <h4 className="text-base font-semibold mb-4">Schedule Configuration</h4>
 
-        <div className="flex gap-2 pt-2">
-          <Button
-            onClick={handleSave}
-            disabled={!validation.isValid}
-          >
-            Save Schedule
-          </Button>
-          {isEnabled && (
-            <Button variant="outline" onClick={handleDisable}>
-              Disable Schedule
+                {/* Common patterns */}
+                <div className="mb-4">
+                  <Label className="text-sm mb-3 block">Quick Patterns</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {commonPatterns.map((pattern) => (
+                      <Badge
+                        key={pattern.value}
+                        variant="outline"
+                        className="cursor-pointer hover:bg-accent transition-colors"
+                        onClick={() => setCronExpression(pattern.value)}
+                      >
+                        {pattern.label}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Cron Expression Input */}
+                <div className="space-y-2 mt-4">
+                  <Label htmlFor="cron-expression">Cron Expression</Label>
+                  <Input
+                    id="cron-expression"
+                    placeholder="0 4 * * *"
+                    value={cronExpression}
+                    onChange={(e) => setCronExpression(e.target.value)}
+                    className={
+                      cronExpression
+                        ? validation.isValid
+                          ? 'border-green-500 focus-visible:ring-green-500'
+                          : 'border-red-500 focus-visible:ring-red-500'
+                        : ''
+                    }
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Format: minute hour day month day-of-week •{' '}
+                    <a
+                      href="https://crontab.guru"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      crontab.guru helper
+                    </a>
+                  </p>
+                </div>
+
+                {/* Validation feedback */}
+                {cronExpression && (
+                  <div
+                    className={`flex items-start gap-3 p-3 rounded-md mt-3 ${
+                      validation.isValid
+                        ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
+                        : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
+                    }`}
+                  >
+                    {validation.isValid ? (
+                      <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
+                    ) : (
+                      <AlertCircle className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium leading-5">{validation.description}</p>
+                      {validation.nextRun && (
+                        <p className="text-xs mt-1 opacity-90">
+                          Next run: {validation.nextRun}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Save Button */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleSave}
+              disabled={!validation.isValid}
+            >
+              Save Schedule
             </Button>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
