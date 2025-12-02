@@ -13,7 +13,8 @@
     "start": "bun run dist/index.js",
     "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun run src/server/db/migrate.ts"
+    "db:migrate": "bun run src/server/db/migrate.ts",
+    "db:reset": "bun run src/server/db/reset.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",
