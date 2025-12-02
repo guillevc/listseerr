@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
-import { ThemeToggle } from './components/theme-toggle';
+import { ThemeToggle } from './components/ui/theme-toggle';
 import { JellyseerrConfigDialog } from './components/JellyseerrConfigDialog';
 import { AddListDialog } from './components/AddListDialog';
 import { ListsTable } from './components/ListsTable';
