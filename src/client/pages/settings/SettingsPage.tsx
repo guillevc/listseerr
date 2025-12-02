@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SettingsSidebar } from '../../components/layout/SettingsSidebar';
 import { JellyseerrSettings } from './JellyseerrSettings';
+import { ApiKeysSettings } from './ApiKeysSettings';
 import { Card } from '../../components/ui/card';
 
 export function SettingsPage() {
@@ -28,6 +29,7 @@ export function SettingsPage() {
           {/* Content */}
           <div className="flex-1 p-6 md:p-8">
             {activeCategory === 'jellyseerr' && <JellyseerrSettings />}
+            {activeCategory === 'api-keys' && <ApiKeysSettings />}
             {/* Future categories can be added here */}
           </div>
         </div>
