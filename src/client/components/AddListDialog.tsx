@@ -12,21 +12,42 @@ import {
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { MediaList } from '@/shared/types';
 import { validateAndDetectProvider, getProviderName } from '../lib/url-validator';
 import { useToast } from '../hooks/use-toast';
+import { trpc } from '../lib/trpc';
 
-interface Props {
-  onAdd: (list: Omit<MediaList, 'id'>) => void;
-}
-
-export function AddListDialog({ onAdd }: Props) {
+export function AddListDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [maxItems, setMaxItems] = useState('');
   const [urlError, setUrlError] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const utils = trpc.useUtils();
+
+  const createMutation = trpc.lists.create.useMutation({
+    onSuccess: (newList) => {
+      utils.lists.getAll.invalidate();
+      toast({
+        title: 'List Added',
+        description: `${newList.name} (${getProviderName(newList.provider)}) has been added successfully`,
+      });
+
+      setName('');
+      setUrl('');
+      setMaxItems('');
+      setUrlError(null);
+      setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   const handleUrlChange = (value: string) => {
     setUrl(value);
@@ -62,24 +83,13 @@ export function AddListDialog({ onAdd }: Props) {
       return;
     }
 
-    onAdd({
+    createMutation.mutate({
       name: name.trim(),
       url: url.trim(),
       provider: result.provider,
       enabled: true,
       maxItems: maxItems ? parseInt(maxItems) : undefined,
     });
-
-    toast({
-      title: 'List Added',
-      description: `${name} (${getProviderName(result.provider)}) has been added successfully`,
-    });
-
-    setName('');
-    setUrl('');
-    setMaxItems('');
-    setUrlError(null);
-    setOpen(false);
   };
 
   return (
@@ -173,7 +183,9 @@ export function AddListDialog({ onAdd }: Props) {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleAdd}>Add List</Button>
+          <Button onClick={handleAdd} disabled={createMutation.isPending}>
+            {createMutation.isPending ? 'Adding...' : 'Add List'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

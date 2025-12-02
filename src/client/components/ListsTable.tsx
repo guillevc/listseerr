@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -19,25 +19,69 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { MediaList } from '@/shared/types';
 import { getProviderName, getProviderColor } from '../lib/url-validator';
 import { getRelativeTime } from '../lib/utils';
-import { useState } from 'react';
+import { trpc } from '../lib/trpc';
+import { useToast } from '../hooks/use-toast';
 
 interface Props {
-  lists: MediaList[];
-  onSync: (id: string) => void;
-  onDelete: (id: string) => void;
-  onToggleEnabled: (id: string) => void;
-  syncingLists: Set<string>;
+  lists: Array<{
+    id: number;
+    name: string;
+    url: string;
+    provider: 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
+    enabled: boolean;
+    maxItems?: number | null;
+    lastSync?: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: number;
+    syncSchedule?: string | null;
+  }>;
+  onSync: (id: number) => void;
+  syncingLists: Set<number>;
 }
+
+type MediaList = Props['lists'][0];
 
 const columnHelper = createColumnHelper<MediaList>();
 
-export function ListsTable({ lists, onSync, onDelete, onToggleEnabled, syncingLists }: Props) {
+export function ListsTable({ lists, onSync, syncingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { toast } = useToast();
+  const utils = trpc.useUtils();
 
-  const formatDate = (date?: Date) => {
+  const deleteMutation = trpc.lists.delete.useMutation({
+    onSuccess: () => {
+      utils.lists.getAll.invalidate();
+      toast({
+        title: 'List Removed',
+        description: 'The list has been removed successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const toggleMutation = trpc.lists.toggleEnabled.useMutation({
+    onSuccess: () => {
+      utils.lists.getAll.invalidate();
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const formatDate = (date?: Date | null) => {
     if (!date) return 'Never';
     const d = new Date(date);
     return d.toLocaleString();
@@ -79,18 +123,13 @@ export function ListsTable({ lists, onSync, onDelete, onToggleEnabled, syncingLi
         ),
         enableSorting: false,
       }),
-      columnHelper.accessor('itemCount', {
+      columnHelper.accessor('maxItems', {
+        id: 'itemCount',
         header: 'Items',
         cell: (info) => {
-          const itemCount = info.getValue();
-          const maxItems = info.row.original.maxItems;
+          const maxItems = info.getValue();
           return (
             <div className="flex flex-col gap-0.5">
-              {itemCount !== undefined && (
-                <span className="text-sm">
-                  {itemCount} item{itemCount !== 1 ? 's' : ''}
-                </span>
-              )}
               {maxItems && (
                 <span className="text-xs text-muted-foreground">Max: {maxItems}</span>
               )}
@@ -126,7 +165,8 @@ export function ListsTable({ lists, onSync, onDelete, onToggleEnabled, syncingLi
         cell: (info) => (
           <Switch
             checked={info.getValue()}
-            onCheckedChange={() => onToggleEnabled(info.row.original.id)}
+            onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
+            disabled={toggleMutation.isPending}
           />
         ),
       }),
@@ -150,7 +190,8 @@ export function ListsTable({ lists, onSync, onDelete, onToggleEnabled, syncingLi
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDelete(list.id)}
+                onClick={() => deleteMutation.mutate({ id: list.id })}
+                disabled={deleteMutation.isPending}
                 className="w-9 h-9 p-0"
               >
                 <Trash2 className="h-4 w-4" />
@@ -160,7 +201,7 @@ export function ListsTable({ lists, onSync, onDelete, onToggleEnabled, syncingLi
         },
       }),
     ],
-    [onSync, onDelete, onToggleEnabled, syncingLists]
+    [onSync, syncingLists, deleteMutation, toggleMutation]
   );
 
   const table = useReactTable({

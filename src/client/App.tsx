@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
@@ -8,64 +8,55 @@ import { JellyseerrConfigDialog } from './components/JellyseerrConfigDialog';
 import { AddListDialog } from './components/AddListDialog';
 import { ListsTable } from './components/ListsTable';
 import { Toaster } from './components/ui/toaster';
-import { useLocalStorage } from './hooks/useLocalStorage';
 import { useToast } from './hooks/use-toast';
-import { MediaList, JellyseerrConfig } from '@/shared/types';
-import { syncList } from './services/sync';
+import { trpc } from './lib/trpc';
 
 function App() {
-  const [lists, setLists] = useLocalStorage<MediaList[]>('listseerr-lists', []);
-  const [jellyseerrConfig, setJellyseerrConfig] = useLocalStorage<JellyseerrConfig | null>(
-    'listseerr-config',
-    null
-  );
-  const [syncingLists, setSyncingLists] = useState<Set<string>>(new Set());
-  const [autoSyncEnabled, setAutoSyncEnabled] = useState(false);
-  const [syncInterval] = useState(60);
+  const [syncingLists, setSyncingLists] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!autoSyncEnabled || !jellyseerrConfig) return;
+  // Fetch lists and config from backend
+  const { data: lists = [], isLoading: listsLoading } = trpc.lists.getAll.useQuery();
+  const { data: jellyseerrConfig, isLoading: configLoading } = trpc.config.get.useQuery();
 
-    const intervalId = setInterval(
-      () => {
-        lists
-          .filter((list) => list.enabled)
-          .forEach((list) => {
-            handleSync(list.id);
-          });
-      },
-      syncInterval * 60 * 1000
-    );
+  // Mutations
+  const syncMutation = trpc.sync.syncList.useMutation({
+    onSuccess: (result, variables) => {
+      setSyncingLists((prev) => {
+        const next = new Set(prev);
+        next.delete(variables.listId);
+        return next;
+      });
 
-    return () => clearInterval(intervalId);
-  }, [autoSyncEnabled, jellyseerrConfig, lists, syncInterval]);
+      if (result.success) {
+        toast({
+          title: 'Sync Complete',
+          description: `Found ${result.itemCount} items, requested ${result.requestedCount} new items`,
+        });
+      } else {
+        toast({
+          title: 'Sync Failed',
+          description: result.error || 'Unknown error occurred',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error, variables) => {
+      setSyncingLists((prev) => {
+        const next = new Set(prev);
+        next.delete(variables.listId);
+        return next;
+      });
 
-  const handleAddList = (newList: Omit<MediaList, 'id'>) => {
-    const list: MediaList = {
-      ...newList,
-      id: Date.now().toString(),
-    };
-    setLists([...lists, list]);
-  };
+      toast({
+        title: 'Sync Failed',
+        description: error.message || 'Unknown error occurred',
+        variant: 'destructive',
+      });
+    },
+  });
 
-  const handleDeleteList = (id: string) => {
-    setLists(lists.filter((list) => list.id !== id));
-    toast({
-      title: 'List Removed',
-      description: 'The list has been removed successfully',
-    });
-  };
-
-  const handleToggleEnabled = (id: string) => {
-    setLists(
-      lists.map((list) =>
-        list.id === id ? { ...list, enabled: !list.enabled } : list
-      )
-    );
-  };
-
-  const handleSync = async (id: string) => {
+  const handleSync = async (id: number) => {
     if (!jellyseerrConfig) {
       toast({
         title: 'Configuration Required',
@@ -78,48 +69,17 @@ function App() {
     const list = lists.find((l) => l.id === id);
     if (!list) return;
 
-    setSyncingLists((prev) => new Set(prev).add(id));
-
-    setLists((currentLists) =>
-      currentLists.map((l) =>
-        l.id === id ? { ...l, lastSyncStatus: 'syncing' } : l
-      )
-    );
-
-    const result = await syncList(list, jellyseerrConfig);
-
-    setSyncingLists((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
-
-    setLists((currentLists) =>
-      currentLists.map((l) =>
-        l.id === id
-          ? {
-              ...l,
-              lastSync: new Date(),
-              lastSyncStatus: result.success ? 'success' : 'error',
-              lastSyncError: result.error,
-              itemCount: result.itemCount,
-            }
-          : l
-      )
-    );
-
-    if (result.success) {
+    if (!list.enabled) {
       toast({
-        title: 'Sync Complete',
-        description: `Found ${result.itemCount} items, requested ${result.requestedCount} new items`,
-      });
-    } else {
-      toast({
-        title: 'Sync Failed',
-        description: result.error || 'Unknown error occurred',
+        title: 'List Disabled',
+        description: 'This list is currently disabled',
         variant: 'destructive',
       });
+      return;
     }
+
+    setSyncingLists((prev) => new Set(prev).add(id));
+    syncMutation.mutate({ listId: id });
   };
 
   const handleSyncAll = async () => {
@@ -152,6 +112,17 @@ function App() {
     }
   };
 
+  if (listsLoading || configLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Toaster />
@@ -168,10 +139,7 @@ function App() {
               </p>
             </motion.div>
             <div className="flex flex-wrap gap-2">
-              <JellyseerrConfigDialog
-                config={jellyseerrConfig}
-                onSave={setJellyseerrConfig}
-              />
+              <JellyseerrConfigDialog />
               <ThemeToggle />
             </div>
           </div>
@@ -192,7 +160,7 @@ function App() {
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex gap-2">
-              <AddListDialog onAdd={handleAddList} />
+              <AddListDialog />
               {lists.length > 0 && (
                 <Button
                   variant="outline"
@@ -229,8 +197,6 @@ function App() {
               <ListsTable
                 lists={lists}
                 onSync={handleSync}
-                onDelete={handleDeleteList}
-                onToggleEnabled={handleToggleEnabled}
                 syncingLists={syncingLists}
               />
             </motion.div>

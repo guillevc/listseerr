@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, CheckCircle2, Trash2 } from 'lucide-react';
+import { Settings, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,59 +12,103 @@ import {
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { JellyseerrConfig } from '@/shared/types';
-import { JellyseerrService } from '../services/jellyseerr';
 import { useToast } from '../hooks/use-toast';
+import { trpc } from '../lib/trpc';
 
-interface Props {
-  config: JellyseerrConfig | null;
-  onSave: (config: JellyseerrConfig | null) => void;
-}
-
-export function JellyseerrConfigDialog({ config, onSave }: Props) {
+export function JellyseerrConfigDialog() {
   const [open, setOpen] = useState(false);
-  const [url, setUrl] = useState(config?.url || '');
-  const [apiKey, setApiKey] = useState(config?.apiKey || '');
-  const [userId, setUserId] = useState(config?.userId.toString() || '');
-  const [testing, setTesting] = useState(false);
+  const [url, setUrl] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [userId, setUserId] = useState('');
   const { toast } = useToast();
+
+  const utils = trpc.useUtils();
+  const { data: config } = trpc.config.get.useQuery();
+
+  const testMutation = trpc.config.test.useMutation({
+    onSuccess: (result) => {
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: result.message,
+        });
+      } else {
+        toast({
+          title: 'Connection Failed',
+          description: result.message,
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const saveMutation = trpc.config.set.useMutation({
+    onSuccess: () => {
+      utils.config.get.invalidate();
+      toast({
+        title: 'Saved',
+        description: 'Jellyseerr configuration saved successfully',
+      });
+      setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteMutation = trpc.config.delete.useMutation({
+    onSuccess: () => {
+      utils.config.get.invalidate();
+      toast({
+        title: 'Configuration Removed',
+        description: 'Jellyseerr configuration has been removed',
+      });
+      setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   // Reset form when dialog opens or config changes
   useEffect(() => {
     if (open) {
       setUrl(config?.url || '');
       setApiKey(config?.apiKey || '');
-      setUserId(config?.userId.toString() || '');
+      setUserId(config?.userIdJellyseerr.toString() || '');
     }
   }, [open, config]);
 
   const handleTest = async () => {
-    if (!url || !apiKey) {
+    if (!url || !apiKey || !userId) {
       toast({
         title: 'Error',
-        description: 'Please fill in URL and API Key',
+        description: 'Please fill in all fields',
         variant: 'destructive',
       });
       return;
     }
 
-    setTesting(true);
-    const service = new JellyseerrService({ url, apiKey, userId: parseInt(userId) || 0 });
-    const result = await service.testConnection();
-    setTesting(false);
-
-    if (result.success) {
-      toast({
-        title: 'Success',
-        description: 'Connection successful!',
-      });
-    } else {
-      toast({
-        title: 'Connection Failed',
-        description: result.error,
-        variant: 'destructive',
-      });
-    }
+    testMutation.mutate({
+      url: url.trim(),
+      apiKey: apiKey.trim(),
+      userIdJellyseerr: parseInt(userId),
+    });
   };
 
   const handleSave = () => {
@@ -77,29 +121,15 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
       return;
     }
 
-    onSave({
+    saveMutation.mutate({
       url: url.trim(),
       apiKey: apiKey.trim(),
-      userId: parseInt(userId),
+      userIdJellyseerr: parseInt(userId),
     });
-
-    toast({
-      title: 'Saved',
-      description: 'Jellyseerr configuration saved successfully',
-    });
-
-    setOpen(false);
   };
 
   const handleRemove = () => {
-    onSave(null);
-
-    toast({
-      title: 'Configuration Removed',
-      description: 'Jellyseerr configuration has been removed',
-    });
-
-    setOpen(false);
+    deleteMutation.mutate();
   };
 
   return (
@@ -168,16 +198,32 @@ export function JellyseerrConfigDialog({ config, onSave }: Props) {
         </div>
         <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
           {config && (
-            <Button variant="destructive" onClick={handleRemove} className="w-full sm:w-auto sm:mr-auto">
+            <Button
+              variant="destructive"
+              onClick={handleRemove}
+              disabled={deleteMutation.isPending}
+              className="w-full sm:w-auto sm:mr-auto"
+            >
               <Trash2 className="h-4 w-4" />
-              Remove
+              {deleteMutation.isPending ? 'Removing...' : 'Remove'}
             </Button>
           )}
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button variant="outline" onClick={handleTest} disabled={testing} className="w-full sm:w-auto">
-              {testing ? 'Testing...' : 'Test Connection'}
+            <Button
+              variant="outline"
+              onClick={handleTest}
+              disabled={testMutation.isPending}
+              className="w-full sm:w-auto"
+            >
+              {testMutation.isPending ? 'Testing...' : 'Test Connection'}
             </Button>
-            <Button onClick={handleSave} className="w-full sm:w-auto">Save Configuration</Button>
+            <Button
+              onClick={handleSave}
+              disabled={saveMutation.isPending}
+              className="w-full sm:w-auto"
+            >
+              {saveMutation.isPending ? 'Saving...' : 'Save Configuration'}
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>
