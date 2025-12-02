@@ -166,11 +166,22 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       columnHelper.accessor('enabled', {
         header: 'Enabled',
         cell: (info) => (
-          <Switch
-            checked={info.getValue()}
-            onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
-            disabled={toggleMutation.isPending}
-          />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Switch
+                    checked={info.getValue()}
+                    onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
+                    disabled={toggleMutation.isPending}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Enable automatic processing for this list</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         ),
       }),
       columnHelper.display({
