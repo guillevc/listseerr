@@ -38,9 +38,24 @@ function validateAndParseCron(cronExpression: string): CronValidation {
       nextRun: nextRunString,
     };
   } catch (error) {
+    let errorMessage = 'Invalid cron expression';
+
+    if (error instanceof Error) {
+      // Clean up technical error messages
+      if (error.message.includes('Syntax error')) {
+        errorMessage = 'Invalid cron syntax. Please check your expression.';
+      } else if (error.message.includes('illegal stepping')) {
+        errorMessage = 'Invalid step value. Use format like */6 for every 6 units.';
+      } else if (error.message.includes('out of range')) {
+        errorMessage = 'Value out of range. Check minute (0-59), hour (0-23), day (1-31), month (1-12).';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+
     return {
       isValid: false,
-      description: error instanceof Error ? error.message : 'Invalid cron expression',
+      description: errorMessage,
     };
   }
 }
@@ -217,19 +232,19 @@ export function SyncScheduleSettings() {
           {/* Validation feedback */}
           {cronExpression && (
             <div
-              className={`flex items-start gap-2 p-3 rounded-md ${
+              className={`flex items-start gap-3 p-3 rounded-md ${
                 validation.isValid
                   ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
                   : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
               }`}
             >
               {validation.isValid ? (
-                <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
               ) : (
-                <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
               )}
               <div className="flex-1">
-                <p className="text-sm font-medium">{validation.description}</p>
+                <p className="text-sm font-medium leading-5">{validation.description}</p>
                 {validation.nextRun && (
                   <p className="text-xs mt-1">
                     Next run: {validation.nextRun}
