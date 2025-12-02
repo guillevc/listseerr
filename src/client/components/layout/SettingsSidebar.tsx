@@ -1,4 +1,4 @@
-import { Settings, Key } from 'lucide-react';
+import { Settings, Key, Clock } from 'lucide-react';
 import { cn } from '@/client/lib/utils';
 
 interface SettingsCategory {
@@ -17,6 +17,11 @@ const settingsCategories: SettingsCategory[] = [
     id: 'api-keys',
     name: 'API Keys',
     icon: <Key className="h-4 w-4" />,
+  },
+  {
+    id: 'sync-schedule',
+    name: 'Sync Schedule',
+    icon: <Clock className="h-4 w-4" />,
   },
   // Future categories can be added here:
   // { id: 'application', name: 'Application', icon: <Cog className="h-4 w-4" /> },

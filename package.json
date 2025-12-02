@@ -30,6 +30,7 @@
     "@trpc/server": "^11.0.0-rc.639",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "croner": "^9.1.0",
     "drizzle-orm": "^0.36.4",
     "framer-motion": "^11.11.17",
     "hono": "^4.6.14",
