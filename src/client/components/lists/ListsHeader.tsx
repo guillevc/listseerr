@@ -1,17 +1,18 @@
 import { RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
 import { AddListDialog } from './AddListDialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface ListsHeaderProps {
-  onSyncAll: () => void;
-  syncingLists: Set<number>;
+  onProcessAll: () => void;
+  processingLists: Set<number>;
   hasLists: boolean;
   jellyseerrConfigured: boolean;
 }
 
 export function ListsHeader({
-  onSyncAll,
-  syncingLists,
+  onProcessAll,
+  processingLists,
   hasLists,
   jellyseerrConfigured,
 }: ListsHeaderProps) {
@@ -21,18 +22,27 @@ export function ListsHeader({
       <div className="flex gap-2">
         <AddListDialog />
         {hasLists && (
-          <Button
-            variant="outline"
-            onClick={onSyncAll}
-            disabled={!jellyseerrConfigured || syncingLists.size > 0}
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${
-                syncingLists.size > 0 ? 'animate-spin' : ''
-              }`}
-            />
-            Sync All
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  onClick={onProcessAll}
+                  disabled={!jellyseerrConfigured || processingLists.size > 0}
+                >
+                  <RefreshCw
+                    className={`h-4 w-4 ${
+                      processingLists.size > 0 ? 'animate-spin' : ''
+                    }`}
+                  />
+                  Process All
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Check all lists for new items and request them to Jellyseerr</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </div>
     </div>

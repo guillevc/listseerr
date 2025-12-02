@@ -5,11 +5,11 @@ import { ListsHeader } from '../components/lists/ListsHeader';
 import { ListStats } from '../components/lists/ListStats';
 import { ListsTable } from '../components/lists/ListsTable';
 import { trpc } from '../lib/trpc';
-import { useSyncOperations } from '../hooks/use-sync-operations';
+import { useListProcessor } from '../hooks/use-list-processor';
 
 export function ListsPage() {
   const { data: lists = [], isLoading: listsLoading } = trpc.lists.getAll.useQuery();
-  const { syncingLists, handleSync, handleSyncAll, jellyseerrConfig } = useSyncOperations();
+  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig } = useListProcessor();
 
   if (listsLoading) {
     return (
@@ -33,7 +33,7 @@ export function ListsPage() {
               Configuration Required
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Please configure your Jellyseerr instance in Settings to start syncing lists.
+              Please configure your Jellyseerr instance in Settings to start processing lists.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -41,8 +41,8 @@ export function ListsPage() {
 
       {/* Header with Actions */}
       <ListsHeader
-        onSyncAll={() => handleSyncAll(lists)}
-        syncingLists={syncingLists}
+        onProcessAll={() => handleProcessAll(lists)}
+        processingLists={processingLists}
         hasLists={lists.length > 0}
         jellyseerrConfigured={!!jellyseerrConfig}
       />
@@ -59,7 +59,7 @@ export function ListsPage() {
             <div className="text-center text-muted-foreground">
               <p className="text-lg mb-2">No lists added yet</p>
               <p className="text-sm">
-                Click "Add List" to get started with syncing your lists
+                Add lists to automatically request new content to Jellyseerr
               </p>
             </div>
           </CardContent>
@@ -71,8 +71,8 @@ export function ListsPage() {
         >
           <ListsTable
             lists={lists}
-            onSync={(id) => handleSync(id, lists)}
-            syncingLists={syncingLists}
+            onProcess={(id) => handleProcess(id, lists)}
+            processingLists={processingLists}
           />
         </motion.div>
       )}

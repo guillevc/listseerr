@@ -1,13 +1,13 @@
 import { router } from './trpc';
 import { listsRouter } from './routers/lists';
 import { configRouter } from './routers/config';
-import { syncRouter } from './routers/sync';
+import { listsProcessorRouter } from './routers/lists-processor';
 import { schedulerRouter } from './routers/scheduler';
 
 export const appRouter = router({
   lists: listsRouter,
   config: configRouter,
-  sync: syncRouter,
+  processor: listsProcessorRouter,
   scheduler: schedulerRouter,
 });
 

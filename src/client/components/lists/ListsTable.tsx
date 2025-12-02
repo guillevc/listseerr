@@ -39,21 +39,21 @@ interface Props {
     provider: 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
     enabled: boolean;
     maxItems?: number | null;
-    lastSync?: Date | null;
+    lastProcessed?: Date | null;
     createdAt: Date;
     updatedAt: Date;
     userId: number;
-    syncSchedule?: string | null;
+    processingSchedule?: string | null;
   }>;
-  onSync: (id: number) => void;
-  syncingLists: Set<number>;
+  onProcess: (id: number) => void;
+  processingLists: Set<number>;
 }
 
 type MediaList = Props['lists'][0];
 
 const columnHelper = createColumnHelper<MediaList>();
 
-export function ListsTable({ lists, onSync, syncingLists }: Props) {
+export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { toast } = useToast();
   const utils = trpc.useUtils();
@@ -140,8 +140,8 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
           );
         },
       }),
-      columnHelper.accessor('lastSync', {
-        header: 'Last Sync',
+      columnHelper.accessor('lastProcessed', {
+        header: 'Processed',
         cell: (info) => (
           <TooltipProvider>
             <Tooltip>
@@ -158,8 +158,8 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
           </TooltipProvider>
         ),
         sortingFn: (rowA, rowB) => {
-          const dateA = rowA.original.lastSync ? new Date(rowA.original.lastSync).getTime() : 0;
-          const dateB = rowB.original.lastSync ? new Date(rowB.original.lastSync).getTime() : 0;
+          const dateA = rowA.original.lastProcessed ? new Date(rowA.original.lastProcessed).getTime() : 0;
+          const dateB = rowB.original.lastProcessed ? new Date(rowB.original.lastProcessed).getTime() : 0;
           return dateA - dateB;
         },
       }),
@@ -178,7 +178,7 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
         header: () => <div className="text-right">Actions</div>,
         cell: (info) => {
           const list = info.row.original;
-          const isSyncing = syncingLists.has(list.id);
+          const isProcessing = processingLists.has(list.id);
           return (
             <div className="flex items-center justify-end">
               <DropdownMenu>
@@ -189,11 +189,11 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    onClick={() => onSync(list.id)}
-                    disabled={!list.enabled || isSyncing}
+                    onClick={() => onProcess(list.id)}
+                    disabled={!list.enabled || isProcessing}
                   >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-                    Sync
+                    <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
+                    Process
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => deleteMutation.mutate({ id: list.id })}
@@ -210,7 +210,7 @@ export function ListsTable({ lists, onSync, syncingLists }: Props) {
         },
       }),
     ],
-    [onSync, syncingLists, deleteMutation, toggleMutation]
+    [onProcess, processingLists, deleteMutation, toggleMutation]
   );
 
   const table = useReactTable({

@@ -9,7 +9,7 @@ const listInputSchema = z.object({
   provider: z.enum(['trakt', 'letterboxd', 'mdblist', 'imdb', 'tmdb']),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().optional(),
-  syncSchedule: z.string().optional(),
+  processingSchedule: z.string().optional(),
 });
 
 export const listsRouter = router({

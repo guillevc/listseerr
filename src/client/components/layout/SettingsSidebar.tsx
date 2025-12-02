@@ -29,10 +29,10 @@ const settingsCategories: SettingsCategory[] = [
     path: '/settings/api-keys',
   },
   {
-    id: 'automatic-sync',
-    name: 'Automatic Sync',
+    id: 'automatic-processing',
+    name: 'Automatic Processing',
     icon: <Clock className="h-4 w-4" />,
-    path: '/settings/automatic-sync',
+    path: '/settings/automatic-processing',
   },
   // Future categories can be added here:
   // { id: 'application', name: 'Application', icon: <Cog className="h-4 w-4" />, path: '/settings/application' },

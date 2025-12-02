@@ -14,17 +14,17 @@ interface JellyseerrConfig {
   userIdJellyseerr: number;
 }
 
-export function useSyncOperations() {
-  const [syncingLists, setSyncingLists] = useState<Set<number>>(new Set());
+export function useListProcessor() {
+  const [processingLists, setProcessingLists] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
   // Get Jellyseerr config
   const { data: jellyseerrConfig } = trpc.config.get.useQuery();
 
-  // Sync mutation
-  const syncMutation = trpc.sync.syncList.useMutation({
+  // Process mutation
+  const processMutation = trpc.processor.processList.useMutation({
     onSuccess: (result, variables) => {
-      setSyncingLists((prev) => {
+      setProcessingLists((prev) => {
         const next = new Set(prev);
         next.delete(variables.listId);
         return next;
@@ -32,37 +32,37 @@ export function useSyncOperations() {
 
       if (result.success) {
         toast({
-          title: 'Sync Complete',
-          description: `Found ${result.itemCount} items, requested ${result.requestedCount} new items`,
+          title: 'Processing Complete',
+          description: `Checked list and found ${result.itemCount} items. Requested ${result.requestedCount} new items to Jellyseerr.`,
         });
       } else {
         toast({
-          title: 'Sync Failed',
+          title: 'Processing Failed',
           description: result.error || 'Unknown error occurred',
           variant: 'destructive',
         });
       }
     },
     onError: (error, variables) => {
-      setSyncingLists((prev) => {
+      setProcessingLists((prev) => {
         const next = new Set(prev);
         next.delete(variables.listId);
         return next;
       });
 
       toast({
-        title: 'Sync Failed',
+        title: 'Processing Failed',
         description: error.message || 'Unknown error occurred',
         variant: 'destructive',
       });
     },
   });
 
-  const handleSync = async (id: number, lists: MediaList[]) => {
+  const handleProcess = async (id: number, lists: MediaList[]) => {
     if (!jellyseerrConfig) {
       toast({
         title: 'Configuration Required',
-        description: 'Please configure Jellyseerr before syncing',
+        description: 'Please configure Jellyseerr before processing lists',
         variant: 'destructive',
       });
       return;
@@ -80,15 +80,15 @@ export function useSyncOperations() {
       return;
     }
 
-    setSyncingLists((prev) => new Set(prev).add(id));
-    syncMutation.mutate({ listId: id });
+    setProcessingLists((prev) => new Set(prev).add(id));
+    processMutation.mutate({ listId: id });
   };
 
-  const handleSyncAll = async (lists: MediaList[]) => {
+  const handleProcessAll = async (lists: MediaList[]) => {
     if (!jellyseerrConfig) {
       toast({
         title: 'Configuration Required',
-        description: 'Please configure Jellyseerr before syncing',
+        description: 'Please configure Jellyseerr before processing lists',
         variant: 'destructive',
       });
       return;
@@ -98,26 +98,26 @@ export function useSyncOperations() {
     if (enabledLists.length === 0) {
       toast({
         title: 'No Lists',
-        description: 'No enabled lists to sync',
+        description: 'No enabled lists to process',
       });
       return;
     }
 
     toast({
-      title: 'Syncing All Lists',
-      description: `Starting sync for ${enabledLists.length} list(s)`,
+      title: 'Processing All Lists',
+      description: `Processing ${enabledLists.length} list(s)`,
     });
 
     for (const list of enabledLists) {
-      await handleSync(list.id, lists);
+      await handleProcess(list.id, lists);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   };
 
   return {
-    syncingLists,
-    handleSync,
-    handleSyncAll,
+    processingLists,
+    handleProcess,
+    handleProcessAll,
     jellyseerrConfig,
   };
 }

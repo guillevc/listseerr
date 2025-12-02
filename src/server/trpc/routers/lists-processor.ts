@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
-import { mediaLists, syncHistory, jellyseerrConfigs } from '../../db/schema';
+import { mediaLists, executionHistory, jellyseerrConfigs } from '../../db/schema';
 import { eq, desc } from 'drizzle-orm';
 
-export const syncRouter = router({
-  syncList: publicProcedure
+export const listsProcessorRouter = router({
+  processList: publicProcedure
     .input(z.object({ listId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       // Get the list
@@ -33,9 +33,9 @@ export const syncRouter = router({
         throw new Error('Jellyseerr configuration not found');
       }
 
-      // Create sync history entry
-      const [syncEntry] = await ctx.db
-        .insert(syncHistory)
+      // Create execution history entry
+      const [executionEntry] = await ctx.db
+        .insert(executionHistory)
         .values({
           listId: list.id,
           startedAt: new Date(),
@@ -43,22 +43,22 @@ export const syncRouter = router({
         })
         .returning();
 
-      // TODO: Implement actual sync logic with list providers
+      // TODO: Implement actual processing logic (check lists + request new media)
       // For now, return a mock result
       try {
-        // Simulate sync
+        // Simulate processing
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Update sync history
+        // Update execution history
         await ctx.db
-          .update(syncHistory)
+          .update(executionHistory)
           .set({
             completedAt: new Date(),
             status: 'success',
             itemsFound: 0,
             itemsRequested: 0,
           })
-          .where(eq(syncHistory.id, syncEntry.id));
+          .where(eq(executionHistory.id, executionEntry.id));
 
         return {
           success: true,
@@ -66,15 +66,15 @@ export const syncRouter = router({
           requestedCount: 0,
         };
       } catch (error) {
-        // Update sync history with error
+        // Update execution history with error
         await ctx.db
-          .update(syncHistory)
+          .update(executionHistory)
           .set({
             completedAt: new Date(),
             status: 'error',
             errorMessage: error instanceof Error ? error.message : 'Unknown error',
           })
-          .where(eq(syncHistory.id, syncEntry.id));
+          .where(eq(executionHistory.id, executionEntry.id));
 
         return {
           success: false,
@@ -83,7 +83,7 @@ export const syncRouter = router({
       }
     }),
 
-  syncAll: publicProcedure.mutation(async ({ ctx }) => {
+  processAll: publicProcedure.mutation(async ({ ctx }) => {
     // Get all enabled lists
     const lists = await ctx.db
       .select()
@@ -92,7 +92,7 @@ export const syncRouter = router({
 
     const results = [];
     for (const list of lists) {
-      // This would trigger individual syncs
+      // This would trigger individual list processing
       // For now, just return mock results
       results.push({
         listId: list.id,
@@ -115,9 +115,9 @@ export const syncRouter = router({
     .query(async ({ ctx, input }) => {
       const history = await ctx.db
         .select()
-        .from(syncHistory)
-        .where(eq(syncHistory.listId, input.listId))
-        .orderBy(desc(syncHistory.startedAt))
+        .from(executionHistory)
+        .where(eq(executionHistory.listId, input.listId))
+        .orderBy(desc(executionHistory.startedAt))
         .limit(input.limit);
 
       return history;

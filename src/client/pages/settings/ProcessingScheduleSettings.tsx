@@ -140,7 +140,7 @@ function generateCronDescription(cronExpression: string): string {
 }
 
 // Placeholder component - will be connected to backend later
-export function SyncScheduleSettings() {
+export function ProcessingScheduleSettings() {
   const [cronExpression, setCronExpression] = useState('');
   const [validation, setValidation] = useState<CronValidation>({
     isValid: false,
@@ -165,7 +165,7 @@ export function SyncScheduleSettings() {
       return;
     }
     // TODO: Connect to backend API
-    console.log('Saving sync schedule:', { cronExpression, isEnabled });
+    console.log('Saving processing schedule:', { cronExpression, isEnabled });
   };
 
   const commonPatterns = [
@@ -180,9 +180,9 @@ export function SyncScheduleSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Automatic Sync</h3>
+        <h3 className="text-lg font-semibold">Automatic Processing</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Schedule automatic list synchronization
+          Schedule automatic list processing: checks lists for new items and requests them to Jellyseerr
         </p>
       </div>
 
@@ -194,10 +194,10 @@ export function SyncScheduleSettings() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="schedule-enabled" className="text-base">
-                Enable Automatic Sync
+                Enable Automatic Processing
               </Label>
               <p className="text-sm text-muted-foreground">
-                Sync your lists automatically on a schedule
+                Automatically check lists for new items and request them to Jellyseerr on a schedule
               </p>
             </div>
             <Switch

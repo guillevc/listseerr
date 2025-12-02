@@ -11,13 +11,13 @@ export function RecentActivity() {
           Recent Activity
         </CardTitle>
         <CardDescription>
-          Recent sync operations and events
+          Recent list processing and events
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="text-center py-8 text-muted-foreground">
           <p>No recent activity</p>
-          <p className="text-sm mt-1">Sync activity will appear here</p>
+          <p className="text-sm mt-1">Processing activity will appear here</p>
         </div>
       </CardContent>
     </Card>

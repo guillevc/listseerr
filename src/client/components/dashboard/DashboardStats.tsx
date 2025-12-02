@@ -4,7 +4,7 @@ import { useListsStats } from '../../hooks/use-lists-stats';
 
 interface MediaList {
   enabled: boolean;
-  lastSync?: Date | null;
+  lastProcessed?: Date | null;
   [key: string]: any;
 }
 
@@ -15,13 +15,13 @@ interface DashboardStatsProps {
 export function DashboardStats({ lists }: DashboardStatsProps) {
   const { total, enabled } = useListsStats(lists);
 
-  // Calculate last sync time
-  const lastSyncDate = lists
-    .map((list) => list.lastSync ? new Date(list.lastSync).getTime() : 0)
+  // Calculate last processed time
+  const lastProcessedDate = lists
+    .map((list) => list.lastProcessed ? new Date(list.lastProcessed).getTime() : 0)
     .sort((a, b) => b - a)[0];
 
-  const lastSyncText = lastSyncDate
-    ? new Date(lastSyncDate).toLocaleString()
+  const lastProcessedText = lastProcessedDate
+    ? new Date(lastProcessedDate).toLocaleString()
     : 'Never';
 
   const stats = [
@@ -39,10 +39,10 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       valueColor: 'text-green-600 dark:text-green-400',
     },
     {
-      title: 'Last Sync',
-      value: lastSyncText,
+      title: 'Processed',
+      value: lastProcessedText,
       icon: Clock,
-      description: 'Most recent sync',
+      description: 'Most recent',
       isTime: true,
     },
     {

@@ -7,9 +7,9 @@ export interface MediaList {
   provider: ListProvider;
   enabled: boolean;
   maxItems?: number;
-  lastSync?: Date;
-  lastSyncStatus?: 'success' | 'error' | 'syncing';
-  lastSyncError?: string;
+  lastProcessed?: Date;
+  lastProcessedStatus?: 'success' | 'error' | 'processing';
+  lastProcessedError?: string;
   itemCount?: number;
 }
 
@@ -27,9 +27,9 @@ export interface MediaItem {
   mediaType: 'movie' | 'tv';
 }
 
-export interface SyncStatus {
+export interface ProcessingStatus {
   listId: string;
-  status: 'idle' | 'syncing' | 'success' | 'error';
+  status: 'idle' | 'processing' | 'success' | 'error';
   message?: string;
-  lastSync?: Date;
+  lastProcessed?: Date;
 }

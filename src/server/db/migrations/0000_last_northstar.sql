@@ -1,3 +1,15 @@
+CREATE TABLE `execution_history` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`list_id` integer NOT NULL,
+	`started_at` integer NOT NULL,
+	`completed_at` integer,
+	`status` text NOT NULL,
+	`items_found` integer,
+	`items_requested` integer,
+	`error_message` text,
+	FOREIGN KEY (`list_id`) REFERENCES `media_lists`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
 CREATE TABLE `jellyseerr_configs` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`user_id` integer NOT NULL,
@@ -29,22 +41,10 @@ CREATE TABLE `media_lists` (
 	`provider` text NOT NULL,
 	`enabled` integer DEFAULT true NOT NULL,
 	`max_items` integer,
-	`sync_schedule` text,
+	`processing_schedule` text,
 	`created_at` integer,
 	`updated_at` integer,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE TABLE `sync_history` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`list_id` integer NOT NULL,
-	`started_at` integer NOT NULL,
-	`completed_at` integer,
-	`status` text NOT NULL,
-	`items_found` integer,
-	`items_requested` integer,
-	`error_message` text,
-	FOREIGN KEY (`list_id`) REFERENCES `media_lists`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
