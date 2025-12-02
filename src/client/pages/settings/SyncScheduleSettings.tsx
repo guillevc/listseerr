@@ -11,7 +11,7 @@ import { Badge } from '../../components/ui/badge';
 interface CronValidation {
   isValid: boolean;
   description: string;
-  nextRuns?: string[];
+  nextRun?: string;
 }
 
 function validateAndParseCron(cronExpression: string): CronValidation {
@@ -25,18 +25,9 @@ function validateAndParseCron(cronExpression: string): CronValidation {
   try {
     const job = new Cron(cronExpression, { paused: true });
 
-    // Get next 3 run times
-    const nextRuns: string[] = [];
-    const now = new Date();
-    let currentDate = new Date(now);
-
-    for (let i = 0; i < 3; i++) {
-      const nextRun = job.nextRun(currentDate);
-      if (nextRun) {
-        nextRuns.push(nextRun.toLocaleString());
-        currentDate = new Date(nextRun.getTime() + 1000); // Add 1 second to get next occurrence
-      }
-    }
+    // Get next run time
+    const nextRun = job.nextRun();
+    const nextRunString = nextRun ? nextRun.toLocaleString() : undefined;
 
     // Generate human-readable description
     const description = generateCronDescription(cronExpression);
@@ -44,7 +35,7 @@ function validateAndParseCron(cronExpression: string): CronValidation {
     return {
       isValid: true,
       description,
-      nextRuns,
+      nextRun: nextRunString,
     };
   } catch (error) {
     return {
@@ -239,15 +230,10 @@ export function SyncScheduleSettings() {
               )}
               <div className="flex-1">
                 <p className="text-sm font-medium">{validation.description}</p>
-                {validation.nextRuns && validation.nextRuns.length > 0 && (
-                  <div className="mt-2 space-y-1">
-                    <p className="text-xs font-semibold">Next 3 scheduled runs:</p>
-                    {validation.nextRuns.map((run, index) => (
-                      <p key={index} className="text-xs">
-                        {index + 1}. {run}
-                      </p>
-                    ))}
-                  </div>
+                {validation.nextRun && (
+                  <p className="text-xs mt-1">
+                    Next run: {validation.nextRun}
+                  </p>
                 )}
               </div>
             </div>
