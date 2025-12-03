@@ -4,6 +4,17 @@ import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '@/client/lib/utils';
 
+/**
+ * DropdownMenu component wrapper
+ *
+ * IMPORTANT: Always use modal={false} to prevent layout shifts!
+ * Example: <DropdownMenu modal={false}>
+ *
+ * This prevents the dropdown from adding overflow:hidden to the body,
+ * which would hide the scrollbar and cause content to shift horizontally.
+ * Combined with scrollbar-gutter:stable in global CSS, this ensures
+ * a stable layout when opening/closing dropdowns.
+ */
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;

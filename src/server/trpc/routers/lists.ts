@@ -197,4 +197,23 @@ export const listsRouter = router({
 
       return updatedList;
     }),
+
+  enableAll: publicProcedure
+    .mutation(async ({ ctx }) => {
+      // Enable all lists
+      await ctx.db
+        .update(mediaLists)
+        .set({
+          enabled: true,
+          updatedAt: new Date(),
+        })
+        .where(eq(mediaLists.userId, 1));
+
+      logger.info('✅ All lists enabled');
+
+      // Reload scheduler to pick up all enabled lists
+      await scheduler.loadScheduledLists();
+
+      return { success: true };
+    }),
 });

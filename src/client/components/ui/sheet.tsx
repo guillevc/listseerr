@@ -5,6 +5,17 @@ import { X } from "lucide-react"
 
 import { cn } from "../../lib/utils"
 
+/**
+ * Sheet component wrapper
+ *
+ * IMPORTANT: Always use modal={false} to prevent layout shifts!
+ * Example: <Sheet open={open} onOpenChange={setOpen} modal={false}>
+ *
+ * This prevents the sheet from adding overflow:hidden to the body,
+ * which would hide the scrollbar and cause content to shift horizontally.
+ * Combined with scrollbar-gutter:stable in global CSS, this ensures
+ * a stable layout when opening/closing sheets.
+ */
 const Sheet = SheetPrimitive.Root
 
 const SheetTrigger = SheetPrimitive.Trigger

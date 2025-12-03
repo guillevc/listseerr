@@ -154,19 +154,32 @@ export function ProcessingScheduleSettings() {
   // Fetch current settings
   const { data: settings } = trpc.generalSettings.get.useQuery();
 
+  // Mutation to enable all lists
+  const enableAllListsMutation = trpc.lists.enableAll.useMutation();
+
   // Save mutation
   const saveMutation = trpc.generalSettings.set.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // If we're enabling automatic processing, enable all lists
+      if (data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled) {
+        await enableAllListsMutation.mutateAsync();
+      }
+
       utils.generalSettings.get.invalidate();
       utils.scheduler.getScheduledJobs.invalidate();
+      utils.lists.getAll.invalidate();
 
       setCronExpression(data.automaticProcessingSchedule || '');
       setIsEnabled(data.automaticProcessingEnabled);
 
+      const wasJustEnabled = data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled;
+
       toast({
         title: 'Success',
-        description: isEnabled
-          ? `Automatic processing enabled with schedule: ${cronExpression}`
+        description: wasJustEnabled
+          ? `Automatic processing enabled with schedule: ${cronExpression}. All lists have been enabled.`
+          : data.automaticProcessingEnabled
+          ? `Automatic processing updated with schedule: ${cronExpression}`
           : 'Automatic processing disabled',
       });
     },

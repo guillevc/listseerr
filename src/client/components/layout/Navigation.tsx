@@ -105,7 +105,7 @@ export function Navigation() {
       </div>
 
       {/* Mobile Navigation Sheet */}
-      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} modal={false}>
         <SheetContent side="left" className="w-64">
           <SheetHeader>
             <SheetTitle className="text-left">Menu</SheetTitle>

@@ -20,6 +20,7 @@ const levelColors: Record<string, string> = {
 export function LogsPage() {
   const [autoScroll, setAutoScroll] = useState(true);
   const logsEndRef = useRef<HTMLDivElement>(null);
+  const logsContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const { data: logs, refetch } = trpc.logs.getLogs.useQuery(
@@ -48,8 +49,8 @@ export function LogsPage() {
   });
 
   useEffect(() => {
-    if (autoScroll && logsEndRef.current) {
-      logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (autoScroll && logsContainerRef.current) {
+      logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
     }
   }, [logs, autoScroll]);
 
@@ -78,38 +79,38 @@ export function LogsPage() {
     Object.entries(data).forEach(([key, value]) => {
       if (value === null) {
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: null
           </div>
         );
       } else if (value === undefined) {
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: undefined
           </div>
         );
       } else if (typeof value === 'string') {
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: {`"${value}"`}
           </div>
         );
       } else if (typeof value === 'number' || typeof value === 'boolean') {
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: {value}
           </div>
         );
       } else if (Array.isArray(value)) {
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: {JSON.stringify(value)}
           </div>
         );
       } else if (typeof value === 'object') {
         // Nested object
         lines.push(
-          <div key={key} className="text-gray-400">
+          <div key={key} className="text-muted-foreground">
             {'    '}{key}: {'{'}
           </div>
         );
@@ -118,13 +119,13 @@ export function LogsPage() {
           const isLast = idx === entries.length - 1;
           const comma = isLast ? '' : ',';
           lines.push(
-            <div key={`${key}.${k}`} className="text-gray-400">
+            <div key={`${key}.${k}`} className="text-muted-foreground">
               {'      '}{`"${k}"`}: {typeof v === 'string' ? `"${v}"` : typeof v === 'number' || typeof v === 'boolean' ? v : JSON.stringify(v)}{comma}
             </div>
           );
         });
         lines.push(
-          <div key={`${key}-close`} className="text-gray-400">
+          <div key={`${key}-close`} className="text-muted-foreground">
             {'    '}{'}'}
           </div>
         );
@@ -137,16 +138,16 @@ export function LogsPage() {
   // Format log entry with colors like console
   const renderLogEntry = (log: LogEntry, index: number) => {
     const timestamp = formatTimestamp(log.timestamp);
-    const levelColor = levelColors[log.level] || 'text-gray-400';
+    const levelColor = levelColors[log.level] || 'text-muted-foreground';
 
     return (
       <div key={log.id || index} className="mb-1">
         <div>
-          <span className="text-gray-500">[{timestamp}]</span>
+          <span className="text-muted-foreground">[{timestamp}]</span>
           {' '}
           <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}:</span>
           {' '}
-          <span className="text-gray-200">{log.msg}</span>
+          <span className="text-foreground">{log.msg}</span>
         </div>
         {log.data && Object.keys(log.data).length > 0 && (
           <div>{formatData(log.data)}</div>
@@ -165,17 +166,17 @@ export function LogsPage() {
           </p>
         </div>
 
-        <Card className="bg-black border-gray-800">
+        <Card className="bg-background border-muted">
           <CardContent className="p-0">
             {/* Controls Bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-muted">
               <div className="flex items-center gap-2">
                 <Switch
                   id="auto-scroll"
                   checked={autoScroll}
                   onCheckedChange={setAutoScroll}
                 />
-                <Label htmlFor="auto-scroll" className="cursor-pointer text-gray-400 text-sm">
+                <Label htmlFor="auto-scroll" className="cursor-pointer text-muted-foreground text-sm">
                   Auto-scroll
                 </Label>
               </div>
@@ -192,11 +193,12 @@ export function LogsPage() {
 
             {/* Logs Display */}
             <div
+              ref={logsContainerRef}
               className="p-4 h-[calc(100vh-280px)] overflow-y-auto font-mono text-xs whitespace-pre"
               style={{ fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace' }}
             >
               {!logs || logs.length === 0 ? (
-                <div className="text-gray-500">No logs available</div>
+                <div className="text-muted-foreground">No logs available</div>
               ) : (
                 <div>
                   {/* Reverse logs so newest is at the bottom (like terminal) */}

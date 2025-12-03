@@ -167,13 +167,16 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         header: 'Enabled',
         cell: (info) => {
           const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending;
+          // Show as OFF when automatic processing is disabled, otherwise show actual state
+          const checkedState = isAutomaticProcessingEnabled ? info.getValue() : false;
+
           return (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
                     <Switch
-                      checked={info.getValue()}
+                      checked={checkedState}
                       onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
                       disabled={isDisabled}
                     />
@@ -182,11 +185,11 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <TooltipContent>
                   {!isAutomaticProcessingEnabled ? (
                     <p>
-                      Automatic processing is disabled. Configure it in{' '}
-                      <span className="font-medium">Settings → Automatic Processing</span> to enable lists.
+                      Automatic processing is disabled. Enable it in{' '}
+                      <span className="font-medium">Settings → Automatic Processing</span> to enable individual lists.
                     </p>
                   ) : (
-                    <p>Enable automatic processing for this list</p>
+                    <p>Toggle automatic processing for this list</p>
                   )}
                 </TooltipContent>
               </Tooltip>
@@ -202,13 +205,13 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
           const isProcessing = processingLists.has(list.id);
           return (
             <div className="flex items-center justify-end">
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-8 w-8 p-0">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" avoidCollisions={true}>
                   <DropdownMenuItem
                     onClick={() => onProcess(list.id)}
                     disabled={!list.enabled || isProcessing}

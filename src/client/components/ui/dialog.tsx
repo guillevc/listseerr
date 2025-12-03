@@ -3,6 +3,17 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '@/client/lib/utils';
 
+/**
+ * Dialog component wrapper
+ *
+ * IMPORTANT: Always use modal={false} to prevent layout shifts!
+ * Example: <Dialog open={open} onOpenChange={setOpen} modal={false}>
+ *
+ * This prevents the dialog from adding overflow:hidden to the body,
+ * which would hide the scrollbar and cause content to shift horizontally.
+ * Combined with scrollbar-gutter:stable in global CSS, this ensures
+ * a stable layout when opening/closing dialogs.
+ */
 const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;
