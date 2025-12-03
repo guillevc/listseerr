@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 interface MediaList {
   enabled: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function useListsStats(lists: MediaList[]) {

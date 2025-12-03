@@ -1,7 +1,7 @@
 import { Cron } from 'croner';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import { eq, and } from 'drizzle-orm';
-import { mediaLists, generalSettings } from '../db/schema';
+import { eq } from 'drizzle-orm';
+import { generalSettings } from '../db/schema';
 import { createLogger } from './logger';
 
 const logger = createLogger('scheduler');
@@ -95,7 +95,7 @@ class Scheduler {
       // Check if this is an interval-based cron by looking for */
       const isIntervalBased = cronExpression.includes('*/');
 
-      const cronOptions: any = {
+      const cronOptions: { timezone: string; name: string } = {
         timezone,
         name: `list-${listId}`,
       };
@@ -163,7 +163,7 @@ class Scheduler {
     }
 
     try {
-      const cronOptions: any = {
+      const cronOptions: { timezone: string; name: string } = {
         timezone,
         name: `global-processing`,
       };
@@ -224,6 +224,7 @@ class Scheduler {
 
   unscheduleAll() {
     logger.info({ count: this.jobs.size }, 'Unscheduling all jobs');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [listId, job] of this.jobs) {
       job.cronJob.stop();
     }

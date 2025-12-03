@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { trpc } from '../lib/trpc';
+import { trpc, type RouterOutputs } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';
 import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
 import { Trash2 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
+
+type LogEntry = RouterOutputs['logs']['getLogs'][0];
 
 const levelColors: Record<string, string> = {
   debug: 'text-blue-400',
@@ -70,7 +72,7 @@ export function LogsPage() {
   };
 
   // Format data object to match console output
-  const formatData = (data: any) => {
+  const formatData = (data: Record<string, unknown>) => {
     const lines: JSX.Element[] = [];
 
     Object.entries(data).forEach(([key, value]) => {
@@ -133,7 +135,7 @@ export function LogsPage() {
   };
 
   // Format log entry with colors like console
-  const renderLogEntry = (log: any, index: number) => {
+  const renderLogEntry = (log: LogEntry, index: number) => {
     const timestamp = formatTimestamp(log.timestamp);
     const levelColor = levelColors[log.level] || 'text-gray-400';
 

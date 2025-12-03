@@ -8,7 +8,7 @@ import { trpc } from './lib/trpc'
 import { RouterProvider } from '@tanstack/react-router'
 import { router } from './lib/router'
 
-function Root() {
+export function Root() {
   const [queryClient] = useState(() => new QueryClient())
   const [trpcClient] = useState(() =>
     trpc.createClient({

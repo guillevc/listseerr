@@ -2,7 +2,7 @@ import { useListsStats } from '../../hooks/use-lists-stats';
 
 interface MediaList {
   enabled: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface ListStatsProps {

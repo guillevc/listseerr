@@ -5,7 +5,7 @@ import { useToast } from './use-toast';
 interface MediaList {
   id: number;
   enabled: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function useListProcessor() {

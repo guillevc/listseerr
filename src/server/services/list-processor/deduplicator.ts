@@ -1,5 +1,4 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import { eq } from 'drizzle-orm';
 import { listItemsCache } from '../../db/schema';
 import type { MediaItem } from '../trakt/types';
 import { createLogger } from '../../lib/logger';

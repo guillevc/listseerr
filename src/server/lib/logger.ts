@@ -40,7 +40,7 @@ const logStream = pino.multistream([
         try {
           const logObject = JSON.parse(msg);
           logBuffer.addLog(logObject);
-        } catch (error) {
+        } catch {
           // Ignore parsing errors
         }
       },

@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar } from 'lucide-react';
 import { trpc } from '../../lib/trpc';
 import { Badge } from '../ui/badge';
-import { cn } from '../../lib/utils';
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();

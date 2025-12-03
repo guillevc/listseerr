@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { List, CheckCircle, Clock, PackageSearch } from 'lucide-react';
+import { List, Clock, PackageSearch } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useListsStats } from '../../hooks/use-lists-stats';
 import { trpc } from '../../lib/trpc';
@@ -8,7 +8,7 @@ import { getRelativeTime } from '../../lib/utils';
 interface MediaList {
   enabled: boolean;
   lastProcessed?: Date | null;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface DashboardStatsProps {
@@ -16,7 +16,7 @@ interface DashboardStatsProps {
 }
 
 export function DashboardStats({ lists }: DashboardStatsProps) {
-  const { total, enabled } = useListsStats(lists);
+  const { total } = useListsStats(lists);
   const { data: dashboardStats } = trpc.dashboard.getStats.useQuery();
 
   // Get last scheduled processing time from stats

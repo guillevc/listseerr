@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
 import { mediaLists, executionHistory } from '../../db/schema';
-import { eq, desc, and, sql } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 import { scheduler } from '../../lib/scheduler';
 import { createLogger } from '../../lib/logger';
 

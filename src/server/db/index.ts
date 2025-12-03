@@ -11,7 +11,7 @@ import { dirname } from 'path';
 
 try {
   mkdirSync(dirname(DB_PATH), { recursive: true });
-} catch (error) {
+} catch {
   // Directory might already exist
 }
 

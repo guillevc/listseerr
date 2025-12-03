@@ -12,7 +12,7 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { validateAndDetectProvider, getProviderName } from '../../lib/url-validator';
+import { validateAndDetectProvider } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
 

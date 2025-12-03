@@ -103,7 +103,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       columnHelper.accessor('provider', {
         header: 'Provider',
         cell: (info) => (
-          <Badge variant={info.getValue() as any}>
+          <Badge variant="default">
             {getProviderName(info.getValue())}
           </Badge>
         ),

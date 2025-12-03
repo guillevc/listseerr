@@ -1,12 +1,10 @@
-import type pino from 'pino';
-
 export interface LogEntry {
   id: string;
   timestamp: string;
   level: string;
   module?: string;
   msg: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 class LogBuffer {
@@ -14,7 +12,7 @@ class LogBuffer {
   private maxSize = 1000;
   private idCounter = 0;
 
-  addLog(logObject: any) {
+  addLog(logObject: Record<string, unknown>) {
     const entry: LogEntry = {
       id: `log-${Date.now()}-${this.idCounter++}`,
       timestamp: new Date().toISOString(),
@@ -72,7 +70,8 @@ class LogBuffer {
     return priorities[levelName.toLowerCase()] || 0;
   }
 
-  private extractData(logObject: any): Record<string, any> | undefined {
+  private extractData(logObject: Record<string, unknown>): Record<string, unknown> | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { level, time, pid, hostname, module, msg, ...rest } = logObject;
 
     if (Object.keys(rest).length === 0) {
