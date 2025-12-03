@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
 import { executionHistory, listItemsCache, mediaLists } from '../../db/schema';
 import { eq, desc, sql, and } from 'drizzle-orm';
+import { scheduler } from '../../lib/scheduler';
 
 export const dashboardRouter = router({
   getStats: publicProcedure.query(async ({ ctx }) => {
@@ -23,9 +24,16 @@ export const dashboardRouter = router({
       .orderBy(desc(executionHistory.completedAt))
       .limit(1);
 
+    // Get next scheduled processing time from scheduler
+    // Global automatic processing job has listId: 0
+    const scheduledJobs = scheduler.getScheduledJobs();
+    const globalJob = scheduledJobs.find(job => job.listId === 0);
+    const nextScheduledProcessing = globalJob?.nextRun || null;
+
     return {
       totalRequestedItems: cacheCount?.count || 0,
       lastScheduledProcessing: lastScheduled?.completedAt || null,
+      nextScheduledProcessing,
     };
   }),
 

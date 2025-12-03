@@ -53,23 +53,84 @@ const port = process.env.PORT || 3000;
 // Initialize scheduler on server start
 async function initializeScheduler() {
   try {
-    // Initialize scheduler with database and process callback
-    scheduler.initialize(db, async (listId: number) => {
-      logger.info({ listId }, 'Scheduler triggered - processing list');
-      // Import and call the standalone processor function
-      const { processListById } = await import('./trpc/routers/lists-processor');
-      try {
-        await processListById(listId, 'scheduled', db);
-      } catch (error) {
-        logger.error(
-          {
-            listId,
-            error: error instanceof Error ? error.message : 'Unknown error',
-          },
-          'Failed to process scheduled list'
+    // Initialize scheduler with database and process callbacks
+    scheduler.initialize(
+      db,
+      // Callback for processing individual list
+      async (listId: number) => {
+        logger.info({ listId }, 'Scheduler triggered - processing list');
+        // Import and call the standalone processor function
+        const { processListById } = await import('./trpc/routers/lists-processor');
+        try {
+          await processListById(listId, 'scheduled', db);
+        } catch (error) {
+          logger.error(
+            {
+              listId,
+              error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Failed to process scheduled list'
+          );
+        }
+      },
+      // Callback for processing all enabled lists (global automatic processing)
+      async () => {
+        logger.info('Global automatic processing triggered - processing all enabled lists sequentially');
+        // Import and call the standalone processor function
+        const { processListById } = await import('./trpc/routers/lists-processor');
+        const { mediaLists } = await import('./db/schema');
+        const { eq, asc } = await import('drizzle-orm');
+
+        // Get all enabled lists ordered by creation date (oldest first)
+        // This processes lists sequentially to avoid rate limits from Trakt.tv
+        const lists = await db
+          .select()
+          .from(mediaLists)
+          .where(eq(mediaLists.enabled, true))
+          .orderBy(asc(mediaLists.createdAt));
+
+        logger.info(
+          { listCount: lists.length },
+          'Processing all enabled lists sequentially (oldest to newest) to avoid rate limits'
         );
+
+        // Process each list sequentially with a small delay between them
+        for (let i = 0; i < lists.length; i++) {
+          const list = lists[i];
+          try {
+            logger.info(
+              {
+                listId: list.id,
+                listName: list.name,
+                position: `${i + 1}/${lists.length}`,
+                createdAt: list.createdAt
+              },
+              'Processing list'
+            );
+            await processListById(list.id, 'scheduled', db);
+
+            // Add a 2-second delay between list processing to avoid rate limits
+            if (i < lists.length - 1) {
+              logger.debug('Waiting 2 seconds before processing next list to avoid rate limits');
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+          } catch (error) {
+            logger.error(
+              {
+                listId: list.id,
+                listName: list.name,
+                position: `${i + 1}/${lists.length}`,
+                error: error instanceof Error ? error.message : 'Unknown error',
+              },
+              'Failed to process list in global automatic processing'
+            );
+            // Continue with next list even if this one fails
+          }
+        }
+
+        logger.info({ listCount: lists.length }, 'Completed global automatic processing');
       }
-    });
+    );
 
     // Load all scheduled lists
     await scheduler.loadScheduledLists();

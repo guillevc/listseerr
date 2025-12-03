@@ -58,6 +58,10 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
+  // Check if automatic processing is enabled globally
+  const { data: settings } = trpc.generalSettings.get.useQuery();
+  const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
+
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
       // Invalidate all related queries
@@ -171,24 +175,34 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       }),
       columnHelper.accessor('enabled', {
         header: 'Enabled',
-        cell: (info) => (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <Switch
-                    checked={info.getValue()}
-                    onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
-                    disabled={toggleMutation.isPending}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Enable automatic processing for this list</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ),
+        cell: (info) => {
+          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending;
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Switch
+                      checked={info.getValue()}
+                      onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
+                      disabled={isDisabled}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {!isAutomaticProcessingEnabled ? (
+                    <p>
+                      Automatic processing is disabled. Configure it in{' '}
+                      <span className="font-medium">Settings → Automatic Processing</span> to enable lists.
+                    </p>
+                  ) : (
+                    <p>Enable automatic processing for this list</p>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        },
       }),
       columnHelper.display({
         id: 'actions',
@@ -227,7 +241,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation]
+    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled]
   );
 
   const table = useReactTable({

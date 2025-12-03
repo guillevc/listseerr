@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -11,6 +11,7 @@ export function JellyseerrSettings() {
   const [url, setUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [userId, setUserId] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -145,13 +146,27 @@ export function JellyseerrSettings() {
 
         <div className="grid gap-2">
           <Label htmlFor="apiKey">API Key</Label>
-          <Input
-            id="apiKey"
-            type="password"
-            placeholder="Your API key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              id="apiKey"
+              type={showApiKey ? 'text' : 'password'}
+              placeholder="Your API key"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showApiKey ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-2">

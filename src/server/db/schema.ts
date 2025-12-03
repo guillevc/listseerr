@@ -35,6 +35,8 @@ export const generalSettings = sqliteTable('general_settings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
   timezone: text('timezone').notNull().default('UTC'),
+  automaticProcessingEnabled: integer('automatic_processing_enabled', { mode: 'boolean' }).notNull().default(false),
+  automaticProcessingSchedule: text('automatic_processing_schedule'), // cron expression for global processing
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
@@ -48,7 +50,7 @@ export const mediaLists = sqliteTable('media_lists', {
   provider: text('provider', { enum: ['trakt', 'letterboxd', 'mdblist', 'imdb', 'tmdb'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),
-  processingSchedule: text('processing_schedule'), // cron expression
+  processingSchedule: text('processing_schedule'), // DEPRECATED: Per-list schedules not used, use global automatic processing instead
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

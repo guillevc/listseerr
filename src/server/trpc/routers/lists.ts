@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
-import { mediaLists } from '../../db/schema';
-import { eq } from 'drizzle-orm';
+import { mediaLists, executionHistory } from '../../db/schema';
+import { eq, desc, and, sql } from 'drizzle-orm';
 import { scheduler } from '../../lib/scheduler';
 import { createLogger } from '../../lib/logger';
 
@@ -18,9 +18,32 @@ const listInputSchema = z.object({
 
 export const listsRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    // For now, get lists for the default user (ID 1)
+    // Get lists for the default user (ID 1) with their last processed time
     const lists = await ctx.db.select().from(mediaLists).where(eq(mediaLists.userId, 1));
-    return lists;
+
+    // For each list, get the most recent successful processing time
+    const listsWithLastProcessed = await Promise.all(
+      lists.map(async (list) => {
+        const [lastExecution] = await ctx.db
+          .select({ completedAt: executionHistory.completedAt })
+          .from(executionHistory)
+          .where(
+            and(
+              eq(executionHistory.listId, list.id),
+              eq(executionHistory.status, 'success')
+            )
+          )
+          .orderBy(desc(executionHistory.completedAt))
+          .limit(1);
+
+        return {
+          ...list,
+          lastProcessed: lastExecution?.completedAt || null,
+        };
+      })
+    );
+
+    return listsWithLastProcessed;
   }),
 
   getById: publicProcedure

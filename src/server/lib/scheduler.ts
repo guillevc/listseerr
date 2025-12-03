@@ -15,13 +15,19 @@ class Scheduler {
   private jobs: Map<number, ScheduledJob> = new Map();
   private db: BunSQLiteDatabase<Record<string, never>> | null = null;
   private processListCallback: ((listId: number) => Promise<void>) | null = null;
+  private processAllListsCallback: (() => Promise<void>) | null = null;
+
+  // Special list ID for global automatic processing job
+  private readonly GLOBAL_PROCESSING_JOB_ID = 0;
 
   initialize(
     db: BunSQLiteDatabase<Record<string, never>>,
-    processListCallback: (listId: number) => Promise<void>
+    processListCallback: (listId: number) => Promise<void>,
+    processAllListsCallback: () => Promise<void>
   ) {
     this.db = db;
     this.processListCallback = processListCallback;
+    this.processAllListsCallback = processAllListsCallback;
     logger.info('Scheduler initialized');
   }
 
@@ -32,7 +38,10 @@ class Scheduler {
     }
 
     try {
-      // Get timezone from settings
+      // Clear all existing jobs before reloading
+      this.unscheduleAll();
+
+      // Get timezone and automatic processing settings
       const [settings] = await this.db
         .select()
         .from(generalSettings)
@@ -40,37 +49,30 @@ class Scheduler {
         .limit(1);
 
       const timezone = settings?.timezone || 'UTC';
+      const automaticProcessingEnabled = settings?.automaticProcessingEnabled || false;
+      const automaticProcessingSchedule = settings?.automaticProcessingSchedule;
+
       logger.info({ timezone }, 'Using timezone for scheduled jobs');
 
-      // Get all enabled lists with schedules
-      const lists = await this.db
-        .select()
-        .from(mediaLists)
-        .where(
-          and(
-            eq(mediaLists.enabled, true),
-            // Check if processingSchedule is not null
-          )
+      // Schedule global automatic processing if enabled
+      if (automaticProcessingEnabled && automaticProcessingSchedule) {
+        logger.info(
+          {
+            schedule: automaticProcessingSchedule,
+            timezone,
+          },
+          'Scheduling global automatic processing - all enabled lists will be processed sequentially'
         );
 
-      const scheduledLists = lists.filter((list) => list.processingSchedule);
+        this.scheduleGlobalProcessing(automaticProcessingSchedule, timezone);
 
-      logger.info(
-        { count: scheduledLists.length },
-        'Loading scheduled lists'
-      );
-
-      // Schedule each list
-      for (const list of scheduledLists) {
-        if (list.processingSchedule) {
-          this.scheduleList(list.id, list.processingSchedule, timezone);
-        }
+        logger.info(
+          { activeJobs: this.jobs.size },
+          'Global automatic processing scheduled successfully'
+        );
+      } else {
+        logger.info('Global automatic processing is disabled');
       }
-
-      logger.info(
-        { activeJobs: this.jobs.size },
-        'Scheduled jobs loaded successfully'
-      );
     } catch (error) {
       logger.error(
         { error: error instanceof Error ? error.message : 'Unknown error' },
@@ -147,6 +149,66 @@ class Scheduler {
           error: error instanceof Error ? error.message : 'Unknown error',
         },
         'Failed to schedule list'
+      );
+    }
+  }
+
+  scheduleGlobalProcessing(cronExpression: string, timezone: string = 'UTC') {
+    // Remove existing global job if any
+    this.unscheduleList(this.GLOBAL_PROCESSING_JOB_ID);
+
+    if (!this.processAllListsCallback) {
+      logger.error('Process all callback not set');
+      return;
+    }
+
+    try {
+      const cronOptions: any = {
+        timezone,
+        name: `global-processing`,
+      };
+
+      const job = new Cron(cronExpression, cronOptions, async () => {
+        logger.info(
+          { cronExpression },
+          'Global automatic processing triggered - processing all enabled lists'
+        );
+
+        try {
+          if (this.processAllListsCallback) {
+            await this.processAllListsCallback();
+          }
+        } catch (error) {
+          logger.error(
+            {
+              error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Error in global automatic processing'
+          );
+        }
+      });
+
+      this.jobs.set(this.GLOBAL_PROCESSING_JOB_ID, {
+        listId: this.GLOBAL_PROCESSING_JOB_ID,
+        cronJob: job,
+      });
+
+      const nextRun = job.nextRun();
+      logger.info(
+        {
+          cronExpression,
+          timezone,
+          nextRun: nextRun ? nextRun.toISOString() : 'N/A',
+        },
+        'Global automatic processing scheduled successfully'
+      );
+    } catch (error) {
+      logger.error(
+        {
+          cronExpression,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
+        'Failed to schedule global automatic processing'
       );
     }
   }

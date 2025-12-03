@@ -9,6 +9,8 @@ const logger = createLogger('general-settings');
 
 const settingsInputSchema = z.object({
   timezone: z.string().min(1, 'Timezone is required'),
+  automaticProcessingEnabled: z.boolean().optional(),
+  automaticProcessingSchedule: z.string().optional(),
 });
 
 export const generalSettingsRouter = router({
@@ -35,6 +37,10 @@ export const generalSettingsRouter = router({
 
       const oldTimezone = existingSettings?.timezone;
       const newTimezone = input.timezone;
+      const oldEnabled = existingSettings?.automaticProcessingEnabled;
+      const newEnabled = input.automaticProcessingEnabled ?? existingSettings?.automaticProcessingEnabled ?? false;
+      const oldSchedule = existingSettings?.automaticProcessingSchedule;
+      const newSchedule = input.automaticProcessingSchedule ?? existingSettings?.automaticProcessingSchedule;
 
       let result;
 
@@ -44,6 +50,8 @@ export const generalSettingsRouter = router({
           .update(generalSettings)
           .set({
             timezone: input.timezone,
+            automaticProcessingEnabled: newEnabled,
+            automaticProcessingSchedule: newSchedule,
             updatedAt: new Date(),
           })
           .where(eq(generalSettings.id, existingSettings.id))
@@ -57,32 +65,51 @@ export const generalSettingsRouter = router({
           .values({
             userId: 1,
             timezone: input.timezone,
+            automaticProcessingEnabled: newEnabled,
+            automaticProcessingSchedule: newSchedule,
           })
           .returning();
 
         result = created;
       }
 
-      // Log the timezone change
-      logger.info(
-        {
-          oldTimezone: oldTimezone || 'none',
-          newTimezone,
-          userId: 1,
-        },
-        '⏰ Timezone changed - reloading scheduler with new timezone'
-      );
+      // Log changes
+      if (oldTimezone !== newTimezone) {
+        logger.info(
+          {
+            oldTimezone: oldTimezone || 'none',
+            newTimezone,
+            userId: 1,
+          },
+          '⏰ Timezone changed'
+        );
+      }
 
-      // Reload scheduler to apply new timezone to all cron jobs
+      if (oldEnabled !== newEnabled || oldSchedule !== newSchedule) {
+        logger.info(
+          {
+            oldEnabled,
+            newEnabled,
+            oldSchedule: oldSchedule || 'none',
+            newSchedule: newSchedule || 'none',
+            userId: 1,
+          },
+          newEnabled
+            ? '⚙️ Automatic processing enabled'
+            : '⏸️ Automatic processing disabled'
+        );
+      }
+
+      // Reload scheduler to apply changes
       try {
         await scheduler.loadScheduledLists();
-        logger.info('✅ Scheduler reloaded successfully with new timezone');
+        logger.info('✅ Scheduler reloaded successfully');
       } catch (error) {
         logger.error(
           {
             error: error instanceof Error ? error.message : 'Unknown error',
           },
-          '❌ Failed to reload scheduler after timezone change'
+          '❌ Failed to reload scheduler'
         );
       }
 

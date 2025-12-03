@@ -8,6 +8,8 @@ import { Separator } from '../../components/ui/separator';
 import { Badge } from '../../components/ui/badge';
 import { Switch } from '../../components/ui/switch';
 import { Card, CardContent } from '../../components/ui/card';
+import { trpc } from '../../lib/trpc';
+import { useToast } from '../../hooks/use-toast';
 
 interface CronValidation {
   isValid: boolean;
@@ -139,7 +141,6 @@ function generateCronDescription(cronExpression: string): string {
   return description;
 }
 
-// Placeholder component - will be connected to backend later
 export function ProcessingScheduleSettings() {
   const [cronExpression, setCronExpression] = useState('');
   const [validation, setValidation] = useState<CronValidation>({
@@ -147,7 +148,46 @@ export function ProcessingScheduleSettings() {
     description: '',
   });
   const [isEnabled, setIsEnabled] = useState(false);
+  const { toast } = useToast();
+  const utils = trpc.useUtils();
 
+  // Fetch current settings
+  const { data: settings } = trpc.generalSettings.get.useQuery();
+
+  // Save mutation
+  const saveMutation = trpc.generalSettings.set.useMutation({
+    onSuccess: (data) => {
+      utils.generalSettings.get.invalidate();
+      utils.scheduler.getScheduledJobs.invalidate();
+
+      setCronExpression(data.automaticProcessingSchedule || '');
+      setIsEnabled(data.automaticProcessingEnabled);
+
+      toast({
+        title: 'Success',
+        description: isEnabled
+          ? `Automatic processing enabled with schedule: ${cronExpression}`
+          : 'Automatic processing disabled',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save settings',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Load settings when they arrive
+  useEffect(() => {
+    if (settings) {
+      setCronExpression(settings.automaticProcessingSchedule || '');
+      setIsEnabled(settings.automaticProcessingEnabled);
+    }
+  }, [settings]);
+
+  // Validate cron expression
   useEffect(() => {
     if (cronExpression) {
       const result = validateAndParseCron(cronExpression);
@@ -162,10 +202,19 @@ export function ProcessingScheduleSettings() {
 
   const handleSave = () => {
     if (isEnabled && !validation.isValid) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please enter a valid cron expression',
+        variant: 'destructive',
+      });
       return;
     }
-    // TODO: Connect to backend API
-    console.log('Saving processing schedule:', { cronExpression, isEnabled });
+
+    saveMutation.mutate({
+      timezone: settings?.timezone || 'UTC',
+      automaticProcessingEnabled: isEnabled,
+      automaticProcessingSchedule: isEnabled ? cronExpression : undefined,
+    });
   };
 
   const commonPatterns = [
@@ -182,7 +231,7 @@ export function ProcessingScheduleSettings() {
       <div>
         <h3 className="text-lg font-semibold">Automatic Processing</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Schedule automatic list processing: checks lists for new items and requests them to Jellyseerr
+          Schedule automatic processing for all enabled lists. Lists are processed sequentially (oldest to newest) to avoid rate limits.
         </p>
       </div>
 
@@ -197,7 +246,7 @@ export function ProcessingScheduleSettings() {
                 Enable Automatic Processing
               </Label>
               <p className="text-sm text-muted-foreground">
-                Automatically check lists for new items and request them to Jellyseerr on a schedule
+                Process all enabled lists on the same schedule. Lists are processed sequentially from oldest to newest.
               </p>
             </div>
             <Switch
@@ -292,18 +341,18 @@ export function ProcessingScheduleSettings() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Save Button */}
-          <div className="flex gap-2">
-            <Button
-              onClick={handleSave}
-              disabled={!validation.isValid}
-            >
-              Save Schedule
-            </Button>
-          </div>
         </>
       )}
+
+      {/* Save Button - always visible */}
+      <div className="flex gap-2">
+        <Button
+          onClick={handleSave}
+          disabled={(isEnabled && !validation.isValid) || saveMutation.isPending}
+        >
+          {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+        </Button>
+      </div>
     </div>
   );
 }

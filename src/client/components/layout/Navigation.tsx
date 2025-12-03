@@ -80,10 +80,6 @@ export function Navigation() {
                   </Link>
                 );
               })}
-              <div className="px-4 py-2 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md inline-flex items-center gap-2">
-                Docs
-                <span className="text-xs px-1.5 py-0.5 bg-muted rounded">Coming Soon</span>
-              </div>
             </div>
           </div>
 
@@ -147,10 +143,6 @@ export function Navigation() {
                 </Link>
               );
             })}
-            <div className="px-4 py-3 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md flex items-center justify-between">
-              <span>Docs</span>
-              <span className="text-xs px-2 py-1 bg-muted rounded">Coming Soon</span>
-            </div>
           </div>
         </SheetContent>
       </Sheet>

@@ -138,20 +138,29 @@ export function RecentActivity() {
 
                         {/* Execution details */}
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">
+                          <p className="font-medium text-sm truncate mb-1">
                             {execution.listName || `List #${execution.listId}`}
                           </p>
 
                           {execution.status === 'success' ? (
-                            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground mt-0.5">
+                            <div className="space-y-0.5">
                               {execution.itemsRequested > 0 && (
-                                <span>{execution.itemsRequested} requested</span>
+                                <div className="flex items-center gap-1.5 text-xs">
+                                  <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                  <span className="text-muted-foreground">{execution.itemsRequested} requested</span>
+                                </div>
                               )}
                               {itemsSkipped > 0 && (
-                                <span>{itemsSkipped} skipped</span>
+                                <div className="flex items-center gap-1.5 text-xs">
+                                  <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                                  <span className="text-muted-foreground">{itemsSkipped} skipped</span>
+                                </div>
                               )}
                               {(execution.itemsFailed || 0) > 0 && (
-                                <span className="text-red-600">{execution.itemsFailed} failed</span>
+                                <div className="flex items-center gap-1.5 text-xs">
+                                  <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                  <span className="text-red-600">{execution.itemsFailed} failed</span>
+                                </div>
                               )}
                             </div>
                           ) : execution.status === 'error' ? (
