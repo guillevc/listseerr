@@ -69,13 +69,15 @@ export const executionHistory = sqliteTable('execution_history', {
   errorMessage: text('error_message'),
 });
 
-// List items cache (optional, for performance)
+// Global cache for requested items across all lists
+// Once an item is requested by ANY list, it won't be requested again by other lists
+// listId tracks which list first requested the item (for reference only)
 export const listItemsCache = sqliteTable('list_items_cache', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   listId: integer('list_id').notNull().references(() => mediaLists.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
   year: integer('year'),
-  tmdbId: integer('tmdb_id'),
+  tmdbId: integer('tmdb_id').unique(), // Unique constraint enforces global cache
   imdbId: text('imdb_id'),
   mediaType: text('media_type', { enum: ['movie', 'tv'] }).notNull(),
   fetchedAt: integer('fetched_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),

@@ -11,12 +11,12 @@ export async function getAlreadyRequestedIds(
   listId: number
 ): Promise<Set<number>> {
   try {
-    logger.debug({ listId }, 'Fetching already requested IDs from cache');
+    logger.debug({ listId }, 'Fetching already requested IDs from global cache');
 
+    // Query ALL cached items across all lists (global cache)
     const cached = await db
       .select({ tmdbId: listItemsCache.tmdbId })
-      .from(listItemsCache)
-      .where(eq(listItemsCache.listId, listId));
+      .from(listItemsCache);
 
     // Filter out null values and return as Set
     const ids = cached
@@ -26,9 +26,9 @@ export async function getAlreadyRequestedIds(
     logger.debug(
       {
         listId,
-        cachedCount: ids.length,
+        globalCachedCount: ids.length,
       },
-      'Retrieved cached IDs'
+      'Retrieved globally cached IDs'
     );
 
     return new Set(ids);
@@ -60,11 +60,12 @@ export async function cacheRequestedItems(
         listId,
         itemsToCache: items.length,
       },
-      'Caching successfully requested items'
+      'Caching successfully requested items to global cache'
     );
 
-    // Insert items into cache
-    // Using INSERT OR IGNORE to handle duplicates gracefully
+    // Insert items into global cache
+    // listId is stored for tracking which list first requested the item
+    // tmdbId is unique, so onConflictDoNothing prevents duplicates across all lists
     for (const item of items) {
       await db
         .insert(listItemsCache)
@@ -85,7 +86,7 @@ export async function cacheRequestedItems(
         listId,
         cachedCount: items.length,
       },
-      'Successfully cached requested items'
+      'Successfully cached requested items to global cache'
     );
   } catch (error) {
     logger.error(

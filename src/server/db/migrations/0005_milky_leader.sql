@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `list_items_cache_tmdb_id_unique` ON `list_items_cache` (`tmdb_id`);
