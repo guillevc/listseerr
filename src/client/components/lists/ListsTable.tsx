@@ -31,25 +31,15 @@ import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 
+import type { RouterOutputs } from '@/client/lib/trpc';
+
+type MediaList = RouterOutputs['lists']['getAll'][0];
+
 interface Props {
-  lists: Array<{
-    id: number;
-    name: string;
-    url: string;
-    provider: 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
-    enabled: boolean;
-    maxItems?: number | null;
-    lastProcessed?: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-    userId: number;
-    processingSchedule?: string | null;
-  }>;
+  lists: MediaList[];
   onProcess: (id: number) => void;
   processingLists: Set<number>;
 }
-
-type MediaList = Props['lists'][0];
 
 const columnHelper = createColumnHelper<MediaList>();
 
@@ -98,7 +88,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
     },
   });
 
-  const formatDate = (date?: Date | null) => {
+  const formatDate = (date?: Date | string | null) => {
     if (!date) return 'Never';
     const d = new Date(date);
     return d.toLocaleString();
