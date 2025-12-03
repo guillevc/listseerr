@@ -20,7 +20,7 @@ export function AddListDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
-  const [maxItems, setMaxItems] = useState('');
+  const [maxItems, setMaxItems] = useState('20');
   const [urlError, setUrlError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -28,15 +28,18 @@ export function AddListDialog() {
 
   const createMutation = trpc.lists.create.useMutation({
     onSuccess: (newList) => {
+      // Invalidate all related queries
       utils.lists.getAll.invalidate();
+      utils.dashboard.getStats.invalidate();
+
       toast({
         title: 'List Added',
-        description: `${newList.name} (${getProviderName(newList.provider)}) has been added successfully`,
+        description: `${newList.name} has been added successfully`,
       });
 
       setName('');
       setUrl('');
-      setMaxItems('');
+      setMaxItems('20');
       setUrlError(null);
       setOpen(false);
     },
@@ -53,8 +56,8 @@ export function AddListDialog() {
     setUrl(value);
     if (value) {
       const result = validateAndDetectProvider(value);
-      if (!result.isValid) {
-        setUrlError(result.error || 'Invalid URL');
+      if (!result.isValid || result.provider !== 'trakt') {
+        setUrlError('Please enter a valid Trakt.tv list URL');
       } else {
         setUrlError(null);
       }
@@ -74,10 +77,20 @@ export function AddListDialog() {
     }
 
     const result = validateAndDetectProvider(url);
-    if (!result.isValid || !result.provider) {
+    if (!result.isValid || result.provider !== 'trakt') {
       toast({
         title: 'Error',
-        description: result.error || 'Invalid URL',
+        description: 'Please enter a valid Trakt.tv list URL',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const maxItemsNum = parseInt(maxItems);
+    if (isNaN(maxItemsNum) || maxItemsNum < 1 || maxItemsNum > 50) {
+      toast({
+        title: 'Error',
+        description: 'Max items must be between 1 and 50',
         variant: 'destructive',
       });
       return;
@@ -86,9 +99,9 @@ export function AddListDialog() {
     createMutation.mutate({
       name: name.trim(),
       url: url.trim(),
-      provider: result.provider,
+      provider: 'trakt',
       enabled: true,
-      maxItems: maxItems ? parseInt(maxItems) : undefined,
+      maxItems: maxItemsNum,
     });
   };
 
@@ -104,7 +117,7 @@ export function AddListDialog() {
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
-            Add a public list from Trakt, Letterboxd, MDBList, IMDB, or TheMovieDB.
+            Add a public list from Trakt.tv to automatically request media to Jellyseerr.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -131,54 +144,35 @@ export function AddListDialog() {
             )}
             {!urlError && url && (
               <p className="text-sm text-green-500">
-                Valid {getProviderName(validateAndDetectProvider(url).provider!)} URL detected
+                Valid Trakt.tv URL detected
               </p>
             )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="maxItems">Max Items (optional)</Label>
+            <Label htmlFor="maxItems">Max Items</Label>
             <Input
               id="maxItems"
               type="number"
-              placeholder="Leave empty for all items"
+              placeholder="20"
               value={maxItems}
               onChange={(e) => setMaxItems(e.target.value)}
               min="1"
+              max="50"
+              required
             />
+            <p className="text-xs text-muted-foreground">
+              Maximum number of items to fetch from the list (1-50). Default: 20
+            </p>
           </div>
           <div className="rounded-md border bg-muted/50 p-3 space-y-2">
-            <p className="text-sm font-medium">Supported public lists:</p>
+            <p className="text-sm font-medium">Trakt.tv URL format:</p>
             <div className="space-y-1.5 text-sm">
-              <div>
-                <span className="text-muted-foreground">Trakt:</span>
-                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
-                  https://trakt.tv/users/USER/lists/LIST
-                </code>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Letterboxd:</span>
-                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
-                  https://letterboxd.com/USER/list/LIST/
-                </code>
-              </div>
-              <div>
-                <span className="text-muted-foreground">MDBList:</span>
-                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
-                  https://mdblist.com/lists/USER/LIST
-                </code>
-              </div>
-              <div>
-                <span className="text-muted-foreground">IMDB:</span>
-                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
-                  https://www.imdb.com/list/ls123456/
-                </code>
-              </div>
-              <div>
-                <span className="text-muted-foreground">TheMovieDB:</span>
-                <code className="ml-2 text-xs bg-background px-1.5 py-0.5 rounded">
-                  https://www.themoviedb.org/list/123
-                </code>
-              </div>
+              <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                https://trakt.tv/users/USERNAME/lists/LIST-SLUG
+              </code>
+              <p className="text-xs text-muted-foreground">
+                Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
+              </p>
             </div>
           </div>
         </div>

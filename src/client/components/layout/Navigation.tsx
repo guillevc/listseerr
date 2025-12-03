@@ -15,7 +15,7 @@ const navItems = [
   { name: 'Dashboard', path: '/' },
   { name: 'Lists', path: '/lists' },
   { name: 'Settings', path: '/settings' },
-  { name: 'Logs', path: '/logs', disabled: true },
+  { name: 'Logs', path: '/logs' },
 ];
 
 export function Navigation() {

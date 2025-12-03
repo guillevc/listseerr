@@ -1,16 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
+import { trpc } from '../../lib/trpc';
+import { useToast } from '../../hooks/use-toast';
 
-// Placeholder component - will be connected to backend later
 export function GeneralSettings() {
   const [timezone, setTimezone] = useState('UTC');
+  const { toast } = useToast();
+  const utils = trpc.useUtils();
+
+  const { data: settings } = trpc.generalSettings.get.useQuery();
+  const saveMutation = trpc.generalSettings.set.useMutation({
+    onSuccess: (data) => {
+      // Invalidate queries to refresh UI immediately
+      utils.generalSettings.get.invalidate();
+      utils.scheduler.getScheduledJobs.invalidate();
+
+      // Update local state immediately
+      setTimezone(data.timezone);
+
+      toast({
+        title: 'Success',
+        description: `Timezone updated to ${data.timezone}. Scheduler and logs will use this timezone.`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save settings',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (settings?.timezone) {
+      setTimezone(settings.timezone);
+    }
+  }, [settings]);
 
   const handleSave = () => {
-    // TODO: Connect to backend API
-    console.log('Saving general settings:', { timezone });
+    if (!timezone.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'Timezone is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+    saveMutation.mutate({ timezone: timezone.trim() });
   };
 
   return (
@@ -47,7 +87,9 @@ export function GeneralSettings() {
         </div>
 
         <div className="flex gap-2 pt-4">
-          <Button onClick={handleSave}>Save Settings</Button>
+          <Button onClick={handleSave} disabled={saveMutation.isPending}>
+            {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+          </Button>
         </div>
       </div>
     </div>

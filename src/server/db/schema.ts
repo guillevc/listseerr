@@ -30,6 +30,15 @@ export const providerConfigs = sqliteTable('provider_configs', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
+// General settings
+export const generalSettings = sqliteTable('general_settings', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  timezone: text('timezone').notNull().default('UTC'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
 // Media lists
 export const mediaLists = sqliteTable('media_lists', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -51,8 +60,10 @@ export const executionHistory = sqliteTable('execution_history', {
   startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
   completedAt: integer('completed_at', { mode: 'timestamp' }),
   status: text('status', { enum: ['running', 'success', 'error'] }).notNull(),
+  triggerType: text('trigger_type', { enum: ['manual', 'scheduled'] }).notNull().default('manual'),
   itemsFound: integer('items_found'),
   itemsRequested: integer('items_requested'),
+  itemsFailed: integer('items_failed'),
   errorMessage: text('error_message'),
 });
 
@@ -69,9 +80,10 @@ export const listItemsCache = sqliteTable('list_items_cache', {
 });
 
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   jellyseerrConfigs: many(jellyseerrConfigs),
   providerConfigs: many(providerConfigs),
+  generalSettings: one(generalSettings),
   mediaLists: many(mediaLists),
 }));
 
@@ -85,6 +97,13 @@ export const jellyseerrConfigsRelations = relations(jellyseerrConfigs, ({ one })
 export const providerConfigsRelations = relations(providerConfigs, ({ one }) => ({
   user: one(users, {
     fields: [providerConfigs.userId],
+    references: [users.id],
+  }),
+}));
+
+export const generalSettingsRelations = relations(generalSettings, ({ one }) => ({
+  user: one(users, {
+    fields: [generalSettings.userId],
     references: [users.id],
   }),
 }));
@@ -121,6 +140,9 @@ export type NewJellyseerrConfig = typeof jellyseerrConfigs.$inferInsert;
 
 export type ProviderConfig = typeof providerConfigs.$inferSelect;
 export type NewProviderConfig = typeof providerConfigs.$inferInsert;
+
+export type GeneralSettings = typeof generalSettings.$inferSelect;
+export type NewGeneralSettings = typeof generalSettings.$inferInsert;
 
 export type MediaList = typeof mediaLists.$inferSelect;
 export type NewMediaList = typeof mediaLists.$inferInsert;

@@ -1,35 +1,41 @@
-export type ListProvider = 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
+/**
+ * Shared types used across client and server
+ * Following DRY principle to avoid duplication
+ */
 
-export interface MediaList {
-  id: string;
-  name: string;
-  url: string;
-  provider: ListProvider;
-  enabled: boolean;
-  maxItems?: number;
-  lastProcessed?: Date;
-  lastProcessedStatus?: 'success' | 'error' | 'processing';
-  lastProcessedError?: string;
-  itemCount?: number;
-}
+// ============================================
+// Provider & Media Types
+// ============================================
 
-export interface JellyseerrConfig {
-  url: string;
-  apiKey: string;
-  userId: number;
-}
+export type Provider = 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
+export type MediaType = 'movie' | 'tv';
+
+// ============================================
+// Processing Types
+// ============================================
+
+export type ProcessingStatus = 'running' | 'success' | 'error';
+export type TriggerType = 'manual' | 'scheduled';
+
+// ============================================
+// Media Item
+// ============================================
 
 export interface MediaItem {
   title: string;
-  year?: number;
-  tmdbId?: number;
-  imdbId?: string;
-  mediaType: 'movie' | 'tv';
+  year: number | null;
+  tmdbId: number;
+  imdbId: string | null;
+  mediaType: MediaType;
 }
 
-export interface ProcessingStatus {
-  listId: string;
-  status: 'idle' | 'processing' | 'success' | 'error';
-  message?: string;
-  lastProcessed?: Date;
+// ============================================
+// Processing Result
+// ============================================
+
+export interface ProcessingResult {
+  success: boolean;
+  itemsFound: number;
+  itemsRequested: number;
+  itemsFailed: number;
 }

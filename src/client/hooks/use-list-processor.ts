@@ -8,15 +8,10 @@ interface MediaList {
   [key: string]: any;
 }
 
-interface JellyseerrConfig {
-  url: string;
-  apiKey: string;
-  userIdJellyseerr: number;
-}
-
 export function useListProcessor() {
   const [processingLists, setProcessingLists] = useState<Set<number>>(new Set());
   const { toast } = useToast();
+  const utils = trpc.useUtils();
 
   // Get Jellyseerr config
   const { data: jellyseerrConfig } = trpc.config.get.useQuery();
@@ -30,16 +25,28 @@ export function useListProcessor() {
         return next;
       });
 
+      // Invalidate queries to refresh UI
+      utils.lists.getAll.invalidate();
+      utils.dashboard.getStats.invalidate();
+      utils.dashboard.getRecentActivity.invalidate();
+
       if (result.success) {
+        const skipped = result.itemsFound - result.itemsRequested - result.itemsFailed;
+        const parts = [`Found ${result.itemsFound} items`];
+
+        if (result.itemsRequested > 0) {
+          parts.push(`${result.itemsRequested} requested`);
+        }
+        if (skipped > 0) {
+          parts.push(`${skipped} skipped`);
+        }
+        if (result.itemsFailed > 0) {
+          parts.push(`${result.itemsFailed} failed`);
+        }
+
         toast({
           title: 'Processing Complete',
-          description: `Checked list and found ${result.itemCount} items. Requested ${result.requestedCount} new items to Jellyseerr.`,
-        });
-      } else {
-        toast({
-          title: 'Processing Failed',
-          description: result.error || 'Unknown error occurred',
-          variant: 'destructive',
+          description: parts.join(', '),
         });
       }
     },
@@ -81,7 +88,7 @@ export function useListProcessor() {
     }
 
     setProcessingLists((prev) => new Set(prev).add(id));
-    processMutation.mutate({ listId: id });
+    processMutation.mutate({ listId: id, triggerType: 'manual' });
   };
 
   const handleProcessAll = async (lists: MediaList[]) => {

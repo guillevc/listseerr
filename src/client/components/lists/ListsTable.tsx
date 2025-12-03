@@ -60,7 +60,11 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
 
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
+      // Invalidate all related queries
       utils.lists.getAll.invalidate();
+      utils.dashboard.getStats.invalidate();
+      utils.dashboard.getRecentActivity.invalidate();
+
       toast({
         title: 'List Removed',
         description: 'The list has been removed successfully',
@@ -77,7 +81,9 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
 
   const toggleMutation = trpc.lists.toggleEnabled.useMutation({
     onSuccess: () => {
+      // Invalidate all related queries
       utils.lists.getAll.invalidate();
+      utils.dashboard.getStats.invalidate();
     },
     onError: (error) => {
       toast({

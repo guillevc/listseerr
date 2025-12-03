@@ -4,7 +4,11 @@ import { serveStatic } from 'hono/bun';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from './trpc';
 import { createContext } from './trpc/trpc';
+import { scheduler } from './lib/scheduler';
+import { db } from './db';
+import { createLogger } from './lib/logger';
 
+const logger = createLogger('server');
 const app = new Hono();
 const isDev = process.argv.includes('--watch') || import.meta.dir.includes('src/server');
 
@@ -46,6 +50,42 @@ if (!isDev) {
 
 const port = process.env.PORT || 3000;
 
+// Initialize scheduler on server start
+async function initializeScheduler() {
+  try {
+    // Initialize scheduler with database and process callback
+    scheduler.initialize(db, async (listId: number) => {
+      logger.info({ listId }, 'Scheduler triggered - processing list');
+      // Import and call the standalone processor function
+      const { processListById } = await import('./trpc/routers/lists-processor');
+      try {
+        await processListById(listId, 'scheduled', db);
+      } catch (error) {
+        logger.error(
+          {
+            listId,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          },
+          'Failed to process scheduled list'
+        );
+      }
+    });
+
+    // Load all scheduled lists
+    await scheduler.loadScheduledLists();
+    logger.info('Scheduler initialized and scheduled lists loaded');
+  } catch (error) {
+    logger.error(
+      { error: error instanceof Error ? error.message : 'Unknown error' },
+      'Failed to initialize scheduler'
+    );
+  }
+}
+
+// Start scheduler initialization (don't block server start)
+initializeScheduler().catch(console.error);
+
+logger.info({ port }, 'Server starting');
 console.log(`🚀 Server running on http://localhost:${port}`);
 console.log(`📡 tRPC endpoint: http://localhost:${port}/trpc`);
 console.log(`🏥 Health check: http://localhost:${port}/health`);
