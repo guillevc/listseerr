@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Eye, EyeOff } from 'lucide-react';
+import { Plus, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
+import { Switch } from '../../components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
@@ -11,23 +12,40 @@ import { useToast } from '../../hooks/use-toast';
 export function ApiKeysSettings() {
   // Trakt.tv state
   const [traktClientId, setTraktClientId] = useState('');
+  const [traktEnabled, setTraktEnabled] = useState(false);
   const [showTraktKey, setShowTraktKey] = useState(false);
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
-  // TMDB state (placeholder for future)
-  const [tmdbApiKey, setTmdbApiKey] = useState('');
-  const [showTmdbKey, setShowTmdbKey] = useState(false);
+  // MDBList state
+  const [mdbListApiKey, setTmdbApiKey] = useState('');
+  const [mdbListEnabled, setTmdbEnabled] = useState(false);
+  const [showMdbListKey, setShowTmdbKey] = useState(false);
 
   // Load Trakt config
   const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
 
-  // Load existing config on mount
+  // Load MDBList config
+  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
+
+  // Load existing configs on mount
   useEffect(() => {
     if (traktConfig?.clientId) {
       setTraktClientId(traktConfig.clientId);
+      setTraktEnabled(true);
+    } else {
+      setTraktEnabled(false);
     }
   }, [traktConfig]);
+
+  useEffect(() => {
+    if (mdbListConfig?.apiKey) {
+      setTmdbApiKey(mdbListConfig.apiKey);
+      setTmdbEnabled(true);
+    } else {
+      setTmdbEnabled(false);
+    }
+  }, [mdbListConfig]);
 
   // Mutations
   const saveTraktMutation = trpc.providerConfig.setTraktConfig.useMutation({
@@ -47,18 +65,111 @@ export function ApiKeysSettings() {
     },
   });
 
+  const deleteTraktMutation = trpc.providerConfig.deleteTraktConfig.useMutation({
+    onSuccess: () => {
+      utils.providerConfig.getTraktConfig.invalidate();
+      setTraktClientId('');
+      toast({
+        title: 'Success',
+        description: 'Trakt.tv Client ID removed',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to remove Trakt.tv Client ID',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const saveMdbListMutation = trpc.providerConfig.setMdbListConfig.useMutation({
+    onSuccess: () => {
+      utils.providerConfig.getMdbListConfig.invalidate();
+      toast({
+        title: 'Success',
+        description: 'MDBList API Key saved successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save MDBList API Key',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteMdbListMutation = trpc.providerConfig.deleteMdbListConfig.useMutation({
+    onSuccess: () => {
+      utils.providerConfig.getMdbListConfig.invalidate();
+      setTmdbApiKey('');
+      toast({
+        title: 'Success',
+        description: 'MDBList API Key removed',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to remove MDBList API Key',
+        variant: 'destructive',
+      });
+    },
+  });
+
   // Trakt.tv handlers
+  const handleTraktToggle = (checked: boolean) => {
+    if (!checked) {
+      // Disable provider - clear the API key
+      if (traktConfig?.clientId) {
+        deleteTraktMutation.mutate();
+      }
+      setTraktClientId('');
+      setTraktEnabled(false);
+    } else {
+      // Enable provider
+      setTraktEnabled(true);
+    }
+  };
+
   const handleTraktSave = () => {
+    if (!traktClientId.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'Client ID cannot be empty',
+        variant: 'destructive',
+      });
+      return;
+    }
     saveTraktMutation.mutate({ clientId: traktClientId.trim() });
   };
 
-  // TMDB handlers (placeholder)
-  const handleTmdbSave = () => {
-    // TODO: Connect to backend API
-    toast({
-      title: 'Info',
-      description: 'TMDB integration coming soon',
-    });
+  // MDBList handlers
+  const handleMdbListToggle = (checked: boolean) => {
+    if (!checked) {
+      // Disable provider - clear the API key
+      if (mdbListConfig?.apiKey) {
+        deleteMdbListMutation.mutate();
+      }
+      setTmdbApiKey('');
+      setTmdbEnabled(false);
+    } else {
+      // Enable provider
+      setTmdbEnabled(true);
+    }
+  };
+
+  const handleMdbListSave = () => {
+    if (!mdbListApiKey.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'API Key cannot be empty',
+        variant: 'destructive',
+      });
+      return;
+    }
+    saveMdbListMutation.mutate({ apiKey: mdbListApiKey.trim() });
   };
 
   return (
@@ -75,107 +186,167 @@ export function ApiKeysSettings() {
       {/* Trakt.tv API Keys */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Trakt.tv</CardTitle>
-          <CardDescription>
-            Required for syncing public Trakt.tv lists. Get your Client ID from{' '}
-            <a
-              href="https://trakt.tv/oauth/applications"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Trakt.tv API Applications
-            </a>
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                Trakt.tv
+                {traktEnabled && traktConfig?.clientId && (
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                )}
+              </CardTitle>
+              <CardDescription>
+                Required for syncing public Trakt.tv lists. Get your Client ID from{' '}
+                <a
+                  href="https://trakt.tv/oauth/applications"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Trakt.tv API Applications
+                </a>
+              </CardDescription>
+            </div>
+            <Switch
+              checked={traktEnabled}
+              onCheckedChange={handleTraktToggle}
+              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
+            />
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {!traktEnabled && (
+            <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
+              <p className="text-sm text-orange-800 dark:text-orange-200">
+                Provider disabled - Trakt lists cannot be processed. Enable to configure API key.
+              </p>
+            </div>
+          )}
+
           <div className="grid gap-2">
             <Label htmlFor="trakt-client-id">Client ID</Label>
             <div className="relative">
               <Input
                 id="trakt-client-id"
                 type={showTraktKey ? 'text' : 'password'}
-                placeholder="Your Trakt.tv Client ID"
-                value={traktClientId}
+                placeholder={traktEnabled ? "Your Trakt.tv Client ID" : "Enable provider to configure"}
+                value={traktEnabled ? traktClientId : ''}
                 onChange={(e) => setTraktClientId(e.target.value)}
-                disabled={saveTraktMutation.isPending}
+                disabled={!traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending}
                 className="pr-10"
               />
-              <button
-                type="button"
-                onClick={() => setShowTraktKey(!showTraktKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                {showTraktKey ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
+              {traktEnabled && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <button
+                    type="button"
+                    onClick={() => setShowTraktKey(!showTraktKey)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    {showTraktKey ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               Only the Client ID is required for reading public lists
             </p>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              onClick={handleTraktSave}
-              disabled={saveTraktMutation.isPending}
-            >
-              {saveTraktMutation.isPending ? 'Saving...' : 'Save Client ID'}
-            </Button>
-          </div>
+          {traktEnabled && (
+            <div className="flex gap-2">
+              <Button
+                onClick={handleTraktSave}
+                disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending || !traktClientId.trim()}
+              >
+                {saveTraktMutation.isPending ? 'Saving...' : 'Save Client ID'}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* TMDB API Key */}
+      {/* MDBList API Key */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">TMDB</CardTitle>
-          <CardDescription>
-            Required for fetching movie and TV show metadata. Get your API key from{' '}
-            <a
-              href="https://www.themoviedb.org/settings/api"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              TMDB API Settings
-            </a>
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                MDBList
+                {mdbListEnabled && mdbListConfig?.apiKey && (
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                )}
+              </CardTitle>
+              <CardDescription>
+                Required for syncing MDBList lists. Get your API key from{' '}
+                <a
+                  href="https://mdblist.com/preferences/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  MDBList Preferences
+                </a>
+              </CardDescription>
+            </div>
+            <Switch
+              checked={mdbListEnabled}
+              onCheckedChange={handleMdbListToggle}
+              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+            />
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {!mdbListEnabled && (
+            <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
+              <p className="text-sm text-orange-800 dark:text-orange-200">
+                Provider disabled - MDBList lists cannot be processed. Enable to configure API key.
+              </p>
+            </div>
+          )}
+
           <div className="grid gap-2">
             <Label htmlFor="tmdb-api-key">API Key</Label>
             <div className="relative">
               <Input
                 id="tmdb-api-key"
-                type={showTmdbKey ? 'text' : 'password'}
-                placeholder="Your TMDB API Key"
-                value={tmdbApiKey}
+                type={showMdbListKey ? 'text' : 'password'}
+                placeholder={mdbListEnabled ? "Your MDBList API Key" : "Enable provider to configure"}
+                value={mdbListEnabled ? mdbListApiKey : ''}
                 onChange={(e) => setTmdbApiKey(e.target.value)}
+                disabled={!mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
                 className="pr-10"
               />
-              <button
-                type="button"
-                onClick={() => setShowTmdbKey(!showTmdbKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                {showTmdbKey ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
+              {mdbListEnabled && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <button
+                    type="button"
+                    onClick={() => setShowTmdbKey(!showMdbListKey)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    {showMdbListKey ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button onClick={handleTmdbSave}>
-              Save API Key
-            </Button>
-          </div>
+          {mdbListEnabled && (
+            <div className="flex gap-2">
+              <Button
+                onClick={handleMdbListSave}
+                disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending || !mdbListApiKey.trim()}
+              >
+                {saveMdbListMutation.isPending ? 'Saving...' : 'Save API Key'}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

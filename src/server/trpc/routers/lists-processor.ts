@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
 import { mediaLists, executionHistory, jellyseerrConfigs, providerConfigs } from '../../db/schema';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, asc } from 'drizzle-orm';
 import { fetchTraktList } from '../../services/trakt/client';
+import { fetchMdbListList } from '../../services/mdblist/client';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
 import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
 import { createLogger } from '../../lib/logger';
@@ -83,7 +84,7 @@ export async function processListById(
       '🚀 Started processing list'
     );
 
-    // Get Trakt client ID from provider configs
+    // Get provider configurations
     const [traktConfig] = await database
       .select()
       .from(providerConfigs)
@@ -95,35 +96,64 @@ export async function processListById(
       )
       .limit(1);
 
-    if (!traktConfig?.clientId) {
-      throw new Error('Trakt configuration not found. Please configure Trakt API credentials.');
+    // Validate provider configuration based on list provider
+    if (list.provider === 'trakt' && !traktConfig?.clientId) {
+      throw new Error(
+        'Trakt API configuration is required to process Trakt lists. ' +
+        'Please configure your Trakt Client ID in Settings → API Keys.'
+      );
     }
 
-    // Fetch items from Trakt
-    const traktItems = await fetchTraktList(
-      list.url,
-      list.maxItems,
-      traktConfig.clientId
-    );
+    // Get MDBList config if needed
+    const [mdbListConfig] = list.provider === 'mdblist'
+      ? await database
+          .select()
+          .from(providerConfigs)
+          .where(
+            and(
+              eq(providerConfigs.userId, 1),
+              eq(providerConfigs.provider, 'mdblist')
+            )
+          )
+          .limit(1)
+      : [null];
+
+    if (list.provider === 'mdblist' && !mdbListConfig?.apiKey) {
+      throw new Error(
+        'MDBList API configuration is required to process MDBList lists. ' +
+        'Please configure your MDBList API Key in Settings → API Keys.'
+      );
+    }
+
+    // Fetch items from provider
+    let items;
+    if (list.provider === 'trakt' && traktConfig?.clientId) {
+      items = await fetchTraktList(list.url, list.maxItems, traktConfig.clientId);
+    } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
+      items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
+    } else {
+      throw new Error(`Unsupported or unconfigured provider: ${list.provider}`);
+    }
 
     logger.info(
       {
         listId: list.id,
-        itemsFound: traktItems.length,
+        provider: list.provider,
+        itemsFound: items.length,
       },
-      'Fetched items from Trakt'
+      'Fetched items from provider'
     );
 
     // Load cache and filter out already-requested items
     const cachedIds = await getAlreadyRequestedIds(database, list.id);
-    const newItems = traktItems.filter(
+    const newItems = items.filter(
       (item) => item.tmdbId && !cachedIds.has(item.tmdbId)
     );
 
     logger.info(
       {
         listId: list.id,
-        totalItems: traktItems.length,
+        totalItems: items.length,
         cachedItems: cachedIds.size,
         newItems: newItems.length,
       },
@@ -142,7 +172,7 @@ export async function processListById(
       .set({
         completedAt: new Date(),
         status: 'success',
-        itemsFound: traktItems.length,
+        itemsFound: items.length,
         itemsRequested: results.successful.length,
         itemsFailed: results.failed.length,
       })
@@ -155,7 +185,7 @@ export async function processListById(
         executionId: executionEntry.id,
         triggerType,
         summary: {
-          totalFound: traktItems.length,
+          totalFound: items.length,
           alreadyCached: cachedIds.size,
           newItemsToRequest: newItems.length,
           successfullyRequested: results.successful.length,
@@ -170,7 +200,7 @@ export async function processListById(
 
     return {
       success: true,
-      itemsFound: traktItems.length,
+      itemsFound: items.length,
       itemsRequested: results.successful.length,
       itemsFailed: results.failed.length,
     };
@@ -200,6 +230,310 @@ export async function processListById(
   }
 }
 
+/**
+ * Process all enabled lists in batch with global deduplication.
+ *
+ * This optimized flow:
+ * 1. Fetches items from all lists
+ * 2. Deduplicates TMDB IDs globally across all lists
+ * 3. Checks global cache once
+ * 4. Requests unique items to Jellyseerr
+ * 5. Updates cache with successful requests
+ *
+ * This prevents duplicate Jellyseerr requests when multiple lists contain the same items.
+ *
+ * @param database - Database instance
+ * @returns Processing summary with counts per list
+ */
+export async function processBatchWithDeduplication(
+  database: BunSQLiteDatabase = db
+): Promise<{
+  success: boolean;
+  processedLists: number;
+  totalItemsFound: number;
+  globalUniqueItems: number;
+  cachedItems: number;
+  itemsRequested: number;
+  itemsFailed: number;
+}> {
+  logger.info('Starting batch processing with global deduplication');
+
+  // Get all enabled lists
+  const lists = await database
+    .select()
+    .from(mediaLists)
+    .where(eq(mediaLists.enabled, true))
+    .orderBy(asc(mediaLists.createdAt));
+
+  if (lists.length === 0) {
+    logger.info('No enabled lists found');
+    return {
+      success: true,
+      processedLists: 0,
+      totalItemsFound: 0,
+      globalUniqueItems: 0,
+      cachedItems: 0,
+      itemsRequested: 0,
+      itemsFailed: 0,
+    };
+  }
+
+  logger.info({ listCount: lists.length }, 'Processing lists with global deduplication');
+
+  // Get Jellyseerr config
+  const [config] = await database
+    .select()
+    .from(jellyseerrConfigs)
+    .where(eq(jellyseerrConfigs.userId, 1))
+    .limit(1);
+
+  if (!config) {
+    throw new Error('Jellyseerr configuration not found');
+  }
+
+  // Get provider configs
+  const [traktConfig] = await database
+    .select()
+    .from(providerConfigs)
+    .where(
+      and(
+        eq(providerConfigs.userId, 1),
+        eq(providerConfigs.provider, 'trakt')
+      )
+    )
+    .limit(1);
+
+  const [mdbListConfig] = await database
+    .select()
+    .from(providerConfigs)
+    .where(
+      and(
+        eq(providerConfigs.userId, 1),
+        eq(providerConfigs.provider, 'mdblist')
+      )
+    )
+    .limit(1);
+
+  // PHASE 1: Fetch all items from all lists
+  logger.info('PHASE 1: Fetching items from all lists');
+
+  interface ListWithItems {
+    list: typeof mediaLists.$inferSelect;
+    items: Awaited<ReturnType<typeof fetchTraktList>>;
+    executionId: number;
+  }
+
+  const listsWithItems: ListWithItems[] = [];
+  let totalItemsFound = 0;
+
+  for (let i = 0; i < lists.length; i++) {
+    const list = lists[i];
+
+    // Create execution history entry
+    const [executionEntry] = await database
+      .insert(executionHistory)
+      .values({
+        listId: list.id,
+        startedAt: new Date(),
+        status: 'running',
+        triggerType: 'scheduled',
+      })
+      .returning();
+
+    try {
+      logger.info(
+        {
+          listId: list.id,
+          listName: list.name,
+          provider: list.provider,
+          position: `${i + 1}/${lists.length}`,
+        },
+        'Fetching items from list'
+      );
+
+      // Validate provider configuration
+      if (list.provider === 'trakt' && !traktConfig?.clientId) {
+        throw new Error('Trakt API configuration required');
+      }
+      if (list.provider === 'mdblist' && !mdbListConfig?.apiKey) {
+        throw new Error('MDBList API configuration required');
+      }
+
+      // Fetch items based on provider
+      let items: Awaited<ReturnType<typeof fetchTraktList>> = [];
+
+      if (list.provider === 'trakt' && traktConfig?.clientId) {
+        items = await fetchTraktList(list.url, list.maxItems, traktConfig.clientId);
+      } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
+        items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
+      }
+
+      totalItemsFound += items.length;
+
+      listsWithItems.push({
+        list,
+        items,
+        executionId: executionEntry.id,
+      });
+
+      logger.info(
+        {
+          listId: list.id,
+          itemsFound: items.length,
+          position: `${i + 1}/${lists.length}`,
+        },
+        'Fetched items from list'
+      );
+
+      // Add delay between fetches to respect rate limits
+      if (i < lists.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      logger.error(
+        {
+          listId: list.id,
+          listName: list.name,
+          error: errorMessage,
+        },
+        'Failed to fetch items from list'
+      );
+
+      // Update execution history with error
+      await database
+        .update(executionHistory)
+        .set({
+          completedAt: new Date(),
+          status: 'error',
+          errorMessage,
+        })
+        .where(eq(executionHistory.id, executionEntry.id));
+
+      // Continue with other lists
+    }
+  }
+
+  // PHASE 2: Global deduplication
+  logger.info('PHASE 2: Performing global deduplication');
+
+  // Aggregate all TMDB IDs from all lists into a single map
+  // Map: TMDB ID -> first MediaItem found (for metadata)
+  const globalItemsMap = new Map<number, Awaited<ReturnType<typeof fetchTraktList>>[0]>();
+
+  for (const { items } of listsWithItems) {
+    for (const item of items) {
+      if (item.tmdbId && !globalItemsMap.has(item.tmdbId)) {
+        globalItemsMap.set(item.tmdbId, item);
+      }
+    }
+  }
+
+  const globalUniqueItems = globalItemsMap.size;
+
+  logger.info(
+    {
+      totalItemsFound,
+      globalUniqueItems,
+      duplicatesAcrossLists: totalItemsFound - globalUniqueItems,
+    },
+    'Global deduplication complete'
+  );
+
+  // PHASE 3: Check global cache
+  logger.info('PHASE 3: Checking global cache');
+
+  const cachedIds = await getAlreadyRequestedIds(database, 0); // Pass 0 since it's global
+
+  // Filter out cached items
+  const itemsToRequest: Awaited<ReturnType<typeof fetchTraktList>> = [];
+  for (const [tmdbId, item] of globalItemsMap) {
+    if (!cachedIds.has(tmdbId)) {
+      itemsToRequest.push(item);
+    }
+  }
+
+  logger.info(
+    {
+      globalUniqueItems,
+      cachedItems: cachedIds.size,
+      itemsToRequest: itemsToRequest.length,
+    },
+    'Cache check complete'
+  );
+
+  // PHASE 4: Request items to Jellyseerr
+  logger.info('PHASE 4: Requesting items to Jellyseerr');
+
+  let results = {
+    successful: [] as Awaited<ReturnType<typeof fetchTraktList>>,
+    failed: [] as Awaited<ReturnType<typeof fetchTraktList>>,
+  };
+
+  if (itemsToRequest.length > 0) {
+    results = await requestItemsToJellyseerr(itemsToRequest, config);
+
+    logger.info(
+      {
+        requested: itemsToRequest.length,
+        successful: results.successful.length,
+        failed: results.failed.length,
+      },
+      'Jellyseerr requests complete'
+    );
+  } else {
+    logger.info('No new items to request');
+  }
+
+  // PHASE 5: Cache successful requests
+  if (results.successful.length > 0) {
+    logger.info('PHASE 5: Caching successful requests');
+
+    // Use first list ID as reference (since cache is global)
+    const referenceListId = listsWithItems[0]?.list.id || 1;
+    await cacheRequestedItems(database, referenceListId, results.successful);
+  }
+
+  // PHASE 6: Update execution history for all lists
+  logger.info('PHASE 6: Updating execution history');
+
+  for (const { items, executionId } of listsWithItems) {
+    // Calculate how many of this list's items were successfully requested
+    const listTmdbIds = new Set(items.filter(i => i.tmdbId).map(i => i.tmdbId!));
+    const successfulTmdbIds = new Set(results.successful.map(i => i.tmdbId));
+    const listSuccessCount = [...listTmdbIds].filter(id => successfulTmdbIds.has(id)).length;
+
+    await database
+      .update(executionHistory)
+      .set({
+        completedAt: new Date(),
+        status: 'success',
+        itemsFound: items.length,
+        itemsRequested: listSuccessCount,
+        itemsFailed: 0, // Global failure count not attributed to individual lists
+      })
+      .where(eq(executionHistory.id, executionId));
+  }
+
+  const summary = {
+    success: true,
+    processedLists: listsWithItems.length,
+    totalItemsFound,
+    globalUniqueItems,
+    cachedItems: cachedIds.size,
+    itemsRequested: results.successful.length,
+    itemsFailed: results.failed.length,
+  };
+
+  logger.info(
+    summary,
+    'Batch processing with global deduplication completed successfully'
+  );
+
+  return summary;
+}
+
 export const listsProcessorRouter = router({
   processList: publicProcedure
     .input(z.object({
@@ -211,25 +545,16 @@ export const listsProcessorRouter = router({
     }),
 
   processAll: publicProcedure.mutation(async ({ ctx }) => {
-    // Get all enabled lists
-    const lists = await ctx.db
-      .select()
-      .from(mediaLists)
-      .where(eq(mediaLists.enabled, true));
+    // Use batch processing with global deduplication
+    const result = await processBatchWithDeduplication(ctx.db);
 
-    const results = [];
-    for (const list of lists) {
-      // This would trigger individual list processing
-      // For now, just return mock results
-      results.push({
-        listId: list.id,
-        success: true,
-        itemCount: 0,
-        requestedCount: 0,
-      });
-    }
-
-    return results;
+    return {
+      success: result.success,
+      processedLists: result.processedLists,
+      totalItemsFound: result.totalItemsFound,
+      itemsRequested: result.itemsRequested,
+      itemsFailed: result.itemsFailed,
+    };
   }),
 
   getHistory: publicProcedure

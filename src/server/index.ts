@@ -75,60 +75,36 @@ async function initializeScheduler() {
       },
       // Callback for processing all enabled lists (global automatic processing)
       async () => {
-        logger.info('Global automatic processing triggered - processing all enabled lists sequentially');
-        // Import and call the standalone processor function
-        const { processListById } = await import('./trpc/routers/lists-processor');
-        const { mediaLists } = await import('./db/schema');
-        const { eq, asc } = await import('drizzle-orm');
+        logger.info('Global automatic processing triggered - using batch processing with global deduplication');
 
-        // Get all enabled lists ordered by creation date (oldest first)
-        // This processes lists sequentially to avoid rate limits from Trakt.tv
-        const lists = await db
-          .select()
-          .from(mediaLists)
-          .where(eq(mediaLists.enabled, true))
-          .orderBy(asc(mediaLists.createdAt));
+        try {
+          // Import and call the batch processor
+          const { processBatchWithDeduplication } = await import('./trpc/routers/lists-processor');
+          const result = await processBatchWithDeduplication(db);
 
-        logger.info(
-          { listCount: lists.length },
-          'Processing all enabled lists sequentially (oldest to newest) to avoid rate limits'
-        );
-
-        // Process each list sequentially with a small delay between them
-        for (let i = 0; i < lists.length; i++) {
-          const list = lists[i];
-          try {
-            logger.info(
-              {
-                listId: list.id,
-                listName: list.name,
-                position: `${i + 1}/${lists.length}`,
-                createdAt: list.createdAt
-              },
-              'Processing list'
-            );
-            await processListById(list.id, 'scheduled', db);
-
-            // Add a 2-second delay between list processing to avoid rate limits
-            if (i < lists.length - 1) {
-              logger.debug('Waiting 2 seconds before processing next list to avoid rate limits');
-              await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-          } catch (error) {
-            logger.error(
-              {
-                listId: list.id,
-                listName: list.name,
-                position: `${i + 1}/${lists.length}`,
-                error: error instanceof Error ? error.message : 'Unknown error',
-              },
-              'Failed to process list in global automatic processing'
-            );
-            // Continue with next list even if this one fails
-          }
+          logger.info(
+            {
+              processedLists: result.processedLists,
+              totalItemsFound: result.totalItemsFound,
+              globalUniqueItems: result.globalUniqueItems,
+              cachedItems: result.cachedItems,
+              itemsRequested: result.itemsRequested,
+              itemsFailed: result.itemsFailed,
+              duplicatesEliminated: result.totalItemsFound - result.globalUniqueItems,
+              efficiencyGain: result.totalItemsFound > 0
+                ? `${(((result.totalItemsFound - result.globalUniqueItems) / result.totalItemsFound) * 100).toFixed(1)}%`
+                : 'N/A',
+            },
+            'Completed global automatic processing with batch deduplication'
+          );
+        } catch (error) {
+          logger.error(
+            {
+              error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Failed to complete global automatic processing'
+          );
         }
-
-        logger.info({ listCount: lists.length }, 'Completed global automatic processing');
       }
     );
 

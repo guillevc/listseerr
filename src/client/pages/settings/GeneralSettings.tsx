@@ -74,14 +74,13 @@ export function GeneralSettings() {
             onChange={(e) => setTimezone(e.target.value)}
           />
           <p className="text-xs text-muted-foreground">
-            IANA timezone identifier (e.g., America/New_York, Europe/London, Asia/Tokyo, UTC). Used for scheduling cron jobs and displaying timestamps.{' '}
             <a
               href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium"
+              className="text-primary hover:underline"
             >
-              View all timezones
+              IANA timezone identifier
             </a>
           </p>
         </div>

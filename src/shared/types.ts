@@ -7,7 +7,7 @@
 // Provider & Media Types
 // ============================================
 
-export type Provider = 'trakt' | 'letterboxd' | 'mdblist' | 'imdb' | 'tmdb';
+export type Provider = 'trakt' | 'letterboxd' | 'mdblist' | 'imdb';
 export type MediaType = 'movie' | 'tv';
 
 // ============================================

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,8 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Badge } from '../ui/badge';
 import { validateAndDetectProvider } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
@@ -21,10 +23,15 @@ export function AddListDialog() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [maxItems, setMaxItems] = useState('20');
+  const [provider, setProvider] = useState<'trakt' | 'mdblist'>('trakt');
   const [urlError, setUrlError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
+
+  // Query provider configs for status indicators
+  const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
+  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
 
   const createMutation = trpc.lists.create.useMutation({
     onSuccess: (newList) => {
@@ -56,13 +63,26 @@ export function AddListDialog() {
     setUrl(value);
     if (value) {
       const result = validateAndDetectProvider(value);
-      if (!result.isValid || result.provider !== 'trakt') {
-        setUrlError('Please enter a valid Trakt.tv list URL');
+      if (!result.isValid || result.provider !== provider) {
+        setUrlError(`Please enter a valid ${provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`);
       } else {
         setUrlError(null);
       }
     } else {
       setUrlError(null);
+    }
+  };
+
+  const handleProviderChange = (newProvider: 'trakt' | 'mdblist') => {
+    setProvider(newProvider);
+    // Re-validate URL if one exists
+    if (url) {
+      const result = validateAndDetectProvider(url);
+      if (!result.isValid || result.provider !== newProvider) {
+        setUrlError(`Please enter a valid ${newProvider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`);
+      } else {
+        setUrlError(null);
+      }
     }
   };
 
@@ -76,11 +96,16 @@ export function AddListDialog() {
       return;
     }
 
+    // Check if provider is configured
+    const isConfigured = provider === 'trakt'
+      ? !!traktConfig?.clientId
+      : !!mdbListConfig?.apiKey;
+
     const result = validateAndDetectProvider(url);
-    if (!result.isValid || result.provider !== 'trakt') {
+    if (!result.isValid || result.provider !== provider) {
       toast({
         title: 'Error',
-        description: 'Please enter a valid Trakt.tv list URL',
+        description: `Please enter a valid ${provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`,
         variant: 'destructive',
       });
       return;
@@ -99,10 +124,20 @@ export function AddListDialog() {
     createMutation.mutate({
       name: name.trim(),
       url: url.trim(),
-      provider: 'trakt',
-      enabled: true,
+      provider: provider,
+      enabled: isConfigured, // Only enable if provider is configured
       maxItems: maxItemsNum,
     });
+
+    // Show info message if provider not configured
+    if (!isConfigured) {
+      setTimeout(() => {
+        toast({
+          title: 'List Added as Disabled',
+          description: `The list was added but is disabled because ${provider === 'trakt' ? 'Trakt' : 'MDBList'} is not configured. Configure the provider in Settings → API Keys to enable processing.`,
+        });
+      }, 500);
+    }
   };
 
   return (
@@ -117,10 +152,62 @@ export function AddListDialog() {
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
-            Add a public list from Trakt.tv to automatically request media to Jellyseerr.
+            Add a public list from Trakt.tv or MDBList to automatically request media to Jellyseerr.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {/* Provider Selection */}
+          <div className="grid gap-3">
+            <Label>Provider</Label>
+            <RadioGroup value={provider} onValueChange={handleProviderChange}>
+              <div className="flex items-center space-x-2 border rounded-md p-3">
+                <RadioGroupItem value="trakt" id="provider-trakt" />
+                <label htmlFor="provider-trakt" className="flex-1 cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Trakt.tv</p>
+                      <p className="text-xs text-muted-foreground">Public lists and watchlists</p>
+                    </div>
+                    {traktConfig?.clientId ? (
+                      <Badge variant="default" className="bg-green-500">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Configured
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-orange-500 text-white">
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        Not Configured
+                      </Badge>
+                    )}
+                  </div>
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2 border rounded-md p-3">
+                <RadioGroupItem value="mdblist" id="provider-mdblist" />
+                <label htmlFor="provider-mdblist" className="flex-1 cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">MDBList</p>
+                      <p className="text-xs text-muted-foreground">Public and custom lists</p>
+                    </div>
+                    {mdbListConfig?.apiKey ? (
+                      <Badge variant="default" className="bg-green-500">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Configured
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-orange-500 text-white">
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        Not Configured
+                      </Badge>
+                    )}
+                  </div>
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+
           <div className="grid gap-2">
             <Label htmlFor="name">List Name</Label>
             <Input
@@ -144,7 +231,7 @@ export function AddListDialog() {
             )}
             {!urlError && url && (
               <p className="text-sm text-green-500">
-                Valid Trakt.tv URL detected
+                Valid {provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} URL detected
               </p>
             )}
           </div>
@@ -165,14 +252,32 @@ export function AddListDialog() {
             </p>
           </div>
           <div className="rounded-md border bg-muted/50 p-3 space-y-2">
-            <p className="text-sm font-medium">Trakt.tv URL format:</p>
+            <p className="text-sm font-medium">
+              {provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} URL format:
+            </p>
             <div className="space-y-1.5 text-sm">
-              <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                https://trakt.tv/users/USERNAME/lists/LIST-SLUG
-              </code>
-              <p className="text-xs text-muted-foreground">
-                Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
-              </p>
+              {provider === 'trakt' ? (
+                <>
+                  <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                    https://trakt.tv/users/USERNAME/lists/LIST-SLUG
+                  </code>
+                  <p className="text-xs text-muted-foreground">
+                    Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    <strong>Tip:</strong> Query parameters for sorting are supported (e.g., ?sort=rank to sort by ranking)
+                  </p>
+                </>
+              ) : (
+                <>
+                  <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                    https://mdblist.com/lists/USERNAME/LIST-SLUG
+                  </code>
+                  <p className="text-xs text-muted-foreground">
+                    Example: https://mdblist.com/lists/linaspurinis/most-popular-movies-top-20
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>

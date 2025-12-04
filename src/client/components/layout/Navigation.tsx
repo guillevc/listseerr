@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { User, Menu } from 'lucide-react';
+import { User, Menu, ExternalLink } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import {
   Sheet,
   SheetContent,
@@ -10,18 +11,34 @@ import {
   SheetTitle,
 } from '../ui/sheet';
 import { cn } from '@/client/lib/utils';
-
-const navItems = [
-  { name: 'Dashboard', path: '/' },
-  { name: 'Lists', path: '/lists' },
-  { name: 'Settings', path: '/settings' },
-  { name: 'Logs', path: '/logs' },
-];
+import { trpc } from '@/client/lib/trpc';
 
 export function Navigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Query Jellyseerr config for requests link
+  const { data: jellyseerrConfig } = trpc.config.get.useQuery();
+  const jellyseerrRequestsUrl = jellyseerrConfig?.url
+    ? `${jellyseerrConfig.url}/requests`
+    : null;
+  const mockPendingRequests = 5; // TODO: Replace with real count later
+
+  // Dynamic nav items including external links
+  const navItems = [
+    { name: 'Dashboard', path: '/', type: 'internal' },
+    { name: 'Lists', path: '/lists', type: 'internal' },
+    {
+      name: 'Requests',
+      path: jellyseerrRequestsUrl,
+      type: 'external',
+      badge: mockPendingRequests,
+      disabled: !jellyseerrRequestsUrl,
+    },
+    { name: 'Settings', path: '/settings', type: 'internal' },
+    { name: 'Logs', path: '/logs', type: 'internal' },
+  ];
 
   return (
     <nav className="border-b bg-card">
@@ -50,18 +67,43 @@ export function Navigation() {
             {/* Nav Tabs */}
             <div className="hidden md:flex gap-1">
               {navItems.map((item) => {
-                const isActive = item.path === '/'
-                  ? currentPath === '/'
-                  : currentPath.startsWith(item.path);
+                const isActive = item.type === 'internal' && (
+                  item.path === '/'
+                    ? currentPath === '/'
+                    : currentPath.startsWith(item.path)
+                );
 
                 if (item.disabled) {
                   return (
                     <div
-                      key={item.path}
+                      key={item.path || item.name}
                       className="px-4 py-2 text-sm text-muted-foreground/50 cursor-not-allowed"
                     >
                       {item.name}
                     </div>
+                  );
+                }
+
+                if (item.type === 'external') {
+                  return (
+                    <a
+                      key={item.path}
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
+                        'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                      )}
+                    >
+                      {item.name}
+                      <ExternalLink className="h-3 w-3" />
+                      {item.badge && (
+                        <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </a>
                   );
                 }
 
@@ -112,18 +154,44 @@ export function Navigation() {
           </SheetHeader>
           <div className="flex flex-col gap-2 mt-6">
             {navItems.map((item) => {
-              const isActive = item.path === '/'
-                ? currentPath === '/'
-                : currentPath.startsWith(item.path);
+              const isActive = item.type === 'internal' && (
+                item.path === '/'
+                  ? currentPath === '/'
+                  : currentPath.startsWith(item.path)
+              );
 
               if (item.disabled) {
                 return (
                   <div
-                    key={item.path}
+                    key={item.path || item.name}
                     className="px-4 py-3 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md"
                   >
                     {item.name}
                   </div>
+                );
+              }
+
+              if (item.type === 'external') {
+                return (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      'px-4 py-3 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
+                      'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                    )}
+                  >
+                    {item.name}
+                    <ExternalLink className="h-3 w-3" />
+                    {item.badge && (
+                      <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </a>
                 );
               }
 

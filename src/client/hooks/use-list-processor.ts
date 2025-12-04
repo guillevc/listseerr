@@ -14,7 +14,7 @@ export function useListProcessor() {
   const utils = trpc.useUtils();
 
   // Get Jellyseerr config
-  const { data: jellyseerrConfig } = trpc.config.get.useQuery();
+  const { data: jellyseerrConfig, isLoading: isLoadingConfig } = trpc.config.get.useQuery();
 
   // Process mutation
   const processMutation = trpc.processor.processList.useMutation({
@@ -126,5 +126,6 @@ export function useListProcessor() {
     handleProcess,
     handleProcessAll,
     jellyseerrConfig,
+    isLoadingConfig,
   };
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,7 +7,7 @@ import {
   createColumnHelper,
   SortingState,
 } from '@tanstack/react-table';
-import { RefreshCw, Trash2, ExternalLink, Clock, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal } from 'lucide-react';
+import { RefreshCw, Trash2, ExternalLink, Clock, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -30,6 +30,7 @@ import { getProviderName } from '../../lib/url-validator';
 import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
+import { EditListDialog } from './EditListDialog';
 
 import type { RouterOutputs } from '@/client/lib/trpc';
 
@@ -45,12 +46,24 @@ const columnHelper = createColumnHelper<MediaList>();
 
 export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [editingList, setEditingList] = useState<MediaList | null>(null);
+  const [togglingLists, setTogglingLists] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
   // Check if automatic processing is enabled globally
   const { data: settings } = trpc.generalSettings.get.useQuery();
   const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
+
+  // Check provider configurations
+  const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
+  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
+
+  const isProviderConfigured = useCallback((provider: string) => {
+    if (provider === 'trakt') return !!traktConfig?.clientId;
+    if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
+    return false; // Other providers not yet implemented
+  }, [traktConfig, mdbListConfig]);
 
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
@@ -74,6 +87,10 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
   });
 
   const toggleMutation = trpc.lists.toggleEnabled.useMutation({
+    onMutate: async (variables) => {
+      // Add to toggling set
+      setTogglingLists((prev) => new Set(prev).add(variables.id));
+    },
     onSuccess: () => {
       // Invalidate all related queries
       utils.lists.getAll.invalidate();
@@ -84,6 +101,14 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         title: 'Error',
         description: error.message,
         variant: 'destructive',
+      });
+    },
+    onSettled: (data, error, variables) => {
+      // Remove from toggling set after mutation completes
+      setTogglingLists((prev) => {
+        const next = new Set(prev);
+        next.delete(variables.id);
+        return next;
       });
     },
   });
@@ -102,11 +127,33 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       }),
       columnHelper.accessor('provider', {
         header: 'Provider',
-        cell: (info) => (
-          <Badge variant="default">
-            {getProviderName(info.getValue())}
-          </Badge>
-        ),
+        cell: (info) => {
+          const list = info.row.original;
+          const providerConfigured = isProviderConfigured(list.provider);
+
+          return (
+            <div className="flex items-center gap-2">
+              <Badge variant="default">
+                {getProviderName(info.getValue())}
+              </Badge>
+              {!providerConfigured && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <AlertCircle className="h-4 w-4 text-orange-500" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {info.getValue() === 'trakt' ? 'Trakt' : info.getValue() === 'mdblist' ? 'MDBList' : info.getValue()} provider is not configured.
+                        Configure API key in Settings → API Keys to enable processing.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+          );
+        },
       }),
       columnHelper.accessor('url', {
         header: 'URL',
@@ -166,9 +213,12 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       columnHelper.accessor('enabled', {
         header: 'Enabled',
         cell: (info) => {
-          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending;
-          // Show as OFF when automatic processing is disabled, otherwise show actual state
-          const checkedState = isAutomaticProcessingEnabled ? info.getValue() : false;
+          const list = info.row.original;
+          const providerConfigured = isProviderConfigured(list.provider);
+          const isToggling = togglingLists.has(list.id);
+          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending || !providerConfigured || isToggling;
+          // Show as OFF when automatic processing is disabled or provider not configured
+          const checkedState = isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
 
           return (
             <TooltipProvider>
@@ -177,13 +227,20 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                   <div>
                     <Switch
                       checked={checkedState}
-                      onCheckedChange={() => toggleMutation.mutate({ id: info.row.original.id })}
+                      onCheckedChange={() => toggleMutation.mutate({ id: list.id })}
                       disabled={isDisabled}
+                      className="transition-all duration-200"
                     />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {!isAutomaticProcessingEnabled ? (
+                  {!providerConfigured ? (
+                    <p>
+                      {list.provider === 'trakt' ? 'Trakt' : 'MDBList'} provider is not configured.{' '}
+                      Configure API key in{' '}
+                      <span className="font-medium">Settings → API Keys</span> to enable processing.
+                    </p>
+                  ) : !isAutomaticProcessingEnabled ? (
                     <p>
                       Automatic processing is disabled. Enable it in{' '}
                       <span className="font-medium">Settings → Automatic Processing</span> to enable individual lists.
@@ -203,6 +260,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         cell: (info) => {
           const list = info.row.original;
           const isProcessing = processingLists.has(list.id);
+          const providerConfigured = isProviderConfigured(list.provider);
           return (
             <div className="flex items-center justify-end">
               <DropdownMenu modal={false}>
@@ -214,10 +272,16 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <DropdownMenuContent align="end" avoidCollisions={true}>
                   <DropdownMenuItem
                     onClick={() => onProcess(list.id)}
-                    disabled={!list.enabled || isProcessing}
+                    disabled={!list.enabled || isProcessing || !providerConfigured}
                   >
                     <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
                     Process
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setEditingList(list)}
+                  >
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => deleteMutation.mutate({ id: list.id })}
@@ -234,7 +298,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled]
+    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, togglingLists]
   );
 
   const table = useReactTable({
@@ -249,58 +313,68 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
   });
 
   return (
-    <div className="rounded-md border">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
-                            : ''
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && (
-                          <span className="text-muted-foreground">
-                            {header.column.getIsSorted() === 'asc' ? (
-                              <ArrowUp className="h-4 w-4" />
-                            ) : header.column.getIsSorted() === 'desc' ? (
-                              <ArrowDown className="h-4 w-4" />
-                            ) : (
-                              <ArrowUpDown className="h-4 w-4" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                className={!row.original.enabled ? 'opacity-60' : ''}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <>
+      <div className="rounded-md border">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={
+                            header.column.getCanSort()
+                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() && (
+                            <span className="text-muted-foreground">
+                              {header.column.getIsSorted() === 'asc' ? (
+                                <ArrowUp className="h-4 w-4" />
+                              ) : header.column.getIsSorted() === 'desc' ? (
+                                <ArrowDown className="h-4 w-4" />
+                              ) : (
+                                <ArrowUpDown className="h-4 w-4" />
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={`list-${row.original.id}`}
+                  className={!row.original.enabled ? 'opacity-60' : ''}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+
+      {editingList && (
+        <EditListDialog
+          list={editingList}
+          open={!!editingList}
+          onOpenChange={(open) => !open && setEditingList(null)}
+        />
+      )}
+    </>
   );
 }

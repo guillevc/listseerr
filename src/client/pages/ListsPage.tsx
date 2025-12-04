@@ -9,7 +9,7 @@ import { useListProcessor } from '../hooks/use-list-processor';
 
 export function ListsPage() {
   const { data: lists = [], isLoading: listsLoading } = trpc.lists.getAll.useQuery();
-  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig } = useListProcessor();
+  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig, isLoadingConfig } = useListProcessor();
 
   if (listsLoading) {
     return (
@@ -25,7 +25,7 @@ export function ListsPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Configuration Alert */}
-      {!jellyseerrConfig && (
+      {!isLoadingConfig && !jellyseerrConfig && (
         <Card className="border-flexoki-orange bg-orange-50 dark:bg-orange-950">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-flexoki-orange">

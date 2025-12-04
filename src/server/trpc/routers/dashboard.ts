@@ -64,7 +64,8 @@ export const dashboardRouter = router({
         .orderBy(desc(executionHistory.startedAt))
         .limit(input.limit);
 
-      // Group by minute if they were triggered by scheduler (batch processing)
+      // Group executions that occur within 1 minute of each other
+      // This groups both scheduled processing and manual "Process all" operations
       const grouped: Array<{
         timestamp: Date;
         triggerType: 'manual' | 'scheduled';
@@ -72,35 +73,26 @@ export const dashboardRouter = router({
       }> = [];
 
       for (const execution of recentExecutions) {
-        if (execution.triggerType === 'manual') {
-          // Manual executions are always standalone
+        // Check if we can add to the last group
+        const lastGroup = grouped[grouped.length - 1];
+        const timeDiff = lastGroup
+          ? Math.abs(execution.startedAt.getTime() - lastGroup.timestamp.getTime())
+          : Infinity;
+
+        if (
+          lastGroup &&
+          lastGroup.triggerType === execution.triggerType &&
+          timeDiff < 60000 // 1 minute
+        ) {
+          // Add to existing group if same trigger type and within 1 minute
+          lastGroup.executions.push(execution);
+        } else {
+          // Create new group
           grouped.push({
             timestamp: execution.startedAt,
-            triggerType: 'manual',
+            triggerType: execution.triggerType,
             executions: [execution],
           });
-        } else {
-          // For scheduled executions, group those within 1 minute of each other
-          const lastGroup = grouped[grouped.length - 1];
-          const timeDiff = lastGroup
-            ? Math.abs(execution.startedAt.getTime() - lastGroup.timestamp.getTime())
-            : Infinity;
-
-          if (
-            lastGroup &&
-            lastGroup.triggerType === 'scheduled' &&
-            timeDiff < 60000 // 1 minute
-          ) {
-            // Add to existing group
-            lastGroup.executions.push(execution);
-          } else {
-            // Create new group
-            grouped.push({
-              timestamp: execution.startedAt,
-              triggerType: 'scheduled',
-              executions: [execution],
-            });
-          }
         }
       }
 

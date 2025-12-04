@@ -157,59 +157,57 @@ export function LogsPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 md:px-8 max-w-7xl">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Server Logs</h1>
-          <p className="text-muted-foreground mt-1">
-            Real-time server logs (auto-refreshes every 2 seconds)
-          </p>
-        </div>
-
-        <Card className="bg-background border-muted">
-          <CardContent className="p-0">
-            {/* Controls Bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-muted">
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="auto-scroll"
-                  checked={autoScroll}
-                  onCheckedChange={setAutoScroll}
-                />
-                <Label htmlFor="auto-scroll" className="cursor-pointer text-muted-foreground text-sm">
-                  Auto-scroll
-                </Label>
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleClearLogs}
-                disabled={clearLogsMutation.isPending}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear Logs
-              </Button>
-            </div>
-
-            {/* Logs Display */}
-            <div
-              ref={logsContainerRef}
-              className="p-4 h-[calc(100vh-280px)] overflow-y-auto font-mono text-xs whitespace-pre"
-              style={{ fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace' }}
-            >
-              {!logs || logs.length === 0 ? (
-                <div className="text-muted-foreground">No logs available</div>
-              ) : (
-                <div>
-                  {/* Reverse logs so newest is at the bottom (like terminal) */}
-                  {[...logs].reverse().map((log, index) => renderLogEntry(log, index))}
-                  <div ref={logsEndRef} />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold">Server Logs</h1>
+        <p className="text-muted-foreground mt-1">
+          Real-time server logs (auto-refreshes every 2 seconds)
+        </p>
       </div>
+
+      <Card className="bg-background border-muted">
+        <CardContent className="p-0">
+          {/* Controls Bar */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-muted">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="auto-scroll"
+                checked={autoScroll}
+                onCheckedChange={setAutoScroll}
+              />
+              <Label htmlFor="auto-scroll" className="cursor-pointer text-muted-foreground text-sm">
+                Auto-scroll
+              </Label>
+            </div>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleClearLogs}
+              disabled={clearLogsMutation.isPending}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear Logs
+            </Button>
+          </div>
+
+          {/* Logs Display */}
+          <div
+            ref={logsContainerRef}
+            className="p-4 h-[calc(100vh-280px)] overflow-y-auto font-mono text-xs whitespace-pre"
+            style={{ fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace' }}
+          >
+            {!logs || logs.length === 0 ? (
+              <div className="text-muted-foreground">No logs available</div>
+            ) : (
+              <div>
+                {/* Reverse logs so newest is at the bottom (like terminal) */}
+                {[...logs].reverse().map((log, index) => renderLogEntry(log, index))}
+                <div ref={logsEndRef} />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

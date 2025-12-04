@@ -19,9 +19,6 @@ const providerPatterns: Record<ListProvider, RegExp[]> = {
   imdb: [
     /^https?:\/\/(www\.)?imdb\.com\/list\/ls\d+\/?$/i,
   ],
-  tmdb: [
-    /^https?:\/\/(www\.)?themoviedb\.org\/list\/\d+\/?$/i,
-  ],
 };
 
 export function validateAndDetectProvider(url: string): ValidationResult {
@@ -54,7 +51,7 @@ export function validateAndDetectProvider(url: string): ValidationResult {
 
   return {
     isValid: false,
-    error: 'URL format not recognized. Supported providers: Trakt, Letterboxd, mdblist, IMDB, TheMovieDB',
+    error: 'URL format not recognized. Supported providers: Trakt, Letterboxd, MDBList, IMDB',
   };
 }
 
@@ -64,7 +61,6 @@ export function getProviderName(provider: ListProvider): string {
     letterboxd: 'Letterboxd',
     mdblist: 'MDBList',
     imdb: 'IMDB',
-    tmdb: 'TheMovieDB',
   };
   return names[provider];
 }
@@ -75,7 +71,6 @@ export function getProviderColor(provider: ListProvider): string {
     letterboxd: 'bg-flexoki-orange',
     mdblist: 'bg-flexoki-blue',
     imdb: 'bg-flexoki-yellow',
-    tmdb: 'bg-flexoki-cyan',
   };
   return colors[provider];
 }
