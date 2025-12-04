@@ -12,19 +12,10 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
-
-interface MediaList {
-  id: number;
-  name: string;
-  url: string;
-  provider: string;
-  enabled: boolean;
-  maxItems: number | null;
-  lastProcessed: Date | null;
-}
+import type { SerializedMediaList } from '@/shared/types';
 
 interface EditListDialogProps {
-  list: MediaList;
+  list: SerializedMediaList;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

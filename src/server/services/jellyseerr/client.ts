@@ -62,6 +62,21 @@ export async function requestToJellyseerr(
       }
     }
 
+    // Handle 202 Accepted status - incomplete request (e.g., TV show with no seasons)
+    // This is not an error - it means nothing new to request
+    // We should cache it to prevent re-requesting
+    if (response.status === 202) {
+      logger.info(
+        {
+          title: item.title,
+          tmdbId: item.tmdbId,
+          mediaType: item.mediaType,
+        },
+        'Jellyseerr returned 202 Accepted - request incomplete (no seasons available). Treating as success for caching.'
+      );
+      return true;
+    }
+
     // Handle "already requested" case (treat as success and cache it)
     if (response.status === 400) {
       const errorData = await response.json().catch(() => ({}));

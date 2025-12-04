@@ -2,11 +2,12 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { listItemsCache } from '../../db/schema';
 import type { MediaItem } from '../trakt/types';
 import { createLogger } from '../../lib/logger';
+import * as schema from '../../db/schema';
 
 const logger = createLogger('deduplicator');
 
 export async function getAlreadyRequestedIds(
-  db: BunSQLiteDatabase<Record<string, never>>,
+  db: BunSQLiteDatabase<typeof schema>,
   listId: number
 ): Promise<Set<number>> {
   try {
@@ -44,7 +45,7 @@ export async function getAlreadyRequestedIds(
 }
 
 export async function cacheRequestedItems(
-  db: BunSQLiteDatabase<Record<string, never>>,
+  db: BunSQLiteDatabase<typeof schema>,
   listId: number,
   items: MediaItem[]
 ): Promise<void> {

@@ -7,6 +7,7 @@ import { settingsJellyseerrRoute } from './settings.jellyseerr';
 import { settingsApiKeysRoute } from './settings.api-keys';
 import { settingsAutomaticProcessingRoute } from './settings.automatic-processing';
 
+// @ts-expect-error - TanStack Router circular type inference limitation
 export const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',

@@ -4,15 +4,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { useListsStats } from '../../hooks/use-lists-stats';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
-
-interface MediaList {
-  enabled: boolean;
-  lastProcessed?: Date | null;
-  [key: string]: unknown;
-}
+import type { SerializedMediaList } from '@/shared/types';
 
 interface DashboardStatsProps {
-  lists: MediaList[];
+  lists: SerializedMediaList[];
 }
 
 export function DashboardStats({ lists }: DashboardStatsProps) {

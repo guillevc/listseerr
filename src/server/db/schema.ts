@@ -59,6 +59,7 @@ export const mediaLists = sqliteTable('media_lists', {
 export const executionHistory = sqliteTable('execution_history', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   listId: integer('list_id').notNull().references(() => mediaLists.id, { onDelete: 'cascade' }),
+  batchId: text('batch_id'), // Groups executions from the same batch operation (e.g., "Process All")
   startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
   completedAt: integer('completed_at', { mode: 'timestamp' }),
   status: text('status', { enum: ['running', 'success', 'error'] }).notNull(),

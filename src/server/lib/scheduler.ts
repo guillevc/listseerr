@@ -3,6 +3,7 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
 import { generalSettings } from '../db/schema';
 import { createLogger } from './logger';
+import * as schema from '../db/schema';
 
 const logger = createLogger('scheduler');
 
@@ -13,7 +14,7 @@ interface ScheduledJob {
 
 class Scheduler {
   private jobs: Map<number, ScheduledJob> = new Map();
-  private db: BunSQLiteDatabase<Record<string, never>> | null = null;
+  private db: BunSQLiteDatabase<typeof schema> | null = null;
   private processListCallback: ((listId: number) => Promise<void>) | null = null;
   private processAllListsCallback: (() => Promise<void>) | null = null;
 
@@ -21,7 +22,7 @@ class Scheduler {
   private readonly GLOBAL_PROCESSING_JOB_ID = 0;
 
   initialize(
-    db: BunSQLiteDatabase<Record<string, never>>,
+    db: BunSQLiteDatabase<typeof schema>,
     processListCallback: (listId: number) => Promise<void>,
     processAllListsCallback: () => Promise<void>
   ) {
@@ -224,8 +225,7 @@ class Scheduler {
 
   unscheduleAll() {
     logger.info({ count: this.jobs.size }, 'Unscheduling all jobs');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [listId, job] of this.jobs) {
+    for (const [_listId, job] of this.jobs) {
       job.cronJob.stop();
     }
     this.jobs.clear();

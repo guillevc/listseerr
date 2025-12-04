@@ -22,7 +22,7 @@ export function Navigation() {
   const { data: jellyseerrConfig } = trpc.config.get.useQuery();
   const jellyseerrRequestsUrl = jellyseerrConfig?.url
     ? `${jellyseerrConfig.url}/requests`
-    : null;
+    : undefined;
   const mockPendingRequests = 5; // TODO: Replace with real count later
 
   // Dynamic nav items including external links
@@ -67,7 +67,7 @@ export function Navigation() {
             {/* Nav Tabs */}
             <div className="hidden md:flex gap-1">
               {navItems.map((item) => {
-                const isActive = item.type === 'internal' && (
+                const isActive = item.type === 'internal' && item.path && (
                   item.path === '/'
                     ? currentPath === '/'
                     : currentPath.startsWith(item.path)
@@ -84,7 +84,7 @@ export function Navigation() {
                   );
                 }
 
-                if (item.type === 'external') {
+                if (item.type === 'external' && item.path) {
                   return (
                     <Button
                       key={item.path}
@@ -96,15 +96,15 @@ export function Navigation() {
                         href={item.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
                       >
-                        {item.name}
-                        <ExternalLink className="h-3 w-3" />
                         {item.badge && (
-                          <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                          <Badge className="px-1.5 py-0 text-xs bg-flexoki-purple text-black hover:bg-flexoki-purple/90">
                             {item.badge}
                           </Badge>
                         )}
+                        {item.name}
+                        <ExternalLink className="h-3 w-3" />
                       </a>
                     </Button>
                   );
@@ -157,7 +157,7 @@ export function Navigation() {
           </SheetHeader>
           <div className="flex flex-col gap-2 mt-6">
             {navItems.map((item) => {
-              const isActive = item.type === 'internal' && (
+              const isActive = item.type === 'internal' && item.path && (
                 item.path === '/'
                   ? currentPath === '/'
                   : currentPath.startsWith(item.path)
@@ -174,7 +174,7 @@ export function Navigation() {
                 );
               }
 
-              if (item.type === 'external') {
+              if (item.type === 'external' && item.path) {
                 return (
                   <Button
                     key={item.path}
@@ -187,15 +187,15 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full"
+                      className="flex items-center gap-2 w-full border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
                     >
-                      {item.name}
-                      <ExternalLink className="h-3 w-3" />
                       {item.badge && (
-                        <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                        <Badge className="px-1.5 py-0 text-xs bg-flexoki-purple text-white hover:bg-flexoki-purple/90">
                           {item.badge}
                         </Badge>
                       )}
+                      {item.name}
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   </Button>
                 );

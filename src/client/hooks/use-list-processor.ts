@@ -16,7 +16,7 @@ export function useListProcessor() {
   // Get Jellyseerr config
   const { data: jellyseerrConfig, isLoading: isLoadingConfig } = trpc.config.get.useQuery();
 
-  // Process mutation
+  // Process single list mutation
   const processMutation = trpc.processor.processList.useMutation({
     onSuccess: (result, variables) => {
       setProcessingLists((prev) => {
@@ -59,6 +59,43 @@ export function useListProcessor() {
 
       toast({
         title: 'Processing Failed',
+        description: error.message || 'Unknown error occurred',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Process all lists mutation (batch processing)
+  const processAllMutation = trpc.processor.processAll.useMutation({
+    onSuccess: (result) => {
+      setProcessingLists(new Set()); // Clear all processing lists
+
+      // Invalidate queries to refresh UI
+      utils.lists.getAll.invalidate();
+      utils.dashboard.getStats.invalidate();
+      utils.dashboard.getRecentActivity.invalidate();
+
+      if (result.success) {
+        const parts = [`Processed ${result.processedLists} list(s)`];
+
+        if (result.itemsRequested > 0) {
+          parts.push(`${result.itemsRequested} requested`);
+        }
+        if (result.itemsFailed > 0) {
+          parts.push(`${result.itemsFailed} failed`);
+        }
+
+        toast({
+          title: 'Batch Processing Complete',
+          description: parts.join(', '),
+        });
+      }
+    },
+    onError: (error) => {
+      setProcessingLists(new Set()); // Clear all processing lists
+
+      toast({
+        title: 'Batch Processing Failed',
         description: error.message || 'Unknown error occurred',
         variant: 'destructive',
       });
@@ -110,15 +147,16 @@ export function useListProcessor() {
       return;
     }
 
+    // Mark all enabled lists as processing
+    setProcessingLists(new Set(enabledLists.map(l => l.id)));
+
     toast({
       title: 'Processing All Lists',
-      description: `Processing ${enabledLists.length} list(s)`,
+      description: `Processing ${enabledLists.length} list(s) as a batch`,
     });
 
-    for (const list of enabledLists) {
-      await handleProcess(list.id, lists);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+    // Use batch processing mutation
+    processAllMutation.mutate();
   };
 
   return {

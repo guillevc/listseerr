@@ -32,9 +32,9 @@ import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { EditListDialog } from './EditListDialog';
 
-import type { RouterOutputs } from '@/client/lib/trpc';
+import type { SerializedMediaList } from '@/shared/types';
 
-type MediaList = RouterOutputs['lists']['getAll'][0];
+type MediaList = SerializedMediaList;
 
 interface Props {
   lists: MediaList[];
@@ -47,6 +47,7 @@ const columnHelper = createColumnHelper<MediaList>();
 export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
+  const [mutatingListId, setMutatingListId] = useState<number | null>(null);
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
@@ -86,10 +87,14 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
   });
 
   const toggleMutation = trpc.lists.toggleEnabled.useMutation({
+    onMutate: ({ id }) => {
+      setMutatingListId(id);
+    },
     onSuccess: () => {
       // Invalidate all related queries
       utils.lists.getAll.invalidate();
       utils.dashboard.getStats.invalidate();
+      setMutatingListId(null);
     },
     onError: (error) => {
       toast({
@@ -97,6 +102,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         description: error.message,
         variant: 'destructive',
       });
+      setMutatingListId(null);
     },
   });
 
@@ -202,7 +208,8 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         cell: (info) => {
           const list = info.row.original;
           const providerConfigured = isProviderConfigured(list.provider);
-          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending || !providerConfigured;
+          const isMutating = mutatingListId === list.id;
+          const isDisabled = !isAutomaticProcessingEnabled || isMutating || !providerConfigured;
           // Show as OFF when automatic processing is disabled or provider not configured
           const checkedState = isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
 

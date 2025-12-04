@@ -9,6 +9,7 @@ import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list
 import { createLogger } from '../../lib/logger';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { db } from '../../db';
+import * as schema from '../../db/schema';
 
 const logger = createLogger('list-processor');
 
@@ -31,7 +32,7 @@ const logger = createLogger('list-processor');
 export async function processListById(
   listId: number,
   triggerType: 'manual' | 'scheduled' = 'manual',
-  database: BunSQLiteDatabase = db
+  database: BunSQLiteDatabase<typeof schema> = db
 ) {
   // Get the list
   const [list] = await database
@@ -248,7 +249,8 @@ export async function processListById(
  * @returns Processing summary with counts per list
  */
 export async function processBatchWithDeduplication(
-  database: BunSQLiteDatabase = db
+  database: BunSQLiteDatabase<typeof schema> = db,
+  triggerType: 'manual' | 'scheduled' = 'scheduled'
 ): Promise<{
   success: boolean;
   processedLists: number;
@@ -258,7 +260,10 @@ export async function processBatchWithDeduplication(
   itemsRequested: number;
   itemsFailed: number;
 }> {
-  logger.info('Starting batch processing with global deduplication');
+  // Generate a unique batch ID for this processing run
+  const batchId = `batch-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+  logger.info({ batchId, triggerType }, 'Starting batch processing with global deduplication');
 
   // Get all enabled lists
   const lists = await database
@@ -336,9 +341,10 @@ export async function processBatchWithDeduplication(
       .insert(executionHistory)
       .values({
         listId: list.id,
+        batchId,
         startedAt: new Date(),
         status: 'running',
-        triggerType: 'scheduled',
+        triggerType,
       })
       .returning();
 
@@ -548,7 +554,8 @@ export const listsProcessorRouter = router({
 
   processAll: publicProcedure.mutation(async ({ ctx }) => {
     // Use batch processing with global deduplication
-    const result = await processBatchWithDeduplication(ctx.db);
+    // Manual trigger since this is called from the UI
+    const result = await processBatchWithDeduplication(ctx.db, 'manual');
 
     return {
       success: result.success,

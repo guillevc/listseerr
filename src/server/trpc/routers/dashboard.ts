@@ -50,6 +50,7 @@ export const dashboardRouter = router({
           id: executionHistory.id,
           listId: executionHistory.listId,
           listName: mediaLists.name,
+          batchId: executionHistory.batchId,
           startedAt: executionHistory.startedAt,
           completedAt: executionHistory.completedAt,
           status: executionHistory.status,
@@ -64,8 +65,9 @@ export const dashboardRouter = router({
         .orderBy(desc(executionHistory.startedAt))
         .limit(input.limit);
 
-      // Group executions that occur within 1 minute of each other
-      // This groups both scheduled processing and manual "Process all" operations
+      // Group executions by batchId (if present) or by time proximity
+      // batchId groups "Process All" operations together regardless of time
+      // Time-based grouping (within 1 minute) is used for individual list processing
       const grouped: Array<{
         timestamp: Date;
         triggerType: 'manual' | 'scheduled';
@@ -73,21 +75,41 @@ export const dashboardRouter = router({
       }> = [];
 
       for (const execution of recentExecutions) {
-        // Check if we can add to the last group
-        const lastGroup = grouped[grouped.length - 1];
-        const timeDiff = lastGroup
-          ? Math.abs(execution.startedAt.getTime() - lastGroup.timestamp.getTime())
-          : Infinity;
+        let addedToGroup = false;
 
-        if (
-          lastGroup &&
-          lastGroup.triggerType === execution.triggerType &&
-          timeDiff < 60000 // 1 minute
-        ) {
-          // Add to existing group if same trigger type and within 1 minute
-          lastGroup.executions.push(execution);
-        } else {
-          // Create new group
+        // If execution has a batchId, try to find existing group with same batchId
+        if (execution.batchId) {
+          const batchGroup = grouped.find(
+            g => g.executions[0]?.batchId === execution.batchId
+          );
+
+          if (batchGroup) {
+            batchGroup.executions.push(execution);
+            addedToGroup = true;
+          }
+        }
+
+        // If not added to a batch group, try time-based grouping
+        if (!addedToGroup) {
+          const lastGroup = grouped[grouped.length - 1];
+
+          if (lastGroup && !lastGroup.executions[0]?.batchId) {
+            // Only try time-based grouping if last group is also not a batch
+            const firstExecutionInGroup = lastGroup.executions[0];
+            const timeDiff = Math.abs(execution.startedAt.getTime() - firstExecutionInGroup.startedAt.getTime());
+
+            if (
+              lastGroup.triggerType === execution.triggerType &&
+              timeDiff < 60000 // 1 minute
+            ) {
+              lastGroup.executions.push(execution);
+              addedToGroup = true;
+            }
+          }
+        }
+
+        // If still not added to any group, create a new group
+        if (!addedToGroup) {
           grouped.push({
             timestamp: execution.startedAt,
             triggerType: execution.triggerType,

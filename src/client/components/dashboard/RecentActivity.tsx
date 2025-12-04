@@ -143,7 +143,7 @@ export function RecentActivity() {
 
                           {execution.status === 'success' ? (
                             <div className="space-y-0.5">
-                              {execution.itemsRequested > 0 && (
+                              {(execution.itemsRequested ?? 0) > 0 && (
                                 <div className="flex items-center gap-1.5 text-xs">
                                   <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
                                   <span className="text-muted-foreground">{execution.itemsRequested} requested</span>
