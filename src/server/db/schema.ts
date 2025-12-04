@@ -11,7 +11,7 @@ export const users = sqliteTable('users', {
 // Jellyseerr configuration
 export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
   url: text('url').notNull(),
   apiKey: text('api_key').notNull(),
   userIdJellyseerr: integer('user_id_jellyseerr').notNull(),
@@ -19,11 +19,11 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
-// Provider configurations (Trakt, MDBList, etc.)
+// Provider configurations (Trakt, MDBList)
 export const providerConfigs = sqliteTable('provider_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  provider: text('provider', { enum: ['trakt', 'letterboxd', 'mdblist', 'imdb'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist'] }).notNull(),
   clientId: text('client_id'),
   apiKey: text('api_key'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -47,7 +47,7 @@ export const mediaLists = sqliteTable('media_lists', {
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   url: text('url').notNull(),
-  provider: text('provider', { enum: ['trakt', 'letterboxd', 'mdblist', 'imdb'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),
   processingSchedule: text('processing_schedule'), // DEPRECATED: Per-list schedules not used, use global automatic processing instead
@@ -78,7 +78,6 @@ export const listItemsCache = sqliteTable('list_items_cache', {
   title: text('title').notNull(),
   year: integer('year'),
   tmdbId: integer('tmdb_id').unique(), // Unique constraint enforces global cache
-  imdbId: text('imdb_id'),
   mediaType: text('media_type', { enum: ['movie', 'tv'] }).notNull(),
   fetchedAt: integer('fetched_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

@@ -30,8 +30,14 @@ export async function fetchTraktList(
     });
 
     if (!response.ok) {
+      const errorBody = await response.text().catch(() => '');
       logger.error(
-        { status: response.status, statusText: response.statusText },
+        {
+          status: response.status,
+          statusText: response.statusText,
+          url: apiUrl.replace(clientId, 'REDACTED'),
+          responseBody: errorBody,
+        },
         'Trakt API request failed'
       );
       throw new Error(`Trakt API error: ${response.status} ${response.statusText}`);
@@ -102,7 +108,6 @@ function transformTraktItem(item: TraktListItem): MediaItem | null {
       title: item.movie.title,
       year: item.movie.year,
       tmdbId,
-      imdbId: item.movie.ids.imdb || null,
       mediaType: 'movie',
     };
   }
@@ -122,7 +127,6 @@ function transformTraktItem(item: TraktListItem): MediaItem | null {
       title: item.show.title,
       year: item.show.year,
       tmdbId,
-      imdbId: item.show.ids.imdb || null,
       mediaType: 'tv',
     };
   }

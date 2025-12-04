@@ -150,11 +150,13 @@ export async function processListById(
       (item) => item.tmdbId && !cachedIds.has(item.tmdbId)
     );
 
+    const listCachedCount = items.length - newItems.length;
+
     logger.info(
       {
         listId: list.id,
         totalItems: items.length,
-        cachedItems: cachedIds.size,
+        cachedItems: listCachedCount,
         newItems: newItems.length,
       },
       'Deduplication complete'

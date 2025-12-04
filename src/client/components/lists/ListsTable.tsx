@@ -47,7 +47,6 @@ const columnHelper = createColumnHelper<MediaList>();
 export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
-  const [togglingLists, setTogglingLists] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
@@ -87,10 +86,6 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
   });
 
   const toggleMutation = trpc.lists.toggleEnabled.useMutation({
-    onMutate: async (variables) => {
-      // Add to toggling set
-      setTogglingLists((prev) => new Set(prev).add(variables.id));
-    },
     onSuccess: () => {
       // Invalidate all related queries
       utils.lists.getAll.invalidate();
@@ -101,14 +96,6 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         title: 'Error',
         description: error.message,
         variant: 'destructive',
-      });
-    },
-    onSettled: (data, error, variables) => {
-      // Remove from toggling set after mutation completes
-      setTogglingLists((prev) => {
-        const next = new Set(prev);
-        next.delete(variables.id);
-        return next;
       });
     },
   });
@@ -211,12 +198,11 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         },
       }),
       columnHelper.accessor('enabled', {
-        header: 'Enabled',
+        header: 'Process Automatically',
         cell: (info) => {
           const list = info.row.original;
           const providerConfigured = isProviderConfigured(list.provider);
-          const isToggling = togglingLists.has(list.id);
-          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending || !providerConfigured || isToggling;
+          const isDisabled = !isAutomaticProcessingEnabled || toggleMutation.isPending || !providerConfigured;
           // Show as OFF when automatic processing is disabled or provider not configured
           const checkedState = isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
 
@@ -272,7 +258,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <DropdownMenuContent align="end" avoidCollisions={true}>
                   <DropdownMenuItem
                     onClick={() => onProcess(list.id)}
-                    disabled={!list.enabled || isProcessing || !providerConfigured}
+                    disabled={isProcessing || !providerConfigured}
                   >
                     <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
                     Process
@@ -298,7 +284,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, togglingLists]
+    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured]
   );
 
   const table = useReactTable({
@@ -354,7 +340,11 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
               {table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={`list-${row.original.id}`}
-                  className={!row.original.enabled ? 'opacity-60' : ''}
+                  className={
+                    !isProviderConfigured(row.original.provider) || !isAutomaticProcessingEnabled
+                      ? 'opacity-60'
+                      : ''
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

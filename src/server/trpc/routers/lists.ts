@@ -10,7 +10,7 @@ const logger = createLogger('lists');
 const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
-  provider: z.enum(['trakt', 'letterboxd', 'mdblist', 'imdb', 'tmdb']).default('trakt'),
+  provider: z.enum(['trakt', 'mdblist']).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),
@@ -60,10 +60,14 @@ export const listsRouter = router({
   create: publicProcedure
     .input(listInputSchema)
     .mutation(async ({ ctx, input }) => {
+      // Remove query params from URL
+      const cleanUrl = input.url.split('?')[0];
+
       const [newList] = await ctx.db
         .insert(mediaLists)
         .values({
           ...input,
+          url: cleanUrl,
           userId: 1, // Default user
         })
         .returning();
@@ -98,10 +102,15 @@ export const listsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Remove query params from URL if URL is being updated
+      const cleanedData = input.data.url
+        ? { ...input.data, url: input.data.url.split('?')[0] }
+        : input.data;
+
       const [updatedList] = await ctx.db
         .update(mediaLists)
         .set({
-          ...input.data,
+          ...cleanedData,
           updatedAt: new Date(),
         })
         .where(eq(mediaLists.id, input.id))

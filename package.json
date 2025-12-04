@@ -12,6 +12,8 @@
     "build:server": "bun build src/server/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
     "lint": "eslint .",
+    "typecheck": "tsc --build --force",
+    "typecheck:watch": "tsc --build --watch",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run src/server/db/migrate.ts",
     "db:reset": "bun run src/server/db/reset.ts"

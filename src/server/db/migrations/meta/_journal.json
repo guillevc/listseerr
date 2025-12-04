@@ -43,6 +43,13 @@
       "when": 1764758721854,
       "tag": "0005_milky_leader",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1764875301479,
+      "tag": "0006_fresh_grandmaster",
+      "breakpoints": true
     }
   ]
 }

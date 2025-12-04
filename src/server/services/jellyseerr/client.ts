@@ -83,53 +83,70 @@ export async function requestToJellyseerr(
       }
 
       // Other 400 errors - log and fail (will retry next sync)
-      logger.warn(
+      logger.error(
         {
           title: item.title,
           tmdbId: item.tmdbId,
           status: 400,
-          error: errorMessage || response.statusText,
+          requestBody: {
+            mediaType: item.mediaType,
+            mediaId: item.tmdbId,
+          },
+          responseBody: errorData,
         },
-        'Request validation failed - will retry next sync'
+        'Jellyseerr API validation error'
       );
       return false;
     }
 
     // Handle 500-level errors - log and fail (will retry next sync)
     if (response.status >= 500) {
-      const errorText = await response.text().catch(() => 'Unknown error');
-      logger.warn(
+      const errorBody = await response.text().catch(() => 'Unknown error');
+      logger.error(
         {
           title: item.title,
           tmdbId: item.tmdbId,
           status: response.status,
-          error: errorText,
+          requestBody: {
+            mediaType: item.mediaType,
+            mediaId: item.tmdbId,
+          },
+          responseBody: errorBody,
         },
-        'Jellyseerr server error - will retry next sync'
+        'Jellyseerr API server error'
       );
       return false;
     }
 
     // All other error status codes
-    logger.warn(
+    const errorBody = await response.text().catch(() => '');
+    logger.error(
       {
         title: item.title,
         tmdbId: item.tmdbId,
         status: response.status,
-        statusText: response.statusText,
+        requestBody: {
+          mediaType: item.mediaType,
+          mediaId: item.tmdbId,
+        },
+        responseBody: errorBody,
       },
-      'Request failed - will retry next sync'
+      'Jellyseerr API error'
     );
     return false;
   } catch (error) {
     // Network errors or other exceptions - log and fail (will retry next sync)
-    logger.warn(
+    logger.error(
       {
         title: item.title,
         tmdbId: item.tmdbId,
+        requestBody: {
+          mediaType: item.mediaType,
+          mediaId: item.tmdbId,
+        },
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      'Request error - will retry next sync'
+      'Jellyseerr API network error'
     );
     return false;
   }

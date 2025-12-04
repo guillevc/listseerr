@@ -73,7 +73,6 @@ export async function cacheRequestedItems(
           title: item.title,
           year: item.year,
           tmdbId: item.tmdbId,
-          imdbId: item.imdbId,
           mediaType: item.mediaType === 'tv' ? 'tv' : 'movie',
           fetchedAt: new Date(),
         })

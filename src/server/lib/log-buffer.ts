@@ -16,9 +16,9 @@ class LogBuffer {
     const entry: LogEntry = {
       id: `log-${Date.now()}-${this.idCounter++}`,
       timestamp: new Date().toISOString(),
-      level: this.getLevelName(logObject.level),
-      module: logObject.module,
-      msg: logObject.msg,
+      level: this.getLevelName(logObject.level as number),
+      module: logObject.module as string | undefined,
+      msg: logObject.msg as string,
       data: this.extractData(logObject),
     };
 

@@ -29,6 +29,8 @@ export function Navigation() {
   const navItems = [
     { name: 'Dashboard', path: '/', type: 'internal' },
     { name: 'Lists', path: '/lists', type: 'internal' },
+    { name: 'Settings', path: '/settings', type: 'internal' },
+    { name: 'Logs', path: '/logs', type: 'internal' },
     {
       name: 'Requests',
       path: jellyseerrRequestsUrl,
@@ -36,8 +38,6 @@ export function Navigation() {
       badge: mockPendingRequests,
       disabled: !jellyseerrRequestsUrl,
     },
-    { name: 'Settings', path: '/settings', type: 'internal' },
-    { name: 'Logs', path: '/logs', type: 'internal' },
   ];
 
   return (
@@ -86,24 +86,27 @@ export function Navigation() {
 
                 if (item.type === 'external') {
                   return (
-                    <a
+                    <Button
                       key={item.path}
-                      href={item.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        'px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
-                        'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                      )}
+                      variant="outline"
+                      size="sm"
+                      asChild
                     >
-                      {item.name}
-                      <ExternalLink className="h-3 w-3" />
-                      {item.badge && (
-                        <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
-                          {item.badge}
-                        </Badge>
-                      )}
-                    </a>
+                      <a
+                        href={item.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        {item.name}
+                        <ExternalLink className="h-3 w-3" />
+                        {item.badge && (
+                          <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                            {item.badge}
+                          </Badge>
+                        )}
+                      </a>
+                    </Button>
                   );
                 }
 
@@ -173,25 +176,28 @@ export function Navigation() {
 
               if (item.type === 'external') {
                 return (
-                  <a
+                  <Button
                     key={item.path}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      'px-4 py-3 text-sm font-medium rounded-md transition-colors flex items-center gap-2',
-                      'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                    )}
+                    variant="outline"
+                    size="sm"
+                    asChild
                   >
-                    {item.name}
-                    <ExternalLink className="h-3 w-3" />
-                    {item.badge && (
-                      <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </a>
+                    <a
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 w-full"
+                    >
+                      {item.name}
+                      <ExternalLink className="h-3 w-3" />
+                      {item.badge && (
+                        <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-xs">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </a>
+                  </Button>
                 );
               }
 

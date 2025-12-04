@@ -7,7 +7,7 @@
 // Provider & Media Types
 // ============================================
 
-export type Provider = 'trakt' | 'letterboxd' | 'mdblist' | 'imdb';
+export type Provider = 'trakt' | 'mdblist';
 export type MediaType = 'movie' | 'tv';
 
 // ============================================
@@ -25,7 +25,6 @@ export interface MediaItem {
   title: string;
   year: number | null;
   tmdbId: number;
-  imdbId: string | null;
   mediaType: MediaType;
 }
 

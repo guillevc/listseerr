@@ -30,9 +30,14 @@ export async function fetchMdbListList(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorBody = await response.text();
       logger.error(
-        { status: response.status, statusText: response.statusText, errorText },
+        {
+          status: response.status,
+          statusText: response.statusText,
+          url: apiUrl.replace(apiKey, 'REDACTED'),
+          responseBody: errorBody,
+        },
         'MDBList API request failed'
       );
       throw new Error(`MDBList API error: ${response.statusText}`);
@@ -68,7 +73,6 @@ function transformMdbListItem(item: MdbListApiItem): MediaItem | null {
     title: item.title,
     year: item.release_year || null,
     tmdbId: item.id,  // MDBList 'id' field is TMDB ID
-    imdbId: item.imdb_id || null,
     mediaType: item.mediatype === 'show' ? 'tv' : 'movie',  // Convert 'show' to 'tv'
   };
 }
