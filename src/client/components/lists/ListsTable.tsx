@@ -44,6 +44,15 @@ interface Props {
 
 const columnHelper = createColumnHelper<MediaList>();
 
+// Utility function to truncate text in the middle
+const truncateMiddle = (text: string, maxLength: number = 30): string => {
+  if (text.length <= maxLength) return text;
+  const halfLength = Math.floor(maxLength / 2);
+  const start = text.substring(0, halfLength);
+  const end = text.substring(text.length - halfLength);
+  return `${start}...${end}`;
+};
+
 export function ListsTable({ lists, onProcess, processingLists }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
@@ -150,33 +159,42 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       }),
       columnHelper.accessor('url', {
         header: 'URL',
-        cell: (info) => (
-          <a
-            href={info.getValue()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
-          >
-            <span className="truncate max-w-[200px] md:max-w-xs">
-              {info.getValue().substring(0, 50)}
-              {info.getValue().length > 50 ? '...' : ''}
-            </span>
-            <ExternalLink className="h-3 w-3 flex-shrink-0" />
-          </a>
-        ),
+        cell: (info) => {
+          const url = info.getValue();
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
+                  >
+                    <span className="truncate">
+                      {truncateMiddle(url, 30)}
+                    </span>
+                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-md break-all">{url}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        },
         enableSorting: false,
       }),
       columnHelper.accessor('maxItems', {
-        id: 'itemCount',
-        header: 'Items',
+        id: 'maxItems',
+        header: 'Max items',
         cell: (info) => {
           const maxItems = info.getValue();
           return (
-            <div className="flex flex-col gap-0.5">
-              {maxItems && (
-                <span className="text-xs text-muted-foreground">Max: {maxItems}</span>
-              )}
-            </div>
+            <span className="text-sm">
+              {maxItems ?? '—'}
+            </span>
           );
         },
       }),
@@ -291,7 +309,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured]
+    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, mutatingListId]
   );
 
   const table = useReactTable({

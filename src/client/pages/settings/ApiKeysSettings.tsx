@@ -120,20 +120,20 @@ export function ApiKeysSettings() {
 
   // Trakt.tv handlers
   const handleTraktToggle = (checked: boolean) => {
-    if (!checked) {
-      // Disable provider - clear the API key
-      if (traktConfig?.clientId) {
-        deleteTraktMutation.mutate();
-      }
-      setTraktClientId('');
-      setTraktEnabled(false);
-    } else {
-      // Enable provider
-      setTraktEnabled(true);
-    }
+    // Just toggle the state, don't delete immediately
+    setTraktEnabled(checked);
   };
 
   const handleTraktSave = () => {
+    if (!traktEnabled) {
+      // Provider is disabled, delete the config
+      if (traktConfig?.clientId) {
+        deleteTraktMutation.mutate();
+      }
+      return;
+    }
+
+    // Provider is enabled, save the config
     if (!traktClientId.trim()) {
       toast({
         title: 'Validation Error',
@@ -147,20 +147,20 @@ export function ApiKeysSettings() {
 
   // MDBList handlers
   const handleMdbListToggle = (checked: boolean) => {
-    if (!checked) {
-      // Disable provider - clear the API key
-      if (mdbListConfig?.apiKey) {
-        deleteMdbListMutation.mutate();
-      }
-      setTmdbApiKey('');
-      setTmdbEnabled(false);
-    } else {
-      // Enable provider
-      setTmdbEnabled(true);
-    }
+    // Just toggle the state, don't delete immediately
+    setTmdbEnabled(checked);
   };
 
   const handleMdbListSave = () => {
+    if (!mdbListEnabled) {
+      // Provider is disabled, delete the config
+      if (mdbListConfig?.apiKey) {
+        deleteMdbListMutation.mutate();
+      }
+      return;
+    }
+
+    // Provider is enabled, save the config
     if (!mdbListApiKey.trim()) {
       toast({
         title: 'Validation Error',
@@ -228,10 +228,11 @@ export function ApiKeysSettings() {
               <Input
                 id="trakt-client-id"
                 type={showTraktKey ? 'text' : 'password'}
-                placeholder={traktEnabled ? "Your Trakt.tv Client ID" : "Enable provider to configure"}
-                value={traktEnabled ? traktClientId : ''}
+                placeholder="Your Trakt.tv Client ID"
+                value={traktClientId}
                 onChange={(e) => setTraktClientId(e.target.value)}
-                disabled={!traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending}
+                readOnly={!traktEnabled}
+                disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
                 className="pr-10"
               />
               {traktEnabled && (
@@ -255,16 +256,14 @@ export function ApiKeysSettings() {
             </p>
           </div>
 
-          {traktEnabled && (
-            <div className="flex gap-2">
-              <Button
-                onClick={handleTraktSave}
-                disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending || !traktClientId.trim()}
-              >
-                {saveTraktMutation.isPending ? 'Saving...' : 'Save Client ID'}
-              </Button>
-            </div>
-          )}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleTraktSave}
+              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending || (traktEnabled && !traktClientId.trim())}
+            >
+              {saveTraktMutation.isPending || deleteTraktMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -313,10 +312,11 @@ export function ApiKeysSettings() {
               <Input
                 id="tmdb-api-key"
                 type={showMdbListKey ? 'text' : 'password'}
-                placeholder={mdbListEnabled ? "Your MDBList API Key" : "Enable provider to configure"}
-                value={mdbListEnabled ? mdbListApiKey : ''}
+                placeholder="Your MDBList API Key"
+                value={mdbListApiKey}
                 onChange={(e) => setTmdbApiKey(e.target.value)}
-                disabled={!mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+                readOnly={!mdbListEnabled}
+                disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
                 className="pr-10"
               />
               {mdbListEnabled && (
@@ -337,16 +337,14 @@ export function ApiKeysSettings() {
             </div>
           </div>
 
-          {mdbListEnabled && (
-            <div className="flex gap-2">
-              <Button
-                onClick={handleMdbListSave}
-                disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending || !mdbListApiKey.trim()}
-              >
-                {saveMdbListMutation.isPending ? 'Saving...' : 'Save API Key'}
-              </Button>
-            </div>
-          )}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleMdbListSave}
+              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending || (mdbListEnabled && !mdbListApiKey.trim())}
+            >
+              {saveMdbListMutation.isPending || deleteMdbListMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

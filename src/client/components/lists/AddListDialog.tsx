@@ -160,51 +160,55 @@ export function AddListDialog() {
           <div className="grid gap-3">
             <Label>Provider</Label>
             <RadioGroup value={provider} onValueChange={handleProviderChange}>
-              <div className="flex items-center space-x-2 border rounded-md p-3">
-                <RadioGroupItem value="trakt" id="provider-trakt" />
-                <label htmlFor="provider-trakt" className="flex-1 cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Trakt.tv</p>
-                      <p className="text-xs text-muted-foreground">Public lists and watchlists</p>
+              <label className="block cursor-pointer">
+                <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
+                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Trakt.tv</p>
+                        <p className="text-xs text-muted-foreground">Public lists and watchlists</p>
+                      </div>
+                      {traktConfig?.clientId ? (
+                        <Badge variant="default" className="bg-green-500">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Configured
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-orange-500 text-white">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Not Configured
+                        </Badge>
+                      )}
                     </div>
-                    {traktConfig?.clientId ? (
-                      <Badge variant="default" className="bg-green-500">
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Configured
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="bg-orange-500 text-white">
-                        <AlertCircle className="h-3 w-3 mr-1" />
-                        Not Configured
-                      </Badge>
-                    )}
                   </div>
-                </label>
-              </div>
+                </div>
+              </label>
 
-              <div className="flex items-center space-x-2 border rounded-md p-3">
-                <RadioGroupItem value="mdblist" id="provider-mdblist" />
-                <label htmlFor="provider-mdblist" className="flex-1 cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">MDBList</p>
-                      <p className="text-xs text-muted-foreground">Public and custom lists</p>
+              <label className="block cursor-pointer">
+                <RadioGroupItem value="mdblist" id="provider-mdblist" className="peer sr-only" />
+                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">MDBList</p>
+                        <p className="text-xs text-muted-foreground">Public and custom lists</p>
+                      </div>
+                      {mdbListConfig?.apiKey ? (
+                        <Badge variant="default" className="bg-green-500">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Configured
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-orange-500 text-white">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Not Configured
+                        </Badge>
+                      )}
                     </div>
-                    {mdbListConfig?.apiKey ? (
-                      <Badge variant="default" className="bg-green-500">
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Configured
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="bg-orange-500 text-white">
-                        <AlertCircle className="h-3 w-3 mr-1" />
-                        Not Configured
-                      </Badge>
-                    )}
                   </div>
-                </label>
-              </div>
+                </div>
+              </label>
             </RadioGroup>
           </div>
 

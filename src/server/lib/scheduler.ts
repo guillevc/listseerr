@@ -225,7 +225,7 @@ class Scheduler {
 
   unscheduleAll() {
     logger.info({ count: this.jobs.size }, 'Unscheduling all jobs');
-    for (const [_listId, job] of this.jobs) {
+    for (const job of this.jobs.values()) {
       job.cronJob.stop();
     }
     this.jobs.clear();

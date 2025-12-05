@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { User, Menu, ExternalLink } from 'lucide-react';
+import { Menu, ExternalLink } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -131,9 +131,6 @@ export function Navigation() {
           {/* Right Actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors">
-              <User className="h-4 w-4 text-muted-foreground" />
-            </div>
 
             {/* Mobile Menu Button */}
             <Button

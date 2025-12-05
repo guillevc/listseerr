@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar } from 'lucide-react';
 import { trpc } from '../../lib/trpc';
 import { Badge } from '../ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -79,16 +81,15 @@ export function RecentActivity() {
       <CardContent>
         <div className="space-y-3">
           {activityGroups.map((group, groupIdx) => {
-            const isBatch = group.executions.length > 1;
             const timestamp = new Date(group.timestamp);
 
             return (
               <div
                 key={`group-${groupIdx}`}
-                className="rounded-lg border"
+                className="rounded-lg border bg-card"
               >
                 {/* Group header */}
-                <div className="flex items-center justify-between px-3 py-2 border-b bg-muted/50">
+                <div className="flex items-center justify-between p-4 border-b">
                   <div className="flex items-center gap-2">
                     <Badge variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'} className="text-xs">
                       {group.triggerType === 'scheduled' ? (
@@ -100,82 +101,86 @@ export function RecentActivity() {
                         'Manual'
                       )}
                     </Badge>
-                    {isBatch && (
-                      <span className="text-xs text-muted-foreground">
-                        {group.executions.length} lists
-                      </span>
-                    )}
+                    <span className="text-sm text-muted-foreground">
+                      {group.executions.length} {group.executions.length === 1 ? 'list' : 'lists'} processed
+                    </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">
-                    {formatRelativeTime(timestamp)}
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="text-sm text-muted-foreground cursor-help">
+                          {formatRelativeTime(timestamp)}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{timestamp.toLocaleString()}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
 
-                {/* Executions */}
-                <div className="divide-y">
-                  {group.executions.map((execution) => {
-                    const itemsSkipped =
-                      (execution.itemsFound || 0) -
-                      (execution.itemsRequested || 0) -
-                      (execution.itemsFailed || 0);
+                {/* Executions Table */}
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>List</TableHead>
+                      <TableHead className="text-right">Items</TableHead>
+                      <TableHead className="text-right">Requested</TableHead>
+                      <TableHead className="text-right">Skipped</TableHead>
+                      <TableHead className="text-right">Failed</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {group.executions.map((execution) => {
+                      const itemsSkipped =
+                        (execution.itemsFound ?? 0) -
+                        (execution.itemsRequested ?? 0) -
+                        (execution.itemsFailed ?? 0);
 
-                    return (
-                      <div
-                        key={execution.id}
-                        className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/50 transition-colors"
-                      >
-                        {/* Status icon */}
-                        <div>
-                          {execution.status === 'success' ? (
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                          ) : execution.status === 'error' ? (
-                            <XCircle className="h-4 w-4 text-red-600" />
-                          ) : (
-                            <AlertCircle className="h-4 w-4 text-yellow-600" />
-                          )}
-                        </div>
-
-                        {/* Execution details */}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate mb-1">
+                      return (
+                        <TableRow key={execution.id}>
+                          <TableCell className="font-medium">
                             {execution.listName || `List #${execution.listId}`}
-                          </p>
-
-                          {execution.status === 'success' ? (
-                            <div className="space-y-0.5">
-                              {(execution.itemsRequested ?? 0) > 0 && (
-                                <div className="flex items-center gap-1.5 text-xs">
-                                  <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                  <span className="text-muted-foreground">{execution.itemsRequested} requested</span>
-                                </div>
-                              )}
-                              {itemsSkipped > 0 && (
-                                <div className="flex items-center gap-1.5 text-xs">
-                                  <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
-                                  <span className="text-muted-foreground">{itemsSkipped} skipped</span>
-                                </div>
-                              )}
-                              {(execution.itemsFailed || 0) > 0 && (
-                                <div className="flex items-center gap-1.5 text-xs">
-                                  <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                  <span className="text-red-600">{execution.itemsFailed} failed</span>
-                                </div>
-                              )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {execution.itemsFound ?? 0}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
+                              <span>{execution.itemsRequested ?? 0}</span>
                             </div>
-                          ) : execution.status === 'error' ? (
-                            <p className="text-xs text-red-600 mt-0.5 truncate">
-                              {execution.errorMessage || 'Processing failed'}
-                            </p>
-                          ) : (
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              Processing...
-                            </p>
-                          )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                              <span>{itemsSkipped}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
+                              <span>{execution.itemsFailed ?? 0}</span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+
+                {/* Show error messages if any */}
+                {group.executions.some((e) => e.errorMessage) && (
+                  <div className="p-4 border-t space-y-2">
+                    {group.executions
+                      .filter((e) => e.errorMessage)
+                      .map((e) => (
+                        <div key={e.id} className="text-sm text-red-600">
+                          <strong>{e.listName || `List #${e.listId}`}:</strong> {e.errorMessage}
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      ))}
+                  </div>
+                )}
               </div>
             );
           })}
