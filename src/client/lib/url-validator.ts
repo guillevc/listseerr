@@ -10,6 +10,9 @@ const providerPatterns: Record<ListProvider, RegExp[]> = {
   trakt: [
     /^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?$/i,
   ],
+  traktChart: [
+    /^https?:\/\/(www\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i,
+  ],
   letterboxd: [
     /^https?:\/\/(www\.)?letterboxd\.com\/[^/]+\/list\/[^/]+\/?$/i,
   ],
@@ -57,7 +60,8 @@ export function validateAndDetectProvider(url: string): ValidationResult {
 
 export function getProviderName(provider: ListProvider): string {
   const names: Record<ListProvider, string> = {
-    trakt: 'Trakt.tv',
+    trakt: 'Trakt List',
+    traktChart: 'Trakt Chart',
     letterboxd: 'Letterboxd',
     mdblist: 'MDBList',
     imdb: 'IMDB',
@@ -68,6 +72,7 @@ export function getProviderName(provider: ListProvider): string {
 export function getProviderColor(provider: ListProvider): string {
   const colors: Record<ListProvider, string> = {
     trakt: 'bg-flexoki-magenta',
+    traktChart: 'bg-flexoki-magenta',
     letterboxd: 'bg-flexoki-orange',
     mdblist: 'bg-flexoki-blue',
     imdb: 'bg-flexoki-yellow',

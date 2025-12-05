@@ -115,14 +115,9 @@ export function useListProcessor() {
     const list = lists.find((l) => l.id === id);
     if (!list) return;
 
-    if (!list.enabled) {
-      toast({
-        title: 'List Disabled',
-        description: 'This list is currently disabled',
-        variant: 'destructive',
-      });
-      return;
-    }
+    // Note: We don't check list.enabled here because manual processing should work
+    // regardless of the scheduled toggle state. The enabled field only controls
+    // whether the list is included in automatic scheduled processing.
 
     setProcessingLists((prev) => new Set(prev).add(id));
     processMutation.mutate({ listId: id, triggerType: 'manual' });

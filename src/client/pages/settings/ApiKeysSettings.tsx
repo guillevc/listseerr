@@ -53,13 +53,13 @@ export function ApiKeysSettings() {
       utils.providerConfig.getTraktConfig.invalidate();
       toast({
         title: 'Success',
-        description: 'Trakt.tv Client ID saved successfully',
+        description: 'Trakt Client ID saved successfully',
       });
     },
     onError: (error) => {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to save Trakt.tv Client ID',
+        description: error.message || 'Failed to save Trakt Client ID',
         variant: 'destructive',
       });
     },
@@ -71,13 +71,13 @@ export function ApiKeysSettings() {
       setTraktClientId('');
       toast({
         title: 'Success',
-        description: 'Trakt.tv Client ID removed',
+        description: 'Trakt Client ID removed',
       });
     },
     onError: (error) => {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to remove Trakt.tv Client ID',
+        description: error.message || 'Failed to remove Trakt Client ID',
         variant: 'destructive',
       });
     },
@@ -118,7 +118,7 @@ export function ApiKeysSettings() {
     },
   });
 
-  // Trakt.tv handlers
+  // Trakt handlers
   const handleTraktToggle = (checked: boolean) => {
     // Just toggle the state, don't delete immediately
     setTraktEnabled(checked);
@@ -189,13 +189,13 @@ export function ApiKeysSettings() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
-                Trakt.tv
+                Trakt
                 {traktEnabled && traktConfig?.clientId && (
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
                 )}
               </CardTitle>
               <CardDescription>
-                Required for syncing public Trakt.tv lists. Get your Client ID from{' '}
+                Required for syncing Trakt lists and curated charts. Get your Client ID from{' '}
                 <a
                   href="https://trakt.tv/oauth/applications"
                   target="_blank"
@@ -217,7 +217,7 @@ export function ApiKeysSettings() {
           {!traktEnabled && (
             <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
               <p className="text-sm text-orange-800 dark:text-orange-200">
-                Provider disabled - Trakt lists cannot be processed. Enable to configure API key.
+                Provider disabled - Trakt lists and charts cannot be processed. Enable to configure API key.
               </p>
             </div>
           )}

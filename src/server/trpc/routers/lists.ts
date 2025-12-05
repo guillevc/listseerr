@@ -10,7 +10,7 @@ const logger = createLogger('lists');
 const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
-  provider: z.enum(['trakt', 'mdblist']).default('trakt'),
+  provider: z.enum(['trakt', 'mdblist', 'traktChart']).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),

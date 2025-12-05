@@ -3,6 +3,7 @@ import { router, publicProcedure } from '../trpc';
 import { mediaLists, executionHistory, jellyseerrConfigs, providerConfigs } from '../../db/schema';
 import { eq, desc, and, asc } from 'drizzle-orm';
 import { fetchTraktList } from '../../services/trakt/client';
+import { fetchTraktChart } from '../../services/trakt/chart-client';
 import { fetchMdbListList } from '../../services/mdblist/client';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
 import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
@@ -45,9 +46,9 @@ export async function processListById(
     throw new Error('List not found');
   }
 
-  if (!list.enabled) {
-    throw new Error('List is disabled');
-  }
+  // Note: We don't check list.enabled here because manual processing should work
+  // regardless of the scheduled toggle state. The enabled field only controls
+  // whether the list is included in automatic scheduled processing.
 
   // Get Jellyseerr config
   const [config] = await database
@@ -98,9 +99,9 @@ export async function processListById(
       .limit(1);
 
     // Validate provider configuration based on list provider
-    if (list.provider === 'trakt' && !traktConfig?.clientId) {
+    if ((list.provider === 'trakt' || list.provider === 'traktChart') && !traktConfig?.clientId) {
       throw new Error(
-        'Trakt API configuration is required to process Trakt lists. ' +
+        'Trakt API configuration is required to process Trakt lists and charts. ' +
         'Please configure your Trakt Client ID in Settings → API Keys.'
       );
     }
@@ -130,6 +131,8 @@ export async function processListById(
     let items;
     if (list.provider === 'trakt' && traktConfig?.clientId) {
       items = await fetchTraktList(list.url, list.maxItems, traktConfig.clientId);
+    } else if (list.provider === 'traktChart' && traktConfig?.clientId) {
+      items = await fetchTraktChart(list.url, list.maxItems, traktConfig.clientId);
     } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
       items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
     } else {
@@ -360,7 +363,7 @@ export async function processBatchWithDeduplication(
       );
 
       // Validate provider configuration
-      if (list.provider === 'trakt' && !traktConfig?.clientId) {
+      if ((list.provider === 'trakt' || list.provider === 'traktChart') && !traktConfig?.clientId) {
         throw new Error('Trakt API configuration required');
       }
       if (list.provider === 'mdblist' && !mdbListConfig?.apiKey) {
@@ -372,6 +375,8 @@ export async function processBatchWithDeduplication(
 
       if (list.provider === 'trakt' && traktConfig?.clientId) {
         items = await fetchTraktList(list.url, list.maxItems, traktConfig.clientId);
+      } else if (list.provider === 'traktChart' && traktConfig?.clientId) {
+        items = await fetchTraktChart(list.url, list.maxItems, traktConfig.clientId);
       } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
         items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
       }

@@ -7,9 +7,11 @@
 // Provider & Media Types
 // ============================================
 
-export type Provider = 'trakt' | 'mdblist';
-export type ListProvider = 'trakt' | 'mdblist' | 'letterboxd' | 'imdb';
+export type Provider = 'trakt' | 'mdblist' | 'traktChart';
+export type ListProvider = 'trakt' | 'mdblist' | 'traktChart' | 'letterboxd' | 'imdb';
 export type MediaType = 'movie' | 'tv';
+export type TraktChartType = 'trending' | 'popular' | 'favorited' | 'played' | 'watched' | 'collected' | 'anticipated';
+export type TraktMediaType = 'movies' | 'shows';
 
 // ============================================
 // Processing Types

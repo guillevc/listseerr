@@ -23,7 +23,7 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
 export const providerConfigs = sqliteTable('provider_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  provider: text('provider', { enum: ['trakt', 'mdblist'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart'] }).notNull(),
   clientId: text('client_id'),
   apiKey: text('api_key'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -47,7 +47,7 @@ export const mediaLists = sqliteTable('media_lists', {
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   url: text('url').notNull(),
-  provider: text('provider', { enum: ['trakt', 'mdblist'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),
   processingSchedule: text('processing_schedule'), // DEPRECATED: Per-list schedules not used, use global automatic processing instead

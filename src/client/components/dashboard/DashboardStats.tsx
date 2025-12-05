@@ -23,6 +23,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
 
     const isProviderConfigured =
       (list.provider === 'trakt' && !!traktConfig?.clientId) ||
+      (list.provider === 'traktChart' && !!traktConfig?.clientId) ||
       (list.provider === 'mdblist' && !!mdbListConfig?.apiKey);
 
     return isProviderConfigured;

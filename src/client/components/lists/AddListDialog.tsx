@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   Dialog,
@@ -14,6 +14,13 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Badge } from '../ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { validateAndDetectProvider } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
@@ -23,8 +30,10 @@ export function AddListDialog() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [maxItems, setMaxItems] = useState('20');
-  const [provider, setProvider] = useState<'trakt' | 'mdblist'>('trakt');
+  const [provider, setProvider] = useState<'trakt' | 'mdblist' | 'traktChart'>('trakt');
   const [urlError, setUrlError] = useState<string | null>(null);
+  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
+  const [selectedChartType, setSelectedChartType] = useState<string>('trending');
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -59,12 +68,21 @@ export function AddListDialog() {
     },
   });
 
+  // Auto-generate name for traktChart
+  useEffect(() => {
+    if (provider === 'traktChart') {
+      const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
+      const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
+      setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
+    }
+  }, [provider, selectedChartType, selectedMediaType]);
+
   const handleUrlChange = (value: string) => {
     setUrl(value);
     if (value) {
       const result = validateAndDetectProvider(value);
       if (!result.isValid || result.provider !== provider) {
-        setUrlError(`Please enter a valid ${provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`);
+        setUrlError(`Please enter a valid ${provider === 'trakt' ? 'Trakt List' : 'MDBList'} list URL`);
       } else {
         setUrlError(null);
       }
@@ -73,16 +91,18 @@ export function AddListDialog() {
     }
   };
 
-  const handleProviderChange = (newProvider: 'trakt' | 'mdblist') => {
+  const handleProviderChange = (newProvider: 'trakt' | 'mdblist' | 'traktChart') => {
     setProvider(newProvider);
-    // Re-validate URL if one exists
-    if (url) {
+    // Re-validate URL if one exists (only for trakt and mdblist)
+    if (newProvider !== 'traktChart' && url) {
       const result = validateAndDetectProvider(url);
       if (!result.isValid || result.provider !== newProvider) {
-        setUrlError(`Please enter a valid ${newProvider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`);
+        setUrlError(`Please enter a valid ${newProvider === 'trakt' ? 'Trakt List' : 'MDBList'} list URL`);
       } else {
         setUrlError(null);
       }
+    } else {
+      setUrlError(null);
     }
   };
 
@@ -96,21 +116,30 @@ export function AddListDialog() {
       return;
     }
 
+    let finalUrl = url;
+
+    // For traktChart, construct the URL from selections
+    if (provider === 'traktChart') {
+      finalUrl = `https://trakt.tv/${selectedMediaType}/${selectedChartType}`;
+    } else {
+      // Validate URL for trakt and mdblist
+      const result = validateAndDetectProvider(url);
+      if (!result.isValid || result.provider !== provider) {
+        toast({
+          title: 'Error',
+          description: `Please enter a valid ${provider === 'trakt' ? 'Trakt List' : 'MDBList'} list URL`,
+          variant: 'destructive',
+        });
+        return;
+      }
+    }
+
     // Check if provider is configured
-    const isConfigured = provider === 'trakt'
+    const isConfigured = (provider === 'trakt' || provider === 'traktChart')
       ? !!traktConfig?.clientId
       : !!mdbListConfig?.apiKey;
 
-    const result = validateAndDetectProvider(url);
-    if (!result.isValid || result.provider !== provider) {
-      toast({
-        title: 'Error',
-        description: `Please enter a valid ${provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} list URL`,
-        variant: 'destructive',
-      });
-      return;
-    }
-
+    // Validate maxItems
     const maxItemsNum = parseInt(maxItems);
     if (isNaN(maxItemsNum) || maxItemsNum < 1 || maxItemsNum > 50) {
       toast({
@@ -123,9 +152,9 @@ export function AddListDialog() {
 
     createMutation.mutate({
       name: name.trim(),
-      url: url.trim(),
+      url: finalUrl,
       provider: provider,
-      enabled: isConfigured, // Only enable if provider is configured
+      enabled: isConfigured,
       maxItems: maxItemsNum,
     });
 
@@ -134,7 +163,7 @@ export function AddListDialog() {
       setTimeout(() => {
         toast({
           title: 'List Added as Disabled',
-          description: `The list was added but is disabled because ${provider === 'trakt' ? 'Trakt' : 'MDBList'} is not configured. Configure the provider in Settings → API Keys to enable processing.`,
+          description: `The list was added but is disabled because ${provider === 'trakt' ? 'Trakt' : provider === 'traktChart' ? 'Trakt' : 'MDBList'} is not configured. Configure the provider in Settings → API Keys to enable processing.`,
         });
       }, 500);
     }
@@ -152,22 +181,47 @@ export function AddListDialog() {
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
-            Add a public list from Trakt.tv or MDBList to automatically request media to Jellyseerr.
+            Add a public list from Trakt List, Trakt Chart, or MDBList to automatically request media to Jellyseerr.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {/* Provider Selection */}
           <div className="grid gap-3">
             <Label>Provider</Label>
-            <RadioGroup value={provider} onValueChange={handleProviderChange}>
+            <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart')}>
               <label className="block cursor-pointer">
                 <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
                 <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">Trakt.tv</p>
-                        <p className="text-xs text-muted-foreground">Public lists and watchlists</p>
+                        <p className="font-medium">Trakt List</p>
+                        <p className="text-xs text-muted-foreground">Public lists</p>
+                      </div>
+                      {traktConfig?.clientId ? (
+                        <Badge variant="default" className="bg-green-500">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Configured
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-orange-500 text-white">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Not Configured
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </label>
+
+              <label className="block cursor-pointer">
+                <RadioGroupItem value="traktChart" id="provider-traktChart" className="peer sr-only" />
+                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Trakt Chart</p>
+                        <p className="text-xs text-muted-foreground">Curated charts like Trending, Popular, etc.</p>
                       </div>
                       {traktConfig?.clientId ? (
                         <Badge variant="default" className="bg-green-500">
@@ -212,6 +266,53 @@ export function AddListDialog() {
             </RadioGroup>
           </div>
 
+          {/* Media Type and Chart Type fields for Trakt Chart (before List Name) */}
+          {provider === 'traktChart' && (
+            <>
+              {/* Media Type Selection */}
+              <div className="grid gap-2">
+                <Label>Media Type</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={selectedMediaType === 'movies' ? 'default' : 'outline'}
+                    onClick={() => setSelectedMediaType('movies')}
+                    className="flex-1"
+                  >
+                    Movies
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={selectedMediaType === 'shows' ? 'default' : 'outline'}
+                    onClick={() => setSelectedMediaType('shows')}
+                    className="flex-1"
+                  >
+                    Shows
+                  </Button>
+                </div>
+              </div>
+
+              {/* Chart Type Dropdown */}
+              <div className="grid gap-2">
+                <Label htmlFor="chartType">Chart Type</Label>
+                <Select value={selectedChartType} onValueChange={setSelectedChartType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select chart type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="trending">Trending</SelectItem>
+                    <SelectItem value="popular">Popular</SelectItem>
+                    <SelectItem value="favorited">Most Favorited</SelectItem>
+                    <SelectItem value="played">Most Played</SelectItem>
+                    <SelectItem value="watched">Most Watched</SelectItem>
+                    <SelectItem value="collected">Most Collected</SelectItem>
+                    <SelectItem value="anticipated">Most Anticipated</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
           <div className="grid gap-2">
             <Label htmlFor="name">List Name</Label>
             <Input
@@ -219,26 +320,36 @@ export function AddListDialog() {
               placeholder="My List"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              disabled={provider === 'traktChart'}
             />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="url">List URL</Label>
-            <Input
-              id="url"
-              placeholder="https://..."
-              value={url}
-              onChange={(e) => handleUrlChange(e.target.value)}
-              className={urlError ? 'border-red-500' : ''}
-            />
-            {urlError && (
-              <p className="text-sm text-red-500">{urlError}</p>
-            )}
-            {!urlError && url && (
-              <p className="text-sm text-green-500">
-                Valid {provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} URL detected
+            {provider === 'traktChart' && (
+              <p className="text-xs text-muted-foreground">
+                Name is auto-generated based on your chart selection
               </p>
             )}
           </div>
+
+          {/* URL field for Trakt List and MDBList (not for Trakt Chart) */}
+          {provider !== 'traktChart' && (
+            <div className="grid gap-2">
+              <Label htmlFor="url">List URL</Label>
+              <Input
+                id="url"
+                placeholder="https://..."
+                value={url}
+                onChange={(e) => handleUrlChange(e.target.value)}
+                className={urlError ? 'border-red-500' : ''}
+              />
+              {urlError && (
+                <p className="text-sm text-red-500">{urlError}</p>
+              )}
+              {!urlError && url && (
+                <p className="text-sm text-green-500">
+                  Valid {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL detected
+                </p>
+              )}
+            </div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="maxItems">Max Items</Label>
             <Input
@@ -255,35 +366,37 @@ export function AddListDialog() {
               Maximum number of items to fetch from the list (1-50). Default: 20
             </p>
           </div>
-          <div className="rounded-md border bg-muted/50 p-3 space-y-2">
-            <p className="text-sm font-medium">
-              {provider === 'trakt' ? 'Trakt.tv' : 'MDBList'} URL format:
-            </p>
-            <div className="space-y-1.5 text-sm">
-              {provider === 'trakt' ? (
-                <>
-                  <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                    https://trakt.tv/users/USERNAME/lists/LIST-SLUG
-                  </code>
-                  <p className="text-xs text-muted-foreground">
-                    Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    <strong>Tip:</strong> Query parameters for sorting are supported (e.g., ?sort=rank to sort by ranking)
-                  </p>
-                </>
-              ) : (
-                <>
-                  <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                    https://mdblist.com/lists/USERNAME/LIST-SLUG
-                  </code>
-                  <p className="text-xs text-muted-foreground">
-                    Example: https://mdblist.com/lists/linaspurinis/most-popular-movies-top-20
-                  </p>
-                </>
-              )}
+          {provider !== 'traktChart' && (
+            <div className="rounded-md border bg-muted/50 p-3 space-y-2">
+              <p className="text-sm font-medium">
+                {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:
+              </p>
+              <div className="space-y-1.5 text-sm">
+                {provider === 'trakt' ? (
+                  <>
+                    <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                      https://trakt.tv/users/USERNAME/lists/LIST-SLUG
+                    </code>
+                    <p className="text-xs text-muted-foreground">
+                      Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      <strong>Tip:</strong> Query parameters for sorting are supported (e.g., ?sort=rank to sort by ranking)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                      https://mdblist.com/lists/USERNAME/LIST-SLUG
+                    </code>
+                    <p className="text-xs text-muted-foreground">
+                      Example: https://mdblist.com/lists/linaspurinis/most-popular-movies-top-20
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <DialogFooter>
           <Button onClick={handleAdd} disabled={createMutation.isPending}>

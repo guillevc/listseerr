@@ -70,6 +70,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
 
   const isProviderConfigured = useCallback((provider: string) => {
     if (provider === 'trakt') return !!traktConfig?.clientId;
+    if (provider === 'traktChart') return !!traktConfig?.clientId;
     if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
     return false; // Other providers not yet implemented
   }, [traktConfig, mdbListConfig]);
@@ -134,19 +135,19 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
           const providerConfigured = isProviderConfigured(list.provider);
 
           return (
-            <div className="flex items-center gap-2">
-              <Badge variant="default">
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              <Badge variant="default" className="whitespace-nowrap">
                 {getProviderName(info.getValue())}
               </Badge>
               {!providerConfigured && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 text-orange-500" />
+                      <AlertCircle className="h-4 w-4 text-orange-500 flex-shrink-0" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        {info.getValue() === 'trakt' ? 'Trakt' : info.getValue() === 'mdblist' ? 'MDBList' : info.getValue()} provider is not configured.
+                        {info.getValue() === 'trakt' ? 'Trakt' : info.getValue() === 'traktChart' ? 'Trakt Chart' : info.getValue() === 'mdblist' ? 'MDBList' : info.getValue()} provider is not configured.
                         Configure API key in Settings → API Keys to enable processing.
                       </p>
                     </TooltipContent>
@@ -250,17 +251,17 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <TooltipContent>
                   {!providerConfigured ? (
                     <p>
-                      {list.provider === 'trakt' ? 'Trakt' : 'MDBList'} provider is not configured.{' '}
+                      {list.provider === 'trakt' ? 'Trakt' : list.provider === 'traktChart' ? 'Trakt Chart' : 'MDBList'} provider is not configured.{' '}
                       Configure API key in{' '}
                       <span className="font-medium">Settings → API Keys</span> to enable processing.
                     </p>
                   ) : !isAutomaticProcessingEnabled ? (
                     <p>
                       Automatic processing is disabled. Enable it in{' '}
-                      <span className="font-medium">Settings → Automatic Processing</span> to enable individual lists.
+                      <span className="font-medium">Settings → Automatic Processing</span> to enable scheduled processing.
                     </p>
                   ) : (
-                    <p>Toggle automatic processing for this list</p>
+                    <p>Toggle scheduled automatic processing for this list</p>
                   )}
                 </TooltipContent>
               </Tooltip>
