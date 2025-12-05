@@ -188,7 +188,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       }),
       columnHelper.accessor('maxItems', {
         id: 'maxItems',
-        header: 'Max items',
+        header: 'Max',
         cell: (info) => {
           const maxItems = info.getValue();
           return (
@@ -197,6 +197,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
             </span>
           );
         },
+        enableSorting: false
       }),
       columnHelper.accessor('lastProcessed', {
         header: 'Processed',
@@ -204,8 +205,8 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5 cursor-help text-sm">
-                  <Clock className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-1.5 cursor-help text-sm whitespace-nowrap">
+                  <Clock className="h-3.5 w-3.5 flex-shrink-0" />
                   <span>{getRelativeTime(info.getValue())}</span>
                 </div>
               </TooltipTrigger>
@@ -220,9 +221,11 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
           const dateB = rowB.original.lastProcessed ? new Date(rowB.original.lastProcessed).getTime() : 0;
           return dateA - dateB;
         },
+        size: 150,
+        minSize: 150,
       }),
       columnHelper.accessor('enabled', {
-        header: 'Process Automatically',
+        header: 'Scheduled',
         cell: (info) => {
           const list = info.row.original;
           const providerConfigured = isProviderConfigured(list.provider);

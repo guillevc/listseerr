@@ -120,54 +120,58 @@ export function RecentActivity() {
                 </div>
 
                 {/* Executions Table */}
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>List</TableHead>
-                      <TableHead className="text-right">Items</TableHead>
-                      <TableHead className="text-right">Requested</TableHead>
-                      <TableHead className="text-right">Skipped</TableHead>
-                      <TableHead className="text-right">Failed</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {group.executions.map((execution) => {
-                      const itemsSkipped =
-                        (execution.itemsFound ?? 0) -
-                        (execution.itemsRequested ?? 0) -
-                        (execution.itemsFailed ?? 0);
+                <div className="overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-1/5">List</TableHead>
+                        <TableHead className="text-right w-1/5">Items</TableHead>
+                        <TableHead className="text-right w-1/5">Requested</TableHead>
+                        <TableHead className="text-right w-1/5">Skipped</TableHead>
+                        <TableHead className="text-right w-1/5">Failed</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {group.executions.map((execution) => {
+                        const itemsSkipped =
+                          (execution.itemsFound ?? 0) -
+                          (execution.itemsRequested ?? 0) -
+                          (execution.itemsFailed ?? 0);
 
-                      return (
-                        <TableRow key={execution.id}>
-                          <TableCell className="font-medium">
-                            {execution.listName || `List #${execution.listId}`}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {execution.itemsFound ?? 0}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
-                              <span>{execution.itemsRequested ?? 0}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
-                              <span>{itemsSkipped}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                              <span>{execution.itemsFailed ?? 0}</span>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                        return (
+                          <TableRow key={execution.id}>
+                            <TableCell className="font-medium w-1/5">
+                              <div className="line-clamp-3 break-words">
+                                {execution.listName || `List #${execution.listId}`}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right w-1/5">
+                              {execution.itemsFound ?? 0}
+                            </TableCell>
+                            <TableCell className="text-right w-1/5">
+                              <div className="flex items-center justify-end gap-1">
+                                <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
+                                <span>{execution.itemsRequested ?? 0}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right w-1/5">
+                              <div className="flex items-center justify-end gap-1">
+                                <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                                <span>{itemsSkipped}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right w-1/5">
+                              <div className="flex items-center justify-end gap-1">
+                                <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
+                                <span>{execution.itemsFailed ?? 0}</span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
 
                 {/* Show error messages if any */}
                 {group.executions.some((e) => e.errorMessage) && (

@@ -231,8 +231,7 @@ export function ApiKeysSettings() {
                 placeholder="Your Trakt.tv Client ID"
                 value={traktClientId}
                 onChange={(e) => setTraktClientId(e.target.value)}
-                readOnly={!traktEnabled}
-                disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
+                disabled={!traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending}
                 className="pr-10"
               />
               {traktEnabled && (
@@ -315,8 +314,7 @@ export function ApiKeysSettings() {
                 placeholder="Your MDBList API Key"
                 value={mdbListApiKey}
                 onChange={(e) => setTmdbApiKey(e.target.value)}
-                readOnly={!mdbListEnabled}
-                disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+                disabled={!mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
                 className="pr-10"
               />
               {mdbListEnabled && (

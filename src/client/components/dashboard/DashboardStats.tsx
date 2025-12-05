@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { List, Clock, PackageSearch } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { Separator } from '../ui/separator';
-import { useListsStats } from '../../hooks/use-lists-stats';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
 import type { SerializedMediaList } from '@/shared/types';
@@ -12,8 +11,22 @@ interface DashboardStatsProps {
 }
 
 export function DashboardStats({ lists }: DashboardStatsProps) {
-  const { total } = useListsStats(lists);
   const { data: dashboardStats } = trpc.dashboard.getStats.useQuery();
+
+  // Check provider configurations
+  const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
+  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
+
+  // Calculate active lists (enabled AND provider is configured)
+  const activeListsCount = lists.filter((list) => {
+    if (!list.enabled) return false;
+
+    const isProviderConfigured =
+      (list.provider === 'trakt' && !!traktConfig?.clientId) ||
+      (list.provider === 'mdblist' && !!mdbListConfig?.apiKey);
+
+    return isProviderConfigured;
+  }).length;
 
   // Get last scheduled processing time from stats
   const lastScheduledDate = dashboardStats?.lastScheduledProcessing
@@ -36,9 +49,9 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
     : 'Not scheduled';
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Lists */}
-      <Card>
+      <Card className="lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Lists
@@ -46,12 +59,13 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <List className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{total}</div>
+          <p className="text-xs text-muted-foreground mb-1">Total active</p>
+          <div className="text-2xl font-bold">{activeListsCount}</div>
         </CardContent>
       </Card>
 
       {/* Total Requests */}
-      <Card>
+      <Card className="lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total Requests
@@ -59,6 +73,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <PackageSearch className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
+          <p className="text-xs text-muted-foreground mb-1">All time</p>
           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
             {dashboardStats?.totalRequestedItems ?? '-'}
           </div>
@@ -66,21 +81,21 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       </Card>
 
       {/* Automatic Processing - Merged Card */}
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="md:col-span-2 lg:col-span-2">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Automatic Processing
           </CardTitle>
+          <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        <CardContent>
+          <div className="flex items-start gap-6">
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground mb-1">Last execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="text-lg font-bold cursor-help truncate">
+                    <div className="text-2xl font-bold cursor-help truncate">
                       {lastScheduledText}
                     </div>
                   </TooltipTrigger>
@@ -90,18 +105,15 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-          </div>
 
-          <Separator />
+            <Separator orientation="vertical" className="h-12" />
 
-          <div className="flex items-center gap-3">
-            <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground mb-1">Next execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="text-lg font-bold cursor-help truncate">
+                    <div className="text-2xl font-bold cursor-help truncate">
                       {nextScheduledText}
                     </div>
                   </TooltipTrigger>
