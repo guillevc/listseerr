@@ -1,0 +1,1 @@
+ALTER TABLE `media_lists` ADD `display_url` text;

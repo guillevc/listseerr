@@ -4,17 +4,54 @@ import { mediaLists, executionHistory } from '../../db/schema';
 import { eq, desc, and } from 'drizzle-orm';
 import { scheduler } from '../../lib/scheduler';
 import { createLogger } from '../../lib/logger';
+import { convertDisplayUrlToApiUrl as convertTraktListUrl } from '../../services/trakt/url-parser';
+import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '../../services/trakt/chart-client';
 
 const logger = createLogger('lists');
 
 const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
+  displayUrl: z.string().optional(),
   provider: z.enum(['trakt', 'mdblist', 'traktChart']).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),
 });
+
+/**
+ * Convert a user-provided URL to API and display URLs based on provider
+ */
+function processUrlForProvider(url: string, provider: 'trakt' | 'mdblist' | 'traktChart'): {
+  apiUrl: string;
+  displayUrl: string;
+} {
+  // Remove query params from URL
+  const cleanUrl = url.split('?')[0];
+
+  if (provider === 'traktChart') {
+    // For Trakt charts, convert display URL to API URL
+    try {
+      const apiUrl = convertTraktChartUrl(cleanUrl);
+      return { apiUrl, displayUrl: cleanUrl };
+    } catch {
+      // If conversion fails, assume it's already an API URL
+      return { apiUrl: cleanUrl, displayUrl: cleanUrl };
+    }
+  } else if (provider === 'trakt') {
+    // For Trakt lists, convert display URL to API URL
+    try {
+      const apiUrl = convertTraktListUrl(cleanUrl);
+      return { apiUrl, displayUrl: cleanUrl };
+    } catch {
+      // If conversion fails, assume it's already an API URL
+      return { apiUrl: cleanUrl, displayUrl: cleanUrl };
+    }
+  } else {
+    // For MDBList, URL is used as-is (no separate API endpoint)
+    return { apiUrl: cleanUrl, displayUrl: cleanUrl };
+  }
+}
 
 export const listsRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -60,14 +97,15 @@ export const listsRouter = router({
   create: publicProcedure
     .input(listInputSchema)
     .mutation(async ({ ctx, input }) => {
-      // Remove query params from URL
-      const cleanUrl = input.url.split('?')[0];
+      // Process URL based on provider
+      const { apiUrl, displayUrl } = processUrlForProvider(input.url, input.provider);
 
       const [newList] = await ctx.db
         .insert(mediaLists)
         .values({
           ...input,
-          url: cleanUrl,
+          url: apiUrl,
+          displayUrl: displayUrl,
           userId: 1, // Default user
         })
         .returning();
@@ -102,10 +140,31 @@ export const listsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Remove query params from URL if URL is being updated
-      const cleanedData = input.data.url
-        ? { ...input.data, url: input.data.url.split('?')[0] }
-        : input.data;
+      // Process URL if URL or provider is being updated
+      let cleanedData = input.data;
+
+      if (input.data.url || input.data.provider) {
+        // Get current list to get the provider if not being updated
+        const [currentList] = await ctx.db
+          .select()
+          .from(mediaLists)
+          .where(eq(mediaLists.id, input.id))
+          .limit(1);
+
+        if (!currentList) {
+          throw new Error('List not found');
+        }
+
+        const provider = input.data.provider || currentList.provider;
+        const url = input.data.url || currentList.url;
+
+        const { apiUrl, displayUrl } = processUrlForProvider(url, provider);
+        cleanedData = {
+          ...input.data,
+          url: apiUrl,
+          displayUrl: displayUrl,
+        };
+      }
 
       const [updatedList] = await ctx.db
         .update(mediaLists)

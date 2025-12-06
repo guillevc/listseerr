@@ -33,6 +33,7 @@ export interface SerializedMediaList {
   createdAt: string | null;
   userId: number;
   url: string;
+  displayUrl: string | null;
   updatedAt: string | null;
   provider: Provider;
   enabled: boolean;

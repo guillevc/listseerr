@@ -339,6 +339,30 @@ export async function processBatchWithDeduplication(
   for (let i = 0; i < lists.length; i++) {
     const list = lists[i];
 
+    // Skip lists where provider is not configured
+    if ((list.provider === 'trakt' || list.provider === 'traktChart') && !traktConfig?.clientId) {
+      logger.warn(
+        {
+          listId: list.id,
+          listName: list.name,
+          provider: list.provider,
+        },
+        'Skipping list - Trakt provider not configured'
+      );
+      continue;
+    }
+    if (list.provider === 'mdblist' && !mdbListConfig?.apiKey) {
+      logger.warn(
+        {
+          listId: list.id,
+          listName: list.name,
+          provider: list.provider,
+        },
+        'Skipping list - MDBList provider not configured'
+      );
+      continue;
+    }
+
     // Create execution history entry
     const [executionEntry] = await database
       .insert(executionHistory)
@@ -361,14 +385,6 @@ export async function processBatchWithDeduplication(
         },
         'Fetching items from list'
       );
-
-      // Validate provider configuration
-      if ((list.provider === 'trakt' || list.provider === 'traktChart') && !traktConfig?.clientId) {
-        throw new Error('Trakt API configuration required');
-      }
-      if (list.provider === 'mdblist' && !mdbListConfig?.apiKey) {
-        throw new Error('MDBList API configuration required');
-      }
 
       // Fetch items based on provider
       let items: Awaited<ReturnType<typeof fetchTraktList>> = [];

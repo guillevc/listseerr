@@ -161,25 +161,27 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
       columnHelper.accessor('url', {
         header: 'URL',
         cell: (info) => {
-          const url = info.getValue();
+          const list = info.row.original;
+          // Use displayUrl if available, otherwise fall back to url
+          const displayUrl = list.displayUrl || info.getValue();
           return (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    href={url}
+                    href={displayUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
                   >
                     <span className="truncate">
-                      {truncateMiddle(url, 30)}
+                      {truncateMiddle(displayUrl, 30)}
                     </span>
                     <ExternalLink className="h-3 w-3 flex-shrink-0" />
                   </a>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="max-w-md break-all">{url}</p>
+                  <p className="max-w-md break-all">{displayUrl}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

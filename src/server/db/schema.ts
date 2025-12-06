@@ -46,7 +46,8 @@ export const mediaLists = sqliteTable('media_lists', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
-  url: text('url').notNull(),
+  url: text('url').notNull(), // API URL used internally for fetching
+  displayUrl: text('display_url'), // User-facing URL shown in UI (optional, falls back to url if not set)
   provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),

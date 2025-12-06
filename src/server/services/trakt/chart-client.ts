@@ -16,8 +16,14 @@ const VALID_CHART_TYPES: TraktChartType[] = [
 
 const VALID_MEDIA_TYPES: TraktMediaType[] = ['movies', 'shows'];
 
-// Chart response items - the movie/show data is at the root level
-interface TraktChartItem {
+// Chart types that return simple responses (movie/show at root level)
+const SIMPLE_CHART_TYPES: TraktChartType[] = ['trending', 'popular', 'anticipated'];
+
+// Chart types that return wrapped responses (movie/show nested in object)
+const WRAPPED_CHART_TYPES: TraktChartType[] = ['collected', 'played', 'watched', 'favorited'];
+
+// Simple chart response - movie/show data at root level
+interface TraktSimpleChartItem {
   title: string;
   year: number;
   ids: {
@@ -25,23 +31,47 @@ interface TraktChartItem {
   };
 }
 
+// Wrapped chart response - movie/show nested with additional metadata
+interface TraktWrappedChartItem {
+  watcher_count?: number;
+  play_count?: number;
+  collected_count?: number;
+  movie?: {
+    title: string;
+    year: number;
+    ids: {
+      tmdb: number;
+    };
+  };
+  show?: {
+    title: string;
+    year: number;
+    ids: {
+      tmdb: number;
+    };
+  };
+}
+
 /**
- * Parse a Trakt chart display URL to extract media type and chart type
- * Example: https://trakt.tv/movies/trending -> { mediaType: 'movies', chartType: 'trending' }
+ * Parse a Trakt chart URL (display or API) to extract media type and chart type
+ * Examples:
+ *   - https://trakt.tv/movies/trending -> { mediaType: 'movies', chartType: 'trending' }
+ *   - https://api.trakt.tv/movies/trending -> { mediaType: 'movies', chartType: 'trending' }
  */
 export function parseTraktChartUrl(url: string): {
   mediaType: TraktMediaType;
   chartType: TraktChartType;
 } {
-  const urlPattern = /^https?:\/\/(www\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i;
+  // Accept both display URLs (trakt.tv) and API URLs (api.trakt.tv)
+  const urlPattern = /^https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i;
   const match = url.match(urlPattern);
 
   if (!match) {
     throw new Error(`Invalid Trakt chart URL: ${url}`);
   }
 
-  const mediaType = match[2].toLowerCase() as TraktMediaType;
-  const chartType = match[3].toLowerCase() as TraktChartType;
+  const mediaType = match[3].toLowerCase() as TraktMediaType;
+  const chartType = match[4].toLowerCase() as TraktChartType;
 
   if (!VALID_MEDIA_TYPES.includes(mediaType)) {
     throw new Error(`Invalid media type: ${mediaType}`);
@@ -52,6 +82,15 @@ export function parseTraktChartUrl(url: string): {
   }
 
   return { mediaType, chartType };
+}
+
+/**
+ * Convert a Trakt chart display URL to an API URL
+ * Example: https://trakt.tv/movies/trending -> https://api.trakt.tv/movies/trending
+ */
+export function convertDisplayUrlToApiUrl(displayUrl: string): string {
+  const { mediaType, chartType } = parseTraktChartUrl(displayUrl);
+  return `https://api.trakt.tv/${mediaType}/${chartType}`;
 }
 
 /**
@@ -117,23 +156,30 @@ export async function fetchTraktChart(
       throw new Error(`Trakt API error: ${response.status} ${response.statusText}`);
     }
 
-    const items = await response.json() as TraktChartItem[];
+    // Determine if this is a wrapped or simple chart type
+    const isWrappedChart = WRAPPED_CHART_TYPES.includes(chartType);
+
+    const rawItems = await response.json() as (TraktSimpleChartItem | TraktWrappedChartItem)[];
 
     logger.debug(
       {
-        totalItems: items.length,
+        totalItems: rawItems.length,
         mediaType,
         chartType,
+        isWrappedChart,
       },
       'Received items from Trakt chart API'
     );
 
     // Transform chart items to MediaItem format
-    const mediaItems: MediaItem[] = items
-      .map((item) => transformTraktChartItem(item, mediaType))
+    const mediaItems: MediaItem[] = rawItems
+      .map((item) => isWrappedChart
+        ? transformWrappedChartItem(item as TraktWrappedChartItem, mediaType)
+        : transformSimpleChartItem(item as TraktSimpleChartItem, mediaType)
+      )
       .filter((item): item is MediaItem => item !== null);
 
-    const skippedCount = items.length - mediaItems.length;
+    const skippedCount = rawItems.length - mediaItems.length;
 
     logger.debug(
       {
@@ -161,11 +207,11 @@ export async function fetchTraktChart(
 }
 
 /**
- * Transform a Trakt chart item to MediaItem format
- * Charts return the movie/show data at the root level (no wrapping object)
+ * Transform a simple Trakt chart item to MediaItem format
+ * Simple charts (trending, popular, anticipated) return movie/show at root level
  */
-function transformTraktChartItem(
-  item: TraktChartItem,
+function transformSimpleChartItem(
+  item: TraktSimpleChartItem,
   mediaType: TraktMediaType
 ): MediaItem | null {
   const tmdbId = item.ids.tmdb;
@@ -185,6 +231,47 @@ function transformTraktChartItem(
   return {
     title: item.title,
     year: item.year,
+    tmdbId,
+    mediaType: mappedMediaType,
+  };
+}
+
+/**
+ * Transform a wrapped Trakt chart item to MediaItem format
+ * Wrapped charts (collected, played, watched, favorited) nest movie/show in object
+ */
+function transformWrappedChartItem(
+  item: TraktWrappedChartItem,
+  mediaType: TraktMediaType
+): MediaItem | null {
+  // Extract the movie or show data from the wrapper
+  const content = mediaType === 'movies' ? item.movie : item.show;
+
+  if (!content) {
+    logger.debug(
+      { mediaType, itemKeys: Object.keys(item) },
+      'Skipping item - no movie/show data found'
+    );
+    return null;
+  }
+
+  const tmdbId = content.ids.tmdb;
+
+  if (!tmdbId) {
+    logger.debug(
+      { title: content.title, year: content.year, mediaType },
+      'Skipping item - no TMDB ID'
+    );
+    return null;
+  }
+
+  // Map mediaType from URL format to our MediaType format
+  // 'movies' -> 'movie', 'shows' -> 'tv'
+  const mappedMediaType: 'movie' | 'tv' = mediaType === 'movies' ? 'movie' : 'tv';
+
+  return {
+    title: content.title,
+    year: content.year,
     tmdbId,
     mediaType: mappedMediaType,
   };

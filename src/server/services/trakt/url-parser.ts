@@ -59,6 +59,15 @@ export function parseTraktUrl(url: string): TraktUrlParts {
   }
 }
 
+/**
+ * Convert a Trakt list display URL to an API URL
+ * Example: https://trakt.tv/users/username/lists/listslug -> https://api.trakt.tv/users/username/lists/listslug/items
+ */
+export function convertDisplayUrlToApiUrl(displayUrl: string): string {
+  const parts = parseTraktUrl(displayUrl);
+  return `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
+}
+
 export function buildTraktApiUrl(
   parts: TraktUrlParts,
   page: number = 1,

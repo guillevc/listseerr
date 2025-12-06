@@ -105,7 +105,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
           <div className="grid gap-2">
             <Label htmlFor="edit-url">List URL (Read-only)</Label>
             <div className="text-sm text-muted-foreground bg-muted p-2 rounded-md break-all">
-              {list.url}
+              {list.displayUrl || list.url}
             </div>
             <p className="text-xs text-muted-foreground">
               URL cannot be changed. Create a new list if you need a different URL.

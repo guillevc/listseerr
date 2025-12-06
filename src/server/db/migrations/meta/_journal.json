@@ -57,6 +57,13 @@
       "when": 1764890796597,
       "tag": "0007_clammy_microchip",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1765022580796,
+      "tag": "0008_careful_fantastic_four",
+      "breakpoints": true
     }
   ]
 }
