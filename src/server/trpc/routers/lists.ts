@@ -13,7 +13,7 @@ const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
   displayUrl: z.string().optional(),
-  provider: z.enum(['trakt', 'mdblist', 'traktChart']).default('trakt'),
+  provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu']).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),
@@ -22,7 +22,7 @@ const listInputSchema = z.object({
 /**
  * Convert a user-provided URL to API and display URLs based on provider
  */
-function processUrlForProvider(url: string, provider: 'trakt' | 'mdblist' | 'traktChart'): {
+function processUrlForProvider(url: string, provider: 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu', providedDisplayUrl?: string): {
   apiUrl: string;
   displayUrl: string;
 } {
@@ -47,6 +47,9 @@ function processUrlForProvider(url: string, provider: 'trakt' | 'mdblist' | 'tra
       // If conversion fails, assume it's already an API URL
       return { apiUrl: cleanUrl, displayUrl: cleanUrl };
     }
+  } else if (provider === 'stevenlu') {
+    // For StevenLu, URL is the API endpoint and displayUrl is provided separately
+    return { apiUrl: cleanUrl, displayUrl: providedDisplayUrl || cleanUrl };
   } else {
     // For MDBList, URL is used as-is (no separate API endpoint)
     return { apiUrl: cleanUrl, displayUrl: cleanUrl };
@@ -98,7 +101,7 @@ export const listsRouter = router({
     .input(listInputSchema)
     .mutation(async ({ ctx, input }) => {
       // Process URL based on provider
-      const { apiUrl, displayUrl } = processUrlForProvider(input.url, input.provider);
+      const { apiUrl, displayUrl } = processUrlForProvider(input.url, input.provider, input.displayUrl);
 
       const [newList] = await ctx.db
         .insert(mediaLists)
@@ -158,7 +161,7 @@ export const listsRouter = router({
         const provider = input.data.provider || currentList.provider;
         const url = input.data.url || currentList.url;
 
-        const { apiUrl, displayUrl } = processUrlForProvider(url, provider);
+        const { apiUrl, displayUrl } = processUrlForProvider(url, provider, input.data.displayUrl);
         cleanedData = {
           ...input.data,
           url: apiUrl,

@@ -5,6 +5,7 @@ import { eq, desc, and, asc } from 'drizzle-orm';
 import { fetchTraktList } from '../../services/trakt/client';
 import { fetchTraktChart } from '../../services/trakt/chart-client';
 import { fetchMdbListList } from '../../services/mdblist/client';
+import { fetchStevenLuList } from '../../services/stevenlu/client';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
 import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
 import { createLogger } from '../../lib/logger';
@@ -135,6 +136,8 @@ export async function processListById(
       items = await fetchTraktChart(list.url, list.maxItems, traktConfig.clientId);
     } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
       items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
+    } else if (list.provider === 'stevenlu') {
+      items = await fetchStevenLuList(list.maxItems);
     } else {
       throw new Error(`Unsupported or unconfigured provider: ${list.provider}`);
     }
@@ -395,6 +398,8 @@ export async function processBatchWithDeduplication(
         items = await fetchTraktChart(list.url, list.maxItems, traktConfig.clientId);
       } else if (list.provider === 'mdblist' && mdbListConfig?.apiKey) {
         items = await fetchMdbListList(list.url, list.maxItems, mdbListConfig.apiKey);
+      } else if (list.provider === 'stevenlu') {
+        items = await fetchStevenLuList(list.maxItems);
       }
 
       totalItemsFound += items.length;

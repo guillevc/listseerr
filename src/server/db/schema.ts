@@ -23,7 +23,7 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
 export const providerConfigs = sqliteTable('provider_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
   clientId: text('client_id'),
   apiKey: text('api_key'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -48,7 +48,7 @@ export const mediaLists = sqliteTable('media_lists', {
   name: text('name').notNull(),
   url: text('url').notNull(), // API URL used internally for fetching
   displayUrl: text('display_url'), // User-facing URL shown in UI (optional, falls back to url if not set)
-  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart'] }).notNull(),
+  provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),
   processingSchedule: text('processing_schedule'), // DEPRECATED: Per-list schedules not used, use global automatic processing instead
@@ -82,6 +82,15 @@ export const listItemsCache = sqliteTable('list_items_cache', {
   tmdbId: integer('tmdb_id').unique(), // Unique constraint enforces global cache
   mediaType: text('media_type', { enum: ['movie', 'tv'] }).notNull(),
   fetchedAt: integer('fetched_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// Provider cache for external data (e.g., StevenLu JSON)
+// Stores cached responses from providers with timestamps for cache invalidation
+export const providerCache = sqliteTable('provider_cache', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  provider: text('provider', { enum: ['stevenlu'] }).notNull().unique(),
+  data: text('data').notNull(), // JSON string of the cached response
+  cachedAt: integer('cached_at', { mode: 'timestamp' }).notNull(),
 });
 
 // Relations
@@ -157,3 +166,6 @@ export type NewExecutionHistory = typeof executionHistory.$inferInsert;
 
 export type ListItemCache = typeof listItemsCache.$inferSelect;
 export type NewListItemCache = typeof listItemsCache.$inferInsert;
+
+export type ProviderCache = typeof providerCache.$inferSelect;
+export type NewProviderCache = typeof providerCache.$inferInsert;

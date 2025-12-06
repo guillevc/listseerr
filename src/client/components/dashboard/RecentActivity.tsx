@@ -32,7 +32,7 @@ export function RecentActivity() {
             Recent Activity
           </CardTitle>
           <CardDescription>
-            Recent list processing and events
+            Recent list processing and events (last 24 hours)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -54,7 +54,7 @@ export function RecentActivity() {
             Recent Activity
           </CardTitle>
           <CardDescription>
-            Recent list processing and events
+            Recent list processing and events (last 24 hours)
           </CardDescription>
         </CardHeader>
         <CardContent>

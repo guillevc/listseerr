@@ -30,7 +30,7 @@ export function AddListDialog() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [maxItems, setMaxItems] = useState('20');
-  const [provider, setProvider] = useState<'trakt' | 'mdblist' | 'traktChart'>('trakt');
+  const [provider, setProvider] = useState<'trakt' | 'mdblist' | 'traktChart' | 'stevenlu'>('trakt');
   const [urlError, setUrlError] = useState<string | null>(null);
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
   const [selectedChartType, setSelectedChartType] = useState<string>('trending');
@@ -68,12 +68,14 @@ export function AddListDialog() {
     },
   });
 
-  // Auto-generate name for traktChart
+  // Auto-generate name for traktChart and stevenlu
   useEffect(() => {
     if (provider === 'traktChart') {
       const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
       const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
       setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
+    } else if (provider === 'stevenlu') {
+      setName('StevenLu Popular Movies');
     }
   }, [provider, selectedChartType, selectedMediaType]);
 
@@ -91,10 +93,10 @@ export function AddListDialog() {
     }
   };
 
-  const handleProviderChange = (newProvider: 'trakt' | 'mdblist' | 'traktChart') => {
+  const handleProviderChange = (newProvider: 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu') => {
     setProvider(newProvider);
     // Re-validate URL if one exists (only for trakt and mdblist)
-    if (newProvider !== 'traktChart' && url) {
+    if (newProvider !== 'traktChart' && newProvider !== 'stevenlu' && url) {
       const result = validateAndDetectProvider(url);
       if (!result.isValid || result.provider !== newProvider) {
         setUrlError(`Please enter a valid ${newProvider === 'trakt' ? 'Trakt List' : 'MDBList'} list URL`);
@@ -117,10 +119,15 @@ export function AddListDialog() {
     }
 
     let finalUrl = url;
+    let displayUrl: string | null = null;
 
     // For traktChart, construct the URL from selections
     if (provider === 'traktChart') {
       finalUrl = `https://trakt.tv/${selectedMediaType}/${selectedChartType}`;
+    } else if (provider === 'stevenlu') {
+      // For StevenLu, use the API URL internally but display the user-facing URL
+      finalUrl = 'https://s3.amazonaws.com/popular-movies/movies.json';
+      displayUrl = 'https://movies.stevenlu.com';
     } else {
       // Validate URL for trakt and mdblist
       const result = validateAndDetectProvider(url);
@@ -135,7 +142,10 @@ export function AddListDialog() {
     }
 
     // Check if provider is configured
-    const isConfigured = (provider === 'trakt' || provider === 'traktChart')
+    // StevenLu doesn't require configuration
+    const isConfigured = provider === 'stevenlu'
+      ? true
+      : (provider === 'trakt' || provider === 'traktChart')
       ? !!traktConfig?.clientId
       : !!mdbListConfig?.apiKey;
 
@@ -153,6 +163,7 @@ export function AddListDialog() {
     createMutation.mutate({
       name: name.trim(),
       url: finalUrl,
+      displayUrl: displayUrl,
       provider: provider,
       enabled: isConfigured,
       maxItems: maxItemsNum,
@@ -181,14 +192,14 @@ export function AddListDialog() {
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
-            Add a public list from Trakt List, Trakt Chart, or MDBList to automatically request media to Jellyseerr.
+            Add a public list from Trakt List, Trakt Chart, MDBList, or StevenLu to automatically request media to Jellyseerr.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {/* Provider Selection */}
           <div className="grid gap-3">
             <Label>Provider</Label>
-            <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart')}>
+            <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
               <label className="block cursor-pointer">
                 <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
                 <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
@@ -263,8 +274,39 @@ export function AddListDialog() {
                   </div>
                 </div>
               </label>
+
+              <label className="block cursor-pointer">
+                <RadioGroupItem value="stevenlu" id="provider-stevenlu" className="peer sr-only" />
+                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">StevenLu</p>
+                        <p className="text-xs text-muted-foreground">Popular movies list (updated daily)</p>
+                      </div>
+                      <Badge variant="default" className="bg-green-500">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        No Config Required
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </label>
             </RadioGroup>
           </div>
+
+          {/* Info box for StevenLu (before List Name) */}
+          {provider === 'stevenlu' && (
+            <div className="rounded-md border bg-muted/50 p-3 space-y-2">
+              <p className="text-sm font-medium">List URL (for reference):</p>
+              <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                https://movies.stevenlu.com
+              </code>
+              <p className="text-xs text-muted-foreground">
+                This list is automatically fetched from StevenLu's popular movies API and updated daily.
+              </p>
+            </div>
+          )}
 
           {/* Media Type and Chart Type fields for Trakt Chart (before List Name) */}
           {provider === 'traktChart' && (
@@ -324,13 +366,18 @@ export function AddListDialog() {
             />
             {provider === 'traktChart' && (
               <p className="text-xs text-muted-foreground">
-                Name is auto-generated based on your chart selection
+                Name is auto-generated based on your chart selection (you can edit it)
+              </p>
+            )}
+            {provider === 'stevenlu' && (
+              <p className="text-xs text-muted-foreground">
+                Default name provided (you can edit it)
               </p>
             )}
           </div>
 
-          {/* URL field for Trakt List and MDBList (not for Trakt Chart) */}
-          {provider !== 'traktChart' && (
+          {/* URL field for Trakt List and MDBList (not for Trakt Chart or StevenLu) */}
+          {provider !== 'traktChart' && provider !== 'stevenlu' && (
             <div className="grid gap-2">
               <Label htmlFor="url">List URL</Label>
               <Input
@@ -366,7 +413,7 @@ export function AddListDialog() {
               Maximum number of items to fetch from the list (1-50). Default: 20
             </p>
           </div>
-          {provider !== 'traktChart' && (
+          {provider !== 'traktChart' && provider !== 'stevenlu' && (
             <div className="rounded-md border bg-muted/50 p-3 space-y-2">
               <p className="text-sm font-medium">
                 {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:

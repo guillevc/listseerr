@@ -22,6 +22,10 @@ const providerPatterns: Record<ListProvider, RegExp[]> = {
   imdb: [
     /^https?:\/\/(www\.)?imdb\.com\/list\/ls\d+\/?$/i,
   ],
+  stevenlu: [
+    // StevenLu doesn't use user-provided URLs, but we include a pattern for internal use
+    /^https?:\/\/movies\.stevenlu\.com\/?$/i,
+  ],
 };
 
 export function validateAndDetectProvider(url: string): ValidationResult {
@@ -65,6 +69,7 @@ export function getProviderName(provider: ListProvider): string {
     letterboxd: 'Letterboxd',
     mdblist: 'MDBList',
     imdb: 'IMDB',
+    stevenlu: 'StevenLu',
   };
   return names[provider];
 }
@@ -76,6 +81,7 @@ export function getProviderColor(provider: ListProvider): string {
     letterboxd: 'bg-flexoki-orange',
     mdblist: 'bg-flexoki-blue',
     imdb: 'bg-flexoki-yellow',
+    stevenlu: 'bg-flexoki-green',
   };
   return colors[provider];
 }
