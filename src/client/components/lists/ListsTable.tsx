@@ -44,13 +44,10 @@ interface Props {
 
 const columnHelper = createColumnHelper<MediaList>();
 
-// Utility function to truncate text in the middle
-const truncateMiddle = (text: string, maxLength: number = 30): string => {
+// Utility function to truncate text from the tail (show leading characters)
+const truncateTail = (text: string, maxLength: number = 30): string => {
   if (text.length <= maxLength) return text;
-  const halfLength = Math.floor(maxLength / 2);
-  const start = text.substring(0, halfLength);
-  const end = text.substring(text.length - halfLength);
-  return `${start}...${end}`;
+  return `${text.substring(0, maxLength)}...`;
 };
 
 export function ListsTable({ lists, onProcess, processingLists }: Props) {
@@ -175,7 +172,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
                   >
                     <span className="truncate">
-                      {truncateMiddle(displayUrl, 30)}
+                      {truncateTail(displayUrl, 30)}
                     </span>
                     <ExternalLink className="h-3 w-3 flex-shrink-0" />
                   </a>

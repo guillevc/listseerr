@@ -23,3 +23,13 @@ export interface ProcessingResult {
     error: string;
   }>;
 }
+
+export interface JellyseerrPendingRequestsResponse {
+  pageInfo: {
+    pages: number;
+    pageSize: number;
+    results: number;
+    page: number;
+  };
+  results: unknown[]; // We don't need the actual request data
+}

@@ -1,8 +1,12 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
-import { executionHistory, listItemsCache, mediaLists } from '../../db/schema';
-import { eq, desc, sql, and } from 'drizzle-orm';
+import { executionHistory, listItemsCache, mediaLists, jellyseerrConfigs } from '../../db/schema';
+import { eq, desc, sql, and, gte } from 'drizzle-orm';
 import { scheduler } from '../../lib/scheduler';
+import { getPendingRequestsCount } from '../../services/jellyseerr/client';
+import { createLogger } from '../../lib/logger';
+
+const logger = createLogger('dashboard');
 
 export const dashboardRouter = router({
   getStats: publicProcedure.query(async ({ ctx }) => {
@@ -44,6 +48,9 @@ export const dashboardRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      // Filter to last 24 hours only
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
       // Get recent executions with list names
       const recentExecutions = await ctx.db
         .select({
@@ -62,6 +69,7 @@ export const dashboardRouter = router({
         })
         .from(executionHistory)
         .leftJoin(mediaLists, eq(executionHistory.listId, mediaLists.id))
+        .where(gte(executionHistory.startedAt, twentyFourHoursAgo))
         .orderBy(desc(executionHistory.startedAt))
         .limit(input.limit);
 
@@ -120,4 +128,27 @@ export const dashboardRouter = router({
 
       return grouped;
     }),
+
+  getPendingRequests: publicProcedure.query(async ({ ctx }) => {
+    // Get Jellyseerr config
+    const [config] = await ctx.db
+      .select()
+      .from(jellyseerrConfigs)
+      .where(eq(jellyseerrConfigs.userId, 1))
+      .limit(1);
+
+    // If no config, return not configured state
+    if (!config) {
+      return { count: 0, configured: false, error: false };
+    }
+
+    // Call getPendingRequestsCount()
+    try {
+      const count = await getPendingRequestsCount(config);
+      return { count, configured: true, error: false };
+    } catch (error) {
+      logger.error({ error }, 'Failed to fetch pending requests count');
+      return { count: 0, configured: true, error: true };
+    }
+  }),
 });

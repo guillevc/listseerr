@@ -29,6 +29,7 @@ export function useListProcessor() {
       utils.lists.getAll.invalidate();
       utils.dashboard.getStats.invalidate();
       utils.dashboard.getRecentActivity.invalidate();
+      utils.dashboard.getPendingRequests.invalidate();
 
       if (result.success) {
         const skipped = result.itemsFound - result.itemsRequested - result.itemsFailed;
@@ -74,6 +75,7 @@ export function useListProcessor() {
       utils.lists.getAll.invalidate();
       utils.dashboard.getStats.invalidate();
       utils.dashboard.getRecentActivity.invalidate();
+      utils.dashboard.getPendingRequests.invalidate();
 
       if (result.success) {
         const parts = [`Processed ${result.processedLists} list(s)`];

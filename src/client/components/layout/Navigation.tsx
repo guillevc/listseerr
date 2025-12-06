@@ -23,7 +23,11 @@ export function Navigation() {
   const jellyseerrRequestsUrl = jellyseerrConfig?.url
     ? `${jellyseerrConfig.url}/requests`
     : undefined;
-  const mockPendingRequests = 5; // TODO: Replace with real count later
+
+  // Query pending requests count with 60-second polling
+  const { data: pendingRequests } = trpc.dashboard.getPendingRequests.useQuery(undefined, {
+    refetchInterval: 60000, // Poll every 60 seconds
+  });
 
   // Dynamic nav items including external links
   const navItems = [
@@ -35,8 +39,10 @@ export function Navigation() {
       name: 'Requests',
       path: jellyseerrRequestsUrl,
       type: 'external',
-      badge: mockPendingRequests,
-      disabled: !jellyseerrRequestsUrl,
+      badge: pendingRequests?.error
+        ? '!'
+        : pendingRequests?.count || undefined,
+      disabled: !pendingRequests?.configured,
     },
   ];
 
@@ -99,7 +105,7 @@ export function Navigation() {
                         className="flex items-center gap-2 border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
                       >
                         {item.badge && (
-                          <Badge className="px-1.5 py-0 text-xs bg-flexoki-purple text-black hover:bg-flexoki-purple/90">
+                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-flexoki-purple text-black hover:bg-flexoki-purple/90'}`}>
                             {item.badge}
                           </Badge>
                         )}
@@ -187,7 +193,7 @@ export function Navigation() {
                       className="flex items-center gap-2 w-full border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
                     >
                       {item.badge && (
-                        <Badge className="px-1.5 py-0 text-xs bg-flexoki-purple text-white hover:bg-flexoki-purple/90">
+                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-flexoki-purple text-white hover:bg-flexoki-purple/90'}`}>
                           {item.badge}
                         </Badge>
                       )}

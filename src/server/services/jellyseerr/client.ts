@@ -4,6 +4,7 @@ import type {
   JellyseerrRequestPayload,
   JellyseerrRequestResponse,
   ProcessingResult,
+  JellyseerrPendingRequestsResponse,
 } from './types';
 import { createLogger } from '../../lib/logger';
 
@@ -227,4 +228,56 @@ export async function requestItemsToJellyseerr(
   );
 
   return result;
+}
+
+/**
+ * Get the count of pending requests from Jellyseerr
+ * @param config - Jellyseerr configuration
+ * @returns Number of pending requests
+ */
+export async function getPendingRequestsCount(config: JellyseerrConfig): Promise<number> {
+  logger.debug('Fetching pending requests count from Jellyseerr');
+
+  try {
+    const response = await fetch(
+      `${config.url}/api/v1/request?filter=pending&take=1000`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': config.apiKey,
+          'X-Api-User': config.userIdJellyseerr.toString(),
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => '');
+      logger.error(
+        {
+          status: response.status,
+          statusText: response.statusText,
+          url: `${config.url}/api/v1/request?filter=pending&take=1000`,
+          responseBody: errorBody,
+        },
+        'Failed to fetch pending requests from Jellyseerr'
+      );
+      throw new Error(`Jellyseerr API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json() as JellyseerrPendingRequestsResponse;
+    const count = data.pageInfo.results;
+
+    logger.info(
+      { pendingRequestsCount: count },
+      'Successfully fetched pending requests count'
+    );
+
+    return count;
+  } catch (error) {
+    logger.error(
+      { error, url: config.url },
+      'Failed to get pending requests count from Jellyseerr'
+    );
+    throw error;
+  }
 }
