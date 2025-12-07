@@ -4,54 +4,193 @@
 
 @layer base {
   :root {
-    /* Flexoki Light Theme - Following official mappings */
-    /* bg: paper, bg-2: base-50, ui: base-100, ui-2: base-150, ui-3: base-200 */
-    /* tx: black, tx-2: base-600, tx-3: base-500 */
-    --background: 48 100% 97%;       /* bg: paper #FFFCF0 */
-    --foreground: 0 3% 6%;           /* tx: black #100F0F */
-    --card: 51 33% 92%;              /* bg-2: base-50 #F2F0E5 */
-    --card-foreground: 0 3% 6%;      /* tx: black #100F0F */
-    --popover: 51 33% 92%;           /* bg-2: base-50 #F2F0E5 */
-    --popover-foreground: 0 3% 6%;   /* tx: black #100F0F */
-    --primary: 177 62% 34%;          /* cy-600: cyan #24837B */
+    /* Flexoki Base Colors */
+    --black: #100F0F;
+    --paper: #FFFCF0;
+
+    /* Base Grayscale */
+    --base-50: #F2F0E5;
+    --base-100: #E6E4D9;
+    --base-150: #DAD8CE;
+    --base-200: #CECDC3;
+    --base-300: #B7B5AC;
+    --base-400: #9F9D96;
+    --base-500: #878580;
+    --base-600: #6F6E69;
+    --base-700: #575653;
+    --base-800: #403E3C;
+    --base-850: #343331;
+    --base-900: #282726;
+    --base-950: #1C1B1A;
+
+    /* Red */
+    --red-50: #FFE1D5;
+    --red-100: #FFD4C1;
+    --red-200: #F2B8A2;
+    --red-300: #E59B83;
+    --red-400: #D77F65;
+    --red-500: #CB6150;
+    --red-600: #AF3029;
+    --red-700: #8E2A23;
+    --red-800: #6D211C;
+    --red-900: #4D1915;
+    --red-950: #261312;
+
+    /* Orange */
+    --orange-50: #FFE7CE;
+    --orange-100: #FFD9B3;
+    --orange-200: #F7C194;
+    --orange-300: #EDA976;
+    --orange-400: #E39158;
+    --orange-500: #D97742;
+    --orange-600: #BC5215;
+    --orange-700: #984411;
+    --orange-800: #73340E;
+    --orange-900: #4F250B;
+    --orange-950: #27180E;
+
+    /* Yellow */
+    --yellow-50: #FAEEC6;
+    --yellow-100: #F5E3A9;
+    --yellow-200: #E8D28A;
+    --yellow-300: #DAC16B;
+    --yellow-400: #CCB04D;
+    --yellow-500: #BE9D31;
+    --yellow-600: #AD8301;
+    --yellow-700: #8B6A01;
+    --yellow-800: #695001;
+    --yellow-900: #473801;
+    --yellow-950: #241E08;
+
+    /* Green */
+    --green-50: #EDEECF;
+    --green-100: #E3E5B3;
+    --green-200: #D4D794;
+    --green-300: #C5C876;
+    --green-400: #B6BA59;
+    --green-500: #A7AA3F;
+    --green-600: #66800B;
+    --green-700: #53660A;
+    --green-800: #3F4D08;
+    --green-900: #2C3406;
+    --green-950: #1A1E0C;
+
+    /* Cyan */
+    --cyan-50: #DDF1E4;
+    --cyan-100: #C9E8D3;
+    --cyan-200: #ACDCBD;
+    --cyan-300: #8ECFA7;
+    --cyan-400: #70C391;
+    --cyan-500: #56B37D;
+    --cyan-600: #24837B;
+    --cyan-700: #1D6A64;
+    --cyan-800: #16504D;
+    --cyan-900: #0F3836;
+    --cyan-950: #101F1D;
+
+    /* Blue */
+    --blue-50: #E1ECEB;
+    --blue-100: #CFE1DE;
+    --blue-200: #B6D2CD;
+    --blue-300: #9DC2BC;
+    --blue-400: #84B3AB;
+    --blue-500: #6EA299;
+    --blue-600: #205EA6;
+    --blue-700: #1A4C85;
+    --blue-800: #143A65;
+    --blue-900: #0D2744;
+    --blue-950: #101A24;
+
+    /* Purple */
+    --purple-50: #F0EAEC;
+    --purple-100: #E5DCE0;
+    --purple-200: #D6C9CF;
+    --purple-300: #C7B5BE;
+    --purple-400: #B8A2AD;
+    --purple-500: #A78E9C;
+    --purple-600: #8B7EC8;
+    --purple-700: #7066A3;
+    --purple-800: #564F7E;
+    --purple-900: #3C3759;
+    --purple-950: #1A1623;
+
+    /* Magenta */
+    --magenta-50: #FEE4E5;
+    --magenta-100: #FDD5D7;
+    --magenta-200: #FBBFC3;
+    --magenta-300: #F9AAAF;
+    --magenta-400: #F7949B;
+    --magenta-500: #F47E87;
+    --magenta-600: #A02F6F;
+    --magenta-700: #81265A;
+    --magenta-800: #621D45;
+    --magenta-900: #431430;
+    --magenta-950: #24131D;
+
+    /* Semantic variables - Light Theme */
+    --bg: var(--paper);
+    --bg-2: var(--base-50);
+    --ui: var(--base-100);
+    --ui-2: var(--base-150);
+    --ui-3: var(--base-200);
+    --tx: var(--black);
+    --tx-2: var(--base-600);
+    --tx-3: var(--base-300);
+
+    /* Tailwind semantic tokens - HSL values for Tailwind */
+    --background: 48 100% 97%;       /* paper #FFFCF0 */
+    --foreground: 0 3% 6%;           /* black #100F0F */
+    --card: 51 33% 92%;              /* base-50 #F2F0E5 */
+    --card-foreground: 0 3% 6%;      /* black #100F0F */
+    --popover: 51 33% 92%;           /* base-50 #F2F0E5 */
+    --popover-foreground: 0 3% 6%;   /* black #100F0F */
+    --primary: 177 62% 34%;          /* cyan-600 #24837B */
     --primary-foreground: 48 100% 97%;/* paper #FFFCF0 */
-    --secondary: 51 33% 92%;         /* bg-2: base-50 #F2F0E5 */
-    --secondary-foreground: 0 3% 6%; /* tx: black #100F0F */
-    --muted: 51 21% 88%;             /* ui: base-100 #E6E4D9 */
-    --muted-foreground: 30 2% 44%;   /* tx-2: base-600 #6F6E69 */
-    --accent: 51 21% 88%;            /* ui: base-100 #E6E4D9 */
-    --accent-foreground: 0 3% 6%;    /* tx: black #100F0F */
-    --destructive: 9 58% 43%;        /* re-600: red #AF3029 */
+    --secondary: 51 33% 92%;         /* base-50 #F2F0E5 */
+    --secondary-foreground: 0 3% 6%; /* black #100F0F */
+    --muted: 51 21% 88%;             /* base-100 #E6E4D9 */
+    --muted-foreground: 30 2% 44%;   /* base-600 #6F6E69 */
+    --accent: 51 21% 88%;            /* base-100 #E6E4D9 */
+    --accent-foreground: 0 3% 6%;    /* black #100F0F */
+    --destructive: 9 58% 43%;        /* red-600 #AF3029 */
     --destructive-foreground: 48 100% 97%; /* paper #FFFCF0 */
-    --border: 51 21% 88%;            /* ui: base-100 #E6E4D9 */
-    --input: 48 16% 85%;             /* ui-2: base-150 #DAD8CE */
-    --ring: 177 62% 34%;             /* cy-600: cyan #24837B */
+    --border: 51 21% 88%;            /* base-100 #E6E4D9 */
+    --input: 48 16% 85%;             /* base-150 #DAD8CE */
+    --ring: 177 62% 34%;             /* cyan-600 #24837B */
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Flexoki Dark Theme - Following official mappings */
-    /* bg: black, bg-2: base-950, ui: base-850, ui-2: base-800, ui-3: base-700 */
-    /* tx: paper, tx-2: base-500, tx-3: base-600 */
-    --background: 0 3% 6%;           /* bg: black #100F0F */
-    --foreground: 48 100% 97%;       /* tx: paper #FFFCF0 */
-    --card: 30 4% 11%;               /* bg-2: base-950 #1C1B1A */
-    --card-foreground: 48 100% 97%;  /* tx: paper #FFFCF0 */
-    --popover: 30 4% 11%;            /* bg-2: base-950 #1C1B1A */
-    --popover-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
-    --primary: 177 48% 43%;          /* cy-400: cyan #3AA99F */
-    --primary-foreground: 0 3% 6%;   /* black #100F0F */
-    --secondary: 30 4% 11%;          /* bg-2: base-950 #1C1B1A */
-    --secondary-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
-    --muted: 40 3% 20%;              /* ui: base-850 #343331 */
-    --muted-foreground: 40 2% 52%;   /* tx-2: base-500 #878580 */
-    --accent: 40 3% 20%;             /* ui: base-850 #343331 */
-    --accent-foreground: 48 100% 97%;/* tx: paper #FFFCF0 */
-    --destructive: 6 53% 54%;        /* re-400: red #D14D41 */
+    /* Semantic variables - Dark Theme */
+    --bg: var(--black);
+    --bg-2: var(--base-950);
+    --ui: var(--base-900);
+    --ui-2: var(--base-850);
+    --ui-3: var(--base-800);
+    --tx: var(--base-200);
+    --tx-2: var(--base-500);
+    --tx-3: var(--base-700);
+
+    /* Tailwind semantic tokens - HSL values for dark mode */
+    --background: 0 3% 6%;            /* black #100F0F */
+    --foreground: 48 16% 85%;         /* base-200 #CECDC3 */
+    --card: 30 3% 11%;                /* base-950 #1C1B1A */
+    --card-foreground: 48 16% 85%;    /* base-200 #CECDC3 */
+    --popover: 30 3% 11%;             /* base-950 #1C1B1A */
+    --popover-foreground: 48 16% 85%; /* base-200 #CECDC3 */
+    --primary: 177 43% 60%;           /* cyan-400 #70C391 */
+    --primary-foreground: 0 3% 6%;    /* black #100F0F */
+    --secondary: 30 3% 11%;           /* base-950 #1C1B1A */
+    --secondary-foreground: 48 16% 85%; /* base-200 #CECDC3 */
+    --muted: 30 3% 16%;               /* base-900 #282726 */
+    --muted-foreground: 30 2% 53%;    /* base-500 #878580 */
+    --accent: 30 3% 16%;              /* base-900 #282726 */
+    --accent-foreground: 48 16% 85%;  /* base-200 #CECDC3 */
+    --destructive: 9 43% 67%;         /* red-400 #D77F65 */
     --destructive-foreground: 0 3% 6%;/* black #100F0F */
-    --border: 40 3% 20%;             /* ui: base-850 #343331 */
-    --input: 30 4% 25%;              /* ui-2: base-800 #403E3C */
-    --ring: 177 48% 43%;             /* cy-400: cyan #3AA99F */
+    --border: 30 3% 16%;              /* base-900 #282726 */
+    --input: 30 4% 20%;               /* base-850 #343331 */
+    --ring: 177 43% 60%;              /* cyan-400 #70C391 */
   }
 }
 

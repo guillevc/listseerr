@@ -76,12 +76,12 @@ export function getProviderName(provider: ListProvider): string {
 
 export function getProviderColor(provider: ListProvider): string {
   const colors: Record<ListProvider, string> = {
-    trakt: 'bg-flexoki-magenta',
-    traktChart: 'bg-flexoki-magenta',
-    letterboxd: 'bg-flexoki-orange',
-    mdblist: 'bg-flexoki-blue',
-    imdb: 'bg-flexoki-yellow',
-    stevenlu: 'bg-flexoki-green',
+    trakt: 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-100',
+    traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
+    letterboxd: 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-100',
+    mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
+    imdb: 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-100',
+    stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
   };
   return colors[provider];
 }

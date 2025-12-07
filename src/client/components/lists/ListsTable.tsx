@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { getProviderName } from '../../lib/url-validator';
+import { getProviderName, getProviderColor } from '../../lib/url-validator';
 import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
@@ -135,7 +135,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
 
           return (
             <div className="flex items-center gap-2 whitespace-nowrap">
-              <Badge variant="default" className="whitespace-nowrap">
+              <Badge variant="outline" className={`whitespace-nowrap border-0 ${getProviderColor(info.getValue())}`}>
                 {getProviderName(info.getValue())}
               </Badge>
               {!providerConfigured && (
