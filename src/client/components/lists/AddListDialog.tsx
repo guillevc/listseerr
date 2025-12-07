@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { validateAndDetectProvider, getProviderName, getProviderColor } from '../../lib/url-validator';
+import { validateAndDetectProvider, getProviderName } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
 

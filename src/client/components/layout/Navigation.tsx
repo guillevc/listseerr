@@ -41,7 +41,7 @@ export function Navigation() {
       type: 'external',
       badge: pendingRequests?.error
         ? '!'
-        : pendingRequests?.count || undefined,
+        : pendingRequests?.count || "0",
       disabled: !pendingRequests?.configured,
     },
   ];
