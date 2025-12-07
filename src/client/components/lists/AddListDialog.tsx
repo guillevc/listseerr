@@ -36,6 +36,7 @@ export function AddListDialog() {
   const [selectedChartType, setSelectedChartType] = useState<string>('trending');
   const [userEditedName, setUserEditedName] = useState(false);
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [progressAnimated, setProgressAnimated] = useState(false);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -131,6 +132,12 @@ export function AddListDialog() {
       setUserEditedName(false);
       setSelectedMediaType('movies');
       setSelectedChartType('trending');
+      setProgressAnimated(false);
+
+      // Trigger progress bar animation from 0% to 50%
+      setTimeout(() => {
+        setProgressAnimated(true);
+      }, 50);
     }
   };
 
@@ -139,12 +146,15 @@ export function AddListDialog() {
     // Trigger auto-name generation when entering step 2
     // For traktChart, always generate name
     // For stevenlu, only generate if user hasn't edited
+    // For trakt and mdblist, clear name if user hasn't edited
     if (provider === 'traktChart') {
       const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
       const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
       setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
     } else if (provider === 'stevenlu' && !userEditedName) {
       setName('StevenLu Popular Movies');
+    } else if ((provider === 'trakt' || provider === 'mdblist') && !userEditedName) {
+      setName('');
     }
   };
 
@@ -241,16 +251,29 @@ export function AddListDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
+        {/* Dialog Header - Always Visible */}
+        <DialogHeader>
+          <DialogTitle>Add New List</DialogTitle>
+          <DialogDescription>
+            {currentStep === 1 ? 'Choose a provider to continue' : `Configure your ${getProviderName(provider)} list`}
+          </DialogDescription>
+        </DialogHeader>
+
+        {/* Animated Progress Bar */}
+        <div className="w-full h-1 bg-muted mt-4">
+          <div
+            className="h-full bg-primary transition-all duration-500 ease-out"
+            style={{
+              width: currentStep === 1
+                ? (progressAnimated ? '50%' : '0%')
+                : '100%'
+            }}
+          ></div>
+        </div>
+
         {/* STEP 1: Provider Selection */}
         {currentStep === 1 && (
           <>
-            <DialogHeader>
-              <DialogTitle>Add New List</DialogTitle>
-              <DialogDescription>
-                Choose a provider to continue
-              </DialogDescription>
-            </DialogHeader>
-
             <div className="space-y-3 py-4">
               <Label>Provider</Label>
               <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
@@ -354,13 +377,6 @@ export function AddListDialog() {
         {/* STEP 2: Configure Details */}
         {currentStep === 2 && (
           <>
-            <DialogHeader>
-              <DialogTitle>Add New List</DialogTitle>
-              <DialogDescription>
-                Configure your {getProviderName(provider)} list
-              </DialogDescription>
-            </DialogHeader>
-
             <div className="py-4">
               <div className="space-y-4 min-h-[350px]">
                 {/* List Name - ALWAYS FIRST */}
