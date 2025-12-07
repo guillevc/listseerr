@@ -10,6 +10,13 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from '@/shared/types';
@@ -23,9 +30,26 @@ interface EditListDialogProps {
 export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps) {
   const [name, setName] = useState(list.name);
   const [maxItems, setMaxItems] = useState(list.maxItems?.toString() || '20');
+  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
+  const [selectedChartType, setSelectedChartType] = useState<string>('trending');
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
+
+  // Parse traktChart URL to extract media type and chart type
+  useEffect(() => {
+    if (list.provider === 'traktChart') {
+      const url = list.displayUrl || list.url;
+      // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
+      const urlPattern = /https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)/i;
+      const match = url.match(urlPattern);
+
+      if (match) {
+        setSelectedMediaType(match[3] as 'movies' | 'shows');
+        setSelectedChartType(match[4].toLowerCase());
+      }
+    }
+  }, [list]);
 
   // Reset form when dialog opens or list changes
   useEffect(() => {
@@ -85,49 +109,113 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Edit List</DialogTitle>
           <DialogDescription>
-            Update list name and max items. URL cannot be changed.
+            Update list settings
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="edit-name">List Name</Label>
-            <Input
-              id="edit-name"
-              placeholder="My List"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="edit-url">List URL (Read-only)</Label>
-            <div className="text-sm text-muted-foreground bg-muted p-2 rounded-md break-all">
-              {list.displayUrl || list.url}
+
+        <div className="py-4">
+          <div className="space-y-4 min-h-[350px]">
+            {/* List Name - ALWAYS FIRST */}
+            <div className="grid gap-2">
+              <Label htmlFor="edit-name">List Name</Label>
+              <Input
+                id="edit-name"
+                placeholder="My List"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
-            <p className="text-xs text-muted-foreground">
-              URL cannot be changed. Create a new list if you need a different URL.
-            </p>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="edit-maxItems">Max Items</Label>
-            <Input
-              id="edit-maxItems"
-              type="number"
-              placeholder="20"
-              value={maxItems}
-              onChange={(e) => setMaxItems(e.target.value)}
-              min="1"
-              max="50"
-              required
-            />
-            <p className="text-xs text-muted-foreground">
-              Maximum number of items to fetch from the list (1-50). Default: 20
-            </p>
+
+            {/* Media Type and Chart Type fields for Trakt Chart (READ-ONLY) */}
+            {list.provider === 'traktChart' && (
+              <>
+                {/* Media Type Selection (Read-only) */}
+                <div className="grid gap-2">
+                  <Label>Media Type (Read-only)</Label>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={selectedMediaType === 'movies' ? 'default' : 'outline'}
+                      className="flex-1 cursor-not-allowed opacity-60"
+                      disabled
+                    >
+                      Movies
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={selectedMediaType === 'shows' ? 'default' : 'outline'}
+                      className="flex-1 cursor-not-allowed opacity-60"
+                      disabled
+                    >
+                      Shows
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Media type cannot be changed. Create a new list if you need a different type.
+                  </p>
+                </div>
+
+                {/* Chart Type Dropdown (Read-only) */}
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-chartType">Chart Type (Read-only)</Label>
+                  <Select value={selectedChartType} disabled>
+                    <SelectTrigger className="cursor-not-allowed opacity-60">
+                      <SelectValue placeholder="Select chart type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="trending">Trending</SelectItem>
+                      <SelectItem value="popular">Popular</SelectItem>
+                      <SelectItem value="favorited">Most Favorited</SelectItem>
+                      <SelectItem value="played">Most Played</SelectItem>
+                      <SelectItem value="watched">Most Watched</SelectItem>
+                      <SelectItem value="collected">Most Collected</SelectItem>
+                      <SelectItem value="anticipated">Most Anticipated</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Chart type cannot be changed. Create a new list if you need a different chart.
+                  </p>
+                </div>
+              </>
+            )}
+
+            {/* URL field for Trakt List, MDBList, and StevenLu (Read-only) */}
+            {list.provider !== 'traktChart' && (
+              <div className="grid gap-2">
+                <Label htmlFor="edit-url">List URL (Read-only)</Label>
+                <div className="text-sm text-muted-foreground bg-muted p-2 rounded-md break-all">
+                  {list.displayUrl || list.url}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  URL cannot be changed. Create a new list if you need a different URL.
+                </p>
+              </div>
+            )}
+
+            {/* Max Items */}
+            <div className="grid gap-2">
+              <Label htmlFor="edit-maxItems">Max Items</Label>
+              <Input
+                id="edit-maxItems"
+                type="number"
+                placeholder="20"
+                value={maxItems}
+                onChange={(e) => setMaxItems(e.target.value)}
+                min="1"
+                max="50"
+                required
+              />
+              <p className="text-xs text-muted-foreground">
+                Maximum number of items to fetch from the list (1-50). Default: 20
+              </p>
+            </div>
           </div>
         </div>
+
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
