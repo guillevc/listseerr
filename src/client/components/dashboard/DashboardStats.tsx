@@ -65,17 +65,17 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
         </CardContent>
       </Card>
 
-      {/* Total Requests */}
+      {/* Requests */}
       <Card className="lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Total Requests
+            Requests
           </CardTitle>
           <PackageSearch className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <p className="text-xs text-muted-foreground mb-1">All time</p>
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
             {dashboardStats?.totalRequestedItems ?? '-'}
           </div>
         </CardContent>
