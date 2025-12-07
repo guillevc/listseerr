@@ -78,10 +78,14 @@ export function useListProcessor() {
       utils.dashboard.getPendingRequests.invalidate();
 
       if (result.success) {
-        const parts = [`Processed ${result.processedLists} list(s)`];
+        const skipped = result.totalItemsFound - result.itemsRequested - result.itemsFailed;
+        const parts = [`Processed ${result.processedLists} list(s): ${result.totalItemsFound} items found`];
 
         if (result.itemsRequested > 0) {
           parts.push(`${result.itemsRequested} requested`);
+        }
+        if (skipped > 0) {
+          parts.push(`${skipped} skipped`);
         }
         if (result.itemsFailed > 0) {
           parts.push(`${result.itemsFailed} failed`);

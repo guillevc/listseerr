@@ -40,6 +40,7 @@ interface Props {
   lists: MediaList[];
   onProcess: (id: number) => void;
   processingLists: Set<number>;
+  jellyseerrConfigured?: boolean;
 }
 
 const columnHelper = createColumnHelper<MediaList>();
@@ -50,7 +51,7 @@ const truncateTail = (text: string, maxLength: number = 30): string => {
   return `${text.substring(0, maxLength)}...`;
 };
 
-export function ListsTable({ lists, onProcess, processingLists }: Props) {
+export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfigured = true }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
   const [mutatingListId, setMutatingListId] = useState<number | null>(null);
@@ -287,7 +288,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <DropdownMenuContent align="end" avoidCollisions={true}>
                   <DropdownMenuItem
                     onClick={() => onProcess(list.id)}
-                    disabled={isProcessing || !providerConfigured}
+                    disabled={isProcessing || !providerConfigured || !jellyseerrConfigured}
                   >
                     <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
                     Process

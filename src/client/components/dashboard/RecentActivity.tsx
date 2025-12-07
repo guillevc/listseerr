@@ -234,6 +234,27 @@ export function RecentActivity() {
                           </TableRow>
                         );
                       })}
+                      {/* Batch Summary Row (only show if multiple lists in batch) */}
+                      {group.executions.length > 1 && (() => {
+                        const totalFound = group.executions.reduce((sum, e) => sum + (e.itemsFound ?? 0), 0);
+                        const totalRequested = group.executions.reduce((sum, e) => sum + (e.itemsRequested ?? 0), 0);
+                        const totalFailed = group.executions.reduce((sum, e) => sum + (e.itemsFailed ?? 0), 0);
+                        const totalSkipped = totalFound - totalRequested - totalFailed;
+
+                        return (
+                          <TableRow className="bg-muted/50 font-semibold border-t-2">
+                            <TableCell>Batch Total</TableCell>
+                            <TableCell className="text-right">{totalFound}</TableCell>
+                            <TableCell className="w-[500px]">
+                              <ProcessingBar
+                                requested={totalRequested}
+                                skipped={totalSkipped}
+                                failed={totalFailed}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })()}
                     </TableBody>
                   </Table>
                 </div>

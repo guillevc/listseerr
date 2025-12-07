@@ -73,6 +73,7 @@ export function ListsPage() {
             lists={lists}
             onProcess={(id) => handleProcess(id, lists)}
             processingLists={processingLists}
+            jellyseerrConfigured={!!jellyseerrConfig}
           />
         </motion.div>
       )}
