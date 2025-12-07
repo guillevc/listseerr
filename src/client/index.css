@@ -153,6 +153,16 @@
     --tx-2: var(--base-600);
     --tx-3: var(--base-300);
 
+    /* Auto-switching chromatic colors (600 in light, 400 in dark) */
+    --red-auto: var(--red-600);
+    --orange-auto: var(--orange-600);
+    --yellow-auto: var(--yellow-600);
+    --green-auto: var(--green-600);
+    --cyan-auto: var(--cyan-600);
+    --blue-auto: var(--blue-600);
+    --purple-auto: var(--purple-600);
+    --magenta-auto: var(--magenta-600);
+
     /* Tailwind radius */
     --radius: 0.5rem;
   }
@@ -167,6 +177,16 @@
     --tx: var(--base-200);
     --tx-2: var(--base-500);
     --tx-3: var(--base-700);
+
+    /* Auto-switching chromatic colors (400 in dark mode) */
+    --red-auto: var(--red-400);
+    --orange-auto: var(--orange-400);
+    --yellow-auto: var(--yellow-400);
+    --green-auto: var(--green-400);
+    --cyan-auto: var(--cyan-400);
+    --blue-auto: var(--blue-400);
+    --purple-auto: var(--purple-400);
+    --magenta-auto: var(--magenta-400);
 
     /* Tailwind semantic tokens - HSL values for dark mode */
     --background: 0 3% 6%;            /* black #100F0F */

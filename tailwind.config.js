@@ -52,9 +52,9 @@ export default {
         'tx-2': 'var(--tx-2)',
         'tx-3': 'var(--tx-3)',
 
-        // Chromatic color variables (direct CSS var access)
+        // Chromatic color variables (auto-switching between light/dark)
         red: {
-          DEFAULT: 'var(--red-400)',
+          DEFAULT: 'var(--red-auto)',
           50: 'var(--red-50)',
           100: 'var(--red-100)',
           150: 'var(--red-150)',
@@ -70,7 +70,7 @@ export default {
           950: 'var(--red-950)',
         },
         orange: {
-          DEFAULT: 'var(--orange-400)',
+          DEFAULT: 'var(--orange-auto)',
           50: 'var(--orange-50)',
           100: 'var(--orange-100)',
           150: 'var(--orange-150)',
@@ -86,7 +86,7 @@ export default {
           950: 'var(--orange-950)',
         },
         yellow: {
-          DEFAULT: 'var(--yellow-400)',
+          DEFAULT: 'var(--yellow-auto)',
           50: 'var(--yellow-50)',
           100: 'var(--yellow-100)',
           150: 'var(--yellow-150)',
@@ -102,7 +102,7 @@ export default {
           950: 'var(--yellow-950)',
         },
         green: {
-          DEFAULT: 'var(--green-400)',
+          DEFAULT: 'var(--green-auto)',
           50: 'var(--green-50)',
           100: 'var(--green-100)',
           150: 'var(--green-150)',
@@ -118,7 +118,7 @@ export default {
           950: 'var(--green-950)',
         },
         cyan: {
-          DEFAULT: 'var(--cyan-400)',
+          DEFAULT: 'var(--cyan-auto)',
           50: 'var(--cyan-50)',
           100: 'var(--cyan-100)',
           150: 'var(--cyan-150)',
@@ -134,7 +134,7 @@ export default {
           950: 'var(--cyan-950)',
         },
         blue: {
-          DEFAULT: 'var(--blue-400)',
+          DEFAULT: 'var(--blue-auto)',
           50: 'var(--blue-50)',
           100: 'var(--blue-100)',
           150: 'var(--blue-150)',
@@ -150,7 +150,7 @@ export default {
           950: 'var(--blue-950)',
         },
         purple: {
-          DEFAULT: 'var(--purple-400)',
+          DEFAULT: 'var(--purple-auto)',
           50: 'var(--purple-50)',
           100: 'var(--purple-100)',
           150: 'var(--purple-150)',
@@ -166,7 +166,7 @@ export default {
           950: 'var(--purple-950)',
         },
         magenta: {
-          DEFAULT: 'var(--magenta-400)',
+          DEFAULT: 'var(--magenta-auto)',
           50: 'var(--magenta-50)',
           100: 'var(--magenta-100)',
           150: 'var(--magenta-150)',
