@@ -183,8 +183,8 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
               </>
             )}
 
-            {/* URL field for Trakt List, MDBList, and StevenLu (Read-only) */}
-            {list.provider !== 'traktChart' && (
+            {/* URL field for Trakt List and MDBList only (Read-only) */}
+            {list.provider !== 'traktChart' && list.provider !== 'stevenlu' && (
               <div className="grid gap-2">
                 <Label htmlFor="edit-url">List URL (Read-only)</Label>
                 <div className="text-sm text-muted-foreground bg-muted p-2 rounded-md break-all">
