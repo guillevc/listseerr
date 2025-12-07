@@ -102,10 +102,10 @@ export function Navigation() {
                         href={item.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
+                        className="flex items-center gap-2 border-purple-600 text-purple-600 hover:bg-purple-600/10"
                       >
                         {item.badge && (
-                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-flexoki-purple text-black hover:bg-flexoki-purple/90'}`}>
+                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
                             {item.badge}
                           </Badge>
                         )}
@@ -190,10 +190,10 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full border-flexoki-purple text-flexoki-purple hover:bg-flexoki-purple/10"
+                      className="flex items-center gap-2 w-full border-purple-600 text-purple-600 hover:bg-purple-600/10"
                     >
                       {item.badge && (
-                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-flexoki-purple text-white hover:bg-flexoki-purple/90'}`}>
+                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
                           {item.badge}
                         </Badge>
                       )}
