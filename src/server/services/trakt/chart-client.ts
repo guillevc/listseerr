@@ -17,10 +17,10 @@ const VALID_CHART_TYPES: TraktChartType[] = [
 const VALID_MEDIA_TYPES: TraktMediaType[] = ['movies', 'shows'];
 
 // Chart types that return simple responses (movie/show at root level)
-const SIMPLE_CHART_TYPES: TraktChartType[] = ['trending', 'popular', 'anticipated'];
+const SIMPLE_CHART_TYPES: TraktChartType[] = ['popular'];
 
 // Chart types that return wrapped responses (movie/show nested in object)
-const WRAPPED_CHART_TYPES: TraktChartType[] = ['collected', 'played', 'watched', 'favorited'];
+const WRAPPED_CHART_TYPES: TraktChartType[] = ['trending', 'anticipated', 'collected', 'played', 'watched', 'favorited'];
 
 // Simple chart response - movie/show data at root level
 interface TraktSimpleChartItem {

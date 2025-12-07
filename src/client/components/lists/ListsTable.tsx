@@ -69,6 +69,7 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
     if (provider === 'trakt') return !!traktConfig?.clientId;
     if (provider === 'traktChart') return !!traktConfig?.clientId;
     if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
+    if (provider === 'stevenlu') return true; // StevenLu doesn't require configuration
     return false; // Other providers not yet implemented
   }, [traktConfig, mdbListConfig]);
 
@@ -369,8 +370,8 @@ export function ListsTable({ lists, onProcess, processingLists }: Props) {
                 <TableRow
                   key={`list-${row.original.id}`}
                   className={
-                    !isProviderConfigured(row.original.provider) || !isAutomaticProcessingEnabled
-                      ? 'opacity-60'
+                    !isProviderConfigured(row.original.provider)
+                      ? 'opacity-60 border-l-4 border-l-orange-500'
                       : ''
                   }
                 >

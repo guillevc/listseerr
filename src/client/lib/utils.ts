@@ -25,17 +25,11 @@ export function getRelativeTime(date?: Date | string | null): string {
   const suffix = isPast ? ' ago' : '';
 
   if (diffSecs < 10) return isPast ? 'just now' : 'in a few seconds';
-  if (diffSecs < 60) return `${prefix}${diffSecs} seconds${suffix}`;
-  if (diffMins === 1) return `${prefix}1 minute${suffix}`;
-  if (diffMins < 60) return `${prefix}${diffMins} minutes${suffix}`;
-  if (diffHours === 1) return `${prefix}1 hour${suffix}`;
-  if (diffHours < 24) return `${prefix}${diffHours} hours${suffix}`;
-  if (diffDays === 1) return `${prefix}1 day${suffix}`;
-  if (diffDays < 7) return `${prefix}${diffDays} days${suffix}`;
-  if (diffWeeks === 1) return `${prefix}1 week${suffix}`;
-  if (diffWeeks < 4) return `${prefix}${diffWeeks} weeks${suffix}`;
-  if (diffMonths === 1) return `${prefix}1 month${suffix}`;
-  if (diffMonths < 12) return `${prefix}${diffMonths} months${suffix}`;
-  if (diffYears === 1) return `${prefix}1 year${suffix}`;
-  return `${prefix}${diffYears} years${suffix}`;
+  if (diffSecs < 60) return `${prefix}${diffSecs}s${suffix}`;
+  if (diffMins < 60) return `${prefix}${diffMins}m${suffix}`;
+  if (diffHours < 24) return `${prefix}${diffHours}h${suffix}`;
+  if (diffDays < 7) return `${prefix}${diffDays}d${suffix}`;
+  if (diffWeeks < 4) return `${prefix}${diffWeeks}w${suffix}`;
+  if (diffMonths < 12) return `${prefix}${diffMonths}mo${suffix}`;
+  return `${prefix}${diffYears}y${suffix}`;
 }

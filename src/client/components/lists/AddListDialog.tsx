@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { validateAndDetectProvider } from '../../lib/url-validator';
+import { validateAndDetectProvider, getProviderName, getProviderColor } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
 
@@ -34,6 +34,8 @@ export function AddListDialog() {
   const [urlError, setUrlError] = useState<string | null>(null);
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
   const [selectedChartType, setSelectedChartType] = useState<string>('trending');
+  const [userEditedName, setUserEditedName] = useState(false);
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -48,15 +50,21 @@ export function AddListDialog() {
       utils.lists.getAll.invalidate();
       utils.dashboard.getStats.invalidate();
 
-      toast({
-        title: 'List Added',
-        description: `${newList.name} has been added successfully`,
-      });
+      // Only show success toast if the list is enabled
+      // If disabled, the manual toast below will handle it
+      if (newList.enabled) {
+        toast({
+          title: 'List Added',
+          description: `${newList.name} has been added successfully`,
+        });
+      }
 
       setName('');
       setUrl('');
       setMaxItems('20');
       setUrlError(null);
+      setUserEditedName(false);
+      setCurrentStep(1);
       setOpen(false);
     },
     onError: (error) => {
@@ -69,15 +77,17 @@ export function AddListDialog() {
   });
 
   // Auto-generate name for traktChart and stevenlu
+  // For traktChart, always regenerate when media/chart type changes
+  // For stevenlu, only regenerate if user hasn't manually edited
   useEffect(() => {
     if (provider === 'traktChart') {
       const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
       const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
       setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
-    } else if (provider === 'stevenlu') {
+    } else if (provider === 'stevenlu' && !userEditedName) {
       setName('StevenLu Popular Movies');
     }
-  }, [provider, selectedChartType, selectedMediaType]);
+  }, [provider, selectedChartType, selectedMediaType, userEditedName]);
 
   const handleUrlChange = (value: string) => {
     setUrl(value);
@@ -95,6 +105,7 @@ export function AddListDialog() {
 
   const handleProviderChange = (newProvider: 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu') => {
     setProvider(newProvider);
+    setUserEditedName(false); // Reset edit flag when provider changes
     // Re-validate URL if one exists (only for trakt and mdblist)
     if (newProvider !== 'traktChart' && newProvider !== 'stevenlu' && url) {
       const result = validateAndDetectProvider(url);
@@ -106,6 +117,47 @@ export function AddListDialog() {
     } else {
       setUrlError(null);
     }
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (newOpen) {
+      // Reset to step 1 when opening dialog
+      setCurrentStep(1);
+      setName('');
+      setUrl('');
+      setMaxItems('20');
+      setUrlError(null);
+      setUserEditedName(false);
+      setSelectedMediaType('movies');
+      setSelectedChartType('trending');
+    }
+  };
+
+  const goToStep2 = () => {
+    setCurrentStep(2);
+    // Trigger auto-name generation when entering step 2
+    // For traktChart, always generate name
+    // For stevenlu, only generate if user hasn't edited
+    if (provider === 'traktChart') {
+      const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
+      const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
+      setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
+    } else if (provider === 'stevenlu' && !userEditedName) {
+      setName('StevenLu Popular Movies');
+    }
+  };
+
+  const goToStep1 = () => {
+    setCurrentStep(1);
+    // Clear form data when going back to provider selection
+    setName('');
+    setUrl('');
+    setMaxItems('20');
+    setUrlError(null);
+    setUserEditedName(false);
+    setSelectedMediaType('movies');
+    setSelectedChartType('trending');
   };
 
   const handleAdd = () => {
@@ -163,7 +215,7 @@ export function AddListDialog() {
     createMutation.mutate({
       name: name.trim(),
       url: finalUrl,
-      displayUrl: displayUrl,
+      ...(displayUrl ? { displayUrl } : {}),
       provider: provider,
       enabled: isConfigured,
       maxItems: maxItemsNum,
@@ -181,275 +233,283 @@ export function AddListDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} modal={false}>
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
           Add List
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Add New List</DialogTitle>
-          <DialogDescription>
-            Add a public list from Trakt List, Trakt Chart, MDBList, or StevenLu to automatically request media to Jellyseerr.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {/* Provider Selection */}
-          <div className="grid gap-3">
-            <Label>Provider</Label>
-            <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
-              <label className="block cursor-pointer">
-                <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
-                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Trakt List</p>
-                        <p className="text-xs text-muted-foreground">Public lists</p>
+      <DialogContent className="sm:max-w-[600px]">
+        {/* STEP 1: Provider Selection */}
+        {currentStep === 1 && (
+          <>
+            <DialogHeader>
+              <DialogTitle>Add New List</DialogTitle>
+              <DialogDescription>
+                Choose a provider to continue
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-3 py-4">
+              <Label>Provider</Label>
+              <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
+                <label className="block cursor-pointer">
+                  <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Trakt List</p>
+                          <p className="text-xs text-muted-foreground">Public lists</p>
+                        </div>
+                        {traktConfig?.clientId ? (
+                          <Badge variant="default" className="bg-green-500 whitespace-nowrap">
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Configured
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="bg-orange-500 text-white whitespace-nowrap">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            Not Configured
+                          </Badge>
+                        )}
                       </div>
-                      {traktConfig?.clientId ? (
-                        <Badge variant="default" className="bg-green-500">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Configured
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="bg-orange-500 text-white">
-                          <AlertCircle className="h-3 w-3 mr-1" />
-                          Not Configured
-                        </Badge>
-                      )}
                     </div>
                   </div>
-                </div>
-              </label>
+                </label>
 
-              <label className="block cursor-pointer">
-                <RadioGroupItem value="traktChart" id="provider-traktChart" className="peer sr-only" />
-                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Trakt Chart</p>
-                        <p className="text-xs text-muted-foreground">Curated charts like Trending, Popular, etc.</p>
+                <label className="block cursor-pointer">
+                  <RadioGroupItem value="traktChart" id="provider-traktChart" className="peer sr-only" />
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Trakt Chart</p>
+                          <p className="text-xs text-muted-foreground">Curated charts like Trending, Popular, etc.</p>
+                        </div>
+                        {traktConfig?.clientId ? (
+                          <Badge variant="default" className="bg-green-500 whitespace-nowrap">
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Configured
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="bg-orange-500 text-white whitespace-nowrap">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            Not Configured
+                          </Badge>
+                        )}
                       </div>
-                      {traktConfig?.clientId ? (
-                        <Badge variant="default" className="bg-green-500">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Configured
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="bg-orange-500 text-white">
-                          <AlertCircle className="h-3 w-3 mr-1" />
-                          Not Configured
-                        </Badge>
-                      )}
                     </div>
                   </div>
-                </div>
-              </label>
+                </label>
 
-              <label className="block cursor-pointer">
-                <RadioGroupItem value="mdblist" id="provider-mdblist" className="peer sr-only" />
-                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">MDBList</p>
-                        <p className="text-xs text-muted-foreground">Public and custom lists</p>
+                <label className="block cursor-pointer">
+                  <RadioGroupItem value="mdblist" id="provider-mdblist" className="peer sr-only" />
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">MDBList</p>
+                          <p className="text-xs text-muted-foreground">Public and custom lists</p>
+                        </div>
+                        {mdbListConfig?.apiKey ? (
+                          <Badge variant="default" className="bg-green-500 whitespace-nowrap">
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Configured
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="bg-orange-500 text-white whitespace-nowrap">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            Not Configured
+                          </Badge>
+                        )}
                       </div>
-                      {mdbListConfig?.apiKey ? (
-                        <Badge variant="default" className="bg-green-500">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Configured
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="bg-orange-500 text-white">
-                          <AlertCircle className="h-3 w-3 mr-1" />
-                          Not Configured
-                        </Badge>
-                      )}
                     </div>
                   </div>
-                </div>
-              </label>
+                </label>
 
-              <label className="block cursor-pointer">
-                <RadioGroupItem value="stevenlu" id="provider-stevenlu" className="peer sr-only" />
-                <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-4 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
+                <label className="block cursor-pointer">
+                  <RadioGroupItem value="stevenlu" id="provider-stevenlu" className="peer sr-only" />
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex-1">
                       <div>
                         <p className="font-medium">StevenLu</p>
                         <p className="text-xs text-muted-foreground">Popular movies list (updated daily)</p>
                       </div>
-                      <Badge variant="default" className="bg-green-500">
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        No Config Required
-                      </Badge>
                     </div>
                   </div>
-                </div>
-              </label>
-            </RadioGroup>
-          </div>
-
-          {/* Info box for StevenLu (before List Name) */}
-          {provider === 'stevenlu' && (
-            <div className="rounded-md border bg-muted/50 p-3 space-y-2">
-              <p className="text-sm font-medium">List URL (for reference):</p>
-              <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                https://movies.stevenlu.com
-              </code>
-              <p className="text-xs text-muted-foreground">
-                This list is automatically fetched from StevenLu's popular movies API and updated daily.
-              </p>
+                </label>
+              </RadioGroup>
             </div>
-          )}
 
-          {/* Media Type and Chart Type fields for Trakt Chart (before List Name) */}
-          {provider === 'traktChart' && (
-            <>
-              {/* Media Type Selection */}
-              <div className="grid gap-2">
-                <Label>Media Type</Label>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={selectedMediaType === 'movies' ? 'default' : 'outline'}
-                    onClick={() => setSelectedMediaType('movies')}
-                    className="flex-1"
-                  >
-                    Movies
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={selectedMediaType === 'shows' ? 'default' : 'outline'}
-                    onClick={() => setSelectedMediaType('shows')}
-                    className="flex-1"
-                  >
-                    Shows
-                  </Button>
+            <DialogFooter>
+              <Button onClick={goToStep2}>
+                Continue
+              </Button>
+            </DialogFooter>
+          </>
+        )}
+
+        {/* STEP 2: Configure Details */}
+        {currentStep === 2 && (
+          <>
+            <DialogHeader>
+              <DialogTitle>Add New List</DialogTitle>
+              <DialogDescription>
+                Configure your {getProviderName(provider)} list
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="py-4">
+              <div className="space-y-4 min-h-[350px]">
+                {/* List Name - ALWAYS FIRST */}
+                <div className="grid gap-2">
+                  <Label htmlFor="name">List Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="My List"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setUserEditedName(true);
+                    }}
+                  />
+                  {provider === 'traktChart' && (
+                    <p className="text-xs text-muted-foreground">
+                      Name is auto-generated based on your chart selection (you can edit it)
+                    </p>
+                  )}
+                  {provider === 'stevenlu' && (
+                    <p className="text-xs text-muted-foreground">
+                      Default name provided (you can edit it)
+                    </p>
+                  )}
                 </div>
-              </div>
 
-              {/* Chart Type Dropdown */}
-              <div className="grid gap-2">
-                <Label htmlFor="chartType">Chart Type</Label>
-                <Select value={selectedChartType} onValueChange={setSelectedChartType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select chart type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="trending">Trending</SelectItem>
-                    <SelectItem value="popular">Popular</SelectItem>
-                    <SelectItem value="favorited">Most Favorited</SelectItem>
-                    <SelectItem value="played">Most Played</SelectItem>
-                    <SelectItem value="watched">Most Watched</SelectItem>
-                    <SelectItem value="collected">Most Collected</SelectItem>
-                    <SelectItem value="anticipated">Most Anticipated</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
-          )}
-
-          <div className="grid gap-2">
-            <Label htmlFor="name">List Name</Label>
-            <Input
-              id="name"
-              placeholder="My List"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={provider === 'traktChart'}
-            />
-            {provider === 'traktChart' && (
-              <p className="text-xs text-muted-foreground">
-                Name is auto-generated based on your chart selection (you can edit it)
-              </p>
-            )}
-            {provider === 'stevenlu' && (
-              <p className="text-xs text-muted-foreground">
-                Default name provided (you can edit it)
-              </p>
-            )}
-          </div>
-
-          {/* URL field for Trakt List and MDBList (not for Trakt Chart or StevenLu) */}
-          {provider !== 'traktChart' && provider !== 'stevenlu' && (
-            <div className="grid gap-2">
-              <Label htmlFor="url">List URL</Label>
-              <Input
-                id="url"
-                placeholder="https://..."
-                value={url}
-                onChange={(e) => handleUrlChange(e.target.value)}
-                className={urlError ? 'border-red-500' : ''}
-              />
-              {urlError && (
-                <p className="text-sm text-red-500">{urlError}</p>
-              )}
-              {!urlError && url && (
-                <p className="text-sm text-green-500">
-                  Valid {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL detected
-                </p>
-              )}
-            </div>
-          )}
-          <div className="grid gap-2">
-            <Label htmlFor="maxItems">Max Items</Label>
-            <Input
-              id="maxItems"
-              type="number"
-              placeholder="20"
-              value={maxItems}
-              onChange={(e) => setMaxItems(e.target.value)}
-              min="1"
-              max="50"
-              required
-            />
-            <p className="text-xs text-muted-foreground">
-              Maximum number of items to fetch from the list (1-50). Default: 20
-            </p>
-          </div>
-          {provider !== 'traktChart' && provider !== 'stevenlu' && (
-            <div className="rounded-md border bg-muted/50 p-3 space-y-2">
-              <p className="text-sm font-medium">
-                {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:
-              </p>
-              <div className="space-y-1.5 text-sm">
-                {provider === 'trakt' ? (
+                {/* Media Type and Chart Type fields for Trakt Chart */}
+                {provider === 'traktChart' && (
                   <>
-                    <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                      https://trakt.tv/users/USERNAME/lists/LIST-SLUG
-                    </code>
-                    <p className="text-xs text-muted-foreground">
-                      Example: https://trakt.tv/users/hdlists/lists/sci-fi-movies
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      <strong>Tip:</strong> Query parameters for sorting are supported (e.g., ?sort=rank to sort by ranking)
-                    </p>
+                    {/* Media Type Selection */}
+                    <div className="grid gap-2">
+                      <Label>Media Type</Label>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant={selectedMediaType === 'movies' ? 'default' : 'outline'}
+                          onClick={() => setSelectedMediaType('movies')}
+                          className="flex-1"
+                        >
+                          Movies
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={selectedMediaType === 'shows' ? 'default' : 'outline'}
+                          onClick={() => setSelectedMediaType('shows')}
+                          className="flex-1"
+                        >
+                          Shows
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Chart Type Dropdown */}
+                    <div className="grid gap-2">
+                      <Label htmlFor="chartType">Chart Type</Label>
+                      <Select value={selectedChartType} onValueChange={setSelectedChartType}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select chart type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="trending">Trending</SelectItem>
+                          <SelectItem value="popular">Popular</SelectItem>
+                          <SelectItem value="favorited">Most Favorited</SelectItem>
+                          <SelectItem value="played">Most Played</SelectItem>
+                          <SelectItem value="watched">Most Watched</SelectItem>
+                          <SelectItem value="collected">Most Collected</SelectItem>
+                          <SelectItem value="anticipated">Most Anticipated</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </>
-                ) : (
-                  <>
-                    <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
-                      https://mdblist.com/lists/USERNAME/LIST-SLUG
-                    </code>
-                    <p className="text-xs text-muted-foreground">
-                      Example: https://mdblist.com/lists/linaspurinis/most-popular-movies-top-20
+                )}
+
+                {/* URL field for Trakt List and MDBList (not for Trakt Chart or StevenLu) */}
+                {provider !== 'traktChart' && provider !== 'stevenlu' && (
+                  <div className="grid gap-2">
+                    <Label htmlFor="url">List URL</Label>
+                    <Input
+                      id="url"
+                      placeholder="https://..."
+                      value={url}
+                      onChange={(e) => handleUrlChange(e.target.value)}
+                      className={urlError ? 'border-red-500' : ''}
+                    />
+                    {urlError && (
+                      <p className="text-sm text-red-500">{urlError}</p>
+                    )}
+                    {!urlError && url && (
+                      <p className="text-sm text-green-500">
+                        Valid {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL detected
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Max Items */}
+                <div className="grid gap-2">
+                  <Label htmlFor="maxItems">Max Items</Label>
+                  <Input
+                    id="maxItems"
+                    type="number"
+                    placeholder="20"
+                    value={maxItems}
+                    onChange={(e) => setMaxItems(e.target.value)}
+                    min="1"
+                    max="50"
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Maximum number of items to fetch from the list (1-50). Default: 20
+                  </p>
+                </div>
+
+                {/* URL format info for Trakt List and MDBList */}
+                {provider !== 'traktChart' && provider !== 'stevenlu' && (
+                  <div className="rounded-md border bg-muted/50 p-3 space-y-2">
+                    <p className="text-sm font-medium">
+                      {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:
                     </p>
-                  </>
+                    <div className="space-y-1.5 text-sm">
+                      {provider === 'trakt' ? (
+                        <>
+                          <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                            https://trakt.tv/users/USERNAME/lists/LIST-SLUG?sort=rank
+                          </code>
+                        </>
+                      ) : (
+                        <>
+                          <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                            https://mdblist.com/lists/USERNAME/LIST-SLUG
+                          </code>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
-          )}
-        </div>
-        <DialogFooter>
-          <Button onClick={handleAdd} disabled={createMutation.isPending}>
-            {createMutation.isPending ? 'Adding...' : 'Add List'}
-          </Button>
-        </DialogFooter>
+
+            <DialogFooter className="flex gap-2">
+              <Button variant="outline" onClick={goToStep1}>
+                Back
+              </Button>
+              <Button onClick={handleAdd} disabled={createMutation.isPending}>
+                {createMutation.isPending ? 'Adding...' : 'Add List'}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

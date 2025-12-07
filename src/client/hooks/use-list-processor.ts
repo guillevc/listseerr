@@ -147,11 +147,6 @@ export function useListProcessor() {
     // Mark all enabled lists as processing
     setProcessingLists(new Set(enabledLists.map(l => l.id)));
 
-    toast({
-      title: 'Processing All Lists',
-      description: `Processing ${enabledLists.length} list(s) as a batch`,
-    });
-
     // Use batch processing mutation
     processAllMutation.mutate();
   };

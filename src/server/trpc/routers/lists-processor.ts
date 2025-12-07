@@ -62,11 +62,16 @@ export async function processListById(
     throw new Error('Jellyseerr configuration not found');
   }
 
+  // Generate a unique batch ID for this processing run
+  // This ensures each processing operation is treated as a separate batch
+  const batchId = `${triggerType}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
   // Create execution history entry
   const [executionEntry] = await database
     .insert(executionHistory)
     .values({
       listId: list.id,
+      batchId,
       startedAt: new Date(),
       status: 'running',
       triggerType,
