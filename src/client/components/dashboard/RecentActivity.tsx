@@ -5,6 +5,84 @@ import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
+interface ProcessingBarProps {
+  requested: number;
+  skipped: number;
+  failed: number;
+}
+
+function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
+  const total = requested + skipped + failed;
+
+  if (total === 0) {
+    return (
+      <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center">
+        <span className="text-xs text-muted-foreground">No items</span>
+      </div>
+    );
+  }
+
+  const requestedPercent = (requested / total) * 100;
+  const skippedPercent = (skipped / total) * 100;
+  const failedPercent = (failed / total) * 100;
+
+  // Only show number if segment is wide enough (at least 8% of total width)
+  const showRequestedNumber = requestedPercent >= 8;
+  const showSkippedNumber = skippedPercent >= 8;
+  const showFailedNumber = failedPercent >= 8;
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="h-8 w-full bg-muted rounded-md overflow-hidden flex cursor-help">
+            {requested > 0 && (
+              <div
+                className="bg-green-600 h-full flex items-center justify-center text-white text-xs font-medium"
+                style={{ width: `${requestedPercent}%` }}
+              >
+                {showRequestedNumber && <span>{requested}</span>}
+              </div>
+            )}
+            {skipped > 0 && (
+              <div
+                className="bg-blue-500 h-full flex items-center justify-center text-white text-xs font-medium"
+                style={{ width: `${skippedPercent}%` }}
+              >
+                {showSkippedNumber && <span>{skipped}</span>}
+              </div>
+            )}
+            {failed > 0 && (
+              <div
+                className="bg-red-600 h-full flex items-center justify-center text-white text-xs font-medium"
+                style={{ width: `${failedPercent}%` }}
+              >
+                {showFailedNumber && <span>{failed}</span>}
+              </div>
+            )}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-3 w-3 text-green-600" />
+              <span>Requested: {requested} ({requestedPercent.toFixed(1)}%)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-3 w-3 text-blue-500" />
+              <span>Skipped: {skipped} ({skippedPercent.toFixed(1)}%)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <XCircle className="h-3 w-3 text-red-600" />
+              <span>Failed: {failed} ({failedPercent.toFixed(1)}%)</span>
+            </div>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 function formatRelativeTime(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -124,11 +202,9 @@ export function RecentActivity() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-1/5">List</TableHead>
-                        <TableHead className="text-right w-1/5">Items</TableHead>
-                        <TableHead className="text-right w-1/5">Requested</TableHead>
-                        <TableHead className="text-right w-1/5">Skipped</TableHead>
-                        <TableHead className="text-right w-1/5">Failed</TableHead>
+                        <TableHead>List</TableHead>
+                        <TableHead className="text-right">Items Found</TableHead>
+                        <TableHead className="w-[300px]">Processing Results</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -140,31 +216,20 @@ export function RecentActivity() {
 
                         return (
                           <TableRow key={execution.id}>
-                            <TableCell className="font-medium w-1/5">
+                            <TableCell className="font-medium">
                               <div className="line-clamp-3 break-words">
                                 {execution.listName || `List #${execution.listId}`}
                               </div>
                             </TableCell>
-                            <TableCell className="text-right w-1/5">
+                            <TableCell className="text-right">
                               {execution.itemsFound ?? 0}
                             </TableCell>
-                            <TableCell className="text-right w-1/5">
-                              <div className="flex items-center justify-end gap-1">
-                                <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
-                                <span>{execution.itemsRequested ?? 0}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right w-1/5">
-                              <div className="flex items-center justify-end gap-1">
-                                <AlertCircle className="h-3 w-3 text-blue-600 flex-shrink-0" />
-                                <span>{itemsSkipped}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right w-1/5">
-                              <div className="flex items-center justify-end gap-1">
-                                <XCircle className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                <span>{execution.itemsFailed ?? 0}</span>
-                              </div>
+                            <TableCell className="w-[500px]">
+                              <ProcessingBar
+                                requested={execution.itemsRequested ?? 0}
+                                skipped={itemsSkipped}
+                                failed={execution.itemsFailed ?? 0}
+                              />
                             </TableCell>
                           </TableRow>
                         );
