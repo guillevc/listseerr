@@ -27,7 +27,10 @@
     },
 
     /* Bun types */
-    "types": ["bun-types"]
+    "types": ["bun-types"],
+
+    /* Build cache */
+    "tsBuildInfoFile": ".cache/tsconfig.server.tsbuildinfo"
   },
   "include": ["src/server/**/*", "src/shared/**/*"]
 }

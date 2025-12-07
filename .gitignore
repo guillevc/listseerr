@@ -31,3 +31,7 @@ dev-dist
 *.db-wal
 *.db-shm
 data/
+
+# TypeScript
+*.tsbuildinfo
+.cache/
