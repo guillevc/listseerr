@@ -262,7 +262,7 @@ export function AddListDialog() {
         {/* Animated Progress Bar */}
         <div className="w-full h-1 bg-light-bg-2 dark:bg-dark-bg-2 mt-4">
           <div
-            className="h-full bg-light-bl dark:bg-dark-bl transition-all duration-500 ease-out"
+            className="h-full bg-light-primary dark:bg-dark-primary transition-all duration-500 ease-out"
             style={{
               width: currentStep === 1
                 ? (progressAnimated ? '50%' : '0%')
@@ -279,7 +279,7 @@ export function AddListDialog() {
               <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-bl/50 hover:dark:border-dark-bl/50 peer-data-[state=checked]:border-light-bl peer-data-[state=checked]:dark:border-dark-bl peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-bl/20 peer-data-[state=checked]:dark:ring-dark-bl/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-primary/50 hover:dark:border-dark-primary/50 peer-data-[state=checked]:border-light-primary peer-data-[state=checked]:dark:border-dark-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-primary/20 peer-data-[state=checked]:dark:ring-dark-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
@@ -304,7 +304,7 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="traktChart" id="provider-traktChart" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-bl/50 hover:dark:border-dark-bl/50 peer-data-[state=checked]:border-light-bl peer-data-[state=checked]:dark:border-dark-bl peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-bl/20 peer-data-[state=checked]:dark:ring-dark-bl/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-primary/50 hover:dark:border-dark-primary/50 peer-data-[state=checked]:border-light-primary peer-data-[state=checked]:dark:border-dark-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-primary/20 peer-data-[state=checked]:dark:ring-dark-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
@@ -329,7 +329,7 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="mdblist" id="provider-mdblist" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-bl/50 hover:dark:border-dark-bl/50 peer-data-[state=checked]:border-light-bl peer-data-[state=checked]:dark:border-dark-bl peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-bl/20 peer-data-[state=checked]:dark:ring-dark-bl/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-primary/50 hover:dark:border-dark-primary/50 peer-data-[state=checked]:border-light-primary peer-data-[state=checked]:dark:border-dark-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-primary/20 peer-data-[state=checked]:dark:ring-dark-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
@@ -354,7 +354,7 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="stevenlu" id="provider-stevenlu" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-bl/50 hover:dark:border-dark-bl/50 peer-data-[state=checked]:border-light-bl peer-data-[state=checked]:dark:border-dark-bl peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-bl/20 peer-data-[state=checked]:dark:ring-dark-bl/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-light-primary/50 hover:dark:border-dark-primary/50 peer-data-[state=checked]:border-light-primary peer-data-[state=checked]:dark:border-dark-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-light-primary/20 peer-data-[state=checked]:dark:ring-dark-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div>
                         <p className="font-medium">StevenLu</p>

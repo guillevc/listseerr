@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Disable default colors to prevent their use; feel free to re-enable as needed. */
+  /* Disable default colors to prevent their use */
   --color-amber-*: initial;
   --color-lime-*: initial;
   --color-emerald-*: initial;
@@ -19,7 +19,7 @@
   --color-neutral-*: initial;
   --color-stone-*: initial;
 
-  /* Specify new default colors. */
+  /* New default colors. */
   --color-black: #100f0f;
   --color-paper: #fffcf0;
   --color-base-50: #f2f0e5;
@@ -204,6 +204,13 @@
   --color-dark-bl-2: var(--color-blue-600);
   --color-dark-pu-2: var(--color-purple-600);
   --color-dark-ma-2: var(--color-magenta-600);
+}
+
+@theme inline {
+  --color-light-primary: var(--color-light-cy);
+  --color-light-primary-2: var(--color-light-cy-2);
+  --color-dark-primary: var(--color-dark-cy);
+  --color-dark-primary-2: var(--color-dark-cy-2);
 }
 
 @layer base {
