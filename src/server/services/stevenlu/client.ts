@@ -77,7 +77,7 @@ export async function fetchStevenLuList(
         throw new Error(`StevenLu API error: ${response.statusText}`);
       }
 
-      items = await response.json();
+      items = await response.json() as StevenLuItem[];
       logger.info({ count: items.length }, 'Received items from StevenLu API');
 
       // Update cache

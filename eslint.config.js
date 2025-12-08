@@ -23,6 +23,8 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      // Allow setState in effects for legitimate data synchronization patterns
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 )

@@ -46,7 +46,7 @@ export async function requestToJellyseerr(
 
     // Check for success status codes (200/201)
     if (response.status === 200 || response.status === 201) {
-      const data: JellyseerrRequestResponse = await response.json();
+      const data = await response.json() as JellyseerrRequestResponse;
       // Validate that the response matches our request
       if (data.media?.tmdbId === item.tmdbId) {
         logger.info(

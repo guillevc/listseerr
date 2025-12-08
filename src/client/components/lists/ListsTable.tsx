@@ -314,9 +314,12 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, mutatingListId]
+    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, mutatingListId, jellyseerrConfigured]
   );
 
+  // TanStack Table's useReactTable API returns functions that cannot be memoized safely
+  // This is a known limitation and is expected behavior
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: lists,
     columns,

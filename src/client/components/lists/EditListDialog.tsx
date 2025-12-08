@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -30,14 +30,12 @@ interface EditListDialogProps {
 export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps) {
   const [name, setName] = useState(list.name);
   const [maxItems, setMaxItems] = useState(list.maxItems?.toString() || '20');
-  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
-  const [selectedChartType, setSelectedChartType] = useState<string>('trending');
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
 
   // Parse traktChart URL to extract media type and chart type
-  useEffect(() => {
+  const parsedChartInfo = useMemo(() => {
     if (list.provider === 'traktChart') {
       const url = list.displayUrl || list.url;
       // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
@@ -45,19 +43,29 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       const match = url.match(urlPattern);
 
       if (match) {
-        setSelectedMediaType(match[3] as 'movies' | 'shows');
-        setSelectedChartType(match[4].toLowerCase());
+        return {
+          mediaType: match[3] as 'movies' | 'shows',
+          chartType: match[4].toLowerCase()
+        };
       }
     }
+    return { mediaType: 'movies' as const, chartType: 'trending' };
   }, [list]);
 
-  // Reset form when dialog opens or list changes
-  useEffect(() => {
-    if (open) {
+  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(parsedChartInfo.mediaType);
+  const [selectedChartType, setSelectedChartType] = useState<string>(parsedChartInfo.chartType);
+
+  // Reset form when dialog state changes
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      // Reset form when opening
       setName(list.name);
       setMaxItems(list.maxItems?.toString() || '20');
+      setSelectedMediaType(parsedChartInfo.mediaType);
+      setSelectedChartType(parsedChartInfo.chartType);
     }
-  }, [open, list]);
+    onOpenChange(newOpen);
+  };
 
   const updateMutation = trpc.lists.update.useMutation({
     onSuccess: () => {
@@ -108,7 +116,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit List</DialogTitle>
@@ -217,7 +225,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
           <Button onClick={handleSave} disabled={updateMutation.isPending}>

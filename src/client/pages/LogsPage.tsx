@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type JSX } from 'react';
 import { trpc, type RouterOutputs } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';

@@ -43,7 +43,7 @@ export async function fetchMdbListList(
       throw new Error(`MDBList API error: ${response.statusText}`);
     }
 
-    const data: MdbListApiItem[] = await response.json();
+    const data = await response.json() as MdbListApiItem[];
     logger.info({ count: data.length }, 'Received items from MDBList');
 
     // Transform to MediaItem format

@@ -28,7 +28,7 @@ export function ApiKeysSettings() {
   // Load MDBList config
   const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
 
-  // Load existing configs on mount
+  // Load existing configs on mount - syncing with external API data
   useEffect(() => {
     if (traktConfig?.clientId) {
       setTraktClientId(traktConfig.clientId);

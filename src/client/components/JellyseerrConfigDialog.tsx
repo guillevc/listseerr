@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Settings, Trash2 } from 'lucide-react';
 import {
   Dialog,
@@ -17,13 +17,14 @@ import { trpc } from '../lib/trpc';
 
 export function JellyseerrConfigDialog() {
   const [open, setOpen] = useState(false);
-  const [url, setUrl] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [userId, setUserId] = useState('');
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
   const { data: config } = trpc.config.get.useQuery();
+
+  const [url, setUrl] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [userId, setUserId] = useState('');
 
   const testMutation = trpc.config.test.useMutation({
     onSuccess: (result) => {
@@ -85,14 +86,20 @@ export function JellyseerrConfigDialog() {
     },
   });
 
-  // Reset form when dialog opens or config changes
-  useEffect(() => {
-    if (open) {
-      setUrl(config?.url || '');
-      setApiKey(config?.apiKey || '');
-      setUserId(config?.userIdJellyseerr.toString() || '');
+  // Reset form when dialog opens
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (newOpen && config) {
+      setUrl(config.url || '');
+      setApiKey(config.apiKey || '');
+      setUserId(config.userIdJellyseerr.toString() || '');
+    } else if (!newOpen) {
+      // Reset form when closing
+      setUrl('');
+      setApiKey('');
+      setUserId('');
     }
-  }, [open, config]);
+  };
 
   const handleTest = async () => {
     if (!url || !apiKey || !userId) {
@@ -133,7 +140,7 @@ export function JellyseerrConfigDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} modal={false}>
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogTrigger asChild>
         <Button
           variant="outline"

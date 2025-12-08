@@ -75,7 +75,7 @@ export function JellyseerrSettings() {
     },
   });
 
-  // Load config when it changes
+  // Load config when it changes - syncing with external API data
   useEffect(() => {
     if (config) {
       setUrl(config.url || '');

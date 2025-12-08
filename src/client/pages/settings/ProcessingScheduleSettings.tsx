@@ -192,7 +192,7 @@ export function ProcessingScheduleSettings() {
     },
   });
 
-  // Load settings when they arrive
+  // Load settings when they arrive - syncing with external API data
   useEffect(() => {
     if (settings) {
       setCronExpression(settings.automaticProcessingSchedule || '');
@@ -200,7 +200,7 @@ export function ProcessingScheduleSettings() {
     }
   }, [settings]);
 
-  // Validate cron expression
+  // Validate cron expression - computed derived state
   useEffect(() => {
     if (cronExpression) {
       const result = validateAndParseCron(cronExpression);

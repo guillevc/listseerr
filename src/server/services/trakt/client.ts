@@ -43,7 +43,7 @@ export async function fetchTraktList(
       throw new Error(`Trakt API error: ${response.status} ${response.statusText}`);
     }
 
-    const items: TraktListItem[] = await response.json();
+    const items = await response.json() as TraktListItem[];
 
     logger.debug(
       {

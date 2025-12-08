@@ -7,6 +7,7 @@ import { fetchTraktChart } from '../../services/trakt/chart-client';
 import { fetchMdbListList } from '../../services/mdblist/client';
 import { fetchStevenLuList } from '../../services/stevenlu/client';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
+import type { MediaItem } from '../../services/trakt/types';
 import { getAlreadyRequestedIds, cacheRequestedItems } from '../../services/list-processor/deduplicator';
 import { createLogger } from '../../lib/logger';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
@@ -505,9 +506,12 @@ export async function processBatchWithDeduplication(
   // PHASE 4: Request items to Jellyseerr
   logger.info('PHASE 4: Requesting items to Jellyseerr');
 
-  let results = {
-    successful: [] as Awaited<ReturnType<typeof fetchTraktList>>,
-    failed: [] as Awaited<ReturnType<typeof fetchTraktList>>,
+  let results: {
+    successful: MediaItem[];
+    failed: Array<{ item: MediaItem; error: string }>;
+  } = {
+    successful: [],
+    failed: [],
   };
 
   if (itemsToRequest.length > 0) {
