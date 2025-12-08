@@ -1,0 +1,40 @@
+# Dependencies (will be installed in Docker)
+node_modules
+
+# Build output (will be generated in Docker)
+dist
+dist-ssr
+
+# Local database
+data
+*.db
+*.db-wal
+*.db-shm
+
+# Git
+.git
+.gitignore
+.github
+
+# Editor and IDE
+.vscode
+.idea
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Development
+.cache
+.claude
+
+# Documentation
+*.md
+README.md
+DOCKER.md

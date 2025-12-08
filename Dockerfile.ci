@@ -1,0 +1,12 @@
+FROM oven/bun:1-alpine
+
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+COPY . .
+
+RUN bun run lint
+RUN bun run typecheck
+RUN bun run build
+
+CMD ["echo", "All checks passed"]
