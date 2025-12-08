@@ -176,7 +176,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                     <span className="truncate">
                       {truncateTail(displayUrl, 30)}
                     </span>
-                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                    <ExternalLink className="h-3 w-3 shrink-0" />
                   </a>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -208,7 +208,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-1.5 cursor-help text-sm whitespace-nowrap">
-                  <Clock className="h-3.5 w-3.5 flex-shrink-0" />
+                  <Clock className="h-3.5 w-3.5 shrink-0" />
                   <span>{getRelativeTime(info.getValue())}</span>
                 </div>
               </TooltipTrigger>
@@ -317,8 +317,6 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
     [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, mutatingListId, jellyseerrConfigured]
   );
 
-  // TanStack Table's useReactTable API returns functions that cannot be memoized safely
-  // This is a known limitation and is expected behavior
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: lists,

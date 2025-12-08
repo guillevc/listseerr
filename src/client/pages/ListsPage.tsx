@@ -1,5 +1,4 @@
 import { RefreshCw, AlertCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { ListsHeader } from '../components/lists/ListsHeader';
 import { ListStats } from '../components/lists/ListStats';
@@ -65,17 +64,14 @@ export function ListsPage() {
           </CardContent>
         </Card>
       ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <div className="animate-fade-in-up">
           <ListsTable
             lists={lists}
             onProcess={(id) => handleProcess(id, lists)}
             processingLists={processingLists}
             jellyseerrConfigured={!!jellyseerrConfig}
           />
-        </motion.div>
+        </div>
       )}
     </div>
   );

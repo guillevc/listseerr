@@ -1,5 +1,4 @@
 import { RefreshCw } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { Card, CardContent } from '../components/ui/card';
@@ -21,15 +20,12 @@ export function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-muted mt-1">
           Overview of your media lists and sync activity
         </p>
-      </motion.div>
+      </div>
 
       {lists.length === 0 ? (
         <Card>

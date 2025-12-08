@@ -35,7 +35,6 @@
     "clsx": "^2.1.1",
     "croner": "^9.1.0",
     "drizzle-orm": "^0.45.0",
-    "framer-motion": "^12.23.25",
     "hono": "^4.10.7",
     "lucide-react": "^0.556.0",
     "next-themes": "^0.4.6",
