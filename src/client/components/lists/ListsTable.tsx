@@ -142,7 +142,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                      <AlertCircle className="h-4 w-4 text-orange-500 shrink-0" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
@@ -372,7 +372,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                   key={`list-${row.original.id}`}
                   className={
                     !isProviderConfigured(row.original.provider)
-                      ? 'opacity-60 border-l-4 border-l-orange-500'
+                      ? 'border-l-4 border-l-light-re dark:border-l-dark-re'
                       : ''
                   }
                 >
