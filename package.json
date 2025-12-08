@@ -1,8 +1,16 @@
 {
   "name": "listseerr",
+  "version": "0.1.0",
+  "description": "Request media in Jellyseerr from your favorite lists",
+  "author": "Guillermo Alfonso Varela Chouciño <guillevch@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/guillevc/listseerr",
   "private": true,
-  "version": "0.0.1",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/listseerr.git"
+  },
   "scripts": {
     "dev": "bun run dev:server & bun run dev:client",
     "dev:client": "vite",
