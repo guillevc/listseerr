@@ -47,7 +47,7 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="border-b bg-card">
+    <nav className="border-b">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -83,7 +83,7 @@ export function Navigation() {
                   return (
                     <div
                       key={item.path || item.name}
-                      className="px-4 py-2 text-sm text-muted-foreground/50 cursor-not-allowed"
+                      className="px-4 py-2 text-sm text-light-tx-3 dark:text-dark-tx-3 cursor-not-allowed"
                     >
                       {item.name}
                     </div>
@@ -102,10 +102,10 @@ export function Navigation() {
                         href={item.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 border-purple text-purple hover:bg-purple/10"
+                        className="flex items-center gap-2 border-purple-600 text-purple-600 hover:bg-purple-600/10"
                       >
                         {item.badge && (
-                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red text-white hover:bg-red/90' : 'bg-purple text-white hover:bg-purple/90'}`}>
+                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-600 text-white hover:bg-red-600/90' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
                             {item.badge}
                           </Badge>
                         )}
@@ -123,8 +123,8 @@ export function Navigation() {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-md transition-colors',
                       isActive
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                        ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx'
+                        : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
                     )}
                   >
                     {item.name}
@@ -170,7 +170,7 @@ export function Navigation() {
                 return (
                   <div
                     key={item.path || item.name}
-                    className="px-4 py-3 text-sm text-muted-foreground/50 cursor-not-allowed rounded-md"
+                    className="px-4 py-3 text-sm text-light-tx-3 dark:text-dark-tx-3 cursor-not-allowed rounded-md"
                   >
                     {item.name}
                   </div>
@@ -190,10 +190,10 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full border-purple text-purple hover:bg-purple/10"
+                      className="flex items-center gap-2 w-full border-purple-600 text-purple-600 hover:bg-purple-600/10"
                     >
                       {item.badge && (
-                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red text-white hover:bg-red/90' : 'bg-purple text-white hover:bg-purple/90'}`}>
+                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-600 text-white hover:bg-red-600/90' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
                           {item.badge}
                         </Badge>
                       )}
@@ -212,8 +212,8 @@ export function Navigation() {
                   className={cn(
                     'px-4 py-3 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-accent text-accent-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                      ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx'
+                      : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
                   )}
                 >
                   {item.name}

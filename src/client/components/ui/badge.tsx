@@ -14,12 +14,12 @@ const badgeVariants = cva(
           'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive:
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        outline: 'text-foreground',
-        trakt: 'border-transparent bg-flexoki-magenta text-white',
-        letterboxd: 'border-transparent bg-flexoki-orange text-white',
-        mdblist: 'border-transparent bg-flexoki-blue text-white',
-        imdb: 'border-transparent bg-flexoki-yellow text-white',
-        tmdb: 'border-transparent bg-flexoki-cyan text-white',
+        outline: 'text-light-tx dark:text-dark-tx',
+        trakt: 'border-transparent bg-magenta-600 text-white',
+        letterboxd: 'border-transparent bg-orange-600 text-white',
+        mdblist: 'border-transparent bg-blue-600 text-white',
+        imdb: 'border-transparent bg-yellow-600 text-white',
+        tmdb: 'border-transparent bg-cyan-600 text-white',
       },
     },
     defaultVariants: {

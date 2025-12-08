@@ -260,7 +260,7 @@ export function AddListDialog() {
         </DialogHeader>
 
         {/* Animated Progress Bar */}
-        <div className="w-full h-1 bg-muted mt-4">
+        <div className="w-full h-1 bg-light-bg-2 dark:bg-dark-bg-2 mt-4">
           <div
             className="h-full bg-primary transition-all duration-500 ease-out"
             style={{
@@ -279,12 +279,12 @@ export function AddListDialog() {
               <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium">Trakt List</p>
-                          <p className="text-xs text-muted-foreground">Public lists</p>
+                          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">Public lists</p>
                         </div>
                         {traktConfig?.clientId ? (
                           <Badge variant="default" className="bg-green-500 whitespace-nowrap">
@@ -304,12 +304,12 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="traktChart" id="provider-traktChart" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium">Trakt Chart</p>
-                          <p className="text-xs text-muted-foreground">Curated charts like Trending, Popular, etc.</p>
+                          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">Curated charts like Trending, Popular, etc.</p>
                         </div>
                         {traktConfig?.clientId ? (
                           <Badge variant="default" className="bg-green-500 whitespace-nowrap">
@@ -329,12 +329,12 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="mdblist" id="provider-mdblist" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium">MDBList</p>
-                          <p className="text-xs text-muted-foreground">Public and custom lists</p>
+                          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">Public and custom lists</p>
                         </div>
                         {mdbListConfig?.apiKey ? (
                           <Badge variant="default" className="bg-green-500 whitespace-nowrap">
@@ -354,11 +354,11 @@ export function AddListDialog() {
 
                 <label className="block cursor-pointer">
                   <RadioGroupItem value="stevenlu" id="provider-stevenlu" className="peer sr-only" />
-                  <div className="flex items-center gap-4 rounded-lg border-2 border-muted p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                  <div className="flex items-center gap-4 rounded-lg border-2 border-light-ui dark:border-dark-ui p-5 hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
                     <div className="flex-1">
                       <div>
                         <p className="font-medium">StevenLu</p>
-                        <p className="text-xs text-muted-foreground">Popular movies list (updated daily)</p>
+                        <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">Popular movies list (updated daily)</p>
                       </div>
                     </div>
                   </div>
@@ -392,12 +392,12 @@ export function AddListDialog() {
                     }}
                   />
                   {provider === 'traktChart' && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                       Name is auto-generated based on your chart selection (you can edit it)
                     </p>
                   )}
                   {provider === 'stevenlu' && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                       Default name provided (you can edit it)
                     </p>
                   )}
@@ -485,14 +485,14 @@ export function AddListDialog() {
                     max="50"
                     required
                   />
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                     Maximum number of items to fetch from the list (1-50). Default: 20
                   </p>
                 </div>
 
                 {/* URL format info for Trakt List and MDBList */}
                 {provider !== 'traktChart' && provider !== 'stevenlu' && (
-                  <div className="rounded-md border bg-muted/50 p-3 space-y-2">
+                  <div className="rounded-md border bg-light-bg-2 dark:bg-dark-bg-2/50 p-3 space-y-2">
                     <p className="text-sm font-medium">
                       {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:
                     </p>

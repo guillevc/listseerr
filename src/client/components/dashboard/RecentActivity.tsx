@@ -16,8 +16,8 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
 
   if (total === 0) {
     return (
-      <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center">
-        <span className="text-xs text-muted-foreground">No items</span>
+      <div className="h-8 w-full bg-light-bg-2 dark:bg-dark-bg-2 rounded-md flex items-center justify-center">
+        <span className="text-xs text-light-tx-2 dark:text-dark-tx-2">No items</span>
       </div>
     );
   }
@@ -35,7 +35,7 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="h-8 w-full bg-muted rounded-md overflow-hidden flex cursor-help">
+          <div className="h-8 w-full bg-light-bg-2 dark:bg-dark-bg-2 rounded-md overflow-hidden flex cursor-help">
             {requested > 0 && (
               <div
                 className="bg-green-600 h-full flex items-center justify-center text-white text-xs font-medium"
@@ -114,7 +114,7 @@ export function RecentActivity() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-light-tx-2 dark:text-dark-tx-2">
             <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
             <p>Loading activity...</p>
           </div>
@@ -136,7 +136,7 @@ export function RecentActivity() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-light-tx-2 dark:text-dark-tx-2">
             <p>No recent activity</p>
             <p className="text-sm mt-1">Processing activity will appear here</p>
           </div>
@@ -164,7 +164,7 @@ export function RecentActivity() {
             return (
               <div
                 key={`group-${groupIdx}`}
-                className="rounded-lg border bg-card"
+                className="rounded-lg border border-hover"
               >
                 {/* Group header */}
                 <div className="flex items-center justify-between p-4 border-b">
@@ -179,14 +179,14 @@ export function RecentActivity() {
                         'Manual'
                       )}
                     </Badge>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-light-tx-2 dark:text-dark-tx-2">
                       {group.executions.length} {group.executions.length === 1 ? 'list' : 'lists'} processed
                     </span>
                   </div>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-sm text-muted-foreground cursor-help">
+                        <span className="text-sm text-light-tx-2 dark:text-dark-tx-2 cursor-help">
                           {formatRelativeTime(timestamp)}
                         </span>
                       </TooltipTrigger>
@@ -217,7 +217,7 @@ export function RecentActivity() {
                         return (
                           <TableRow key={execution.id}>
                             <TableCell className="font-medium">
-                              <div className="line-clamp-3 break-words">
+                              <div className="line-clamp-3 wrap-break-word">
                                 {execution.listName || `List #${execution.listId}`}
                               </div>
                             </TableCell>
@@ -242,7 +242,7 @@ export function RecentActivity() {
                         const totalSkipped = totalFound - totalRequested - totalFailed;
 
                         return (
-                          <TableRow className="bg-muted/50 font-semibold border-t-2">
+                          <TableRow className="bg-light-bg-2 dark:bg-dark-bg-2/50 font-semibold border-t-2">
                             <TableCell>Batch Total</TableCell>
                             <TableCell className="text-right">{totalFound}</TableCell>
                             <TableCell className="w-[500px]">

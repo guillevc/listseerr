@@ -57,10 +57,10 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <CardTitle className="text-sm font-medium">
             Lists
           </CardTitle>
-          <List className="h-4 w-4 text-muted-foreground" />
+          <List className="h-4 w-4 text-light-tx-2 dark:text-dark-tx-2" />
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted-foreground mb-1">Total active</p>
+          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2 mb-1">Total active</p>
           <div className="text-2xl font-bold">{activeListsCount}</div>
         </CardContent>
       </Card>
@@ -71,11 +71,11 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <CardTitle className="text-sm font-medium">
             Requests
           </CardTitle>
-          <PackageSearch className="h-4 w-4 text-muted-foreground" />
+          <PackageSearch className="h-4 w-4 text-light-tx-2 dark:text-dark-tx-2" />
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted-foreground mb-1">All time</p>
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2 mb-1">All time</p>
+          <div className="text-2xl font-bold text-green-600">
             {dashboardStats?.totalRequestedItems ?? '-'}
           </div>
         </CardContent>
@@ -87,12 +87,12 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <CardTitle className="text-sm font-medium">
             Automatic Processing
           </CardTitle>
-          <Clock className="h-4 w-4 text-muted-foreground" />
+          <Clock className="h-4 w-4 text-light-tx-2 dark:text-dark-tx-2" />
         </CardHeader>
         <CardContent>
           <div className="flex items-start gap-6">
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground mb-1">Last execution</p>
+              <p className="text-xs text-light-tx-2 dark:text-dark-tx-2 mb-1">Last execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -110,7 +110,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
             <Separator orientation="vertical" className="h-12" />
 
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground mb-1">Next execution</p>
+              <p className="text-xs text-light-tx-2 dark:text-dark-tx-2 mb-1">Next execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

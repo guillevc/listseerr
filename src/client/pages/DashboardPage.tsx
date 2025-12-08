@@ -13,7 +13,7 @@ export function DashboardPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading dashboard...</p>
+          <p className="text-light-tx-2 dark:text-dark-tx-2">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -26,7 +26,7 @@ export function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-light-tx-2 dark:text-dark-tx-2 mt-1">
           Overview of your media lists and sync activity
         </p>
       </motion.div>
@@ -34,7 +34,7 @@ export function DashboardPage() {
       {lists.length === 0 ? (
         <Card>
           <CardContent className="py-12">
-            <div className="text-center text-muted-foreground">
+            <div className="text-center text-light-tx-2 dark:text-dark-tx-2">
               <p className="text-lg mb-2">Welcome to Listseerr!</p>
               <p className="text-sm">
                 Get started by adding your first media list from the Lists page.

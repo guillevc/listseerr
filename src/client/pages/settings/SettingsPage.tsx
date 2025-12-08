@@ -14,7 +14,7 @@ export function SettingsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-light-tx-2 dark:text-dark-tx-2 mt-1">
           Manage your application configuration
         </p>
       </div>
@@ -22,7 +22,7 @@ export function SettingsPage() {
       <Card className="overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Sidebar */}
-          <div className="border-b md:border-b-0 md:border-r bg-muted/30">
+          <div className="border-b md:border-b-0 md:border-r bg-light-bg-2/50 dark:bg-dark-bg-2/50">
             <SettingsSidebar activeCategory={activeCategory} />
           </div>
 
