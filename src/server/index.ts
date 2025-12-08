@@ -38,7 +38,7 @@ app.use('/trpc/*', async (c) => {
 
 // Serve static files in production builds
 if (!isDev) {
-  console.log('📦 Serving static files from ./dist');
+  logger.info('Serving static files from ./dist');
   // Serve static assets
   app.use('/assets/*', serveStatic({ root: './dist' }));
   app.use('/vite.svg', serveStatic({ path: './dist/vite.svg' }));
@@ -46,7 +46,7 @@ if (!isDev) {
   // Serve index.html for all other routes (SPA fallback)
   app.get('*', serveStatic({ path: './dist/index.html' }));
 } else {
-  console.log('⚠️  Development mode - static files served by Vite');
+  logger.info('Development mode - static files served by Vite');
 }
 
 const port = env.PORT;
@@ -121,12 +121,17 @@ async function initializeScheduler() {
 }
 
 // Start scheduler initialization (don't block server start)
-initializeScheduler().catch(console.error);
+initializeScheduler().catch((error) =>
+  logger.error(
+    { error: error instanceof Error ? error.message : 'Unknown error' },
+    'Failed to start scheduler initialization'
+  )
+);
 
 logger.info({ port }, 'Server starting');
-console.log(`🚀 Server running on http://localhost:${port}`);
-console.log(`📡 tRPC endpoint: http://localhost:${port}/trpc`);
-console.log(`🏥 Health check: http://localhost:${port}/health`);
+logger.info(`Server running on http://localhost:${port}`);
+logger.info(`tRPC endpoint: http://localhost:${port}/trpc`);
+logger.info(`Health check: http://localhost:${port}/health`);
 
 export default {
   port,
