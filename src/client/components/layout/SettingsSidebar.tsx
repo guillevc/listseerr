@@ -59,7 +59,7 @@ export function SettingsSidebar({
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors text-left rounded-md border border-transparent',
                 isActive
-                  ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx border-light-ui-2 dark:border-dark-ui-2'
+                  ? 'bg-light-bg/70 dark:bg-dark-bg/50 text-light-tx dark:text-dark-tx border-light-ui-2 dark:border-dark-ui-2'
                   : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
               )}
             >

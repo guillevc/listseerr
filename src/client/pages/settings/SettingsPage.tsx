@@ -22,7 +22,7 @@ export function SettingsPage() {
       <Card className="overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Sidebar */}
-          <div className="border-b md:border-b-0 md:border-r bg-light-bg-2/50 dark:bg-dark-bg-2/50">
+          <div className="border-b md:border-b-0 md:border-r">
             <SettingsSidebar activeCategory={activeCategory} />
           </div>
 
