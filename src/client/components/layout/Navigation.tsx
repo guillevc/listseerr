@@ -55,7 +55,7 @@ export function Navigation() {
             <Link to="/" className="flex items-center gap-2">
               <svg
                 viewBox="0 0 24 24"
-                className="h-8 w-8 text-primary"
+                className="h-8 w-8 text-light-bl dark:text-dark-bl"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

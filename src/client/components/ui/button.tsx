@@ -5,19 +5,19 @@ import { type VariantProps, cva } from 'class-variance-authority'
 import { cn } from '@/client/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        default: 'bg-light-bl text-white hover:bg-light-bl-2 dark:bg-dark-bl dark:hover:bg-dark-bl-2',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'bg-light-re text-white hover:bg-light-re-2 dark:bg-dark-re dark:hover:bg-dark-re-2',
         outline:
-          'border-2 border-light-ui-2 dark:border-dark-ui-2 bg-transparent hover:bg-light-bg-2 hover:dark:bg-dark-bg-2 hover:border-light-ui-3 hover:dark:border-dark-ui-3',
+          'border-2 border-light-ui-2 dark:border-dark-ui-2 bg-transparent text-light-tx dark:text-dark-tx hover:bg-light-bg-2 hover:dark:bg-dark-bg-2 hover:border-light-ui-3 hover:dark:border-dark-ui-3',
         secondary:
-          'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx hover:bg-light-bg-2/80 hover:dark:bg-dark-bg-2/80',
+          'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx hover:bg-light-ui hover:dark:bg-dark-ui',
         ghost: 'hover:bg-light-bg-2 hover:dark:bg-dark-bg-2 hover:text-light-tx hover:dark:text-dark-tx',
-        link: 'text-primary underline-offset-4 hover:underline',
+        link: 'text-light-bl dark:text-dark-bl underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',

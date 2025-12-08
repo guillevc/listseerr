@@ -4,7 +4,7 @@ import { AppLayout } from '../components/layout/AppLayout';
 
 export const rootRoute = createRootRoute({
   component: () => (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Toaster />
       <AppLayout>
         <Outlet />

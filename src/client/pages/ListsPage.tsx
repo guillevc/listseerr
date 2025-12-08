@@ -16,7 +16,7 @@ export function ListsPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading lists...</p>
+          <p className="text-light-tx-2 dark:text-dark-tx-2">Loading lists...</p>
         </div>
       </div>
     );
@@ -32,7 +32,7 @@ export function ListsPage() {
               <AlertCircle className="h-5 w-5" />
               Configuration Required
             </CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription className="text-light-tx-2 dark:text-dark-tx-2">
               Please configure your Jellyseerr instance in Settings to start processing lists.
             </CardDescription>
           </CardHeader>
@@ -56,7 +56,7 @@ export function ListsPage() {
       {lists.length === 0 ? (
         <Card>
           <CardContent className="py-12">
-            <div className="text-center text-muted-foreground">
+            <div className="text-center text-light-tx-2 dark:text-dark-tx-2">
               <p className="text-lg mb-2">No lists added yet</p>
               <p className="text-sm">
                 Add lists to automatically request new content to Jellyseerr

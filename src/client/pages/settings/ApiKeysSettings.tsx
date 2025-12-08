@@ -176,7 +176,7 @@ export function ApiKeysSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">API Keys</h3>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-light-tx-2 dark:text-dark-tx-2 mt-1">
           Manage API keys for third-party services
         </p>
       </div>
@@ -200,7 +200,7 @@ export function ApiKeysSettings() {
                   href="https://trakt.tv/oauth/applications"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   Trakt.tv API Applications
                 </a>
@@ -239,7 +239,7 @@ export function ApiKeysSettings() {
                   <button
                     type="button"
                     onClick={() => setShowTraktKey(!showTraktKey)}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx"
                   >
                     {showTraktKey ? (
                       <EyeOff className="h-4 w-4" />
@@ -250,7 +250,7 @@ export function ApiKeysSettings() {
                 </div>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
               Only the Client ID is required for reading public lists
             </p>
           </div>
@@ -283,7 +283,7 @@ export function ApiKeysSettings() {
                   href="https://mdblist.com/preferences/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   MDBList Preferences
                 </a>
@@ -322,7 +322,7 @@ export function ApiKeysSettings() {
                   <button
                     type="button"
                     onClick={() => setShowTmdbKey(!showMdbListKey)}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx"
                   >
                     {showMdbListKey ? (
                       <EyeOff className="h-4 w-4" />
@@ -349,7 +349,7 @@ export function ApiKeysSettings() {
       {/* Future API Keys can be added here */}
       <Card className="border-dashed">
         <CardContent className="py-8">
-          <div className="text-center text-muted-foreground">
+          <div className="text-center text-light-tx-2 dark:text-dark-tx-2">
             <Plus className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">More API integrations coming soon</p>
           </div>

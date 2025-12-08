@@ -154,7 +154,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                       Shows
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                     Media type cannot be changed. Create a new list if you need a different type.
                   </p>
                 </div>
@@ -176,7 +176,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                       <SelectItem value="anticipated">Most Anticipated</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                     Chart type cannot be changed. Create a new list if you need a different chart.
                   </p>
                 </div>
@@ -187,10 +187,10 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             {list.provider !== 'traktChart' && list.provider !== 'stevenlu' && (
               <div className="grid gap-2">
                 <Label htmlFor="edit-url">List URL (Read-only)</Label>
-                <div className="text-sm text-muted-foreground bg-muted p-2 rounded-md break-all">
+                <div className="text-sm text-light-tx-2 dark:text-dark-tx-2 bg-light-ui dark:bg-dark-ui p-2 rounded-md break-all">
                   {list.displayUrl || list.url}
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                   URL cannot be changed. Create a new list if you need a different URL.
                 </p>
               </div>
@@ -209,7 +209,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 max="50"
                 required
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
                 Maximum number of items to fetch from the list (1-50). Default: 20
               </p>
             </div>

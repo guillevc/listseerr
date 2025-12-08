@@ -57,10 +57,10 @@ export function SettingsSidebar({
               key={category.id}
               to={category.path}
               className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors text-left rounded-md',
+                'w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors text-left rounded-md border border-transparent',
                 isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx border-light-ui-2 dark:border-dark-ui-2'
+                  : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
               )}
             >
               {category.icon}

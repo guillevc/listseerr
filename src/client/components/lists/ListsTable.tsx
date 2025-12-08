@@ -302,7 +302,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                   <DropdownMenuItem
                     onClick={() => deleteMutation.mutate({ id: list.id })}
                     disabled={deleteMutation.isPending}
-                    className="text-destructive focus:text-destructive"
+                    className="text-light-re dark:text-dark-re focus:text-light-re focus:dark:text-dark-re"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete

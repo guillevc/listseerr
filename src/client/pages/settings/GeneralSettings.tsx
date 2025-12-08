@@ -57,7 +57,7 @@ export function GeneralSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">General Settings</h3>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-light-tx-2 dark:text-dark-tx-2 mt-1">
           Configure general application settings
         </p>
       </div>
@@ -73,12 +73,12 @@ export function GeneralSettings() {
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
             <a
               href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               IANA timezone identifier
             </a>
