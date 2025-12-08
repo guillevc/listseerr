@@ -1,0 +1,11 @@
+when:
+  event: push
+  branch: main
+
+steps:
+  - name: ci-checks
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker build -f Dockerfile.ci .
