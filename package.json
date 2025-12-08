@@ -32,7 +32,6 @@
     "@trpc/client": "^11.7.2",
     "@trpc/react-query": "^11.7.2",
     "@trpc/server": "^11.7.2",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "croner": "^9.1.0",
     "drizzle-orm": "^0.45.0",
@@ -45,6 +44,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "tailwind-merge": "^3.4.0",
+    "tailwind-variants": "^3.2.2",
     "zod": "^4.1.13"
   },
   "devDependencies": {
