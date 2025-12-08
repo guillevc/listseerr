@@ -102,10 +102,10 @@ export function Navigation() {
                         href={item.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 border-purple-600 text-purple-600 hover:bg-purple-600/10"
+                        className="flex items-center gap-2 border-light-pu dark:border-dark-pu text-light-pu dark:text-dark-pu hover:bg-light-pu/10 hover:dark:bg-dark-pu/10"
                       >
                         {item.badge && (
-                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-600 text-white hover:bg-red-600/90' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
+                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-white hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-white hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
                             {item.badge}
                           </Badge>
                         )}
@@ -190,10 +190,10 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full border-purple-600 text-purple-600 hover:bg-purple-600/10"
+                      className="flex items-center gap-2 w-full border-light-pu dark:border-dark-pu text-light-pu dark:text-dark-pu hover:bg-light-pu/10 hover:dark:bg-dark-pu/10"
                     >
                       {item.badge && (
-                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-red-600 text-white hover:bg-red-600/90' : 'bg-purple-600 text-white hover:bg-purple-600/90'}`}>
+                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-white hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-white hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
                           {item.badge}
                         </Badge>
                       )}
