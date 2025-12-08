@@ -5,8 +5,6 @@ COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 COPY . .
 
-RUN bun run lint
-RUN bun run typecheck
-RUN bun run build
+RUN bun run ci
 
 CMD ["echo", "All checks passed"]

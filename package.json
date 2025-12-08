@@ -11,6 +11,7 @@
     "build:client": "vite build",
     "build:server": "bun build src/server/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
+    "ci": "bun run lint && bun run typecheck && bun run build",
     "lint": "eslint .",
     "typecheck": "tsc --build --force",
     "typecheck:watch": "tsc --build --watch",
