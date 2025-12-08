@@ -171,7 +171,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                     href={displayUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
+                    className="text-sm text-muted hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
                   >
                     <span className="truncate">
                       {truncateTail(displayUrl, 30)}
@@ -342,14 +342,14 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                         <div
                           className={
                             header.column.getCanSort()
-                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-light-tx hover:dark:text-dark-tx'
+                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
                               : ''
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {header.column.getCanSort() && (
-                            <span className="text-light-tx-2 dark:text-dark-tx-2">
+                            <span className="text-muted">
                               {header.column.getIsSorted() === 'asc' ? (
                                 <ArrowUp className="h-4 w-4" />
                               ) : header.column.getIsSorted() === 'desc' ? (

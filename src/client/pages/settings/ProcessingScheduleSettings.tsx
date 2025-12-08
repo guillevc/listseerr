@@ -243,7 +243,7 @@ export function ProcessingScheduleSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Automatic Processing</h3>
-        <p className="text-sm text-light-tx-2 dark:text-dark-tx-2 mt-1">
+        <p className="text-sm text-muted mt-1">
           Schedule automatic processing for all enabled lists. Lists are processed sequentially (oldest to newest) to avoid rate limits.
         </p>
       </div>
@@ -258,7 +258,7 @@ export function ProcessingScheduleSettings() {
               <Label htmlFor="schedule-enabled" className="text-base">
                 Enable Automatic Processing
               </Label>
-              <p className="text-sm text-light-tx-2 dark:text-dark-tx-2">
+              <p className="text-sm text-muted">
                 Process all enabled lists on the same schedule. Lists are processed sequentially from oldest to newest.
               </p>
             </div>
@@ -287,7 +287,7 @@ export function ProcessingScheduleSettings() {
                       <Badge
                         key={pattern.value}
                         variant="outline"
-                        className="cursor-pointer hover:bg-light-bg-2 hover:dark:bg-dark-bg-2 transition-colors"
+                        className="cursor-pointer hover:bg-card transition-colors"
                         onClick={() => setCronExpression(pattern.value)}
                       >
                         {pattern.label}
@@ -314,7 +314,7 @@ export function ProcessingScheduleSettings() {
                         : ''
                     }
                   />
-                  <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
+                  <p className="text-xs text-muted">
                     Format: minute hour day month day-of-week •{' '}
                     <a
                       href="https://crontab.guru"

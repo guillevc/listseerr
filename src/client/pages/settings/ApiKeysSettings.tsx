@@ -176,7 +176,7 @@ export function ApiKeysSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">API Keys</h3>
-        <p className="text-sm text-light-tx-2 dark:text-dark-tx-2 mt-1">
+        <p className="text-sm text-muted mt-1">
           Manage API keys for third-party services
         </p>
       </div>
@@ -239,7 +239,7 @@ export function ApiKeysSettings() {
                   <button
                     type="button"
                     onClick={() => setShowTraktKey(!showTraktKey)}
-                    className="text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx"
+                    className="text-muted hover:text-foreground"
                   >
                     {showTraktKey ? (
                       <EyeOff className="h-4 w-4" />
@@ -250,7 +250,7 @@ export function ApiKeysSettings() {
                 </div>
               )}
             </div>
-            <p className="text-xs text-light-tx-2 dark:text-dark-tx-2">
+            <p className="text-xs text-muted">
               Only the Client ID is required for reading public lists
             </p>
           </div>
@@ -322,7 +322,7 @@ export function ApiKeysSettings() {
                   <button
                     type="button"
                     onClick={() => setShowTmdbKey(!showMdbListKey)}
-                    className="text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx"
+                    className="text-muted hover:text-foreground"
                   >
                     {showMdbListKey ? (
                       <EyeOff className="h-4 w-4" />
@@ -349,7 +349,7 @@ export function ApiKeysSettings() {
       {/* Future API Keys can be added here */}
       <Card className="border-dashed">
         <CardContent className="py-8">
-          <div className="text-center text-light-tx-2 dark:text-dark-tx-2">
+          <div className="text-center text-muted">
             <Plus className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">More API integrations coming soon</p>
           </div>

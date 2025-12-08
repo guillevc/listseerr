@@ -4,17 +4,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/client/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-light-ui-2 dark:focus:ring-dark-ui-2 focus:ring-offset-2',
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   {
     variants: {
       variant: {
         default:
-          'border-transparent bg-light-primary dark:bg-dark-primary text-white hover:bg-light-primary-2 hover:dark:bg-dark-primary-2',
+          'border-transparent bg-primary text-white hover:bg-primary-hover',
         secondary:
-          'border-transparent bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx hover:bg-light-ui hover:dark:bg-dark-ui',
+          'border-transparent bg-card text-foreground hover:bg-border',
         destructive:
-          'border-transparent bg-light-re dark:bg-dark-re text-white hover:bg-light-re-2 hover:dark:bg-dark-re-2',
-        outline: 'text-light-tx dark:text-dark-tx',
+          'border-transparent bg-destructive text-white hover:bg-destructive-hover',
+        outline: 'text-foreground',
         trakt: 'border-transparent bg-magenta-600 text-white',
         letterboxd: 'border-transparent bg-orange-600 text-white',
         mdblist: 'border-transparent bg-blue-600 text-white',

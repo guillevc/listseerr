@@ -126,7 +126,7 @@ export function JellyseerrSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Jellyseerr Configuration</h3>
-        <p className="text-sm text-light-tx-2 dark:text-dark-tx-2 mt-1">
+        <p className="text-sm text-muted mt-1">
           Configure your Jellyseerr instance to enable automatic media requests.
         </p>
       </div>
@@ -158,7 +158,7 @@ export function JellyseerrSettings() {
             <button
               type="button"
               onClick={() => setShowApiKey(!showApiKey)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
             >
               {showApiKey ? (
                 <EyeOff className="h-4 w-4" />

@@ -83,7 +83,7 @@ export function Navigation() {
                   return (
                     <div
                       key={item.path || item.name}
-                      className="px-4 py-2 text-sm text-light-tx-3 dark:text-dark-tx-3 cursor-not-allowed"
+                      className="px-4 py-2 text-sm text-muted cursor-not-allowed"
                     >
                       {item.name}
                     </div>
@@ -123,8 +123,8 @@ export function Navigation() {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-md transition-colors',
                       isActive
-                        ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx'
-                        : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
+                        ? 'bg-card text-foreground'
+                        : 'text-muted hover:text-foreground hover:bg-card/50'
                     )}
                   >
                     {item.name}
@@ -170,7 +170,7 @@ export function Navigation() {
                 return (
                   <div
                     key={item.path || item.name}
-                    className="px-4 py-3 text-sm text-light-tx-3 dark:text-dark-tx-3 cursor-not-allowed rounded-md"
+                    className="px-4 py-3 text-sm text-muted cursor-not-allowed rounded-md"
                   >
                     {item.name}
                   </div>
@@ -212,8 +212,8 @@ export function Navigation() {
                   className={cn(
                     'px-4 py-3 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-light-bg-2 dark:bg-dark-bg-2 text-light-tx dark:text-dark-tx'
-                      : 'text-light-tx-2 dark:text-dark-tx-2 hover:text-light-tx hover:dark:text-dark-tx hover:bg-light-bg-2/50 hover:dark:bg-dark-bg-2/50'
+                      ? 'bg-card text-foreground'
+                      : 'text-muted hover:text-foreground hover:bg-card/50'
                   )}
                 >
                   {item.name}

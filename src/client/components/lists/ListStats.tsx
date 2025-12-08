@@ -13,8 +13,8 @@ export function ListStats({ lists }: ListStatsProps) {
   const { total, enabled, disabled } = useListsStats(lists);
 
   return (
-    <div className="flex items-center gap-2 text-sm text-light-tx-2 dark:text-dark-tx-2">
-      <span className="font-medium text-light-tx dark:text-dark-tx">{total} All</span>
+    <div className="flex items-center gap-2 text-sm text-muted">
+      <span className="font-medium text-foreground">{total} All</span>
       <span>•</span>
       <span className="font-medium text-green-600">
         {enabled} Enabled
