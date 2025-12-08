@@ -1,9 +1,9 @@
 import { Database } from 'bun:sqlite';
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 import * as schema from './schema';
+import { env } from '../env';
 
-// Database path - defaults to data/listseerr.db for Docker compatibility
-const DB_PATH = process.env.DATABASE_PATH || './data/listseerr.db';
+const DB_PATH = env.DATABASE_PATH;
 
 // Create data directory if it doesn't exist
 import { mkdirSync } from 'fs';
@@ -19,7 +19,7 @@ try {
 const sqlite = new Database(DB_PATH, { create: true });
 
 // Enable WAL mode for better concurrency
-sqlite.exec('PRAGMA journal_mode = WAL;');
+sqlite.run('PRAGMA journal_mode = WAL;');
 
 // Initialize Drizzle ORM
 export const db = drizzle(sqlite, { schema });

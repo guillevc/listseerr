@@ -1,0 +1,28 @@
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
+
+export const env = createEnv({
+  /**
+   * Specify your server-side environment variables schema here.
+   * This way you can ensure the app isn't built with invalid env vars.
+   */
+  server: {
+    PORT: z.coerce.number().default(3000),
+    DATABASE_PATH: z.string().default('./data/listseerr.db'),
+    NODE_ENV: z.enum(['development', 'production']).default('development'),
+    LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('debug'),
+  },
+
+  /**
+   * What object holds the environment variables at runtime.
+   * This is usually `process.env` in Node.js/Bun environments.
+   */
+  runtimeEnv: process.env,
+
+  /**
+   * Makes it so that empty strings are treated as undefined.
+   * `PORT=''` becomes `undefined` instead of `''`.
+   * Recommended for new projects.
+   */
+  emptyStringAsUndefined: true,
+});

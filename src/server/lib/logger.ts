@@ -1,7 +1,8 @@
 import pino from 'pino';
 import { logBuffer } from './log-buffer';
+import { env } from '../env';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = env.NODE_ENV === 'production';
 
 /**
  * Logger Configuration
@@ -50,7 +51,7 @@ const logStream = pino.multistream([
 
 export const logger = pino(
   {
-    level: process.env.LOG_LEVEL || 'debug',
+    level: env.LOG_LEVEL,
   },
   logStream
 );

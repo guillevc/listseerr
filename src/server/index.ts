@@ -7,6 +7,7 @@ import { createContext } from './trpc/trpc';
 import { scheduler } from './lib/scheduler';
 import { db } from './db';
 import { createLogger } from './lib/logger';
+import { env } from './env';
 
 const logger = createLogger('server');
 const app = new Hono();
@@ -48,7 +49,7 @@ if (!isDev) {
   console.log('⚠️  Development mode - static files served by Vite');
 }
 
-const port = process.env.PORT || 3000;
+const port = env.PORT;
 
 // Initialize scheduler on server start
 async function initializeScheduler() {

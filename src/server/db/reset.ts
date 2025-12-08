@@ -1,7 +1,8 @@
 import { unlinkSync, existsSync } from 'fs';
 import { $ } from 'bun';
+import { env } from '../env';
 
-const DB_PATH = process.env.DATABASE_PATH || './data/listseerr.db';
+const DB_PATH = env.DATABASE_PATH;
 const DB_FILES = [DB_PATH, `${DB_PATH}-shm`, `${DB_PATH}-wal`];
 
 console.log('🗑️  Resetting database...\n');
