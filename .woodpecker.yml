@@ -4,8 +4,7 @@ when:
 
 steps:
   - name: ci-checks
-    image: docker:cli
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker build -f Dockerfile.ci .
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      dockerfile: Dockerfile.ci
+      dry_run: true
