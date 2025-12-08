@@ -250,7 +250,7 @@ export function AddListDialog() {
           Add List
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-xl">
         {/* Dialog Header - Always Visible */}
         <DialogHeader>
           <DialogTitle>Add New List</DialogTitle>

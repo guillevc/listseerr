@@ -109,7 +109,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit List</DialogTitle>
           <DialogDescription>
