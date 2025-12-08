@@ -1,7 +1,7 @@
 {
   "name": "listseerr",
   "version": "0.1.0",
-  "description": "Request media in Jellyseerr from your favorite lists",
+  "description": "Automatic Jellyseerr requests from your favorite lists",
   "author": "Guillermo Alfonso Varela Chouciño <guillevch@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/guillevc/listseerr",
