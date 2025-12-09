@@ -17,15 +17,17 @@
     "dev:server": "bun run --watch src/server/index.ts",
     "build": "bun run build:client && bun run build:server",
     "build:client": "vite build",
-    "build:server": "bun build src/server/index.ts --outdir dist --target bun",
-    "start": "bun run dist/index.js",
-    "ci": "bun run lint && bun run typecheck && bun run build",
-    "lint": "eslint .",
+    "build:server": "bun build src/server/index.ts --outdir dist --target bun --sourcemap=external --minify",
+    "build:standalone": "bun build src/server/index.ts --compile --minify --outfile listseerr",
+    "build:standalone:linux": "bun build src/server/index.ts --compile --minify --target=bun-linux-x64 --outfile listseerr-linux",
     "typecheck": "tsc --build --force",
     "typecheck:watch": "tsc --build --watch",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run src/server/db/migrate.ts",
-    "db:reset": "bun run src/server/db/reset.ts"
+    "db:reset": "bun run src/server/db/reset.ts",
+    "start": "bun run dist/index.js",
+    "ci": "bun run lint && bun run typecheck && bun run build",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@socketsecurity/bun-security-scanner": "^1.1.2",
     "@tailwindcss/cli": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/router-devtools": "^1.140.0",
