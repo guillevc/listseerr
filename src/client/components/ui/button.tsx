@@ -12,7 +12,7 @@ const buttonVariants = tv({
       destructive:
         'bg-destructive text-white hover:bg-destructive-hover',
       outline:
-        'border-2 border-input bg-transparent text-foreground hover:bg-card hover:border-border',
+        'border-2 border-border bg-transparent text-foreground hover:border-border-hover',
       secondary:
         'bg-card text-foreground hover:bg-border',
       ghost: 'hover:bg-card hover:text-foreground',

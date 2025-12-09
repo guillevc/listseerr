@@ -146,7 +146,7 @@ export function RecentActivity() {
   }
 
   return (
-    <Card>
+    <Card className="hover:border-border-hover">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Activity className="h-5 w-5" />
@@ -164,10 +164,10 @@ export function RecentActivity() {
             return (
               <div
                 key={`group-${groupIdx}`}
-                className="rounded-lg border border-hover"
+                className="rounded-lg border border-border hover:border-border-hover"
               >
                 {/* Group header */}
-                <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center justify-between p-4 border-b border-border">
                   <div className="flex items-center gap-2">
                     <Badge variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'} className="text-xs">
                       {group.triggerType === 'scheduled' ? (
@@ -242,7 +242,7 @@ export function RecentActivity() {
                         const totalSkipped = totalFound - totalRequested - totalFailed;
 
                         return (
-                          <TableRow className="bg-card/50 font-semibold border-t-2">
+                          <TableRow className="bg-card/50 font-semibold border-t-2 border-border">
                             <TableCell>Batch Total</TableCell>
                             <TableCell className="text-right">{totalFound}</TableCell>
                             <TableCell className="w-[500px]">

@@ -102,10 +102,10 @@ export function Navigation() {
                         href={item.path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 border-light-pu dark:border-dark-pu text-light-pu dark:text-dark-pu hover:bg-light-pu/10 hover:dark:bg-dark-pu/10"
+                        className="flex items-center gap-2 text-light-pu-2 border-light-pu-2 hover:border-light-pu dark:text-dark-pu-2 dark:border-dark-pu-2 dark:hover:border-dark-pu"
                       >
                         {item.badge && (
-                          <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-white hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-white hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
+                          <Badge variant="simple" className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper'}`}>
                             {item.badge}
                           </Badge>
                         )}
@@ -190,10 +190,10 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full border-light-pu dark:border-dark-pu text-light-pu dark:text-dark-pu hover:bg-light-pu/10 hover:dark:bg-dark-pu/10"
+                      className="flex items-center gap-2 w-full border-light-pu dark:border-dark-pu"
                     >
                       {item.badge && (
-                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-white hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-white hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
+                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-foreground hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
                           {item.badge}
                         </Badge>
                       )}

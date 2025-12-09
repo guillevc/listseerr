@@ -281,13 +281,13 @@ export function ProcessingScheduleSettings() {
 
                 {/* Common patterns */}
                 <div className="mb-4">
-                  <Label className="text-sm mb-3 block">Quick Patterns</Label>
+                  <Label className="text-sm mb-2 block">Quick Patterns</Label>
                   <div className="flex flex-wrap gap-2">
                     {commonPatterns.map((pattern) => (
                       <Badge
                         key={pattern.value}
                         variant="outline"
-                        className="cursor-pointer hover:bg-card transition-colors"
+                        className="cursor-pointer hover:bg-card-hover transition-colors"
                         onClick={() => setCronExpression(pattern.value)}
                       >
                         {pattern.label}
@@ -300,20 +300,22 @@ export function ProcessingScheduleSettings() {
 
                 {/* Cron Expression Input */}
                 <div className="space-y-2 mt-4">
-                  <Label htmlFor="cron-expression">Cron Expression</Label>
-                  <Input
-                    id="cron-expression"
-                    placeholder="0 4 * * *"
-                    value={cronExpression}
-                    onChange={(e) => setCronExpression(e.target.value)}
-                    className={
-                      cronExpression
-                        ? validation.isValid
-                          ? 'border-green-500 focus-visible:ring-green-500'
-                          : 'border-red-500 focus-visible:ring-red-500'
-                        : ''
-                    }
-                  />
+                  <div className="grid gap-2">
+                    <Label htmlFor="cron-expression">Cron Expression</Label>
+                    <Input
+                      id="cron-expression"
+                      placeholder="0 4 * * *"
+                      value={cronExpression}
+                      onChange={(e) => setCronExpression(e.target.value)}
+                      className={
+                        cronExpression
+                          ? validation.isValid
+                            ? 'border-light-gr dark:border-dark-gr focus-visible:ring-green-500'
+                            : 'border-light-re dark:border-dark-re focus-visible:ring-red-500'
+                          : ''
+                      }
+                    />
+                  </div>
                   <p className="text-xs text-muted">
                     Format: minute hour day month day-of-week •{' '}
                     <a
@@ -330,21 +332,21 @@ export function ProcessingScheduleSettings() {
                 {/* Validation feedback */}
                 {cronExpression && (
                   <div
-                    className={`flex items-start gap-3 p-3 rounded-md mt-3 ${
+                    className={`flex items-start gap-3 p-3 rounded-md mt-3 text-foreground ${
                       validation.isValid
-                        ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
-                        : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
+                        ? 'bg-green-150 dark:bg-green-800'
+                        : 'bg-red-150 dark:bg-red-800'
                     }`}
                   >
                     {validation.isValid ? (
-                      <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
+                      <CheckCircle2 className="h-5 w-5 shrink-0 mt-[0.1rem]" />
                     ) : (
-                      <AlertCircle className="h-5 w-5 flex-shrink-0 mt-[0.1rem]" />
+                      <AlertCircle className="h-5 w-5 shrink-0 mt-[0.1rem]" />
                     )}
                     <div className="flex-1">
                       <p className="text-sm font-medium leading-5">{validation.description}</p>
                       {validation.nextRun && (
-                        <p className="text-xs mt-1 opacity-90">
+                        <p className="text-xs mt-1">
                           Next run: {validation.nextRun}
                         </p>
                       )}

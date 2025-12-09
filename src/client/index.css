@@ -232,16 +232,18 @@
   --color-card: var(--color-light-bg-2);
   --color-card-foreground: var(--color-light-tx);
   --color-muted: var(--color-light-tx-2);
-  --color-primary: var(--color-light-cy);
+  --color-primary: var(--color-light-cy-2);
   --color-primary-foreground: var(--color-light-tx);
   --color-input: var(--color-light-ui);
   --color-ring: var(--color-light-bl-2);
-  --color-destructive: var(--color-light-re);
+  --color-destructive: var(--color-light-re-2);
   --color-destructive-foreground: var(--color-light-tx);
   --color-border: var(--color-light-ui);
 
-  --color-primary-hover: var(--color-light-cy-2);
-  --color-destructive-hover: var(--color-light-re-2);
+  --color-primary-hover: var(--color-light-cy);
+  --color-destructive-hover: var(--color-light-re);
+  --color-border-hover: var(--color-light-ui-2);
+  --color-card-hover: var(--color-base-100);
 }
 
 @layer theme {
@@ -252,16 +254,18 @@
       --color-card: var(--color-dark-bg-2);
       --color-card-foreground: var(--color-dark-tx);
       --color-muted: var(--color-dark-tx-2);
-      --color-primary: var(--color-dark-cy);
+      --color-primary: var(--color-dark-cy-2);
       --color-primary-foreground: var(--color-dark-tx);
       --color-input: var(--color-dark-ui);
       --color-ring: var(--color-dark-bl-2);
-      --color-destructive: var(--color-dark-re);
+      --color-destructive: var(--color-dark-re-2);
       --color-destructive-foreground: var(--color-dark-tx);
       --color-border: var(--color-dark-ui);
 
-      --color-primary-hover: var(--color-dark-cy-2);
-      --color-destructive-hover: var(--color-dark-re-2);
+      --color-primary-hover: var(--color-dark-cy);
+      --color-destructive-hover: var(--color-dark-re);
+      --color-border-hover: var(--color-dark-ui-2);
+      --color-card-hover: var(--color-base-900);
     }
   }
 }
@@ -287,15 +291,5 @@
 
   html {
     scrollbar-gutter: stable;
-  }
-}
-
-@layer components {
-  .border-hover:hover {
-    border-color: var(--color-light-ui-2);
-
-    @variant dark {
-      border-color: var(--color-dark-ui-2);
-    }
   }
 }

@@ -52,7 +52,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Lists */}
-      <Card className="lg:col-span-1">
+      <Card className="lg:col-span-1 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Lists
@@ -66,7 +66,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       </Card>
 
       {/* Requests */}
-      <Card className="lg:col-span-1">
+      <Card className="lg:col-span-1 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Requests
@@ -82,7 +82,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       </Card>
 
       {/* Automatic Processing - Merged Card */}
-      <Card className="md:col-span-2 lg:col-span-2">
+      <Card className="md:col-span-2 lg:col-span-2 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Automatic Processing

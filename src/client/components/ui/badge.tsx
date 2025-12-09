@@ -19,6 +19,7 @@ const badgeVariants = tv({
       mdblist: 'border-transparent bg-blue-600 text-white',
       imdb: 'border-transparent bg-yellow-600 text-white',
       tmdb: 'border-transparent bg-cyan-600 text-white',
+      simple: 'border-transparent'
     },
   },
   defaultVariants: {
