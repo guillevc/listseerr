@@ -266,7 +266,7 @@ export function AddListDialog() {
         {/* Animated Progress Bar */}
         <div className="w-full h-1 bg-card mt-4">
           <div
-            className="h-full bg-light-primary dark:bg-dark-primary transition-all duration-500 ease-out"
+            className="h-full bg-primary transition-all duration-500 ease-out"
             style={{
               width: currentStep === 1
                 ? (progressAnimated ? '50%' : '0%')
@@ -279,6 +279,7 @@ export function AddListDialog() {
         {currentStep === 1 && (
           <>
             <div className="space-y-3 py-4">
+              <div className="grid gap-2">
               <Label>Provider</Label>
               <RadioGroup value={provider} onValueChange={(value) => handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')}>
                 <label className="block cursor-pointer">
@@ -368,6 +369,7 @@ export function AddListDialog() {
                   </div>
                 </label>
               </RadioGroup>
+            </div>
             </div>
 
             <DialogFooter>
