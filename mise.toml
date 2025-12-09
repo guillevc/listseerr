@@ -1,2 +1,16 @@
 [tools]
 bun = "1.1.20"
+
+[tasks.dockerfile-ci]
+description = "Run CI checks in Docker (same as GitHub Actions)"
+run = """
+  if docker build -f Dockerfile.ci -t listseerr-ci .; then
+    docker rmi listseerr-ci
+    echo ""
+    echo "✅ CI checks passed - image cleaned up"
+  else
+    echo ""
+    echo "❌ CI checks failed"
+    exit 1
+  fi
+"""
