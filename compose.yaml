@@ -5,12 +5,13 @@ services:
       dockerfile: Dockerfile
     container_name: listseerr
     restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:3000"
     environment:
-      LOG_LEVEL: info
-      PORT: 3000
-      DATABASE_PATH: /app/data/listseerr.db
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      PORT: ${PORT:-3000}
+      DATABASE_PATH: ${DATABASE_PATH:-/app/data/listseerr.db}
     volumes:
       - listseerr-data:/app/data
     healthcheck:

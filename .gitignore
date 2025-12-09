@@ -32,6 +32,9 @@ dev-dist
 *.db-shm
 data/
 
+# Environment variables
+.env
+
 # TypeScript
 *.tsbuildinfo
 .cache/
