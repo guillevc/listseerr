@@ -15,7 +15,7 @@ const logger = createLogger('server');
 // Run database migrations on startup
 try {
   logger.info('Running database migrations...');
-  migrate(db, { migrationsFolder: './src/server/db/migrations' });
+  migrate(db, { migrationsFolder: env.MIGRATIONS_FOLDER });
   logger.info('Database migrations completed successfully');
 } catch (error) {
   logger.error(

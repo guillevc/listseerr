@@ -38,7 +38,3 @@ data/
 # TypeScript
 *.tsbuildinfo
 .cache/
-
-# Standalone executables
-listseerr
-listseerr-*
