@@ -279,6 +279,11 @@
     }
   }
 
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-ring);
+  }
+
   body {
     background-color: var(--color-light-bg);
     color: var(--color-light-tx);
