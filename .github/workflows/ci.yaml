@@ -15,4 +15,4 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run CI checks in Docker
-        run: docker build -f Dockerfile.ci .
+        run: docker build -f docker/Dockerfile.ci .

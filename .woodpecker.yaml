@@ -6,5 +6,5 @@ steps:
   - name: ci-checks
     image: woodpeckerci/plugin-docker-buildx
     settings:
-      dockerfile: Dockerfile.ci
+      dockerfile: docker/Dockerfile.ci
       dry_run: true
