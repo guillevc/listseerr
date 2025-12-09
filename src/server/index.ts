@@ -8,8 +8,23 @@ import { scheduler } from './lib/scheduler';
 import { db } from './db';
 import { createLogger } from './lib/logger';
 import { env } from './env';
+import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 
 const logger = createLogger('server');
+
+// Run database migrations on startup
+try {
+  logger.info('Running database migrations...');
+  migrate(db, { migrationsFolder: './src/server/db/migrations' });
+  logger.info('Database migrations completed successfully');
+} catch (error) {
+  logger.error(
+    { error: error instanceof Error ? error.message : 'Unknown error' },
+    'Failed to run database migrations'
+  );
+  process.exit(1);
+}
+
 const app = new Hono();
 const isDev = process.argv.includes('--watch') || import.meta.dir.includes('src/server');
 
