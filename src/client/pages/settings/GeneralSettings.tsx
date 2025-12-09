@@ -69,7 +69,7 @@ export function GeneralSettings() {
           <Label htmlFor="timezone">Timezone</Label>
           <Input
             id="timezone"
-            placeholder="America/New_York"
+            placeholder="Europe/Madrid"
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
           />

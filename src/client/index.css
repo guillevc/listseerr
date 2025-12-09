@@ -235,7 +235,7 @@
   --color-primary: var(--color-light-cy-2);
   --color-primary-foreground: var(--color-light-tx);
   --color-input: var(--color-light-ui);
-  --color-ring: var(--color-light-bl-2);
+  --color-ring: var(--color-light-cy-2);
   --color-destructive: var(--color-light-re-2);
   --color-destructive-foreground: var(--color-light-tx);
   --color-border: var(--color-light-ui);
