@@ -14,7 +14,7 @@ export interface CreateMediaListCommand {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
-  processingSchedule?: string;
+  processingSchedule: string | null;
   userId: number;
 }
 
@@ -27,7 +27,7 @@ export interface UpdateMediaListCommand {
     provider?: ProviderType;
     enabled?: boolean;
     maxItems?: number;
-    processingSchedule?: string;
+    processingSchedule?: string | null;
   };
 }
 

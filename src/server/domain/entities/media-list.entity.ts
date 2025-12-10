@@ -26,7 +26,7 @@ export class MediaList {
   private _provider: Provider;
   private _enabled: boolean;
   private _maxItems: number;
-  private _processingSchedule?: string;
+  private _processingSchedule: string | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -77,7 +77,7 @@ export class MediaList {
     return this._maxItems;
   }
 
-  get processingSchedule(): string | undefined {
+  get processingSchedule(): string | null {
     return this._processingSchedule;
   }
 
@@ -165,7 +165,7 @@ export class MediaList {
   /**
    * Change processing schedule
    */
-  changeSchedule(newSchedule: string | undefined): void {
+  changeSchedule(newSchedule: string | null): void {
     this._processingSchedule = newSchedule;
     this._updatedAt = new Date();
   }
@@ -220,7 +220,7 @@ export class MediaList {
       provider: this._provider.getValue(), // Unwrap VO
       enabled: this._enabled,
       maxItems: this._maxItems,
-      processingSchedule: this._processingSchedule ?? null, // Convert undefined to null
+      processingSchedule: this._processingSchedule, // Already string | null
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
     };

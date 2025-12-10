@@ -155,7 +155,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       provider: row.provider,
       enabled: row.enabled,
       maxItems: row.maxItems || 50, // Default to 50 if null
-      processingSchedule: row.processingSchedule || undefined,
+      processingSchedule: row.processingSchedule || null,
       createdAt: row.createdAt || new Date(), // Fallback to current date if null
       updatedAt: row.updatedAt || new Date(), // Fallback to current date if null
     };

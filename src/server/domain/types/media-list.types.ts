@@ -9,7 +9,7 @@ export interface MediaListProps {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
-  processingSchedule?: string;
+  processingSchedule: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

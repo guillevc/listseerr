@@ -44,6 +44,7 @@ export function createListsRouter(container: ListsContainer) {
         const { list } = await container.createMediaListUseCase.execute({
           ...input,
           userId: 1, // Default user
+          processingSchedule: input.processingSchedule ?? null, // Convert undefined to null
         });
         return list;
       }),
