@@ -5,7 +5,8 @@ import { Card, CardContent } from '../components/ui/card';
 import { trpc } from '../lib/trpc';
 
 export function DashboardPage() {
-  const { data: lists = [], isLoading } = trpc.lists.getAll.useQuery();
+  const { data, isLoading } = trpc.lists.getAll.useQuery();
+  const lists = data?.lists ?? [];
 
   if (isLoading) {
     return (

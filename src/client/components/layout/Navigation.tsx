@@ -19,7 +19,8 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Query Jellyseerr config for requests link
-  const { data: jellyseerrConfig } = trpc.config.get.useQuery();
+  const { data: configData } = trpc.config.get.useQuery();
+  const jellyseerrConfig = configData?.config;
   const jellyseerrRequestsUrl = jellyseerrConfig?.url
     ? `${jellyseerrConfig.url}/requests`
     : undefined;

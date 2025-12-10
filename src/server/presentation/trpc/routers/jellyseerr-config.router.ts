@@ -25,19 +25,17 @@ const testConnectionInputSchema = z.object({
  */
 export function createJellyseerrConfigRouter(container: JellyseerrConfigContainer) {
   return router({
-    get: publicProcedure.query(async () => {
-      const { config } = await container.getJellyseerrConfigUseCase.execute({ userId: 1 });
-      return config;
+    get: publicProcedure.query(async ({ ctx }) => {
+      return await container.getJellyseerrConfigUseCase.execute({ userId: ctx.userId });
     }),
 
     set: publicProcedure
       .input(configInputSchema)
-      .mutation(async ({ input }) => {
-        const { config } = await container.updateJellyseerrConfigUseCase.execute({
-          userId: 1, // Default user (hardcoded for now)
+      .mutation(async ({ input, ctx }) => {
+        return await container.updateJellyseerrConfigUseCase.execute({
+          userId: ctx.userId,
           data: input,
         });
-        return config;
       }),
 
     test: publicProcedure
@@ -46,8 +44,8 @@ export function createJellyseerrConfigRouter(container: JellyseerrConfigContaine
         return await container.testJellyseerrConnectionUseCase.execute(input);
       }),
 
-    delete: publicProcedure.mutation(async () => {
-      return await container.deleteJellyseerrConfigUseCase.execute({ userId: 1 });
+    delete: publicProcedure.mutation(async ({ ctx }) => {
+      return await container.deleteJellyseerrConfigUseCase.execute({ userId: ctx.userId });
     }),
   });
 }

@@ -5,9 +5,14 @@ import { DomainError } from '../domain/errors/domain.error';
 
 // Create context for each request
 export const createContext = async (opts: FetchCreateContextFnOptions) => {
+  // TODO: Extract from session when authentication is implemented
+  // For now, default to userId: 1
+  const userId = 1; // Future: opts.session?.user?.id ?? 1
+
   return {
     db,
     req: opts.req,
+    userId,
   };
 };
 

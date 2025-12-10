@@ -1,4 +1,3 @@
-
 # CLAUDE.md
 
 ## Server Input for AI Coding Agent (TypeScript, Monorepo Structure)
@@ -34,7 +33,9 @@ The architecture relies on strategic code sharing for UX gains and strict DTO co
 |**Flow Point**|**Object Type Used**|**Naming Convention**|**Rationale**|
 |---|---|---|---|
 |**Input (tRPC $\rightarrow$ Use Case)**|**Command DTO**|`<UseCaseName>Command` or `<UseCaseName>Input`|Simple, serializable interface for incoming data.|
-|**Output (Use Case $\rightarrow$ Router)**|**Response DTO**|**`<UseCaseName>Response`**|**CRITICAL:** Use Case returns a DTO that reflects the outcome. The Use Case **unwraps VOs into primitives** before packaging the Response DTO.|
+|**Core Data Structure**|**Core DTO**|`<EntityName>DTO` (e.g., `MediaListDTO`)|Defines the *atomic* primitive structure of an entity for transport.|
+|**Output (Use Case $\rightarrow$ Router)**|**Response DTO**|**`<UseCaseName>Response`**|**CRITICAL:** Use Case returns this **Container DTO** (which wraps the Core DTO) to reflect the outcome. The Use Case unwraps VOs into primitives before packaging.|
+|**Router Return (tRPC $\rightarrow$ Client)**|**Response DTO**|**`<UseCaseName>Response`**|**MANDATE: The router MUST return the full, wrapped Response DTO object. It MUST NOT destructure and return an unwrapped Core DTO (e.g., return `{ list }` instead of `list`).**|
 
 #### B. Router Data Adaptation Policy
 
@@ -99,48 +100,3 @@ interface Dependencies {
   createUserUseCase: CreateUserUseCase; // Instance injected with userRepository
   notificationService: INotificationService;
 }
-```
-
------
-
-### 4\. 🛠️ Implementation Task: Required Structure (Monorepo Layout)
-
-The following structure reflects the final, required monorepo layout:
-
-```bash
-/project-root
-├── src/
-│   ├── client/                          # Frontend Application (e.g., React/tRPC client)
-│   │   └── src/                         # Client-side code (views, hooks)
-│   │
-│   ├── shared/
-│   │   ├── domain/
-│   │   │   └── email.value-object.ts    # SHARED: EmailAddress VO class (pure logic)
-│   │   └── application/
-│   │       └── dtos/
-│   │           └── create-user.dto.ts   # SHARED: Defines CreateUserCommand/Response interfaces.
-│   │
-│   └── server/
-│       ├── domain/
-│       │   └── user.entity.ts           # 1. Domain: Defines the User Entity, imports VO from shared.
-│       ├── application/
-│       │   ├── repositories/
-│       │   │   └── IUserRepository.ts     # 2. Application: Repository Port. (Methods: findById, save)
-│       │   ├── use-cases/
-│       │   │   └── create-user.usecase.ts # 2. Application: Use case logic.
-│       │   └── services/
-│       │       └── notification.interface.ts
-│       ├── infrastructure/
-│       │   ├── db/
-│       │   │   ├── drizzle.client.ts        # 3. Infrastructure: DB connection.
-│       │   │   └── user.schema.ts
-│       │   ├── repositories/
-│       │   │   └── sqlite-user.repository.ts # 3. Infrastructure: Implements IUserRepository using Drizzle.
-│       │   └── scheduling/
-│       │       └── cron-job.service.ts
-│       └── presentation/
-│           ├── trpc/
-│           │   └── app.router.ts        # 4. Presentation: tRPC router, calls Use Cases.
-│           └── server.ts                # 4. Presentation: Bun startup, Hono/DI Composition Root.
-└── package.json
-```

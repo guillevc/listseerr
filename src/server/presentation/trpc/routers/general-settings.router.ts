@@ -22,19 +22,17 @@ const settingsInputSchema = z.object({
  */
 export function createGeneralSettingsRouter(container: GeneralSettingsContainer) {
   return router({
-    get: publicProcedure.query(async () => {
-      const { settings } = await container.getGeneralSettingsUseCase.execute({ userId: 1 });
-      return settings;
+    get: publicProcedure.query(async ({ ctx }) => {
+      return await container.getGeneralSettingsUseCase.execute({ userId: ctx.userId });
     }),
 
     set: publicProcedure
       .input(settingsInputSchema)
-      .mutation(async ({ input }) => {
-        const { settings } = await container.updateGeneralSettingsUseCase.execute({
-          userId: 1, // Default user (hardcoded for now)
+      .mutation(async ({ input, ctx }) => {
+        return await container.updateGeneralSettingsUseCase.execute({
+          userId: ctx.userId,
           data: input,
         });
-        return settings;
       }),
   });
 }

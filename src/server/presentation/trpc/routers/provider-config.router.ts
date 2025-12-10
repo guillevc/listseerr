@@ -37,30 +37,28 @@ export function createProviderConfigRouter(container: ProviderConfigContainer) {
   return router({
     get: publicProcedure
       .input(getConfigSchema)
-      .query(async ({ input }) => {
-        const { config } = await container.getProviderConfigUseCase.execute({
-          userId: 1, // Default user (hardcoded for now)
+      .query(async ({ input, ctx }) => {
+        return await container.getProviderConfigUseCase.execute({
+          userId: ctx.userId,
           provider: input.provider,
         });
-        return config;
       }),
 
     set: publicProcedure
       .input(updateConfigSchema)
-      .mutation(async ({ input }) => {
-        const { config } = await container.updateProviderConfigUseCase.execute({
-          userId: 1, // Default user (hardcoded for now)
+      .mutation(async ({ input, ctx }) => {
+        return await container.updateProviderConfigUseCase.execute({
+          userId: ctx.userId,
           provider: input.provider,
           config: input.config,
         });
-        return config;
       }),
 
     delete: publicProcedure
       .input(deleteConfigSchema)
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         return await container.deleteProviderConfigUseCase.execute({
-          userId: 1, // Default user (hardcoded for now)
+          userId: ctx.userId,
           provider: input.provider,
         });
       }),

@@ -152,14 +152,17 @@ export function ProcessingScheduleSettings() {
   const utils = trpc.useUtils();
 
   // Fetch current settings
-  const { data: settings } = trpc.generalSettings.get.useQuery();
+  const { data: settingsData } = trpc.generalSettings.get.useQuery();
+  const settings = settingsData?.settings;
 
   // Mutation to enable all lists
   const enableAllListsMutation = trpc.lists.enableAll.useMutation();
 
   // Save mutation
   const saveMutation = trpc.generalSettings.set.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: async (result) => {
+      const data = result.settings;
+
       // If we're enabling automatic processing, enable all lists
       if (data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled) {
         await enableAllListsMutation.mutateAsync();

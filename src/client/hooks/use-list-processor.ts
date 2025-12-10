@@ -14,11 +14,12 @@ export function useListProcessor() {
   const utils = trpc.useUtils();
 
   // Get Jellyseerr config
-  const { data: jellyseerrConfig, isLoading: isLoadingConfig } = trpc.config.get.useQuery();
+  const { data: configData, isLoading: isLoadingConfig } = trpc.config.get.useQuery();
+  const jellyseerrConfig = configData?.config;
 
   // Process single list mutation
   const processMutation = trpc.processor.processList.useMutation({
-    onSuccess: (execution, variables) => {
+    onSuccess: (result, variables) => {
       setProcessingLists((prev) => {
         const next = new Set(prev);
         next.delete(variables.listId);
@@ -30,6 +31,9 @@ export function useListProcessor() {
       utils.dashboard.getStats.invalidate();
       utils.dashboard.getRecentActivity.invalidate();
       utils.dashboard.getPendingRequests.invalidate();
+
+      // Destructure wrapped response
+      const { execution } = result;
 
       if (execution.status === 'success') {
         const skipped = execution.itemsFound - execution.itemsRequested - execution.itemsFailed;

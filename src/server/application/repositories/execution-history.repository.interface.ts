@@ -18,8 +18,9 @@ export interface IExecutionHistoryRepository {
 
   /**
    * Find all executions for a specific list, ordered by start time (newest first)
+   * Validates that the list belongs to the specified userId (defense-in-depth)
    */
-  findByListId(listId: number, limit: number): Promise<ProcessingExecution[]>;
+  findByListId(listId: number, userId: number, limit: number): Promise<ProcessingExecution[]>;
 
   /**
    * Find all executions in a batch

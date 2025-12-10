@@ -19,6 +19,7 @@ export class StevenLuMediaFetcher implements IMediaFetcher {
   async fetchItems(
     _url: string,
     maxItems: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _providerConfig: ProviderConfigData
   ): Promise<MediaItem[]> {
     // StevenLu doesn't require authentication or URL

@@ -20,7 +20,8 @@ export function JellyseerrConfigDialog() {
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
-  const { data: config } = trpc.config.get.useQuery();
+  const { data: configData } = trpc.config.get.useQuery();
+  const config = configData?.config;
 
   const [url, setUrl] = useState('');
   const [apiKey, setApiKey] = useState('');

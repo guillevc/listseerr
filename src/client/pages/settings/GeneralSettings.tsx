@@ -11,9 +11,13 @@ export function GeneralSettings() {
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
-  const { data: settings } = trpc.generalSettings.get.useQuery();
+  const { data: settingsData } = trpc.generalSettings.get.useQuery();
+  const settings = settingsData?.settings;
+
   const saveMutation = trpc.generalSettings.set.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (result) => {
+      const data = result.settings;
+
       // Invalidate queries to refresh UI immediately
       utils.generalSettings.get.invalidate();
       utils.scheduler.getScheduledJobs.invalidate();

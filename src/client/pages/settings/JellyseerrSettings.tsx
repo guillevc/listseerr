@@ -15,7 +15,8 @@ export function JellyseerrSettings() {
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
-  const { data: config } = trpc.config.get.useQuery();
+  const { data: configData } = trpc.config.get.useQuery();
+  const config = configData?.config;
 
   const testMutation = trpc.config.test.useMutation({
     onSuccess: (result) => {

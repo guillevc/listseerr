@@ -59,12 +59,15 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
   const utils = trpc.useUtils();
 
   // Check if automatic processing is enabled globally
-  const { data: settings } = trpc.generalSettings.get.useQuery();
+  const { data: settingsData } = trpc.generalSettings.get.useQuery();
+  const settings = settingsData?.settings;
   const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
 
   // Check provider configurations
-  const { data: traktConfig } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
-  const { data: mdbListConfig } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const traktConfig = traktData?.config;
+  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const mdbListConfig = mdbListData?.config;
 
   const isProviderConfigured = useCallback((provider: string) => {
     if (provider === 'trakt') return !!traktConfig?.clientId;

@@ -24,22 +24,22 @@ export const processingRouter = router({
         triggerType: z.enum(['manual', 'scheduled']).default('manual'),
       })
     )
-    .mutation(async ({ input }) => {
-      const { execution } = await processingContainer.processListUseCase.execute({
+    .mutation(async ({ input, ctx }) => {
+      const response = await processingContainer.processListUseCase.execute({
         listId: input.listId,
         triggerType: input.triggerType,
-        userId: 1, // TODO: ctx.session?.user?.id
+        userId: ctx.userId,
       });
-      return execution;
+      return response; // Return full ProcessListResponse wrapper
     }),
 
   /**
    * Process all enabled lists with global deduplication
    */
-  processAll: publicProcedure.mutation(async () => {
+  processAll: publicProcedure.mutation(async ({ ctx }) => {
     return await processingContainer.processBatchUseCase.execute({
       triggerType: 'manual',
-      userId: 1, // TODO: ctx.session?.user?.id
+      userId: ctx.userId,
     });
   }),
 
@@ -53,13 +53,13 @@ export const processingRouter = router({
         limit: z.number().positive().default(10),
       })
     )
-    .query(async ({ input }) => {
-      const { executions } = await processingContainer.getExecutionHistoryUseCase.execute({
+    .query(async ({ input, ctx }) => {
+      const response = await processingContainer.getExecutionHistoryUseCase.execute({
         listId: input.listId,
         limit: input.limit,
-        userId: 1, // TODO: ctx.session?.user?.id
+        userId: ctx.userId,
       });
-      return executions;
+      return response; // Return full GetExecutionHistoryResponse wrapper
     }),
 });
 

@@ -14,7 +14,7 @@ const logger = createLogger('scheduler');
  */
 async function processListCallback(
   listId: number,
-  _db: BunSQLiteDatabase<typeof schema>
+  db: BunSQLiteDatabase<typeof schema>
 ): Promise<void> {
   logger.info({ listId }, 'Scheduler triggered - processing list');
 
@@ -22,10 +22,22 @@ async function processListCallback(
   const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
 
   try {
+    // Load the list to get the owner userId
+    const { mediaLists } = schema;
+    const { eq } = await import('drizzle-orm');
+    const list = await db.select().from(mediaLists).where(eq(mediaLists.id, listId)).limit(1);
+
+    if (!list || list.length === 0) {
+      logger.error({ listId }, 'List not found for scheduled processing');
+      return;
+    }
+
+    const userId = list[0].userId;
+
     await processingContainer.processListUseCase.execute({
       listId,
       triggerType: 'scheduled',
-      userId: 1, // TODO: Get from list owner
+      userId,
     });
   } catch (error) {
     logger.error(
@@ -46,6 +58,7 @@ async function processListCallback(
  * @param db - Database instance
  */
 async function processAllListsCallback(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _db: BunSQLiteDatabase<typeof schema>
 ): Promise<void> {
   logger.info('Global automatic processing triggered - using batch processing with global deduplication');
@@ -53,9 +66,11 @@ async function processAllListsCallback(
   try {
     // Dynamic import to avoid circular dependencies
     const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
+    // TODO: When multitenancy is implemented, process for all users separately
+    // For now, process all lists for the default user (userId: 1)
     const result = await processingContainer.processBatchUseCase.execute({
       triggerType: 'scheduled',
-      userId: 1, // TODO: Process for all users
+      userId: 1,
     });
 
     logger.info(

@@ -42,11 +42,15 @@ export function AddListDialog() {
   const utils = trpc.useUtils();
 
   // Query provider configs for status indicators
-  const { data: traktConfig } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
-  const { data: mdbListConfig } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const traktConfig = traktData?.config;
+  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const mdbListConfig = mdbListData?.config;
 
   const createMutation = trpc.lists.create.useMutation({
-    onSuccess: (newList) => {
+    onSuccess: (result) => {
+      const newList = result.list;
+
       // Invalidate all related queries
       utils.lists.getAll.invalidate();
       utils.dashboard.getStats.invalidate();

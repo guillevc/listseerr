@@ -101,7 +101,6 @@ export class ProcessingContainer {
     );
 
     this.getExecutionHistoryUseCase = new GetExecutionHistoryUseCase(
-      this.mediaListRepository,
       this.executionHistoryRepository
     );
   }

@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
-import { executionHistory } from '../../db/schema';
+import { executionHistory, mediaLists } from '../../db/schema';
 import { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
 import { ExecutionStatus } from '../../domain/value-objects/execution-status.value-object';
 import { TriggerType } from '../../domain/value-objects/trigger-type.value-object';
@@ -22,15 +22,24 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
     return row ? this.toDomain(row) : null;
   }
 
-  async findByListId(listId: number, limit: number): Promise<ProcessingExecution[]> {
+  async findByListId(listId: number, userId: number, limit: number): Promise<ProcessingExecution[]> {
+    // Defense-in-depth: JOIN with mediaLists to ensure the list belongs to the user
     const rows = await this.db
-      .select()
+      .select({
+        eh: executionHistory,
+      })
       .from(executionHistory)
-      .where(eq(executionHistory.listId, listId))
+      .innerJoin(mediaLists, eq(executionHistory.listId, mediaLists.id))
+      .where(
+        and(
+          eq(executionHistory.listId, listId),
+          eq(mediaLists.userId, userId)
+        )
+      )
       .orderBy(desc(executionHistory.startedAt))
       .limit(limit);
 
-    return rows.map(row => this.toDomain(row));
+    return rows.map(row => this.toDomain(row.eh));
   }
 
   async findByBatchId(batchId: string): Promise<ProcessingExecution[]> {

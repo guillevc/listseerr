@@ -7,7 +7,8 @@ import { trpc } from '../lib/trpc';
 import { useListProcessor } from '../hooks/use-list-processor';
 
 export function ListsPage() {
-  const { data: lists = [], isLoading: listsLoading } = trpc.lists.getAll.useQuery();
+  const { data, isLoading: listsLoading } = trpc.lists.getAll.useQuery();
+  const lists = data?.lists ?? [];
   const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig, isLoadingConfig } = useListProcessor();
 
   if (listsLoading) {

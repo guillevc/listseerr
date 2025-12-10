@@ -1,4 +1,5 @@
 import { MediaItem } from '../../domain/value-objects/media-item.value-object';
+import { MediaType } from '../../domain/value-objects/media-type.value-object';
 import type { IJellyseerrClient, ProcessingResult } from '../../application/services/jellyseerr-client.service.interface';
 import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
@@ -40,8 +41,8 @@ export class JellyseerrHttpClient implements IJellyseerrClient {
           year: dto.year,
           tmdbId: dto.tmdbId,
           mediaType: dto.mediaType === 'movie'
-            ? require('../../domain/value-objects/media-type.value-object').MediaType.movie()
-            : require('../../domain/value-objects/media-type.value-object').MediaType.tv(),
+            ? MediaType.movie()
+            : MediaType.tv(),
         })
       ),
       failed: result.failed.map(failure => ({
@@ -50,8 +51,8 @@ export class JellyseerrHttpClient implements IJellyseerrClient {
           year: failure.item.year,
           tmdbId: failure.item.tmdbId,
           mediaType: failure.item.mediaType === 'movie'
-            ? require('../../domain/value-objects/media-type.value-object').MediaType.movie()
-            : require('../../domain/value-objects/media-type.value-object').MediaType.tv(),
+            ? MediaType.movie()
+            : MediaType.tv(),
         }),
         error: failure.error,
       })),

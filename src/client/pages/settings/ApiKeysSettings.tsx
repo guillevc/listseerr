@@ -23,10 +23,12 @@ export function ApiKeysSettings() {
   const [showMdbListKey, setShowTmdbKey] = useState(false);
 
   // Load Trakt config
-  const { data: traktConfig } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const traktConfig = traktData?.config;
 
   // Load MDBList config
-  const { data: mdbListConfig } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const mdbListConfig = mdbListData?.config;
 
   // Load existing configs on mount - syncing with external API data
   useEffect(() => {

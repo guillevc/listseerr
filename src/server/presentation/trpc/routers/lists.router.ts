@@ -26,30 +26,27 @@ const listInputSchema = z.object({
  */
 export function createListsRouter(container: ListsContainer) {
   return router({
-    getAll: publicProcedure.query(async () => {
-      const { lists } = await container.getAllMediaListsUseCase.execute({ userId: 1 });
-      return lists;
+    getAll: publicProcedure.query(async ({ ctx }) => {
+      return await container.getAllMediaListsUseCase.execute({ userId: ctx.userId });
     }),
 
     getById: publicProcedure
       .input(z.object({ id: z.number() }))
-      .query(async ({ input }) => {
-        const { list } = await container.getMediaListByIdUseCase.execute({
+      .query(async ({ input, ctx }) => {
+        return await container.getMediaListByIdUseCase.execute({
           id: input.id,
-          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+          userId: ctx.userId,
         });
-        return list;
       }),
 
     create: publicProcedure
       .input(listInputSchema)
-      .mutation(async ({ input }) => {
-        const { list } = await container.createMediaListUseCase.execute({
+      .mutation(async ({ input, ctx }) => {
+        return await container.createMediaListUseCase.execute({
           ...input,
-          userId: 1, // Default user
+          userId: ctx.userId,
           processingSchedule: input.processingSchedule ?? null, // Convert undefined to null
         });
-        return list;
       }),
 
     update: publicProcedure
@@ -59,36 +56,34 @@ export function createListsRouter(container: ListsContainer) {
           data: listInputSchema.partial(),
         })
       )
-      .mutation(async ({ input }) => {
-        const { list } = await container.updateMediaListUseCase.execute({
+      .mutation(async ({ input, ctx }) => {
+        return await container.updateMediaListUseCase.execute({
           id: input.id,
-          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+          userId: ctx.userId,
           data: input.data,
         });
-        return list;
       }),
 
     delete: publicProcedure
       .input(z.object({ id: z.number() }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         return await container.deleteMediaListUseCase.execute({
           id: input.id,
-          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+          userId: ctx.userId,
         });
       }),
 
     toggleEnabled: publicProcedure
       .input(z.object({ id: z.number() }))
-      .mutation(async ({ input }) => {
-        const { list } = await container.toggleListEnabledUseCase.execute({
+      .mutation(async ({ input, ctx }) => {
+        return await container.toggleListEnabledUseCase.execute({
           id: input.id,
-          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+          userId: ctx.userId,
         });
-        return list;
       }),
 
-    enableAll: publicProcedure.mutation(async () => {
-      return await container.enableAllListsUseCase.execute({ userId: 1 });
+    enableAll: publicProcedure.mutation(async ({ ctx }) => {
+      return await container.enableAllListsUseCase.execute({ userId: ctx.userId });
     }),
   });
 }
