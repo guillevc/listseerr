@@ -15,7 +15,7 @@ export class UpdateMediaListUseCase {
 
   async execute(command: UpdateMediaListCommand): Promise<UpdateMediaListResponse> {
     // 1. Load entity from repository
-    const list = await this.mediaListRepository.findById(command.id);
+    const list = await this.mediaListRepository.findById(command.id, command.userId);
 
     if (!list) {
       throw new Error('List not found');

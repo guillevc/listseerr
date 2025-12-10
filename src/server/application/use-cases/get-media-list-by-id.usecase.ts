@@ -8,7 +8,7 @@ export class GetMediaListByIdUseCase {
   ) {}
 
   async execute(command: GetMediaListByIdCommand): Promise<GetMediaListByIdResponse> {
-    const list = await this.mediaListRepository.findById(command.id);
+    const list = await this.mediaListRepository.findById(command.id, command.userId);
 
     return {
       list: list ? list.toDTO() : null,

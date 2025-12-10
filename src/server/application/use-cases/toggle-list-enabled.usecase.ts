@@ -13,7 +13,7 @@ export class ToggleListEnabledUseCase {
 
   async execute(command: ToggleListEnabledCommand): Promise<ToggleListEnabledResponse> {
     // 1. Load entity
-    const list = await this.mediaListRepository.findById(command.id);
+    const list = await this.mediaListRepository.findById(command.id, command.userId);
 
     if (!list) {
       throw new Error('List not found');

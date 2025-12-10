@@ -16,7 +16,7 @@ import type { Nullable } from '../../../shared/types';
 export interface IMediaListRepository {
   // Query operations - return entities or DTOs
   findAll(userId: number): Promise<MediaList[]>;
-  findById(id: number): Promise<Nullable<MediaList>>;
+  findById(id: number, userId: number): Promise<Nullable<MediaList>>;
   findAllWithLastProcessed(userId: number): Promise<MediaListWithLastProcessed[]>;
 
   // Command operations - work with entities
@@ -37,5 +37,5 @@ export interface IMediaListRepository {
   enableAll(userId: number): Promise<void>;
 
   // Utility
-  exists(id: number): Promise<boolean>;
+  exists(id: number, userId: number): Promise<boolean>;
 }

@@ -34,7 +34,10 @@ export function createListsRouter(container: ListsContainer) {
     getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
-        const { list } = await container.getMediaListByIdUseCase.execute(input);
+        const { list } = await container.getMediaListByIdUseCase.execute({
+          id: input.id,
+          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+        });
         return list;
       }),
 
@@ -57,20 +60,30 @@ export function createListsRouter(container: ListsContainer) {
         })
       )
       .mutation(async ({ input }) => {
-        const { list } = await container.updateMediaListUseCase.execute(input);
+        const { list } = await container.updateMediaListUseCase.execute({
+          id: input.id,
+          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+          data: input.data,
+        });
         return list;
       }),
 
     delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
-        return await container.deleteMediaListUseCase.execute(input);
+        return await container.deleteMediaListUseCase.execute({
+          id: input.id,
+          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+        });
       }),
 
     toggleEnabled: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
-        const { list } = await container.toggleListEnabledUseCase.execute(input);
+        const { list } = await container.toggleListEnabledUseCase.execute({
+          id: input.id,
+          userId: 1, // TODO: ctx.session?.user?.id ?? throw auth error
+        });
         return list;
       }),
 

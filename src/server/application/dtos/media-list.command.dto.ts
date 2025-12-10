@@ -21,6 +21,7 @@ export interface CreateMediaListCommand {
 
 export interface UpdateMediaListCommand {
   id: number;
+  userId: number;
   data: {
     name?: string;
     url?: string;
@@ -34,6 +35,7 @@ export interface UpdateMediaListCommand {
 
 export interface GetMediaListByIdCommand {
   id: number;
+  userId: number;
 }
 
 export interface GetAllMediaListsCommand {
@@ -42,10 +44,12 @@ export interface GetAllMediaListsCommand {
 
 export interface ToggleListEnabledCommand {
   id: number;
+  userId: number;
 }
 
 export interface DeleteMediaListCommand {
   id: number;
+  userId: number;
 }
 
 export interface EnableAllListsCommand {

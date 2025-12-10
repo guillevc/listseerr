@@ -13,7 +13,7 @@ export class DeleteMediaListUseCase {
 
   async execute(command: DeleteMediaListCommand): Promise<DeleteMediaListResponse> {
     // 1. Load entity
-    const list = await this.mediaListRepository.findById(command.id);
+    const list = await this.mediaListRepository.findById(command.id, command.userId);
 
     if (!list) {
       throw new Error('List not found');

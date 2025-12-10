@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { mediaLists, executionHistory } from '../../db/schema';
 import { MediaList } from '../../domain/entities/media-list.entity';
@@ -20,11 +20,14 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return rows.map((row) => this.toDomain(row));
   }
 
-  async findById(id: number): Promise<Nullable<MediaList>> {
+  async findById(id: number, userId: number): Promise<Nullable<MediaList>> {
     const [row] = await this.db
       .select()
       .from(mediaLists)
-      .where(eq(mediaLists.id, id))
+      .where(and(
+        eq(mediaLists.id, id),
+        eq(mediaLists.userId, userId)
+      ))
       .limit(1);
 
     return row ? this.toDomain(row) : null;
@@ -70,7 +73,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
    * Determines operation based on whether entity exists in database
    */
   async save(entity: MediaList): Promise<MediaList> {
-    const entityExists = await this.exists(entity.id);
+    const entityExists = await this.exists(entity.id, entity.userId);
 
     if (entityExists) {
       // Update existing entity
@@ -125,11 +128,14 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       .where(eq(mediaLists.userId, userId));
   }
 
-  async exists(id: number): Promise<boolean> {
+  async exists(id: number, userId: number): Promise<boolean> {
     const [row] = await this.db
       .select({ id: mediaLists.id })
       .from(mediaLists)
-      .where(eq(mediaLists.id, id))
+      .where(and(
+        eq(mediaLists.id, id),
+        eq(mediaLists.userId, userId)
+      ))
       .limit(1);
 
     return !!row;
