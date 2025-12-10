@@ -1,5 +1,5 @@
 import { router } from './trpc';
-import { listsRouter } from './routers/lists';
+import { listsRouter } from '../presentation/trpc/routers/lists.router';
 import { configRouter } from './routers/config';
 import { providerConfigRouter } from './routers/provider-config';
 import { generalSettingsRouter } from './routers/general-settings';
