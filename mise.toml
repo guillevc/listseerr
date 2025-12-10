@@ -2,13 +2,22 @@
   bun = "1.3.4"
 
 [tasks.docker-build]
-  run = "docker build -t listseerr ."
+  run = [
+    "docker build -t listseerr .",
+    "echo '✅ Docker build successful!' 1>/dev/null"
+  ]
+
 
 [tasks.docker-run]
-  run = "docker run -p 3000:3000 -v $(pwd)/data:/app/data listseerr"
+  run = [
+    "echo '🚀 Starting container...' 1>/dev/null",
+    "docker run -p 3000:3000 -v $(pwd)/data:/app/data listseerr",
+    "echo 'Container stopped.' 1>/dev/null"
+  ]
 
 [tasks.docker-ci]
   run = [
     "docker build -f docker/Dockerfile.ci -t listseerr-ci .",
     "docker rmi listseerr-ci",
+    "echo '✅ CI image build and cleanup successful!' 1>/dev/null"
   ]
