@@ -4,6 +4,16 @@
  */
 
 // ============================================
+// Utility Types
+// ============================================
+
+/**
+ * Nullable utility type - represents a value that can be null
+ * Use this instead of `T | null` for consistency
+ */
+export type Nullable<T> = T | null;
+
+// ============================================
 // Provider & Media Types
 // ============================================
 
@@ -30,16 +40,16 @@ export type TriggerType = 'manual' | 'scheduled';
 export interface SerializedMediaList {
   id: number;
   name: string;
-  createdAt: string | null;
+  createdAt: Nullable<string>;
   userId: number;
   url: string;
-  displayUrl: string | null;
-  updatedAt: string | null;
+  displayUrl: Nullable<string>;
+  updatedAt: Nullable<string>;
   provider: Provider;
   enabled: boolean;
-  maxItems: number | null;
-  processingSchedule: string | null;
-  lastProcessed: string | null;
+  maxItems: Nullable<number>;
+  processingSchedule: Nullable<string>;
+  lastProcessed: Nullable<string>;
   [key: string]: unknown;
 }
 
@@ -49,7 +59,7 @@ export interface SerializedMediaList {
 
 export interface MediaItem {
   title: string;
-  year: number | null;
+  year: Nullable<number>;
   tmdbId: number;
   mediaType: MediaType;
 }

@@ -3,6 +3,7 @@ import { ListUrl } from '../value-objects/list-url.value-object';
 import { Provider } from '../value-objects/provider.value-object';
 import type { MediaListProps, ProviderType } from '../types/media-list.types';
 import type { MediaListDTO } from '../../application/dtos/media-list.response.dto';
+import type { Nullable } from '../../../shared/types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior
@@ -26,7 +27,7 @@ export class MediaList {
   private _provider: Provider;
   private _enabled: boolean;
   private _maxItems: number;
-  private _processingSchedule: string | null;
+  private _processingSchedule: Nullable<string>;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -77,7 +78,7 @@ export class MediaList {
     return this._maxItems;
   }
 
-  get processingSchedule(): string | null {
+  get processingSchedule(): Nullable<string> {
     return this._processingSchedule;
   }
 
@@ -165,7 +166,7 @@ export class MediaList {
   /**
    * Change processing schedule
    */
-  changeSchedule(newSchedule: string | null): void {
+  changeSchedule(newSchedule: Nullable<string>): void {
     this._processingSchedule = newSchedule;
     this._updatedAt = new Date();
   }

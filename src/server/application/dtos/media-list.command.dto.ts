@@ -1,4 +1,5 @@
 import type { ProviderType } from '../../domain/types/media-list.types';
+import type { Nullable } from '../../../shared/types';
 
 /**
  * Command DTOs (Input)
@@ -14,7 +15,7 @@ export interface CreateMediaListCommand {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
-  processingSchedule: string | null;
+  processingSchedule: Nullable<string>;
   userId: number;
 }
 
@@ -27,7 +28,7 @@ export interface UpdateMediaListCommand {
     provider?: ProviderType;
     enabled?: boolean;
     maxItems?: number;
-    processingSchedule?: string | null;
+    processingSchedule?: Nullable<string>;
   };
 }
 

@@ -1,4 +1,5 @@
 import type { ProviderType } from '../../domain/types/media-list.types';
+import type { Nullable } from '../../../shared/types';
 
 /**
  * Response DTOs (Output)
@@ -21,7 +22,7 @@ export interface MediaListDTO {
   provider: ProviderType;    // Unwrapped from Provider VO
   enabled: boolean;
   maxItems: number;
-  processingSchedule: string | null;
+  processingSchedule: Nullable<string>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,7 +32,7 @@ export interface MediaListDTO {
  * Used for list views that show processing history
  */
 export interface MediaListWithLastProcessedDTO extends MediaListDTO {
-  lastProcessed: Date | null;
+  lastProcessed: Nullable<Date>;
 }
 
 // Use Case Response Interfaces
@@ -41,7 +42,7 @@ export interface CreateMediaListResponse {
 }
 
 export interface GetMediaListByIdResponse {
-  list: MediaListDTO | null;
+  list: Nullable<MediaListDTO>;
 }
 
 export interface GetAllMediaListsResponse {

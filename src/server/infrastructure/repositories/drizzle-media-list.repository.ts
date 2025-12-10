@@ -5,6 +5,7 @@ import { mediaLists, executionHistory } from '../../db/schema';
 import { MediaList } from '../../domain/entities/media-list.entity';
 import type { MediaListProps, MediaListWithLastProcessed } from '../../domain/types/media-list.types';
 import type { IMediaListRepository } from '../../application/repositories/media-list.repository.interface';
+import type { Nullable } from '../../../shared/types';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -19,7 +20,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return rows.map((row) => this.toDomain(row));
   }
 
-  async findById(id: number): Promise<MediaList | null> {
+  async findById(id: number): Promise<Nullable<MediaList>> {
     const [row] = await this.db
       .select()
       .from(mediaLists)
