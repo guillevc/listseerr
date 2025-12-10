@@ -21,7 +21,7 @@ export interface MediaListDTO {
   provider: ProviderType;    // Unwrapped from Provider VO
   enabled: boolean;
   maxItems: number;
-  processingSchedule?: string;
+  processingSchedule: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

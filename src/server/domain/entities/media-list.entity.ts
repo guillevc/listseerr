@@ -220,7 +220,7 @@ export class MediaList {
       provider: this._provider.getValue(), // Unwrap VO
       enabled: this._enabled,
       maxItems: this._maxItems,
-      processingSchedule: this._processingSchedule,
+      processingSchedule: this._processingSchedule ?? null, // Convert undefined to null
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
     };

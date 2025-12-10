@@ -1,5 +1,6 @@
 import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
-import type { GetAllMediaListsCommand, GetAllMediaListsResponse } from '../dtos/media-list.command.dto';
+import type { GetAllMediaListsCommand } from '../dtos/media-list.command.dto';
+import type { GetAllMediaListsResponse } from '../dtos/media-list.response.dto';
 
 export class GetAllMediaListsUseCase {
   constructor(
@@ -7,7 +8,13 @@ export class GetAllMediaListsUseCase {
   ) {}
 
   async execute(command: GetAllMediaListsCommand): Promise<GetAllMediaListsResponse> {
-    const lists = await this.mediaListRepository.findAllWithLastProcessed(command.userId);
+    const listsFromRepo = await this.mediaListRepository.findAllWithLastProcessed(command.userId);
+
+    // Convert repository response to DTO format (undefined → null for processingSchedule)
+    const lists = listsFromRepo.map((list) => ({
+      ...list,
+      processingSchedule: list.processingSchedule ?? null,
+    }));
 
     return {
       lists,

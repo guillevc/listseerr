@@ -1,7 +1,8 @@
 import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
-import type { EnableAllListsCommand, EnableAllListsResponse } from '../dtos/media-list.command.dto';
+import type { EnableAllListsCommand } from '../dtos/media-list.command.dto';
+import type { EnableAllListsResponse } from '../dtos/media-list.response.dto';
 
 export class EnableAllListsUseCase {
   constructor(

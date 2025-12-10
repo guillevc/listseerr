@@ -1,5 +1,6 @@
 import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
-import type { GetMediaListByIdCommand, GetMediaListByIdResponse } from '../dtos/media-list.command.dto';
+import type { GetMediaListByIdCommand } from '../dtos/media-list.command.dto';
+import type { GetMediaListByIdResponse } from '../dtos/media-list.response.dto';
 
 export class GetMediaListByIdUseCase {
   constructor(

@@ -3,7 +3,8 @@ import type { IListUrlParserService } from '../services/list-url-parser.service.
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
 import { MediaList } from '../../domain/entities/media-list.entity';
-import type { CreateMediaListCommand, CreateMediaListResponse } from '../dtos/media-list.command.dto';
+import type { CreateMediaListCommand } from '../dtos/media-list.command.dto';
+import type { CreateMediaListResponse } from '../dtos/media-list.response.dto';
 
 export class CreateMediaListUseCase {
   constructor(
