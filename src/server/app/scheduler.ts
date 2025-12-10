@@ -14,15 +14,19 @@ const logger = createLogger('scheduler');
  */
 async function processListCallback(
   listId: number,
-  db: BunSQLiteDatabase<typeof schema>
+  _db: BunSQLiteDatabase<typeof schema>
 ): Promise<void> {
   logger.info({ listId }, 'Scheduler triggered - processing list');
 
   // Dynamic import to avoid circular dependencies
-  const { processListById } = await import('../trpc/routers/lists-processor');
+  const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
 
   try {
-    await processListById(listId, 'scheduled', db);
+    await processingContainer.processListUseCase.execute({
+      listId,
+      triggerType: 'scheduled',
+      userId: 1, // TODO: Get from list owner
+    });
   } catch (error) {
     logger.error(
       {
@@ -42,26 +46,27 @@ async function processListCallback(
  * @param db - Database instance
  */
 async function processAllListsCallback(
-  db: BunSQLiteDatabase<typeof schema>
+  _db: BunSQLiteDatabase<typeof schema>
 ): Promise<void> {
   logger.info('Global automatic processing triggered - using batch processing with global deduplication');
 
   try {
     // Dynamic import to avoid circular dependencies
-    const { processBatchWithDeduplication } = await import('../trpc/routers/lists-processor');
-    const result = await processBatchWithDeduplication(db);
+    const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
+    const result = await processingContainer.processBatchUseCase.execute({
+      triggerType: 'scheduled',
+      userId: 1, // TODO: Process for all users
+    });
 
     logger.info(
       {
         processedLists: result.processedLists,
         totalItemsFound: result.totalItemsFound,
-        globalUniqueItems: result.globalUniqueItems,
-        cachedItems: result.cachedItems,
         itemsRequested: result.itemsRequested,
         itemsFailed: result.itemsFailed,
-        duplicatesEliminated: result.totalItemsFound - result.globalUniqueItems,
+        duplicatesEliminated: result.totalItemsFound - result.itemsRequested,
         efficiencyGain: result.totalItemsFound > 0
-          ? `${(((result.totalItemsFound - result.globalUniqueItems) / result.totalItemsFound) * 100).toFixed(1)}%`
+          ? `${(((result.totalItemsFound - result.itemsRequested) / result.totalItemsFound) * 100).toFixed(1)}%`
           : 'N/A',
       },
       'Completed global automatic processing with batch deduplication'

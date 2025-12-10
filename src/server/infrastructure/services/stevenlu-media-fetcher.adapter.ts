@@ -1,0 +1,39 @@
+import { MediaItem } from '../../domain/value-objects/media-item.value-object';
+import { MediaType } from '../../domain/value-objects/media-type.value-object';
+import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
+import type { ProviderType } from '../../domain/value-objects/provider-type.value-object';
+import type { ProviderConfigData } from '../../domain/types/provider-config.types';
+import { fetchStevenLuList } from '../../services/stevenlu/client';
+
+/**
+ * StevenLu Media Fetcher Adapter
+ *
+ * Adapts existing StevenLu client function to IMediaFetcher interface.
+ * StevenLu is a public API (no auth required) that returns popular movies.
+ */
+export class StevenLuMediaFetcher implements IMediaFetcher {
+  supports(providerType: ProviderType): boolean {
+    return providerType.isStevenLu();
+  }
+
+  async fetchItems(
+    _url: string,
+    maxItems: number,
+    _providerConfig: ProviderConfigData
+  ): Promise<MediaItem[]> {
+    // StevenLu doesn't require authentication or URL
+    // _url parameter is ignored (API has no URL parameter)
+    // _providerConfig is ignored (public API, no authentication)
+    const rawItems = await fetchStevenLuList(maxItems);
+
+    // Transform raw items to domain MediaItem value objects
+    return rawItems.map(item =>
+      MediaItem.create({
+        title: item.title,
+        year: item.year,
+        tmdbId: item.tmdbId,
+        mediaType: MediaType.fromString(item.mediaType),
+      })
+    );
+  }
+}

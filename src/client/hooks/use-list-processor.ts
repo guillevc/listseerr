@@ -18,7 +18,7 @@ export function useListProcessor() {
 
   // Process single list mutation
   const processMutation = trpc.processor.processList.useMutation({
-    onSuccess: (result, variables) => {
+    onSuccess: (execution, variables) => {
       setProcessingLists((prev) => {
         const next = new Set(prev);
         next.delete(variables.listId);
@@ -31,18 +31,18 @@ export function useListProcessor() {
       utils.dashboard.getRecentActivity.invalidate();
       utils.dashboard.getPendingRequests.invalidate();
 
-      if (result.success) {
-        const skipped = result.itemsFound - result.itemsRequested - result.itemsFailed;
-        const parts = [`Found ${result.itemsFound} items`];
+      if (execution.status === 'success') {
+        const skipped = execution.itemsFound - execution.itemsRequested - execution.itemsFailed;
+        const parts = [`Found ${execution.itemsFound} items`];
 
-        if (result.itemsRequested > 0) {
-          parts.push(`${result.itemsRequested} requested`);
+        if (execution.itemsRequested > 0) {
+          parts.push(`${execution.itemsRequested} requested`);
         }
         if (skipped > 0) {
           parts.push(`${skipped} skipped`);
         }
-        if (result.itemsFailed > 0) {
-          parts.push(`${result.itemsFailed} failed`);
+        if (execution.itemsFailed > 0) {
+          parts.push(`${execution.itemsFailed} failed`);
         }
 
         toast({
