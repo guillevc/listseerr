@@ -63,8 +63,8 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
   const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
 
   // Check provider configurations
-  const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
-  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
+  const { data: traktConfig } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const { data: mdbListConfig } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
 
   const isProviderConfigured = useCallback((provider: string) => {
     if (provider === 'trakt') return !!traktConfig?.clientId;

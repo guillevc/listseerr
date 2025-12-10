@@ -12,6 +12,7 @@ export const env = createEnv({
     MIGRATIONS_FOLDER: z.string().default('./src/server/db/migrations'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('debug'),
+    ENCRYPTION_KEY: z.string().min(1, 'ENCRYPTION_KEY is required for encrypting API keys'),
   },
 
   /**

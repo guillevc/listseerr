@@ -1,7 +1,7 @@
 import { router } from './trpc';
 import { listsRouter } from '../presentation/trpc/routers/lists.router';
 import { jellyseerrConfigRouter } from '../presentation/trpc/routers/jellyseerr-config.router';
-import { providerConfigRouter } from './routers/provider-config';
+import { providerConfigRouter } from '../presentation/trpc/routers/provider-config.router';
 import { generalSettingsRouter } from '../presentation/trpc/routers/general-settings.router';
 import { listsProcessorRouter } from './routers/lists-processor';
 import { schedulerRouter } from './routers/scheduler';

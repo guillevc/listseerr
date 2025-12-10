@@ -23,10 +23,10 @@ export function ApiKeysSettings() {
   const [showMdbListKey, setShowTmdbKey] = useState(false);
 
   // Load Trakt config
-  const { data: traktConfig } = trpc.providerConfig.getTraktConfig.useQuery();
+  const { data: traktConfig } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
 
   // Load MDBList config
-  const { data: mdbListConfig } = trpc.providerConfig.getMdbListConfig.useQuery();
+  const { data: mdbListConfig } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
 
   // Load existing configs on mount - syncing with external API data
   useEffect(() => {
@@ -48,9 +48,9 @@ export function ApiKeysSettings() {
   }, [mdbListConfig]);
 
   // Mutations
-  const saveTraktMutation = trpc.providerConfig.setTraktConfig.useMutation({
+  const saveTraktMutation = trpc.providerConfig.set.useMutation({
     onSuccess: () => {
-      utils.providerConfig.getTraktConfig.invalidate();
+      utils.providerConfig.get.invalidate({ provider: 'trakt' });
       toast({
         title: 'Success',
         description: 'Trakt Client ID saved successfully',
@@ -65,9 +65,9 @@ export function ApiKeysSettings() {
     },
   });
 
-  const deleteTraktMutation = trpc.providerConfig.deleteTraktConfig.useMutation({
+  const deleteTraktMutation = trpc.providerConfig.delete.useMutation({
     onSuccess: () => {
-      utils.providerConfig.getTraktConfig.invalidate();
+      utils.providerConfig.get.invalidate({ provider: 'trakt' });
       setTraktClientId('');
       toast({
         title: 'Success',
@@ -83,9 +83,9 @@ export function ApiKeysSettings() {
     },
   });
 
-  const saveMdbListMutation = trpc.providerConfig.setMdbListConfig.useMutation({
+  const saveMdbListMutation = trpc.providerConfig.set.useMutation({
     onSuccess: () => {
-      utils.providerConfig.getMdbListConfig.invalidate();
+      utils.providerConfig.get.invalidate({ provider: 'mdblist' });
       toast({
         title: 'Success',
         description: 'MDBList API Key saved successfully',
@@ -100,9 +100,9 @@ export function ApiKeysSettings() {
     },
   });
 
-  const deleteMdbListMutation = trpc.providerConfig.deleteMdbListConfig.useMutation({
+  const deleteMdbListMutation = trpc.providerConfig.delete.useMutation({
     onSuccess: () => {
-      utils.providerConfig.getMdbListConfig.invalidate();
+      utils.providerConfig.get.invalidate({ provider: 'mdblist' });
       setTmdbApiKey('');
       toast({
         title: 'Success',
@@ -128,7 +128,7 @@ export function ApiKeysSettings() {
     if (!traktEnabled) {
       // Provider is disabled, delete the config
       if (traktConfig?.clientId) {
-        deleteTraktMutation.mutate();
+        deleteTraktMutation.mutate({ provider: 'trakt' });
       }
       return;
     }
@@ -142,7 +142,10 @@ export function ApiKeysSettings() {
       });
       return;
     }
-    saveTraktMutation.mutate({ clientId: traktClientId.trim() });
+    saveTraktMutation.mutate({
+      provider: 'trakt',
+      config: { clientId: traktClientId.trim() }
+    });
   };
 
   // MDBList handlers
@@ -155,7 +158,7 @@ export function ApiKeysSettings() {
     if (!mdbListEnabled) {
       // Provider is disabled, delete the config
       if (mdbListConfig?.apiKey) {
-        deleteMdbListMutation.mutate();
+        deleteMdbListMutation.mutate({ provider: 'mdblist' });
       }
       return;
     }
@@ -169,7 +172,10 @@ export function ApiKeysSettings() {
       });
       return;
     }
-    saveMdbListMutation.mutate({ apiKey: mdbListApiKey.trim() });
+    saveMdbListMutation.mutate({
+      provider: 'mdblist',
+      config: { apiKey: mdbListApiKey.trim() }
+    });
   };
 
   return (
