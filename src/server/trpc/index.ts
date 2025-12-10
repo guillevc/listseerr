@@ -2,7 +2,7 @@ import { router } from './trpc';
 import { listsRouter } from '../presentation/trpc/routers/lists.router';
 import { configRouter } from './routers/config';
 import { providerConfigRouter } from './routers/provider-config';
-import { generalSettingsRouter } from './routers/general-settings';
+import { generalSettingsRouter } from '../presentation/trpc/routers/general-settings.router';
 import { listsProcessorRouter } from './routers/lists-processor';
 import { schedulerRouter } from './routers/scheduler';
 import { logsRouter } from './routers/logs';
