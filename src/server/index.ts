@@ -1,148 +1,24 @@
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { serveStatic } from 'hono/bun';
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from './trpc';
-import { createContext } from './trpc/trpc';
-import { scheduler } from './lib/scheduler';
-import { db } from './db';
 import { createLogger } from './lib/logger';
 import { env } from './env';
-import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
+import { db } from './db';
+import { runMigrations } from './app/bootstrap';
+import { createHttpApp } from './app/create-http-app';
+import { initializeScheduler } from './app/scheduler';
 
 const logger = createLogger('server');
 
-// Run database migrations on startup
-try {
-  logger.info('Running database migrations...');
-  migrate(db, { migrationsFolder: env.MIGRATIONS_FOLDER });
-  logger.info('Database migrations completed successfully');
-} catch (error) {
-  logger.error(
-    { error: error instanceof Error ? error.message : 'Unknown error' },
-    'Failed to run database migrations'
-  );
-  process.exit(1);
-}
+await runMigrations();
 
-const app = new Hono();
-const isDev = process.argv.includes('--watch') || import.meta.dir.includes('src/server');
+const app = createHttpApp();
 
-// CORS for development
-if (isDev) {
-  app.use('/*', cors({
-    origin: 'http://localhost:5173', // Vite dev server
-    credentials: true,
-  }));
-}
-
-// Health check endpoint
-app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-// tRPC endpoint
-app.use('/trpc/*', async (c) => {
-  return fetchRequestHandler({
-    router: appRouter,
-    req: c.req.raw,
-    endpoint: '/trpc',
-    createContext,
-  });
-});
-
-// Serve static files in production builds
-if (!isDev) {
-  logger.info('Serving static files from ./dist');
-  // Serve static assets
-  app.use('/assets/*', serveStatic({ root: './dist' }));
-  app.use('/vite.svg', serveStatic({ path: './dist/vite.svg' }));
-
-  // Serve index.html for all other routes (SPA fallback)
-  app.get('*', serveStatic({ path: './dist/index.html' }));
-} else {
-  logger.info('Development mode - static files served by Vite');
-}
-
-const port = env.PORT;
-
-// Initialize scheduler on server start
-async function initializeScheduler() {
-  try {
-    // Initialize scheduler with database and process callbacks
-    scheduler.initialize(
-      db,
-      // Callback for processing individual list
-      async (listId: number) => {
-        logger.info({ listId }, 'Scheduler triggered - processing list');
-        // Import and call the standalone processor function
-        const { processListById } = await import('./trpc/routers/lists-processor');
-        try {
-          await processListById(listId, 'scheduled', db);
-        } catch (error) {
-          logger.error(
-            {
-              listId,
-              error: error instanceof Error ? error.message : 'Unknown error',
-            },
-            'Failed to process scheduled list'
-          );
-        }
-      },
-      // Callback for processing all enabled lists (global automatic processing)
-      async () => {
-        logger.info('Global automatic processing triggered - using batch processing with global deduplication');
-
-        try {
-          // Import and call the batch processor
-          const { processBatchWithDeduplication } = await import('./trpc/routers/lists-processor');
-          const result = await processBatchWithDeduplication(db);
-
-          logger.info(
-            {
-              processedLists: result.processedLists,
-              totalItemsFound: result.totalItemsFound,
-              globalUniqueItems: result.globalUniqueItems,
-              cachedItems: result.cachedItems,
-              itemsRequested: result.itemsRequested,
-              itemsFailed: result.itemsFailed,
-              duplicatesEliminated: result.totalItemsFound - result.globalUniqueItems,
-              efficiencyGain: result.totalItemsFound > 0
-                ? `${(((result.totalItemsFound - result.globalUniqueItems) / result.totalItemsFound) * 100).toFixed(1)}%`
-                : 'N/A',
-            },
-            'Completed global automatic processing with batch deduplication'
-          );
-        } catch (error) {
-          logger.error(
-            {
-              error: error instanceof Error ? error.message : 'Unknown error',
-            },
-            'Failed to complete global automatic processing'
-          );
-        }
-      }
-    );
-
-    // Load all scheduled lists
-    await scheduler.loadScheduledLists();
-    logger.info('Scheduler initialized and scheduled lists loaded');
-  } catch (error) {
-    logger.error(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      'Failed to initialize scheduler'
-    );
-  }
-}
-
-// Start scheduler initialization (don't block server start)
-initializeScheduler().catch((error) =>
+initializeScheduler(db).catch((error) =>
   logger.error(
     { error: error instanceof Error ? error.message : 'Unknown error' },
     'Failed to start scheduler initialization'
   )
 );
 
+const port = env.PORT;
 logger.info({ port }, 'Server starting');
 logger.info(`Server running on http://localhost:${port}`);
 logger.info(`tRPC endpoint: http://localhost:${port}/trpc`);

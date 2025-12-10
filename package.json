@@ -23,7 +23,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run src/server/db/migrate.ts",
     "db:reset": "bun run src/server/db/reset.ts",
-    "start": "bun run dist/index.js",
+    "start": "NODE_ENV=production bun run dist/index.js",
     "ci": "bun run lint && bun run typecheck && bun run build",
     "lint": "eslint ."
   },
