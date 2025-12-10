@@ -1,0 +1,142 @@
+import type { JellyseerrConfigProps } from '../types/jellyseerr-config.types';
+import type { JellyseerrUrl } from '../value-objects/jellyseerr-url.value-object';
+import type { JellyseerrApiKey } from '../value-objects/jellyseerr-api-key.value-object';
+import type { JellyseerrUserId } from '../value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrl as JellyseerrUrlVO } from '../value-objects/jellyseerr-url.value-object';
+import { JellyseerrApiKey as JellyseerrApiKeyVO } from '../value-objects/jellyseerr-api-key.value-object';
+import { JellyseerrUserId as JellyseerrUserIdVO } from '../value-objects/jellyseerr-user-id.value-object';
+
+export interface JellyseerrConfigDTO {
+  id: number;
+  userId: number;
+  url: string;
+  apiKey: string;
+  userIdJellyseerr: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * JellyseerrConfig Entity - Domain Model with Rich Behavior
+ *
+ * This entity follows DDD principles:
+ * - Private state (encapsulation)
+ * - Mutation methods enforce business rules (behavioral)
+ * - toDTO() method for crossing application boundary
+ */
+export class JellyseerrConfig {
+  // Private state - encapsulated
+  private readonly _id: number;
+  private readonly _userId: number;
+  private _url: JellyseerrUrl;
+  private _apiKey: JellyseerrApiKey;
+  private _userIdJellyseerr: JellyseerrUserId;
+  private readonly _createdAt: Date;
+  private _updatedAt: Date;
+
+  constructor(props: JellyseerrConfigProps) {
+    this._id = props.id;
+    this._userId = props.userId;
+    this._url = props.url;
+    this._apiKey = props.apiKey;
+    this._userIdJellyseerr = props.userIdJellyseerr;
+    this._createdAt = props.createdAt;
+    this._updatedAt = props.updatedAt;
+  }
+
+  // Getters - expose state for read access
+  get id(): number {
+    return this._id;
+  }
+
+  get userId(): number {
+    return this._userId;
+  }
+
+  get url(): JellyseerrUrl {
+    return this._url;
+  }
+
+  get apiKey(): JellyseerrApiKey {
+    return this._apiKey;
+  }
+
+  get userIdJellyseerr(): JellyseerrUserId {
+    return this._userIdJellyseerr;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  // Mutation methods - behavioral API for changing state
+
+  /**
+   * Change the Jellyseerr URL
+   * Accepts primitive and creates VO internally for validation
+   */
+  changeUrl(newUrl: string): void {
+    this._url = JellyseerrUrlVO.create(newUrl);
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Change the API key
+   * Accepts primitive and creates VO internally for validation
+   */
+  changeApiKey(newApiKey: string): void {
+    this._apiKey = JellyseerrApiKeyVO.create(newApiKey);
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Change the Jellyseerr user ID
+   * Accepts primitive and creates VO internally for validation
+   */
+  changeJellyseerrUserId(newUserId: number): void {
+    this._userIdJellyseerr = JellyseerrUserIdVO.create(newUserId);
+    this._updatedAt = new Date();
+  }
+
+  // Business logic methods - domain rules
+
+  /**
+   * Get API headers for Jellyseerr requests
+   * Encapsulates header construction logic
+   */
+  getApiHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      'X-Api-Key': this._apiKey.getValue(),
+      'X-Api-User': this._userIdJellyseerr.getValue().toString(),
+    };
+  }
+
+  /**
+   * Get the status endpoint URL
+   * Encapsulates endpoint construction logic
+   */
+  getStatusEndpoint(): string {
+    return `${this._url.getValue()}/api/v1/status`;
+  }
+
+  /**
+   * Convert entity to DTO for crossing application boundary
+   * This is the ONLY way entities should leave the domain layer
+   */
+  toDTO(): JellyseerrConfigDTO {
+    return {
+      id: this._id,
+      userId: this._userId,
+      url: this._url.getValue(),
+      apiKey: this._apiKey.getValue(),
+      userIdJellyseerr: this._userIdJellyseerr.getValue(),
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+    };
+  }
+}

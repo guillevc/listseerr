@@ -1,3 +1,5 @@
+import { InvalidListUrlError } from '../errors/media-list.errors';
+
 export class ListUrl {
   private constructor(private readonly value: string) {}
 
@@ -5,7 +7,7 @@ export class ListUrl {
     const cleaned = this.cleanUrl(url);
 
     if (!this.isValid(cleaned)) {
-      throw new Error(`Invalid URL: ${url}`);
+      throw new InvalidListUrlError(url);
     }
 
     return new ListUrl(cleaned);

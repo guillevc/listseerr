@@ -1,6 +1,6 @@
 import { router } from './trpc';
 import { listsRouter } from '../presentation/trpc/routers/lists.router';
-import { configRouter } from './routers/config';
+import { jellyseerrConfigRouter } from '../presentation/trpc/routers/jellyseerr-config.router';
 import { providerConfigRouter } from './routers/provider-config';
 import { generalSettingsRouter } from '../presentation/trpc/routers/general-settings.router';
 import { listsProcessorRouter } from './routers/lists-processor';
@@ -10,7 +10,7 @@ import { dashboardRouter } from './routers/dashboard';
 
 export const appRouter = router({
   lists: listsRouter,
-  config: configRouter,
+  config: jellyseerrConfigRouter,
   providerConfig: providerConfigRouter,
   generalSettings: generalSettingsRouter,
   processor: listsProcessorRouter,

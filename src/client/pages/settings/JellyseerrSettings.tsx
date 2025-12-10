@@ -97,7 +97,6 @@ export function JellyseerrSettings() {
     testMutation.mutate({
       url: url.trim(),
       apiKey: apiKey.trim(),
-      userIdJellyseerr: parseInt(userId),
     });
   };
 
