@@ -1,34 +1,69 @@
 FROM oven/bun:1-alpine AS base
 WORKDIR /app
 
+# Install dependencies stage
 FROM base AS install
 
-RUN mkdir -p /temp/dev
-COPY package.json bun.lock /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+# Copy workspace package files and install dependencies
+COPY package.json bun.lock ./
+COPY packages/client/package.json ./packages/client/
+COPY packages/server/package.json ./packages/server/
+COPY packages/shared/package.json ./packages/shared/
 
-RUN mkdir -p /temp/prod
-COPY package.json bun.lock /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
+# Install all dependencies (dev + prod) for building
+RUN bun install --frozen-lockfile
 
+# Build stage
 FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
-COPY . .
+
+# Copy installed dependencies
+COPY --from=install /app/node_modules ./node_modules
+
+# Copy workspace package files
+COPY package.json bun.lock ./
+COPY packages/client/package.json ./packages/client/
+COPY packages/server/package.json ./packages/server/
+COPY packages/shared/package.json ./packages/shared/
+
+# Copy all source code
+COPY packages/client ./packages/client
+COPY packages/server ./packages/server
+COPY packages/shared ./packages/shared
 
 ENV NODE_ENV=production
 RUN bun run build
 
-FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /app/dist ./dist
-COPY --from=prerelease /app/src/server/db/migrations ./migrations
+# Production stage - install only production dependencies
+FROM base AS prod-deps
 
+COPY package.json bun.lock ./
+COPY packages/client/package.json ./packages/client/
+COPY packages/server/package.json ./packages/server/
+COPY packages/shared/package.json ./packages/shared/
+
+RUN bun install --frozen-lockfile --production
+
+# Final production stage
+FROM base AS release
+
+# Copy production dependencies
+COPY --from=prod-deps /app/node_modules ./node_modules
+
+# Copy built artifacts
+COPY --from=prerelease /app/dist ./dist
+
+# Copy server migrations (needed for runtime database initialization)
+COPY --from=prerelease /app/packages/server/migrations ./migrations
+
+# Create data directory for SQLite database
 RUN mkdir -p /app/data
 
+# Environment variables
 ENV NODE_ENV=production
 ENV DATABASE_PATH=/app/data/listseerr.db
 ENV MIGRATIONS_FOLDER=/app/migrations
 
+# Run as non-root user
 USER bun
 EXPOSE 3000/tcp
 

@@ -14,7 +14,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["bun-types"],
+    "types": ["@types/bun"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

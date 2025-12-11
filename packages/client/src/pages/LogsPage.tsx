@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type JSX } from 'react';
+import { useState, useEffect, useRef, useMemo, type JSX } from 'react';
 import { trpc, type RouterOutputs } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';
@@ -30,7 +30,7 @@ export function LogsPage() {
       refetchIntervalInBackground: false,
     }
   );
-  const logs = data?.logs ?? [];
+  const logs = useMemo(() => data?.logs ?? [], [data?.logs]);
 
   const clearLogsMutation = trpc.logs.clearLogs.useMutation({
     onSuccess: () => {

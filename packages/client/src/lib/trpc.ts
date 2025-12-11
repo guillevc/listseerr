@@ -1,6 +1,6 @@
 import { createTRPCReact } from '@trpc/react-query';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { AppRouter } from '@/server/trpc';
+import type { AppRouter } from 'api-contract';
 
 export const trpc = createTRPCReact<AppRouter>();
 

@@ -1,9 +1,11 @@
 # Dependencies (will be installed in Docker)
 node_modules
+**/node_modules
 
 # Build output (will be generated in Docker)
 dist
 dist-ssr
+packages/*/dist
 
 # Local database
 data
@@ -30,12 +32,20 @@ yarn-error.log*
 
 # TypeScript cache
 *.tsbuildinfo
+.cache
 
 # Development
-.cache
 .claude
+.env.local
+.env.*.local
+scripts
+mise.toml
 
 # Documentation
+docs
 *.md
-README.md
-DOCKER.md
+LICENSE
+
+# Docker
+docker-compose*.yml
+compose*.yaml

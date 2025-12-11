@@ -11,7 +11,11 @@ services:
     environment:
       LOG_LEVEL: ${LOG_LEVEL:-info}
       PORT: ${PORT:-3000}
+      NODE_ENV: production
       DATABASE_PATH: ${DATABASE_PATH:-/app/data/listseerr.db}
+      MIGRATIONS_FOLDER: /app/migrations
+      # Security (generate with: openssl rand -hex 32)
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY is required - generate with 'openssl rand -hex 32'}
     volumes:
       - listseerr-data:/app/data
     healthcheck:
