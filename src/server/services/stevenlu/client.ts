@@ -3,6 +3,7 @@ import { db } from '../../db';
 import { providerCache } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import type { StevenLuItem, MediaItem } from './types';
+import { ProviderValues } from '../../../shared/domain/types/provider.types';
 
 const logger = createLogger('stevenlu-client');
 
@@ -26,7 +27,7 @@ export async function fetchStevenLuList(
     const [cachedData] = await db
       .select()
       .from(providerCache)
-      .where(eq(providerCache.provider, 'stevenlu'))
+      .where(eq(providerCache.provider, ProviderValues.STEVENLU))
       .limit(1);
 
     const now = new Date();
@@ -91,7 +92,7 @@ export async function fetchStevenLuList(
             data: dataJson,
             cachedAt: now,
           })
-          .where(eq(providerCache.provider, 'stevenlu'));
+          .where(eq(providerCache.provider, ProviderValues.STEVENLU));
 
         logger.info('Updated StevenLu cache');
       } else {
@@ -99,7 +100,7 @@ export async function fetchStevenLuList(
         await db
           .insert(providerCache)
           .values({
-            provider: 'stevenlu',
+            provider: ProviderValues.STEVENLU,
             data: dataJson,
             cachedAt: now,
           });

@@ -1,13 +1,19 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../../../trpc/trpc';
 import { ListsContainer } from '../../di/lists-container';
+import { ProviderValues } from '../../../../shared/domain/types/provider.types';
 
 // Zod schemas for input validation
 const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
   displayUrl: z.string().optional(),
-  provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu']).default('trakt'),
+  provider: z.enum([
+    ProviderValues.TRAKT,
+    ProviderValues.MDBLIST,
+    ProviderValues.TRAKT_CHART,
+    ProviderValues.STEVENLU
+  ] as const).default(ProviderValues.TRAKT),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),

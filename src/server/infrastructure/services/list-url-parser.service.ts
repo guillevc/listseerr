@@ -1,4 +1,5 @@
 import type { ProviderType } from '../../../shared/domain/types/provider.types';
+import { ProviderValues } from '../../../shared/domain/types/provider.types';
 import type {
   IListUrlParserService,
   ParsedUrls,
@@ -13,16 +14,16 @@ export class ListUrlParserService implements IListUrlParserService {
     providedDisplayUrl?: string
   ): ParsedUrls {
     switch (provider) {
-      case 'trakt':
+      case ProviderValues.TRAKT:
         return this.parseTraktUrl(url, providedDisplayUrl);
 
-      case 'traktChart':
+      case ProviderValues.TRAKT_CHART:
         return this.parseTraktChartUrl(url, providedDisplayUrl);
 
-      case 'mdblist':
+      case ProviderValues.MDBLIST:
         return this.parseMdbListUrl(url, providedDisplayUrl);
 
-      case 'stevenlu':
+      case ProviderValues.STEVENLU:
         return this.parseStevenLuUrl(url, providedDisplayUrl);
 
       default:

@@ -1,14 +1,15 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../../../trpc/trpc';
 import { ProviderConfigContainer } from '../../di/provider-config-container';
+import { ProviderValues } from '../../../../shared/domain/types/provider.types';
 
 // Zod schemas for input validation
 const getConfigSchema = z.object({
-  provider: z.enum(['trakt', 'mdblist']),
+  provider: z.enum([ProviderValues.TRAKT, ProviderValues.MDBLIST] as const),
 });
 
 const updateConfigSchema = z.object({
-  provider: z.enum(['trakt', 'mdblist']),
+  provider: z.enum([ProviderValues.TRAKT, ProviderValues.MDBLIST] as const),
   config: z.object({
     clientId: z.string().optional(),
     apiKey: z.string().optional(),
@@ -16,7 +17,7 @@ const updateConfigSchema = z.object({
 });
 
 const deleteConfigSchema = z.object({
-  provider: z.enum(['trakt', 'mdblist']),
+  provider: z.enum([ProviderValues.TRAKT, ProviderValues.MDBLIST] as const),
 });
 
 /**

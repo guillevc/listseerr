@@ -1,4 +1,5 @@
 import type { ProviderType } from '../types/provider.types';
+import { ProviderValues } from '../types/provider.types';
 
 export class Provider {
   private constructor(private readonly value: ProviderType) {}
@@ -11,7 +12,7 @@ export class Provider {
   }
 
   static isValid(value: string): boolean {
-    return ['trakt', 'mdblist', 'traktChart', 'stevenlu'].includes(value);
+    return Object.values(ProviderValues).includes(value as ProviderType);
   }
 
   getValue(): ProviderType {
@@ -23,6 +24,6 @@ export class Provider {
   }
 
   requiresUrlConversion(): boolean {
-    return this.value === 'trakt' || this.value === 'traktChart';
+    return this.value === ProviderValues.TRAKT || this.value === ProviderValues.TRAKT_CHART;
   }
 }
