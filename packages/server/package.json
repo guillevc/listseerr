@@ -8,7 +8,7 @@
     "build": "bun build src/index.ts --outdir ../../dist --target bun --production --sourcemap=external",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "db:generate": "drizzle-kit generate",
+    "db:generate": "bun --env-file=../../.env drizzle-kit generate",
     "db:migrate": "bun run --env-file=../../.env src/db/migrate.ts",
     "db:reset": "bun run --env-file=../../.env src/db/reset.ts"
   },
