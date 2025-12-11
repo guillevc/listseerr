@@ -115,6 +115,154 @@ export type ProviderType = typeof ProviderValues[keyof typeof ProviderValues];
 
 **Location:** `src/shared/domain/types/<domain>.types.ts`
 
+#### F. Value Object Pattern (Encapsulation with Validation)
+
+Value Objects encapsulate primitive types and enforce domain invariants. They provide type safety, validation, and domain-specific behavior.
+
+**Pattern Structure:**
+
+```typescript
+import type { ProviderType } from '../types/provider.types';
+import { ProviderValues } from '../types/provider.types';
+import { InvalidProviderError } from '../errors/provider.errors';
+
+/**
+ * Provider Value Object
+ *
+ * Encapsulates and validates provider type.
+ * Provides domain-specific operations and type guards.
+ */
+export class Provider {
+  // 1. Private constructor - prevents invalid instantiation
+  private constructor(private readonly value: ProviderType) {}
+
+  // 2. Static factory method - validates before construction
+  static create(value: string): Provider {
+    if (!this.isValid(value)) {
+      throw new InvalidProviderError(value);
+    }
+    return new Provider(value as ProviderType);
+  }
+
+  // 3. Validation method - reusable validation logic
+  static isValid(value: string): boolean {
+    return Object.values(ProviderValues).includes(value as ProviderType);
+  }
+
+  // 4. Accessor method - unwraps primitive for serialization
+  getValue(): ProviderType {
+    return this.value;
+  }
+
+  // 5. Type guard helpers - domain-specific boolean checks
+  isTrakt(): boolean {
+    return this.value === ProviderValues.TRAKT;
+  }
+
+  isMdbList(): boolean {
+    return this.value === ProviderValues.MDBLIST;
+  }
+
+  // 6. Equality comparison - value-based equality
+  equals(other: Provider): boolean {
+    return this.value === other.value;
+  }
+
+  // 7. Domain logic methods - encapsulate business rules
+  requiresUrlConversion(): boolean {
+    return this.value === ProviderValues.TRAKT ||
+           this.value === ProviderValues.TRAKT_CHART;
+  }
+}
+```
+
+**Key Components:**
+
+|**Component**|**Purpose**|**Example**|
+|---|---|---|
+|**Private Constructor**|Prevents direct instantiation, forces use of factory method|`private constructor(private readonly value: ProviderType) {}`|
+|**Static Factory Method**|Validates input and constructs VO|`static create(value: string): Provider`|
+|**Static Validation**|Reusable validation logic|`static isValid(value: string): boolean`|
+|**Accessor Method**|Unwraps primitive for DTOs and persistence|`getValue(): ProviderType`|
+|**Type Guards**|Domain-specific boolean checks|`isTrakt(): boolean`, `isMdbList(): boolean`|
+|**Equality Method**|Value-based equality comparison|`equals(other: Provider): boolean`|
+|**Domain Logic**|Business rule methods|`requiresUrlConversion(): boolean`|
+
+**Usage in Different Layers:**
+
+```typescript
+// ❌ BAD: DTOs should use primitives, not VOs
+export interface MediaListDTO {
+  provider: Provider; // WRONG - not serializable
+}
+
+// ✅ GOOD: DTOs use primitive types
+export interface MediaListDTO {
+  provider: ProviderType; // Primitive string union type
+}
+
+// ✅ GOOD: Entities encapsulate primitives in VOs
+export class MediaList {
+  private readonly _provider: Provider; // VO for validation and behavior
+
+  constructor(params: { provider: ProviderType }) {
+    this._provider = Provider.create(params.provider); // Convert primitive to VO
+  }
+
+  get provider(): Provider {
+    return this._provider;
+  }
+
+  toDTO(): MediaListDTO {
+    return {
+      provider: this._provider.getValue(), // Unwrap VO to primitive for DTO
+    };
+  }
+}
+
+// ✅ GOOD: Use Cases convert DTO primitives to VOs
+export class CreateMediaListUseCase {
+  async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
+    // Convert primitive from DTO to VO for validation
+    const provider = Provider.create(command.provider);
+
+    // Use VO methods for domain logic
+    if (provider.requiresUrlConversion()) {
+      // ... handle URL conversion
+    }
+  }
+}
+```
+
+**Data Flow Pattern:**
+
+```
+Client (Primitive)
+  → DTO (Primitive: ProviderType)
+    → Use Case (converts to VO: Provider.create())
+      → Entity (stores VO: Provider)
+        → Repository (converts to primitive: provider.getValue())
+          → Database (Primitive: string)
+
+Database (Primitive: string)
+  → Repository (converts to VO: Provider.create())
+    → Entity (stores VO: Provider)
+      → Use Case (VO operations)
+        → DTO (converts to primitive: provider.getValue())
+          → Client (Primitive)
+```
+
+**Key Benefits:**
+
+1. **Validation at Boundaries:** Invalid values rejected immediately at VO creation
+2. **Type Safety:** TypeScript enforces that only valid VOs are used in domain layer
+3. **Encapsulation:** Business logic lives with the data it operates on
+4. **Immutability:** `readonly` ensures VOs can't be changed after creation
+5. **Shareability:** VOs in `shared/domain` can be used by both client and server for validation
+6. **Self-Documenting:** Type guards and domain methods express business rules clearly
+
+**Location:** `src/shared/domain/value-objects/<name>.value-object.ts`
+
 -----
 
 ### 3\. ⚙️ Operational Mandates and Error Handling
