@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev": "bun run dev:server & bun run dev:client",
-    "dev:client": "vite",
+    "dev:client": "vite --clearScreen false",
     "dev:server": "bun run --watch src/server/index.ts",
     "build": "bun run build:client && bun run build:server",
     "build:client": "vite build",
