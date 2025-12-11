@@ -1,4 +1,4 @@
-import type { Nullable } from '@/shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 /**
  * General Settings Core DTO

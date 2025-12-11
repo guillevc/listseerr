@@ -51,8 +51,8 @@ export class ProcessListUseCase {
     // 2. Create execution entity (status: running)
     const execution = ProcessingExecution.create({
       listId: command.listId,
-      batchId: BatchId.generate(TriggerType.fromString(command.triggerType)),
-      triggerType: TriggerType.fromString(command.triggerType),
+      batchId: BatchId.generate(TriggerType.create(command.triggerType)),
+      triggerType: TriggerType.create(command.triggerType),
     });
     const savedExecution = await this.executionHistoryRepository.save(execution);
 

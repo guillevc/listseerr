@@ -9,7 +9,7 @@ import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 import type { IProviderConfigRepository } from '../../application/repositories/provider-config.repository.interface';
 import type { IEncryptionService } from '../../application/services/encryption.service.interface';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 export class DrizzleProviderConfigRepository implements IProviderConfigRepository {
   constructor(

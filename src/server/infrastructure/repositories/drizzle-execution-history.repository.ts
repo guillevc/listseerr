@@ -7,7 +7,7 @@ import { ExecutionStatus } from '../../../shared/domain/value-objects/execution-
 import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
 import type { IExecutionHistoryRepository } from '../../application/repositories/execution-history.repository.interface';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -115,8 +115,8 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
       id: row.id,
       listId: row.listId,
       batchId: BatchId.fromString(row.batchId),
-      status: ExecutionStatus.fromString(row.status),
-      triggerType: TriggerType.fromString(row.triggerType),
+      status: ExecutionStatus.create(row.status),
+      triggerType: TriggerType.create(row.triggerType),
       startedAt: row.startedAt,
       completedAt: row.completedAt,
       itemsFound: row.itemsFound || 0,

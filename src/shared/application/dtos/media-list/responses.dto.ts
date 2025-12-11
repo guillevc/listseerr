@@ -1,5 +1,5 @@
 import type { MediaListDTO, MediaListWithLastProcessedDTO } from '../core/media-list.dto';
-import type { Nullable } from '@/shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 /**
  * Response DTOs (Output)

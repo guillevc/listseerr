@@ -42,7 +42,7 @@ export class TraktMediaFetcher implements IMediaFetcher {
         title: item.title,
         year: item.year,
         tmdbId: item.tmdbId,
-        mediaType: MediaType.fromString(item.mediaType),
+        mediaType: MediaType.create(item.mediaType),
       })
     );
   }

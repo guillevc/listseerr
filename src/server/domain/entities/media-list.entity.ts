@@ -3,7 +3,7 @@ import { ListUrl } from '../../../shared/domain/value-objects/list-url.value-obj
 import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { ProviderType } from '../../../shared/domain/types/provider.types';
 import type { MediaListDTO } from '../../../shared/application/dtos/core/media-list.dto';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior

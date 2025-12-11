@@ -7,7 +7,7 @@ import { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-u
 import { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
 import type { IJellyseerrConfigRepository } from '../../application/repositories/jellyseerr-config.repository.interface';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}

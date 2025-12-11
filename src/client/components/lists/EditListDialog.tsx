@@ -19,7 +19,7 @@ import {
 } from '../ui/select';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
-import type { SerializedMediaList } from '@/shared/types';
+import type { SerializedMediaList } from '@/shared/application/dtos/core/media-list.dto';
 
 interface EditListDialogProps {
   list: SerializedMediaList;

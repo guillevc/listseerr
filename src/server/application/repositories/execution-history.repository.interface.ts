@@ -1,5 +1,5 @@
 import type { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 /**
  * Execution History Repository Interface (Port)

@@ -1,5 +1,5 @@
 import type { GeneralSettingsDTO } from '../../../shared/application/dtos/core/general-settings.dto';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
 
 /**

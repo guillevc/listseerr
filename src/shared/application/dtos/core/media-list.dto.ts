@@ -1,8 +1,8 @@
-import type { Nullable } from '@/shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 import type { ProviderType } from '@/shared/domain/types/provider.types';
 
 // Re-export for convenience
-export type { ProviderType };
+export type { ProviderType, Nullable };
 
 /**
  * MediaList Core DTO
@@ -37,4 +37,31 @@ export interface MediaListDTO {
  */
 export interface MediaListWithLastProcessedDTO extends MediaListDTO {
   lastProcessed: Nullable<Date>;
+}
+
+/**
+ * SerializedMediaList
+ *
+ * MediaList as received from tRPC (dates serialized to strings).
+ * This represents how the client receives MediaList data over the wire,
+ * where Date objects are automatically serialized to ISO string format.
+ *
+ * Used by:
+ * - Client components that consume tRPC endpoints
+ * - TypeScript type inference for tRPC client calls
+ */
+export interface SerializedMediaList {
+  id: number;
+  name: string;
+  createdAt: Nullable<string>;
+  userId: number;
+  url: string;
+  displayUrl: Nullable<string>;
+  updatedAt: Nullable<string>;
+  provider: ProviderType;
+  enabled: boolean;
+  maxItems: Nullable<number>;
+  processingSchedule: Nullable<string>;
+  lastProcessed: Nullable<string>;
+  [key: string]: unknown;
 }

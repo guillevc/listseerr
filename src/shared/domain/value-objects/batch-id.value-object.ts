@@ -62,7 +62,7 @@ export class BatchId {
    */
   getTriggerType(): TriggerType {
     const triggerTypeStr = this.value.split('-')[0];
-    return TriggerType.fromString(triggerTypeStr);
+    return TriggerType.create(triggerTypeStr);
   }
 
   /**

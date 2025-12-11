@@ -1,23 +1,27 @@
-import type { TraktChartType, TraktMediaType } from '@/shared/types';
+import type { TraktChartType } from '@/shared/domain/types/trakt-chart-type.types';
+import { TraktChartTypeValues } from '@/shared/domain/types/trakt-chart-type.types';
+import type { TraktMediaType } from '@/shared/domain/types/trakt-media-type.types';
+import { TraktMediaTypeValues } from '@/shared/domain/types/trakt-media-type.types';
 import type { MediaItem } from './types';
 import { createLogger } from '../../lib/logger';
 
 const logger = createLogger('trakt-chart-client');
 
-const VALID_CHART_TYPES: TraktChartType[] = [
-  'trending',
-  'popular',
-  'favorited',
-  'played',
-  'watched',
-  'collected',
-  'anticipated',
-];
+// Valid chart types - derived from TraktChartTypeValues
+const VALID_CHART_TYPES: TraktChartType[] = Object.values(TraktChartTypeValues);
 
-const VALID_MEDIA_TYPES: TraktMediaType[] = ['movies', 'shows'];
+// Valid media types - derived from TraktMediaTypeValues
+const VALID_MEDIA_TYPES: TraktMediaType[] = Object.values(TraktMediaTypeValues);
 
 // Chart types that return wrapped responses (movie/show nested in object)
-const WRAPPED_CHART_TYPES: TraktChartType[] = ['trending', 'anticipated', 'collected', 'played', 'watched', 'favorited'];
+const WRAPPED_CHART_TYPES: TraktChartType[] = [
+  TraktChartTypeValues.TRENDING,
+  TraktChartTypeValues.ANTICIPATED,
+  TraktChartTypeValues.COLLECTED,
+  TraktChartTypeValues.PLAYED,
+  TraktChartTypeValues.WATCHED,
+  TraktChartTypeValues.FAVORITED,
+];
 
 // Simple chart response - movie/show data at root level
 interface TraktSimpleChartItem {

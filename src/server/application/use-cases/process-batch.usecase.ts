@@ -65,7 +65,7 @@ export class ProcessBatchUseCase {
     }
 
     // 2. Fetch items from all lists (with rate limiting)
-    const triggerType = TriggerType.fromString(command.triggerType);
+    const triggerType = TriggerType.create(command.triggerType);
     const batchId = BatchId.generate(triggerType);
     const listsWithItems = await this.fetchFromAllLists(enabledLists, command.userId, batchId, triggerType);
 

@@ -1,5 +1,5 @@
 import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
-import type { Nullable } from '../../../shared/types';
+import type { Nullable } from '@/shared/domain/types/utility.types';
 
 /**
  * Repository interface for Jellyseerr Config (Port)
