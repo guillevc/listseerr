@@ -1,6 +1,6 @@
 import { Settings, Key, Clock, SlidersHorizontal } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { cn } from '@/client/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface SettingsCategory {
   id: string;

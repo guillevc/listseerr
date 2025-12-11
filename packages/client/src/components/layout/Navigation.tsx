@@ -10,8 +10,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '../ui/sheet';
-import { cn } from '@/client/lib/utils';
-import { trpc } from '@/client/lib/trpc';
+import { cn } from '@/lib/utils';
+import { trpc } from '@/lib/trpc';
 
 export function Navigation() {
   const router = useRouterState();
