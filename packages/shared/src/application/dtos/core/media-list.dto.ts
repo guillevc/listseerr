@@ -1,5 +1,5 @@
-import type { Nullable } from '@/domain/types/utility.types';
-import type { ProviderType } from '@/domain/types/provider.types';
+import type { Nullable } from '../../../domain/types/utility.types';
+import type { ProviderType } from '../../../domain/types/provider.types';
 
 // Re-export for convenience
 export type { ProviderType, Nullable };

@@ -1,5 +1,5 @@
 import type { GeneralSettings } from '../../domain/entities/general-settings.entity';
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * GeneralSettings Repository Interface (Port)

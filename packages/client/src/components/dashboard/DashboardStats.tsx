@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { Separator } from '../ui/separator';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
-import type { SerializedMediaList } from '@/shared/application/dtos/core/media-list.dto';
+import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 
 interface DashboardStatsProps {
   lists: SerializedMediaList[];

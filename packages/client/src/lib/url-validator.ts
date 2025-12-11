@@ -1,4 +1,4 @@
-import type { ProviderType } from '@/shared/domain/types/provider.types';
+import type { ProviderType } from 'shared/domain/types/provider.types';
 
 interface ValidationResult {
   isValid: boolean;

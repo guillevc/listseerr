@@ -1,6 +1,6 @@
 import type { IGeneralSettingsRepository } from '../repositories/general-settings.repository.interface';
-import type { GetGeneralSettingsCommand } from '../../../shared/application/dtos/general-settings/commands.dto';
-import type { GetGeneralSettingsResponse } from '../../../shared/application/dtos/general-settings/responses.dto';
+import type { GetGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
+import type { GetGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 
 export class GetGeneralSettingsUseCase {
   constructor(

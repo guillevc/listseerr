@@ -1,5 +1,5 @@
-import type { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
-import type { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
+import type { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
+import type { MdbListApiKey } from 'shared/domain/value-objects/mdblist-api-key.value-object';
 
 /**
  * Provider-specific configuration data types

@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/server/*": ["../server/src/*"],
+      "@/shared/*": ["../shared/src/*"]
     },
     "strict": true,
     "noUnusedLocals": true,

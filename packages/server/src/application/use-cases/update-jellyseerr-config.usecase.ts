@@ -1,10 +1,10 @@
 import type { IJellyseerrConfigRepository } from '../repositories/jellyseerr-config.repository.interface';
-import type { UpdateJellyseerrConfigCommand } from '../../../shared/application/dtos/jellyseerr-config/commands.dto';
-import type { UpdateJellyseerrConfigResponse } from '../../../shared/application/dtos/jellyseerr-config/responses.dto';
+import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
+import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 import { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
+import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
+import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
 import type { Logger } from 'pino';
 
 export class UpdateJellyseerrConfigUseCase {

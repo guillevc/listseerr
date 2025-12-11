@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../../../trpc/trpc';
 import { ProviderConfigContainer } from '../../di/provider-config-container';
-import { ProviderValues } from '../../../../shared/domain/types/provider.types';
+import { ProviderValues } from 'shared/domain/types/provider.types';
 
 // Zod schemas for input validation
 const getConfigSchema = z.object({

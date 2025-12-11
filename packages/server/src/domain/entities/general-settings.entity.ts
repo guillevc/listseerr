@@ -1,6 +1,6 @@
-import type { GeneralSettingsDTO } from '../../../shared/application/dtos/core/general-settings.dto';
-import type { Nullable } from '@/shared/domain/types/utility.types';
-import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
+import type { GeneralSettingsDTO } from 'shared/application/dtos/core/general-settings.dto';
+import type { Nullable } from 'shared/domain/types/utility.types';
+import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 
 /**
  * GeneralSettings Entity - Domain Model with Rich Behavior

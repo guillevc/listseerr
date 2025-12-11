@@ -1,9 +1,9 @@
-import { ListName } from '../../../shared/domain/value-objects/list-name.value-object';
-import { ListUrl } from '../../../shared/domain/value-objects/list-url.value-object';
-import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import type { ProviderType } from '../../../shared/domain/types/provider.types';
-import type { MediaListDTO } from '../../../shared/application/dtos/core/media-list.dto';
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import { ListName } from 'shared/domain/value-objects/list-name.value-object';
+import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
+import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { MediaListDTO } from 'shared/application/dtos/core/media-list.dto';
+import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior

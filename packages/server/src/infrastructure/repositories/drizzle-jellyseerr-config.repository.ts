@@ -3,11 +3,11 @@ import { eq } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { jellyseerrConfigs } from '../../db/schema';
 import { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
+import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
+import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
 import type { IJellyseerrConfigRepository } from '../../application/repositories/jellyseerr-config.repository.interface';
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}

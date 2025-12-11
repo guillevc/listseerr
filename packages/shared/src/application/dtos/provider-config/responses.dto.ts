@@ -1,4 +1,4 @@
-import type { Nullable } from '@/domain/types/utility.types';
+import type { Nullable } from '../../../domain/types/utility.types';
 import type { ProviderConfigDTO } from '../core/provider-config.dto';
 
 /**

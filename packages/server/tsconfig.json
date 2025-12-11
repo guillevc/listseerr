@@ -11,6 +11,9 @@
     "moduleDetection": "force",
     "noEmit": true,
     "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": ["bun-types"],
     "strict": true,
     "noUnusedLocals": true,

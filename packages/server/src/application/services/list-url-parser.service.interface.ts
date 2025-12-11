@@ -1,4 +1,4 @@
-import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
+import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 
 export interface ParsedUrls {
   apiUrl: string;

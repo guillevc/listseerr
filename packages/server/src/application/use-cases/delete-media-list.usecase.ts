@@ -1,8 +1,8 @@
 import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
-import type { DeleteMediaListCommand } from '../../../shared/application/dtos/media-list/commands.dto';
-import type { DeleteMediaListResponse } from '../../../shared/application/dtos/media-list/responses.dto';
+import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
+import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 
 export class DeleteMediaListUseCase {
   constructor(

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../../../trpc/trpc';
 import { ListsContainer } from '../../di/lists-container';
-import { ProviderValues } from '../../../../shared/domain/types/provider.types';
+import { ProviderValues } from 'shared/domain/types/provider.types';
 
 // Zod schemas for input validation
 const listInputSchema = z.object({

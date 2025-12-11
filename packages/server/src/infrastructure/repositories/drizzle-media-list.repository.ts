@@ -4,8 +4,8 @@ import * as schema from '../../db/schema';
 import { mediaLists, executionHistory } from '../../db/schema';
 import { MediaList } from '../../domain/entities/media-list.entity';
 import type { IMediaListRepository } from '../../application/repositories/media-list.repository.interface';
-import type { Nullable } from '@/shared/domain/types/utility.types';
-import type { ProviderType } from '../../../shared/domain/types/provider.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
+import type { ProviderType } from 'shared/domain/types/provider.types';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}

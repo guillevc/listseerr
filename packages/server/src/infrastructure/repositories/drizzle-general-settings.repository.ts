@@ -3,9 +3,9 @@ import { eq } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { generalSettings } from '../../db/schema';
 import { GeneralSettings } from '../../domain/entities/general-settings.entity';
-import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
+import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 import type { IGeneralSettingsRepository } from '../../application/repositories/general-settings.repository.interface';
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleGeneralSettingsRepository implements IGeneralSettingsRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}

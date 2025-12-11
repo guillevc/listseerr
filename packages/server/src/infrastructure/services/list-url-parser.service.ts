@@ -1,5 +1,5 @@
-import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import { ProviderValues } from '../../../shared/domain/types/provider.types';
+import type { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { ProviderValues } from 'shared/domain/types/provider.types';
 import type {
   IListUrlParserService,
   ParsedUrls,

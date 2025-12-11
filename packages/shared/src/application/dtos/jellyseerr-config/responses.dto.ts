@@ -1,4 +1,4 @@
-import type { Nullable } from '@/domain/types/utility.types';
+import type { Nullable } from '../../../domain/types/utility.types';
 import type { JellyseerrConfigDTO } from '../core/jellyseerr-config.dto';
 
 /**

@@ -3,7 +3,7 @@ import { db } from '../../db';
 import { providerCache } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import type { StevenLuItem, MediaItem } from './types';
-import { ProviderValues } from '../../../shared/domain/types/provider.types';
+import { ProviderValues } from 'shared/domain/types/provider.types';
 
 const logger = createLogger('stevenlu-client');
 

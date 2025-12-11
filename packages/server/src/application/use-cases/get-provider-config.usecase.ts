@@ -1,7 +1,7 @@
 import type { IProviderConfigRepository } from '../repositories/provider-config.repository.interface';
-import type { GetProviderConfigCommand } from '../../../shared/application/dtos/provider-config/commands.dto';
-import type { GetProviderConfigResponse } from '../../../shared/application/dtos/provider-config/responses.dto';
-import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
+import type { GetProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
+import type { GetProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
+import { Provider } from 'shared/domain/value-objects/provider.value-object';
 
 export class GetProviderConfigUseCase {
   constructor(

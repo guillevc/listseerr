@@ -1,7 +1,7 @@
 import type { IDashboardStatsRepository, ExecutionWithListName } from '../repositories/dashboard-stats.repository.interface';
-import type { GetRecentActivityCommand } from '../../../shared/application/dtos/dashboard/commands.dto';
-import type { GetRecentActivityResponse, ActivityGroup } from '../../../shared/application/dtos/dashboard/responses.dto';
-import type { ExecutionDTO } from '../../../shared/application/dtos/core/execution.dto';
+import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';
+import type { GetRecentActivityResponse, ActivityGroup } from 'shared/application/dtos/dashboard/responses.dto';
+import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
 
 /**
  * GetRecentActivityUseCase

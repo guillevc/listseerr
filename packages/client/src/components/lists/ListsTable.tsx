@@ -32,7 +32,7 @@ import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { EditListDialog } from './EditListDialog';
 
-import type { SerializedMediaList } from '@/shared/application/dtos/core/media-list.dto';
+import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 
 type MediaList = SerializedMediaList;
 

@@ -3,13 +3,13 @@ import { eq, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { providerConfigs } from '../../db/schema';
 import { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
-import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
+import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
+import { MdbListApiKey } from 'shared/domain/value-objects/mdblist-api-key.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 import type { IProviderConfigRepository } from '../../application/repositories/provider-config.repository.interface';
 import type { IEncryptionService } from '../../application/services/encryption.service.interface';
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleProviderConfigRepository implements IProviderConfigRepository {
   constructor(

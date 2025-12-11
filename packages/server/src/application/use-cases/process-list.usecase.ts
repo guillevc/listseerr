@@ -5,15 +5,15 @@ import type { IExecutionHistoryRepository } from '../repositories/execution-hist
 import type { ICacheRepository } from '../repositories/cache.repository.interface';
 import type { IMediaFetcher } from '../services/media-fetcher.service.interface';
 import type { IJellyseerrClient } from '../services/jellyseerr-client.service.interface';
-import type { ProcessListCommand } from '../../../shared/application/dtos/processing/commands.dto';
-import type { ProcessListResponse } from '../../../shared/application/dtos/processing/responses.dto';
+import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
+import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { Logger } from 'pino';
 import { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
-import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
-import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
-import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import { MediaListNotFoundError } from '../../../shared/domain/errors/media-list.errors';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from '../../../shared/domain/errors/processing.errors';
+import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
+import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
+import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
+import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
 
 /**
  * ProcessListUseCase

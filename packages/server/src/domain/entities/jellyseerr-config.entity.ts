@@ -1,10 +1,10 @@
-import type { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
-import type { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
-import type { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
-import { JellyseerrUrl as JellyseerrUrlVO } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey as JellyseerrApiKeyVO } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId as JellyseerrUserIdVO } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { JellyseerrConfigDTO } from '../../../shared/application/dtos/core/jellyseerr-config.dto';
+import type { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
+import type { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
+import type { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrl as JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.value-object';
+import { JellyseerrApiKey as JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
+import { JellyseerrUserId as JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
+import type { JellyseerrConfigDTO } from 'shared/application/dtos/core/jellyseerr-config.dto';
 
 /**
  * JellyseerrConfig Entity - Domain Model with Rich Behavior

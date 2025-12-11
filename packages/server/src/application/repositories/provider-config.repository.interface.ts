@@ -1,6 +1,6 @@
-import type { Nullable } from '@/shared/domain/types/utility.types';
+import type { Nullable } from 'shared/domain/types/utility.types';
 import type { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
+import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 
 /**
  * ProviderConfig Repository Interface (Port)
