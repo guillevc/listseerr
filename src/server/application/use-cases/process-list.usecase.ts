@@ -12,7 +12,6 @@ import { ProcessingExecution } from '../../domain/entities/processing-execution.
 import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
 import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import { MediaListNotFoundError } from '../../../shared/domain/errors/media-list.errors';
 import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from '../../../shared/domain/errors/processing.errors';
 
@@ -124,9 +123,7 @@ export class ProcessListUseCase {
    * Load provider configuration for user
    */
   private async loadProviderConfig(provider: Provider, userId: number) {
-    // Convert Provider to ProviderType for repository call
-    const providerType = ProviderType.create(provider.getValue());
-    const config = await this.providerConfigRepository.findByUserIdAndProvider(userId, providerType);
+    const config = await this.providerConfigRepository.findByUserIdAndProvider(userId, provider);
     if (!config) {
       throw new ProviderNotConfiguredError(provider.getValue());
     }
@@ -137,9 +134,7 @@ export class ProcessListUseCase {
    * Find the appropriate media fetcher for the provider type
    */
   private findFetcherFor(provider: Provider): IMediaFetcher {
-    // Convert Provider to ProviderType for fetcher call
-    const providerType = ProviderType.create(provider.getValue());
-    const fetcher = this.mediaFetchers.find(f => f.supports(providerType));
+    const fetcher = this.mediaFetchers.find(f => f.supports(provider));
     if (!fetcher) {
       throw new Error(`No fetcher found for provider: ${provider.getValue()}`);
     }

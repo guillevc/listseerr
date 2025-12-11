@@ -1,4 +1,4 @@
-import type { ProviderType } from '../../../shared/domain/types/provider.types';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import { ProviderValues } from '../../../shared/domain/types/provider.types';
 import type {
   IListUrlParserService,
@@ -10,10 +10,12 @@ import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '../../service
 export class ListUrlParserService implements IListUrlParserService {
   parseUrlForProvider(
     url: string,
-    provider: ProviderType,
+    provider: Provider,
     providedDisplayUrl?: string
   ): ParsedUrls {
-    switch (provider) {
+    const providerValue = provider.getValue();
+
+    switch (providerValue) {
       case ProviderValues.TRAKT:
         return this.parseTraktUrl(url, providedDisplayUrl);
 
@@ -27,7 +29,7 @@ export class ListUrlParserService implements IListUrlParserService {
         return this.parseStevenLuUrl(url, providedDisplayUrl);
 
       default:
-        throw new Error(`Unknown provider: ${provider}`);
+        throw new Error(`Unknown provider: ${providerValue}`);
     }
   }
 

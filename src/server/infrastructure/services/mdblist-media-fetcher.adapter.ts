@@ -2,7 +2,7 @@ import { MediaItem } from '../../../shared/domain/value-objects/media-item.value
 import { MediaType } from '../../../shared/domain/value-objects/media-type.value-object';
 import { ProviderNotConfiguredError } from '../../../shared/domain/errors/processing.errors';
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
-import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 import { fetchMdbListList } from '../../services/mdblist/client';
 
@@ -12,8 +12,8 @@ import { fetchMdbListList } from '../../services/mdblist/client';
  * Adapts existing MDBList client function to IMediaFetcher interface.
  */
 export class MdbListMediaFetcher implements IMediaFetcher {
-  supports(providerType: ProviderType): boolean {
-    return providerType.isMdbList();
+  supports(provider: Provider): boolean {
+    return provider.isMdbList();
   }
 
   async fetchItems(

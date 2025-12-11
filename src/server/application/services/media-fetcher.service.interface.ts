@@ -1,5 +1,5 @@
 import type { MediaItem } from '../../../shared/domain/value-objects/media-item.value-object';
-import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 
 /**
@@ -12,7 +12,7 @@ export interface IMediaFetcher {
   /**
    * Check if this fetcher supports the given provider type
    */
-  supports(providerType: ProviderType): boolean;
+  supports(provider: Provider): boolean;
 
   /**
    * Fetch media items from external provider

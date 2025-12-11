@@ -3,6 +3,7 @@ import type { IListUrlParserService } from '../services/list-url-parser.service.
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
 import { MediaList } from '../../domain/entities/media-list.entity';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { CreateMediaListCommand } from '../../../shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from '../../../shared/application/dtos/media-list/responses.dto';
 
@@ -15,10 +16,11 @@ export class CreateMediaListUseCase {
   ) {}
 
   async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
-    // 1. Validate and parse URLs based on provider
+    // 1. Validate provider and parse URLs
+    const provider = Provider.create(command.provider);
     const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(
       command.url,
-      command.provider,
+      provider,
       command.displayUrl
     );
 

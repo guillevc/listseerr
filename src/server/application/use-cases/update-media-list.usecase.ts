@@ -2,6 +2,7 @@ import type { IMediaListRepository } from '../repositories/media-list.repository
 import type { IListUrlParserService } from '../services/list-url-parser.service.interface';
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { UpdateMediaListCommand } from '../../../shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from '../../../shared/application/dtos/media-list/responses.dto';
 
@@ -30,7 +31,8 @@ export class UpdateMediaListUseCase {
 
     // Handle URL and provider changes (with URL parsing)
     if (command.data.url !== undefined || command.data.provider !== undefined) {
-      const provider = command.data.provider || list.provider.getValue();
+      const providerValue = command.data.provider || list.provider.getValue();
+      const provider = Provider.create(providerValue);
       const url = command.data.url || list.url.getValue();
 
       const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(

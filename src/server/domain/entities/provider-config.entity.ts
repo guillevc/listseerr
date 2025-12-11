@@ -1,5 +1,5 @@
 import type { ProviderConfigData, TraktConfigData, MdbListConfigData } from '../types/provider-config.types';
-import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import { InvalidProviderConfigError } from '../../../shared/domain/errors/provider-config.errors';
 import type { ProviderConfigDTO } from '../../../shared/application/dtos/core/provider-config.dto';
 
@@ -16,7 +16,7 @@ export class ProviderConfig {
   // Private state - encapsulated
   private readonly _id: number;
   private readonly _userId: number;
-  private readonly _provider: ProviderType;
+  private readonly _provider: Provider;
   private _config: ProviderConfigData;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
@@ -24,7 +24,7 @@ export class ProviderConfig {
   constructor(params: {
     id: number;
     userId: number;
-    provider: ProviderType;
+    provider: Provider;
     config: ProviderConfigData;
     createdAt: Date;
     updatedAt: Date;
@@ -46,7 +46,7 @@ export class ProviderConfig {
     return this._userId;
   }
 
-  get provider(): ProviderType {
+  get provider(): Provider {
     return this._provider;
   }
 

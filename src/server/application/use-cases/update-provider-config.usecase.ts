@@ -2,7 +2,7 @@ import type { IProviderConfigRepository } from '../repositories/provider-config.
 import type { UpdateProviderConfigCommand } from '../../../shared/application/dtos/provider-config/commands.dto';
 import type { UpdateProviderConfigResponse } from '../../../shared/application/dtos/provider-config/responses.dto';
 import { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
 import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
@@ -17,15 +17,15 @@ export class UpdateProviderConfigUseCase {
 
   async execute(command: UpdateProviderConfigCommand): Promise<UpdateProviderConfigResponse> {
     // 1. Validate and create provider type VO
-    const providerType = ProviderType.create(command.provider);
+    const provider = Provider.create(command.provider);
 
     // 2. Create provider-specific config data with VOs
-    const configData = this.createConfigData(providerType, command.config);
+    const configData = this.createConfigData(provider, command.config);
 
     // 3. Load existing config or create new
     let config = await this.providerConfigRepository.findByUserIdAndProvider(
       command.userId,
-      providerType
+      provider
     );
 
     if (!config) {
@@ -33,7 +33,7 @@ export class UpdateProviderConfigUseCase {
       config = new ProviderConfig({
         id: 0, // Temporary ID, DB will assign real ID
         userId: command.userId,
-        provider: providerType,
+        provider: provider,
         config: configData,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -63,10 +63,10 @@ export class UpdateProviderConfigUseCase {
    * Create provider-specific config data with proper Value Objects
    */
   private createConfigData(
-    providerType: ProviderType,
+    provider: Provider,
     config: UpdateProviderConfigCommand['config']
   ): ProviderConfigData {
-    if (providerType.isTrakt()) {
+    if (provider.isTrakt()) {
       if (!config.clientId) {
         throw new InvalidTraktClientIdError('Client ID is required for Trakt');
       }
@@ -75,7 +75,7 @@ export class UpdateProviderConfigUseCase {
       };
     }
 
-    if (providerType.isMdbList()) {
+    if (provider.isMdbList()) {
       if (!config.apiKey) {
         throw new InvalidMdbListApiKeyError('API key is required for MDBList');
       }
@@ -85,6 +85,6 @@ export class UpdateProviderConfigUseCase {
     }
 
     // For future providers (traktChart, stevenlu)
-    throw new Error(`Unsupported provider: ${providerType.getValue()}`);
+    throw new Error(`Unsupported provider: ${provider.getValue()}`);
   }
 }

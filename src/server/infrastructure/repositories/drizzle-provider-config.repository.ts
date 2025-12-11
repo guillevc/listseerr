@@ -3,7 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { providerConfigs } from '../../db/schema';
 import { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
 import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
@@ -19,7 +19,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
 
   async findByUserIdAndProvider(
     userId: number,
-    provider: ProviderType
+    provider: Provider
   ): Promise<Nullable<ProviderConfig>> {
     const [row] = await this.db
       .select()
@@ -72,7 +72,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
     }
   }
 
-  async deleteByUserIdAndProvider(userId: number, provider: ProviderType): Promise<void> {
+  async deleteByUserIdAndProvider(userId: number, provider: Provider): Promise<void> {
     await this.db
       .delete(providerConfigs)
       .where(
@@ -86,7 +86,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
   /**
    * Check if config exists for user and provider
    */
-  private async exists(userId: number, provider: ProviderType): Promise<boolean> {
+  private async exists(userId: number, provider: Provider): Promise<boolean> {
     const [row] = await this.db
       .select({ id: providerConfigs.id })
       .from(providerConfigs)
@@ -131,15 +131,15 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
    * Decrypts sensitive data when loading from database
    */
   private toDomain(row: typeof providerConfigs.$inferSelect): ProviderConfig {
-    const providerType = ProviderType.create(row.provider);
+    const provider = Provider.create(row.provider);
 
     // Create provider-specific config data with VOs (decrypt values first)
     let configData: ProviderConfigData;
-    if (providerType.isTrakt()) {
+    if (provider.isTrakt()) {
       configData = {
         clientId: TraktClientId.create(this.decryptValue(row.clientId)),
       };
-    } else if (providerType.isMdbList()) {
+    } else if (provider.isMdbList()) {
       configData = {
         apiKey: MdbListApiKey.create(this.decryptValue(row.apiKey)),
       };
@@ -150,7 +150,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
     return new ProviderConfig({
       id: row.id,
       userId: row.userId,
-      provider: providerType,
+      provider: provider,
       config: configData,
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),

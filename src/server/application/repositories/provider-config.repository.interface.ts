@@ -1,6 +1,6 @@
 import type { Nullable } from '../../../shared/types';
 import type { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 
 /**
  * ProviderConfig Repository Interface (Port)
@@ -10,9 +10,9 @@ import type { ProviderType } from '../../../shared/domain/value-objects/provider
  */
 export interface IProviderConfigRepository {
   /**
-   * Find provider config by user ID and provider type
+   * Find provider config by user ID and provider
    */
-  findByUserIdAndProvider(userId: number, provider: ProviderType): Promise<Nullable<ProviderConfig>>;
+  findByUserIdAndProvider(userId: number, provider: Provider): Promise<Nullable<ProviderConfig>>;
 
   /**
    * Save (insert or update) provider config
@@ -21,7 +21,7 @@ export interface IProviderConfigRepository {
   save(entity: ProviderConfig): Promise<ProviderConfig>;
 
   /**
-   * Delete provider config by user ID and provider type
+   * Delete provider config by user ID and provider
    */
-  deleteByUserIdAndProvider(userId: number, provider: ProviderType): Promise<void>;
+  deleteByUserIdAndProvider(userId: number, provider: Provider): Promise<void>;
 }

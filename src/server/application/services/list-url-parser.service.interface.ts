@@ -1,4 +1,4 @@
-import type { ProviderType } from '../../../shared/domain/types/provider.types';
+import type { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 
 export interface ParsedUrls {
   apiUrl: string;
@@ -8,7 +8,7 @@ export interface ParsedUrls {
 export interface IListUrlParserService {
   parseUrlForProvider(
     url: string,
-    provider: ProviderType,
+    provider: Provider,
     providedDisplayUrl?: string
   ): ParsedUrls;
 }

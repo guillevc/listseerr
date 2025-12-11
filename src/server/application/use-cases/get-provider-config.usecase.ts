@@ -1,7 +1,7 @@
 import type { IProviderConfigRepository } from '../repositories/provider-config.repository.interface';
 import type { GetProviderConfigCommand } from '../../../shared/application/dtos/provider-config/commands.dto';
 import type { GetProviderConfigResponse } from '../../../shared/application/dtos/provider-config/responses.dto';
-import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 
 export class GetProviderConfigUseCase {
   constructor(
@@ -10,12 +10,12 @@ export class GetProviderConfigUseCase {
 
   async execute(command: GetProviderConfigCommand): Promise<GetProviderConfigResponse> {
     // Validate provider type
-    const providerType = ProviderType.create(command.provider);
+    const provider = Provider.create(command.provider);
 
     // Fetch config
     const config = await this.providerConfigRepository.findByUserIdAndProvider(
       command.userId,
-      providerType
+      provider
     );
 
     return {
