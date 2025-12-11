@@ -17,7 +17,7 @@
     "dev:server": "bun run --watch src/server/index.ts",
     "build": "bun run build:client && bun run build:server",
     "build:client": "vite build",
-    "build:server": "bun build src/server/index.ts --outdir dist --target bun --production --sourcemap=external",
+    "build:server": "bun build src/server/index.ts --outdir dist --target bun --production --sourcemap=external --tsconfig-override tsconfig.server.json",
     "typecheck": "tsc --build --force",
     "typecheck:watch": "tsc --build --watch",
     "db:generate": "drizzle-kit generate",

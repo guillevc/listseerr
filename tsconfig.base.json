@@ -10,6 +10,14 @@
     "isolatedModules": true,
     "moduleDetection": "force",
 
+    /* Path aliases - shared between client and server */
+    "baseUrl": ".",
+    "paths": {
+      "@/server/*": ["./src/server/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/client/*": ["./src/client/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

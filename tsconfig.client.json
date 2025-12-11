@@ -8,14 +8,6 @@
     /* Bundler mode */
     "jsx": "react-jsx",
 
-    /* Path aliases */
-    "baseUrl": ".",
-    "paths": {
-      "@/client/*": ["./src/client/*"],
-      "@/server/*": ["./src/server/*"],
-      "@/shared/*": ["./src/shared/*"]
-    },
-
     /* Build cache */
     "tsBuildInfoFile": ".cache/tsconfig.client.tsbuildinfo"
   },

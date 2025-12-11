@@ -4,13 +4,6 @@
     "lib": ["ES2023"],
     "module": "Preserve",
 
-    /* Path aliases */
-    "baseUrl": ".",
-    "paths": {
-      "@/server/*": ["./src/server/*"],
-      "@/shared/*": ["./src/shared/*"]
-    },
-
     /* Bun types */
     "types": ["bun-types"],
 
