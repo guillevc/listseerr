@@ -7,7 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Trash2 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
-type LogEntry = RouterOutputs['logs']['getLogs'][0];
+type LogEntry = RouterOutputs['logs']['getLogs']['logs'][0];
 
 const levelColors: Record<string, string> = {
   debug: 'text-blue-400',
@@ -23,13 +23,14 @@ export function LogsPage() {
   const logsContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const { data: logs, refetch } = trpc.logs.getLogs.useQuery(
+  const { data, refetch } = trpc.logs.getLogs.useQuery(
     { limit: 1000, level: 'all' },
     {
       refetchInterval: 2000,
       refetchIntervalInBackground: false,
     }
   );
+  const logs = data?.logs ?? [];
 
   const clearLogsMutation = trpc.logs.clearLogs.useMutation({
     onSuccess: () => {

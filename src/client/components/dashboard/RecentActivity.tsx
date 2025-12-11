@@ -97,9 +97,11 @@ function formatRelativeTime(date: Date): string {
 }
 
 export function RecentActivity() {
-  const { data: activityGroups, isLoading } = trpc.dashboard.getRecentActivity.useQuery({
+  const { data, isLoading } = trpc.dashboard.getRecentActivity.useQuery({
     limit: 20,
   });
+
+  const activityGroups = data?.groups;
 
   if (isLoading) {
     return (

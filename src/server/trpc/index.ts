@@ -4,9 +4,9 @@ import { jellyseerrConfigRouter } from '../presentation/trpc/routers/jellyseerr-
 import { providerConfigRouter } from '../presentation/trpc/routers/provider-config.router';
 import { generalSettingsRouter } from '../presentation/trpc/routers/general-settings.router';
 import { processingRouter } from '../presentation/trpc/routers/processing.router';
-import { schedulerRouter } from './routers/scheduler';
-import { logsRouter } from './routers/logs';
-import { dashboardRouter } from './routers/dashboard';
+import { schedulerRouter } from '../presentation/trpc/routers/scheduler.router';
+import { logsRouter } from '../presentation/trpc/routers/logs.router';
+import { dashboardRouter } from '../presentation/trpc/routers/dashboard.router';
 
 export const appRouter = router({
   lists: listsRouter,
