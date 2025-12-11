@@ -64,6 +64,57 @@ All repository interfaces and implementations must enforce Entity integrity.
 |**DTO Interfaces & Zod Schemas**|**YES** (Source Code)|**`src/shared/application`**|Essential for **end-to-end type safety** with tRPC.|
 |**Entity Classes & Use Cases**|**NO**|`src/server/` only|These are tied to the server's I/O, security, and transaction management. They must remain server-authoritative.|
 
+#### E. Type-Safe Enum Pattern (Runtime Constants + Derived Types)
+
+To achieve type safety while maintaining runtime constants that can be shared between client and server, use the following pattern:
+
+**Pattern Structure:**
+
+```typescript
+/**
+ * Runtime constants for identification.
+ * Provides named constants instead of magic strings.
+ *
+ * Benefits:
+ * - IDE autocomplete for values
+ * - Single source of truth
+ * - Refactoring-safe
+ */
+export const ProviderValues = {
+  TRAKT: 'trakt',
+  MDBLIST: 'mdblist',
+  TRAKT_CHART: 'traktChart',
+  STEVENLU: 'stevenlu',
+} as const;
+
+/**
+ * Union type derived from runtime constants.
+ * Automatically stays in sync with ProviderValues.
+ *
+ * Type is inferred as: 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu'
+ */
+export type ProviderType = typeof ProviderValues[keyof typeof ProviderValues];
+```
+
+**Usage Guidelines:**
+
+|**Component**|**Usage**|**Example**|
+|---|---|---|
+|**Value Objects**|Use the type for validation, constants for comparison|`if (value === ProviderValues.TRAKT)`|
+|**DTOs**|Use the type for interface properties|`provider: ProviderType`|
+|**Switch Statements**|Use constants in case clauses|`case ProviderValues.TRAKT:`|
+|**Error Messages**|Use string interpolation with variables|`` `Invalid provider: ${provider}` ``|
+
+**Key Benefits:**
+
+1. **Type Safety:** TypeScript enforces that only valid values are used
+2. **Runtime Constants:** Actual string values available for runtime comparisons
+3. **Automatic Synchronization:** Adding a new value updates both the constants object and the derived type
+4. **Shared Across Layers:** Both client and server can import from `shared/domain/types`
+5. **Refactoring Support:** Renaming a constant updates all usages via IDE refactoring
+
+**Location:** `src/shared/domain/types/<domain>.types.ts`
+
 -----
 
 ### 3\. ⚙️ Operational Mandates and Error Handling
