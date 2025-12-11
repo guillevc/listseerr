@@ -1,9 +1,9 @@
 import type { Config } from 'drizzle-kit';
-import { env } from './src/server/env';
+import { env } from './packages/server/src/env';
 
 export default {
-  schema: './src/server/db/schema.ts',
-  out: './src/server/db/migrations',
+  schema: './packages/server/src/db/schema.ts',
+  out: './packages/server/src/db/migrations',
   dialect: 'sqlite',
   dbCredentials: {
     url: env.DATABASE_PATH,

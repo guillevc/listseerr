@@ -9,7 +9,7 @@ export const env = createEnv({
   server: {
     PORT: z.coerce.number().default(3000),
     DATABASE_PATH: z.string().default('./data/listseerr.db'),
-    MIGRATIONS_FOLDER: z.string().default('./src/server/db/migrations'),
+    MIGRATIONS_FOLDER: z.string().default('./src/db/migrations'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('debug'),
     ENCRYPTION_KEY: z.string().min(1, 'ENCRYPTION_KEY is required for encrypting API keys'),

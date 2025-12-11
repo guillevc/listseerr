@@ -4,13 +4,13 @@
   "type": "module",
   "exports": [],
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --watch --env-file=../../.env src/index.ts",
     "build": "bun build src/index.ts --outdir ../../dist --target bun --production --sourcemap=external",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun run src/db/migrate.ts",
-    "db:reset": "bun run src/db/reset.ts"
+    "db:migrate": "bun run --env-file=../../.env src/db/migrate.ts",
+    "db:reset": "bun run --env-file=../../.env src/db/reset.ts"
   },
   "dependencies": {
     "shared": "workspace:*",
