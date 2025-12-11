@@ -1,3 +1,5 @@
+import type { ExecutionDTO } from '../core/execution.dto';
+
 /**
  * Dashboard Response DTOs
  *
@@ -9,21 +11,6 @@ export interface DashboardStatsResponse {
   totalRequestedItems: number;
   lastScheduledProcessing: Date | null;
   nextScheduledProcessing: string | null;
-}
-
-export interface ExecutionDTO {
-  id: number;
-  listId: number | null;
-  listName: string | null;
-  batchId: string | null;
-  startedAt: Date;
-  completedAt: Date | null;
-  status: 'running' | 'success' | 'error';
-  triggerType: 'manual' | 'scheduled';
-  itemsFound: number | null;
-  itemsRequested: number | null;
-  itemsFailed: number | null;
-  errorMessage: string | null;
 }
 
 export interface ActivityGroup {

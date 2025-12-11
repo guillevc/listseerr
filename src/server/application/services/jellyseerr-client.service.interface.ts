@@ -1,4 +1,4 @@
-import type { MediaItem } from '../../domain/value-objects/media-item.value-object';
+import type { MediaItem } from '../../../shared/domain/value-objects/media-item.value-object';
 import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
 
 /**

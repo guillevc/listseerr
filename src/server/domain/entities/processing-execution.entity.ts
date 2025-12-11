@@ -1,8 +1,8 @@
-import { ExecutionStatus } from '../value-objects/execution-status.value-object';
-import { TriggerType } from '../value-objects/trigger-type.value-object';
-import { BatchId } from '../value-objects/batch-id.value-object';
-import { InvalidExecutionStatusTransitionError } from '../errors/processing.errors';
-import type { ExecutionHistoryDTO } from '../../application/dtos/processing.response.dto';
+import { ExecutionStatus } from '../../../shared/domain/value-objects/execution-status.value-object';
+import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
+import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
+import { InvalidExecutionStatusTransitionError } from '../../../shared/domain/errors/processing.errors';
+import type { ExecutionHistoryDTO } from '../../../shared/application/dtos/core/execution-history.dto';
 
 export interface ProcessingExecutionProps {
   id: number;

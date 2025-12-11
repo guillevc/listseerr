@@ -1,6 +1,6 @@
 import type { ILogBufferService } from '../services/log-buffer.service.interface';
-import type { GetLogsCommand } from '../dtos/logs.command.dto';
-import type { GetLogsResponse } from '../dtos/logs.response.dto';
+import type { GetLogsCommand } from '../../../shared/application/dtos/logs/commands.dto';
+import type { GetLogsResponse } from '../../../shared/application/dtos/logs/responses.dto';
 
 /**
  * GetLogsUseCase

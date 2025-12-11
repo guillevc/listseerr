@@ -3,9 +3,9 @@ import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { executionHistory, mediaLists } from '../../db/schema';
 import { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
-import { ExecutionStatus } from '../../domain/value-objects/execution-status.value-object';
-import { TriggerType } from '../../domain/value-objects/trigger-type.value-object';
-import { BatchId } from '../../domain/value-objects/batch-id.value-object';
+import { ExecutionStatus } from '../../../shared/domain/value-objects/execution-status.value-object';
+import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
+import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
 import type { IExecutionHistoryRepository } from '../../application/repositories/execution-history.repository.interface';
 import type { Nullable } from '../../../shared/types';
 

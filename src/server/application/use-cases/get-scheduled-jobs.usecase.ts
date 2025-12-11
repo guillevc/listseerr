@@ -1,6 +1,6 @@
 import type { ISchedulerService } from '../services/scheduler.service.interface';
-import type { GetScheduledJobsCommand } from '../dtos/scheduler.command.dto';
-import type { GetScheduledJobsResponse } from '../dtos/scheduler.response.dto';
+import type { GetScheduledJobsCommand } from '../../../shared/application/dtos/scheduler/commands.dto';
+import type { GetScheduledJobsResponse } from '../../../shared/application/dtos/scheduler/responses.dto';
 
 /**
  * GetScheduledJobsUseCase

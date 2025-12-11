@@ -1,5 +1,5 @@
 import type { Nullable } from '../../../shared/types';
-import { Timezone } from '../value-objects/timezone.value-object';
+import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
 
 export interface GeneralSettingsProps {
   id: number;

@@ -1,16 +1,7 @@
 import type { ProviderConfigProps, ProviderConfigData, TraktConfigData, MdbListConfigData } from '../types/provider-config.types';
-import type { ProviderType } from '../value-objects/provider-type.value-object';
-import { InvalidProviderConfigError } from '../errors/provider-config.errors';
-
-export interface ProviderConfigDTO {
-  id: number;
-  userId: number;
-  provider: string;
-  clientId: string | null;
-  apiKey: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { InvalidProviderConfigError } from '../../../shared/domain/errors/provider-config.errors';
+import type { ProviderConfigDTO } from '../../../shared/application/dtos/core/provider-config.dto';
 
 /**
  * ProviderConfig Entity - Domain Model with Polymorphic Behavior

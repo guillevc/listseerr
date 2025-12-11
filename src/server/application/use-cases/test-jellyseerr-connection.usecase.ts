@@ -1,8 +1,8 @@
 import type { IJellyseerrConnectionTester } from '../services/jellyseerr-connection-tester.service.interface';
-import type { TestJellyseerrConnectionCommand, TestJellyseerrConnectionResponse } from '../dtos/diagnostics/jellyseerr-connection-test.dto';
-import { JellyseerrUrl } from '../../domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from '../../domain/value-objects/jellyseerr-api-key.value-object';
-import { DomainError } from '../../domain/errors/domain.error';
+import type { TestJellyseerrConnectionCommand, TestJellyseerrConnectionResponse } from '../../../shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
+import { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
+import { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
+import { DomainError } from '../../../shared/domain/errors/domain.error';
 
 export class TestJellyseerrConnectionUseCase {
   constructor(

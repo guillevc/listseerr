@@ -1,6 +1,6 @@
 import type { ISchedulerService } from '../services/scheduler.service.interface';
-import type { ReloadSchedulerCommand } from '../dtos/scheduler.command.dto';
-import type { ReloadSchedulerResponse } from '../dtos/scheduler.response.dto';
+import type { ReloadSchedulerCommand } from '../../../shared/application/dtos/scheduler/commands.dto';
+import type { ReloadSchedulerResponse } from '../../../shared/application/dtos/scheduler/responses.dto';
 
 /**
  * ReloadSchedulerUseCase

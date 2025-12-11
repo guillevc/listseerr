@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { db } from '../db';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { DomainError } from '../domain/errors/domain.error';
+import { DomainError } from '../../shared/domain/errors/domain.error';
 
 // Create context for each request
 export const createContext = async (opts: FetchCreateContextFnOptions) => {

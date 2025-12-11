@@ -1,4 +1,4 @@
-import type { ProviderType } from '../types/media-list.types';
+import type { ProviderType } from '../../../server/domain/types/media-list.types';
 
 export class Provider {
   private constructor(private readonly value: ProviderType) {}

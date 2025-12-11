@@ -1,5 +1,5 @@
 import { MediaType } from './media-type.value-object';
-import type { MediaItemDTO } from '../../application/dtos/media-item.dto';
+import type { MediaItemDTO } from '../../application/dtos/core/media-item.dto';
 
 export interface MediaItemProps {
   title: string;

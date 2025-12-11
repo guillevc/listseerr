@@ -1,6 +1,6 @@
 import type { IJellyseerrConfigRepository } from '../repositories/jellyseerr-config.repository.interface';
-import type { DeleteJellyseerrConfigCommand } from '../dtos/jellyseerr-config.command.dto';
-import type { DeleteJellyseerrConfigResponse } from '../dtos/jellyseerr-config.response.dto';
+import type { DeleteJellyseerrConfigCommand } from '../../../shared/application/dtos/jellyseerr-config/commands.dto';
+import type { DeleteJellyseerrConfigResponse } from '../../../shared/application/dtos/jellyseerr-config/responses.dto';
 import type { Logger } from 'pino';
 
 export class DeleteJellyseerrConfigUseCase {

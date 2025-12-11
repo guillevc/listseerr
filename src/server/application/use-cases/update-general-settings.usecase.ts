@@ -1,8 +1,8 @@
 import type { IGeneralSettingsRepository } from '../repositories/general-settings.repository.interface';
-import type { UpdateGeneralSettingsCommand } from '../dtos/general-settings.command.dto';
-import type { UpdateGeneralSettingsResponse } from '../dtos/general-settings.response.dto';
+import type { UpdateGeneralSettingsCommand } from '../../../shared/application/dtos/general-settings/commands.dto';
+import type { UpdateGeneralSettingsResponse } from '../../../shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '../../domain/entities/general-settings.entity';
-import { Timezone } from '../../domain/value-objects/timezone.value-object';
+import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
 import type { Logger } from 'pino';
 
 export class UpdateGeneralSettingsUseCase {

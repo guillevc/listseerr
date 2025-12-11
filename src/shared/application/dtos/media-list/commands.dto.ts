@@ -1,5 +1,5 @@
-import type { ProviderType } from '../../domain/types/media-list.types';
-import type { Nullable } from '../../../shared/types';
+import type { ProviderType } from '../core/media-list.dto';
+import type { Nullable } from '@/shared/types';
 
 /**
  * Command DTOs (Input)

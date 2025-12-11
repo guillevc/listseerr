@@ -1,7 +1,7 @@
 import type { IProviderConfigRepository } from '../repositories/provider-config.repository.interface';
-import type { DeleteProviderConfigCommand } from '../dtos/provider-config.command.dto';
-import type { DeleteProviderConfigResponse } from '../dtos/provider-config.response.dto';
-import { ProviderType } from '../../domain/value-objects/provider-type.value-object';
+import type { DeleteProviderConfigCommand } from '../../../shared/application/dtos/provider-config/commands.dto';
+import type { DeleteProviderConfigResponse } from '../../../shared/application/dtos/provider-config/responses.dto';
+import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import type { Logger } from 'pino';
 
 export class DeleteProviderConfigUseCase {

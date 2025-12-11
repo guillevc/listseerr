@@ -6,7 +6,7 @@ This document provides a comprehensive and structured mandate for implementing t
 
 ### 1\. 🎯 Architectural Mandate: Onion/Clean Structure and Monorepo Layout
 
-The system adheres to the concentric layer model on the server and uses a peer-based monorepo structure where server, client, and shared code live side-by-side.
+The system adheres to the concentric layer model on the server and uses a peer-based monorepo structure where server, client, and shared code live side-by-side. 
 
 #### A. Inner Core Layers (Server)
 
@@ -60,6 +60,7 @@ All repository interfaces and implementations must enforce Entity integrity.
 |**Component**|**Shareable?**|**Location**|**Rationale**|
 |---|---|---|---|
 |**Value Objects (VOs)**|**YES** (Source Code)|**`src/shared/domain`**|Provides the client with **authoritative, instant, local input validation** (UX gain).|
+|**Domain/Application Errors**|**YES** (Source Code)|**`src/shared/domain/errors`**|Allows client to import error classes (`DomainError`, `NotFoundError`, etc.) for `instanceof` checks on tRPC responses, enabling user-friendly error messages.|
 |**DTO Interfaces & Zod Schemas**|**YES** (Source Code)|**`src/shared/application`**|Essential for **end-to-end type safety** with tRPC.|
 |**Entity Classes & Use Cases**|**NO**|`src/server/` only|These are tied to the server's I/O, security, and transaction management. They must remain server-authoritative.|
 
@@ -100,3 +101,59 @@ interface Dependencies {
   createUserUseCase: CreateUserUseCase; // Instance injected with userRepository
   notificationService: INotificationService;
 }
+```
+
+#### D. Roles of Core Architectural Components
+
+This section strictly defines the responsibilities and dependencies of the Application and Infrastructure components, enforcing the Dependency Inversion Principle (DIP).
+
+|**Component**|**Layer**|**Responsibility**|**Dependency Rule (Who it uses)**|
+|---|---|---|---|
+|**Use Case (Application Service)**|**Application**|Coordinates the entire business flow: handles **Authorization**, orchestrates **Domain Entity mutations**, and manages **Transactions**.|Uses **Interfaces (Ports)** for Repositories and Services. **Never** imports concrete implementations.|
+|**Service Interface (Port)**|**Application**|A contract required by a Use Case for external I/O (e.g., `INotificationService`) or specialized Domain logic (e.g., `IDuplicationChecker`).|**NO Dependencies on any other layer.**|
+|**Repository Interface (Port)**|**Application**|A contract required by a Use Case for fetching and persisting Entities (e.g., `IUserRepository`).|**NO Dependencies on any other layer.**|
+|**Service Implementation (Adapter)**|**Infrastructure**|Implements a **Service Interface**. Handles external I/O (e.g., fetch, API client), cross-cutting tasks (e.g., encryption), or scheduling.|Depends on the **Application** interface it implements and necessary external libraries.|
+|**Repository Implementation (Adapter)**|**Infrastructure**|Implements a **Repository Interface**. Handles **Database/ORM mapping** (e.g., Drizzle/SQL) to convert between the Entity (Domain) and the persistence layer.|Depends on **Drizzle ORM** (Infrastructure) and the **Domain Entity** it persists.|
+
+-----
+
+### 4\. 🛠️ Required Structure (Monorepo Layout)
+
+```bash
+/project-root
+├── src/
+│   ├── client/                          # Frontend Application (e.g., React/tRPC client)
+│   │   └── src/                         # Client-side code (views, hooks)
+│   │
+│   ├── shared/
+│   │   ├── domain/
+│   │   │   ├── errors/                  # Location for sharable Domain/Application Error classes.
+│   │   │   └── email.value-object.ts    # SHARED: Example Value Object (pure logic)
+│   │   └── application/
+│   │       └── dtos/
+│   │           └── create-user.dto.ts   # SHARED: Defines Command/Response interfaces & Zod Schemas.
+│   │
+│   └── server/
+│       ├── domain/
+│       │   └── user.entity.ts           # 1. Domain: Defines the User Entity, imports VO from shared.
+│       ├── application/
+│       │   ├── repositories/
+│       │   │   └── IUserRepository.ts     # 2. Application: Repository Port. (Methods: findById, save)
+│       │   ├── use-cases/
+│       │   │   └── create-user.usecase.ts # 2. Application: Use case logic.
+│       │   └── services/
+│       │       └── notification.interface.ts # 2. Application: Service Port.
+│       ├── infrastructure/
+│       │   ├── db/
+│       │   │   ├── drizzle.client.ts        # 3. Infrastructure: DB connection.
+│       │   │   └── user.schema.ts
+│       │   ├── repositories/
+│       │   │   └── sqlite-user.repository.ts # 3. Infrastructure: Implements IUserRepository using Drizzle.
+│       │   └── scheduling/
+│       │       └── cron-job.service.ts       # 3. Infrastructure: Implements ISchedulerService.
+│       └── presentation/
+│           ├── trpc/
+│           │   └── app.router.ts        # 4. Presentation: tRPC router, calls Use Cases.
+│           └── server.ts                # 4. Presentation: Bun startup, Hono/DI Composition Root.
+└── package.json
+```

@@ -1,6 +1,6 @@
 import type { IExecutionHistoryRepository } from '../repositories/execution-history.repository.interface';
-import type { GetExecutionHistoryCommand } from '../dtos/processing.command.dto';
-import type { GetExecutionHistoryResponse } from '../dtos/processing.response.dto';
+import type { GetExecutionHistoryCommand } from '../../../shared/application/dtos/processing/commands.dto';
+import type { GetExecutionHistoryResponse } from '../../../shared/application/dtos/processing/responses.dto';
 
 /**
  * GetExecutionHistoryUseCase

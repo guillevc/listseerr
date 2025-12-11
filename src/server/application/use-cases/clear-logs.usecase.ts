@@ -1,6 +1,6 @@
 import type { ILogBufferService } from '../services/log-buffer.service.interface';
-import type { ClearLogsCommand } from '../dtos/logs.command.dto';
-import type { ClearLogsResponse } from '../dtos/logs.response.dto';
+import type { ClearLogsCommand } from '../../../shared/application/dtos/logs/commands.dto';
+import type { ClearLogsResponse } from '../../../shared/application/dtos/logs/responses.dto';
 
 /**
  * ClearLogsUseCase

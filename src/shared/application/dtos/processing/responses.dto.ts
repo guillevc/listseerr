@@ -1,23 +1,11 @@
+import type { ExecutionHistoryDTO } from '../core/execution-history.dto';
+
 /**
  * Processing Response DTOs
  *
  * Output data from processing use cases.
  * Contain only primitives - no value objects or entities.
  */
-
-export interface ExecutionHistoryDTO {
-  id: number;
-  listId: number;
-  batchId: string;
-  status: 'running' | 'success' | 'error';
-  triggerType: 'manual' | 'scheduled';
-  startedAt: Date;
-  completedAt: Date | null;
-  itemsFound: number;
-  itemsRequested: number;
-  itemsFailed: number;
-  errorMessage: string | null;
-}
 
 export interface ProcessListResponse {
   execution: ExecutionHistoryDTO;

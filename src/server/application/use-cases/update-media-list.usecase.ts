@@ -2,8 +2,8 @@ import type { IMediaListRepository } from '../repositories/media-list.repository
 import type { IListUrlParserService } from '../services/list-url-parser.service.interface';
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
-import type { UpdateMediaListCommand } from '../dtos/media-list.command.dto';
-import type { UpdateMediaListResponse } from '../dtos/media-list.response.dto';
+import type { UpdateMediaListCommand } from '../../../shared/application/dtos/media-list/commands.dto';
+import type { UpdateMediaListResponse } from '../../../shared/application/dtos/media-list/responses.dto';
 
 export class UpdateMediaListUseCase {
   constructor(

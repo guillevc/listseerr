@@ -5,17 +5,17 @@ import type { IExecutionHistoryRepository } from '../repositories/execution-hist
 import type { ICacheRepository } from '../repositories/cache.repository.interface';
 import type { IMediaFetcher } from '../services/media-fetcher.service.interface';
 import type { IJellyseerrClient } from '../services/jellyseerr-client.service.interface';
-import type { ProcessBatchCommand } from '../dtos/processing.command.dto';
-import type { ProcessBatchResponse } from '../dtos/processing.response.dto';
+import type { ProcessBatchCommand } from '../../../shared/application/dtos/processing/commands.dto';
+import type { ProcessBatchResponse } from '../../../shared/application/dtos/processing/responses.dto';
 import type { Logger } from 'pino';
 import type { MediaList } from '../../domain/entities/media-list.entity';
 import { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
-import { TriggerType } from '../../domain/value-objects/trigger-type.value-object';
-import { BatchId } from '../../domain/value-objects/batch-id.value-object';
-import { MediaItem } from '../../domain/value-objects/media-item.value-object';
-import { Provider } from '../../domain/value-objects/provider.value-object';
-import { ProviderType } from '../../domain/value-objects/provider-type.value-object';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from '../../domain/errors/processing.errors';
+import { TriggerType } from '../../../shared/domain/value-objects/trigger-type.value-object';
+import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-object';
+import { MediaItem } from '../../../shared/domain/value-objects/media-item.value-object';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
+import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from '../../../shared/domain/errors/processing.errors';
 
 /**
  * ProcessBatchUseCase

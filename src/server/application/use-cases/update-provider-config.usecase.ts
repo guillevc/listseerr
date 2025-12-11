@@ -1,12 +1,12 @@
 import type { IProviderConfigRepository } from '../repositories/provider-config.repository.interface';
-import type { UpdateProviderConfigCommand } from '../dtos/provider-config.command.dto';
-import type { UpdateProviderConfigResponse } from '../dtos/provider-config.response.dto';
+import type { UpdateProviderConfigCommand } from '../../../shared/application/dtos/provider-config/commands.dto';
+import type { UpdateProviderConfigResponse } from '../../../shared/application/dtos/provider-config/responses.dto';
 import { ProviderConfig } from '../../domain/entities/provider-config.entity';
-import { ProviderType } from '../../domain/value-objects/provider-type.value-object';
-import { TraktClientId } from '../../domain/value-objects/trakt-client-id.value-object';
-import { MdbListApiKey } from '../../domain/value-objects/mdblist-api-key.value-object';
+import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
+import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
-import { InvalidTraktClientIdError, InvalidMdbListApiKeyError } from '../../domain/errors/provider-config.errors';
+import { InvalidTraktClientIdError, InvalidMdbListApiKeyError } from '../../../shared/domain/errors/provider-config.errors';
 import type { Logger } from 'pino';
 
 export class UpdateProviderConfigUseCase {

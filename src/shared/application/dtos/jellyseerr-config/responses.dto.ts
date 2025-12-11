@@ -1,5 +1,5 @@
-import type { Nullable } from '../../../shared/types';
-import type { JellyseerrConfigDTO } from '../../domain/entities/jellyseerr-config.entity';
+import type { Nullable } from '@/shared/types';
+import type { JellyseerrConfigDTO } from '../core/jellyseerr-config.dto';
 
 /**
  * Response DTOs (Output)

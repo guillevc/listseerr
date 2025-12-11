@@ -1,8 +1,8 @@
 /**
- * Command DTOs (Input)
+ * Provider Config Command DTOs
  *
- * These represent the input data for each use case.
- * They contain only primitives - no Value Objects or Entities.
+ * Input contracts for provider configuration use cases.
+ * Contains only primitives - no Value Objects or Entities.
  */
 
 export interface GetProviderConfigCommand {

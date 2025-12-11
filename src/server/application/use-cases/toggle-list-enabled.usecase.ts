@@ -1,8 +1,8 @@
 import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
 import type { ISchedulerService } from '../services/scheduler.service.interface';
 import type { ILogger } from '../services/logger.interface';
-import type { ToggleListEnabledCommand } from '../dtos/media-list.command.dto';
-import type { ToggleListEnabledResponse } from '../dtos/media-list.response.dto';
+import type { ToggleListEnabledCommand } from '../../../shared/application/dtos/media-list/commands.dto';
+import type { ToggleListEnabledResponse } from '../../../shared/application/dtos/media-list/responses.dto';
 
 export class ToggleListEnabledUseCase {
   constructor(

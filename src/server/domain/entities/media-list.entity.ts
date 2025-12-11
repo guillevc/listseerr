@@ -1,8 +1,8 @@
-import { ListName } from '../value-objects/list-name.value-object';
-import { ListUrl } from '../value-objects/list-url.value-object';
-import { Provider } from '../value-objects/provider.value-object';
+import { ListName } from '../../../shared/domain/value-objects/list-name.value-object';
+import { ListUrl } from '../../../shared/domain/value-objects/list-url.value-object';
+import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
 import type { MediaListProps, ProviderType } from '../types/media-list.types';
-import type { MediaListDTO } from '../../application/dtos/media-list.response.dto';
+import type { MediaListDTO } from '../../../shared/application/dtos/core/media-list.dto';
 import type { Nullable } from '../../../shared/types';
 
 /**

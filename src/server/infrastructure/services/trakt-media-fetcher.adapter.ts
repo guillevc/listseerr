@@ -1,8 +1,8 @@
-import { MediaItem } from '../../domain/value-objects/media-item.value-object';
-import { MediaType } from '../../domain/value-objects/media-type.value-object';
-import { ProviderNotConfiguredError } from '../../domain/errors/processing.errors';
+import { MediaItem } from '../../../shared/domain/value-objects/media-item.value-object';
+import { MediaType } from '../../../shared/domain/value-objects/media-type.value-object';
+import { ProviderNotConfiguredError } from '../../../shared/domain/errors/processing.errors';
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
-import type { ProviderType } from '../../domain/value-objects/provider-type.value-object';
+import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 import { fetchTraktList } from '../../services/trakt/client';
 import { fetchTraktChart } from '../../services/trakt/chart-client';

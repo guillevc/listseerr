@@ -1,6 +1,6 @@
-import type { ProviderType } from '../value-objects/provider-type.value-object';
-import type { TraktClientId } from '../value-objects/trakt-client-id.value-object';
-import type { MdbListApiKey } from '../value-objects/mdblist-api-key.value-object';
+import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
+import type { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
+import type { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
 
 /**
  * Provider-specific configuration data types
