@@ -1,4 +1,4 @@
-import type { ProviderType } from '../../domain/types/media-list.types';
+import type { ProviderType } from '../../../shared/domain/types/provider.types';
 
 export interface ParsedUrls {
   apiUrl: string;

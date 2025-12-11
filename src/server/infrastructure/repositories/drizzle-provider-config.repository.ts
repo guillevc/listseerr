@@ -6,7 +6,7 @@ import { ProviderConfig } from '../../domain/entities/provider-config.entity';
 import { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
 import { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
-import type { ProviderConfigProps, ProviderConfigData } from '../../domain/types/provider-config.types';
+import type { ProviderConfigData } from '../../domain/types/provider-config.types';
 import type { IProviderConfigRepository } from '../../application/repositories/provider-config.repository.interface';
 import type { IEncryptionService } from '../../application/services/encryption.service.interface';
 import type { Nullable } from '../../../shared/types';
@@ -128,16 +128,9 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
 
   /**
    * Convert Drizzle row to ProviderConfig domain entity
-   */
-  private toDomain(row: typeof providerConfigs.$inferSelect): ProviderConfig {
-    return new ProviderConfig(this.toDomainProps(row));
-  }
-
-  /**
-   * Convert Drizzle row to ProviderConfigProps (plain object with VOs)
    * Decrypts sensitive data when loading from database
    */
-  private toDomainProps(row: typeof providerConfigs.$inferSelect): ProviderConfigProps {
+  private toDomain(row: typeof providerConfigs.$inferSelect): ProviderConfig {
     const providerType = ProviderType.create(row.provider);
 
     // Create provider-specific config data with VOs (decrypt values first)
@@ -154,13 +147,13 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
       throw new Error(`Unknown provider: ${row.provider}`);
     }
 
-    return {
+    return new ProviderConfig({
       id: row.id,
       userId: row.userId,
       provider: providerType,
       config: configData,
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
-    };
+    });
   }
 }

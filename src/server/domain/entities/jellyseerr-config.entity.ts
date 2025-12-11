@@ -1,4 +1,3 @@
-import type { JellyseerrConfigProps } from '../types/jellyseerr-config.types';
 import type { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
 import type { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
 import type { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
@@ -25,14 +24,22 @@ export class JellyseerrConfig {
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(props: JellyseerrConfigProps) {
-    this._id = props.id;
-    this._userId = props.userId;
-    this._url = props.url;
-    this._apiKey = props.apiKey;
-    this._userIdJellyseerr = props.userIdJellyseerr;
-    this._createdAt = props.createdAt;
-    this._updatedAt = props.updatedAt;
+  constructor(params: {
+    id: number;
+    userId: number;
+    url: JellyseerrUrl;
+    apiKey: JellyseerrApiKey;
+    userIdJellyseerr: JellyseerrUserId;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    this._id = params.id;
+    this._userId = params.userId;
+    this._url = params.url;
+    this._apiKey = params.apiKey;
+    this._userIdJellyseerr = params.userIdJellyseerr;
+    this._createdAt = params.createdAt;
+    this._updatedAt = params.updatedAt;
   }
 
   // Getters - expose state for read access

@@ -1,9 +1,8 @@
 import type { Nullable } from '@/shared/types';
+import type { ProviderType } from '@/shared/domain/types/provider.types';
 
-/**
- * Provider type for media lists
- */
-export type ProviderType = 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu';
+// Re-export for convenience
+export type { ProviderType };
 
 /**
  * MediaList Core DTO

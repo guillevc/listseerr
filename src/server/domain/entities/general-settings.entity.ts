@@ -1,4 +1,3 @@
-import type { GeneralSettingsProps } from '../types/general-settings.types';
 import type { GeneralSettingsDTO } from '../../../shared/application/dtos/core/general-settings.dto';
 import type { Nullable } from '../../../shared/types';
 import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
@@ -24,14 +23,22 @@ export class GeneralSettings {
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(props: GeneralSettingsProps) {
-    this._id = props.id;
-    this._userId = props.userId;
-    this._timezone = props.timezone;
-    this._automaticProcessingEnabled = props.automaticProcessingEnabled;
-    this._automaticProcessingSchedule = props.automaticProcessingSchedule;
-    this._createdAt = props.createdAt;
-    this._updatedAt = props.updatedAt;
+  constructor(params: {
+    id: number;
+    userId: number;
+    timezone: Timezone;
+    automaticProcessingEnabled: boolean;
+    automaticProcessingSchedule: Nullable<string>;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    this._id = params.id;
+    this._userId = params.userId;
+    this._timezone = params.timezone;
+    this._automaticProcessingEnabled = params.automaticProcessingEnabled;
+    this._automaticProcessingSchedule = params.automaticProcessingSchedule;
+    this._createdAt = params.createdAt;
+    this._updatedAt = params.updatedAt;
   }
 
   // Getters - expose state for read access

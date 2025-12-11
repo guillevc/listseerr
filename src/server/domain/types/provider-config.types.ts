@@ -1,4 +1,3 @@
-import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import type { TraktClientId } from '../../../shared/domain/value-objects/trakt-client-id.value-object';
 import type { MdbListApiKey } from '../../../shared/domain/value-objects/mdblist-api-key.value-object';
 
@@ -18,15 +17,3 @@ export type MdbListConfigData = {
  * Union type for all provider configurations
  */
 export type ProviderConfigData = TraktConfigData | MdbListConfigData;
-
-/**
- * Props for ProviderConfig entity construction
- */
-export interface ProviderConfigProps {
-  id: number;
-  userId: number;
-  provider: ProviderType;
-  config: ProviderConfigData;
-  createdAt: Date;
-  updatedAt: Date;
-}

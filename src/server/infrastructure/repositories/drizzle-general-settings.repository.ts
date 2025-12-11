@@ -4,7 +4,6 @@ import * as schema from '../../db/schema';
 import { generalSettings } from '../../db/schema';
 import { GeneralSettings } from '../../domain/entities/general-settings.entity';
 import { Timezone } from '../../../shared/domain/value-objects/timezone.value-object';
-import type { GeneralSettingsProps } from '../../domain/types/general-settings.types';
 import type { IGeneralSettingsRepository } from '../../application/repositories/general-settings.repository.interface';
 import type { Nullable } from '../../../shared/types';
 
@@ -75,14 +74,7 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
    * Convert Drizzle row to GeneralSettings domain entity
    */
   private toDomain(row: typeof generalSettings.$inferSelect): GeneralSettings {
-    return new GeneralSettings(this.toDomainProps(row));
-  }
-
-  /**
-   * Convert Drizzle row to GeneralSettingsProps (plain object)
-   */
-  private toDomainProps(row: typeof generalSettings.$inferSelect): GeneralSettingsProps {
-    return {
+    return new GeneralSettings({
       id: row.id,
       userId: row.userId,
       timezone: Timezone.create(row.timezone),
@@ -90,6 +82,6 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
       automaticProcessingSchedule: row.automaticProcessingSchedule || null,
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
-    };
+    });
   }
 }

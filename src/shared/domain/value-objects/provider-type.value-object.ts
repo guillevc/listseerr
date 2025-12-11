@@ -1,6 +1,5 @@
 import { InvalidProviderTypeError } from '../errors/provider-config.errors';
-
-export type ProviderTypeValue = 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu';
+import type { ProviderType as ProviderTypeValue } from '../types/provider.types';
 
 /**
  * ProviderType Value Object

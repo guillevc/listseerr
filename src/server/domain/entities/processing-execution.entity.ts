@@ -4,20 +4,6 @@ import { BatchId } from '../../../shared/domain/value-objects/batch-id.value-obj
 import { InvalidExecutionStatusTransitionError } from '../../../shared/domain/errors/processing.errors';
 import type { ExecutionHistoryDTO } from '../../../shared/application/dtos/core/execution-history.dto';
 
-export interface ProcessingExecutionProps {
-  id: number;
-  listId: number;
-  batchId: BatchId;
-  status: ExecutionStatus;
-  triggerType: TriggerType;
-  startedAt: Date;
-  completedAt: Date | null;
-  itemsFound: number;
-  itemsRequested: number;
-  itemsFailed: number;
-  errorMessage: string | null;
-}
-
 /**
  * ProcessingExecution Entity
  *
@@ -42,18 +28,30 @@ export class ProcessingExecution {
   private _itemsFailed: number;
   private _errorMessage: string | null;
 
-  constructor(props: ProcessingExecutionProps) {
-    this._id = props.id;
-    this._listId = props.listId;
-    this._batchId = props.batchId;
-    this._status = props.status;
-    this._triggerType = props.triggerType;
-    this._startedAt = props.startedAt;
-    this._completedAt = props.completedAt;
-    this._itemsFound = props.itemsFound;
-    this._itemsRequested = props.itemsRequested;
-    this._itemsFailed = props.itemsFailed;
-    this._errorMessage = props.errorMessage;
+  constructor(params: {
+    id: number;
+    listId: number;
+    batchId: BatchId;
+    status: ExecutionStatus;
+    triggerType: TriggerType;
+    startedAt: Date;
+    completedAt: Date | null;
+    itemsFound: number;
+    itemsRequested: number;
+    itemsFailed: number;
+    errorMessage: string | null;
+  }) {
+    this._id = params.id;
+    this._listId = params.listId;
+    this._batchId = params.batchId;
+    this._status = params.status;
+    this._triggerType = params.triggerType;
+    this._startedAt = params.startedAt;
+    this._completedAt = params.completedAt;
+    this._itemsFound = params.itemsFound;
+    this._itemsRequested = params.itemsRequested;
+    this._itemsFailed = params.itemsFailed;
+    this._errorMessage = params.errorMessage;
   }
 
   /**

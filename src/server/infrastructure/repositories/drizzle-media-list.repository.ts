@@ -3,9 +3,9 @@ import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { mediaLists, executionHistory } from '../../db/schema';
 import { MediaList } from '../../domain/entities/media-list.entity';
-import type { MediaListProps, MediaListWithLastProcessed } from '../../domain/types/media-list.types';
 import type { IMediaListRepository } from '../../application/repositories/media-list.repository.interface';
 import type { Nullable } from '../../../shared/types';
+import type { ProviderType } from '../../../shared/domain/types/provider.types';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -33,7 +33,20 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return row ? this.toDomain(row) : null;
   }
 
-  async findAllWithLastProcessed(userId: number): Promise<MediaListWithLastProcessed[]> {
+  async findAllWithLastProcessed(userId: number): Promise<{
+    id: number;
+    userId: number;
+    name: string;
+    url: string;
+    displayUrl: string;
+    provider: ProviderType;
+    enabled: boolean;
+    maxItems: number;
+    processingSchedule: Nullable<string>;
+    createdAt: Date;
+    updatedAt: Date;
+    lastProcessed: Nullable<Date>;
+  }[]> {
     // Subquery to get the most recent successful execution for each list
     const latestExecutions = this.db
       .select({
@@ -60,9 +73,9 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       .orderBy(desc(mediaLists.createdAt));
 
     return rows.map((row) => {
-      const props = this.toDomainProps(row.list);
+      const params = this.toParams(row.list);
       return {
-        ...props,
+        ...params,
         lastProcessed: row.lastProcessed || null,
       };
     });
@@ -145,14 +158,26 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
    * Convert Drizzle row to MediaList domain entity
    */
   private toDomain(row: typeof mediaLists.$inferSelect): MediaList {
-    return new MediaList(this.toDomainProps(row));
+    return new MediaList(this.toParams(row));
   }
 
   /**
-   * Convert Drizzle row to MediaListProps (plain object)
-   * Used for MediaListWithLastProcessed which extends MediaListProps
+   * Convert Drizzle row to constructor parameters
+   * Shared by both toDomain() and findAllWithLastProcessed()
    */
-  private toDomainProps(row: typeof mediaLists.$inferSelect): MediaListProps {
+  private toParams(row: typeof mediaLists.$inferSelect): {
+    id: number;
+    userId: number;
+    name: string;
+    url: string;
+    displayUrl: string;
+    provider: ProviderType;
+    enabled: boolean;
+    maxItems: number;
+    processingSchedule: Nullable<string>;
+    createdAt: Date;
+    updatedAt: Date;
+  } {
     return {
       id: row.id,
       userId: row.userId,

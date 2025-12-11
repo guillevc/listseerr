@@ -1,6 +1,6 @@
 import type { MediaList } from '../../domain/entities/media-list.entity';
-import type { MediaListWithLastProcessed } from '../../domain/types/media-list.types';
 import type { Nullable } from '../../../shared/types';
+import type { ProviderType } from '../../../shared/domain/types/provider.types';
 
 /**
  * MediaList Repository Interface (Port)
@@ -17,7 +17,20 @@ export interface IMediaListRepository {
   // Query operations - return entities or DTOs
   findAll(userId: number): Promise<MediaList[]>;
   findById(id: number, userId: number): Promise<Nullable<MediaList>>;
-  findAllWithLastProcessed(userId: number): Promise<MediaListWithLastProcessed[]>;
+  findAllWithLastProcessed(userId: number): Promise<{
+    id: number;
+    userId: number;
+    name: string;
+    url: string;
+    displayUrl: string;
+    provider: ProviderType;
+    enabled: boolean;
+    maxItems: number;
+    processingSchedule: Nullable<string>;
+    createdAt: Date;
+    updatedAt: Date;
+    lastProcessed: Nullable<Date>;
+  }[]>;
 
   // Command operations - work with entities
   /**

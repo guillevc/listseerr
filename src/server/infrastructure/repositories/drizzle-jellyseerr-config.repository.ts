@@ -6,7 +6,6 @@ import { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity
 import { JellyseerrUrl } from '../../../shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from '../../../shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from '../../../shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { JellyseerrConfigProps } from '../../domain/types/jellyseerr-config.types';
 import type { IJellyseerrConfigRepository } from '../../application/repositories/jellyseerr-config.repository.interface';
 import type { Nullable } from '../../../shared/types';
 
@@ -79,14 +78,7 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
    * Convert Drizzle row to JellyseerrConfig domain entity
    */
   private toDomain(row: typeof jellyseerrConfigs.$inferSelect): JellyseerrConfig {
-    return new JellyseerrConfig(this.toDomainProps(row));
-  }
-
-  /**
-   * Convert Drizzle row to JellyseerrConfigProps (plain object)
-   */
-  private toDomainProps(row: typeof jellyseerrConfigs.$inferSelect): JellyseerrConfigProps {
-    return {
+    return new JellyseerrConfig({
       id: row.id,
       userId: row.userId,
       url: JellyseerrUrl.create(row.url),
@@ -94,6 +86,6 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
       userIdJellyseerr: JellyseerrUserId.create(row.userIdJellyseerr),
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
-    };
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { ListName } from '../../../shared/domain/value-objects/list-name.value-object';
 import { ListUrl } from '../../../shared/domain/value-objects/list-url.value-object';
 import { Provider } from '../../../shared/domain/value-objects/provider.value-object';
-import type { MediaListProps, ProviderType } from '../types/media-list.types';
+import type { ProviderType } from '../../../shared/domain/types/provider.types';
 import type { MediaListDTO } from '../../../shared/application/dtos/core/media-list.dto';
 import type { Nullable } from '../../../shared/types';
 
@@ -31,18 +31,30 @@ export class MediaList {
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(props: MediaListProps) {
-    this._id = props.id;
-    this._userId = props.userId;
-    this._name = ListName.create(props.name);
-    this._url = ListUrl.create(props.url);
-    this._displayUrl = props.displayUrl;
-    this._provider = Provider.create(props.provider);
-    this._enabled = props.enabled;
-    this._maxItems = props.maxItems;
-    this._processingSchedule = props.processingSchedule;
-    this._createdAt = props.createdAt;
-    this._updatedAt = props.updatedAt;
+  constructor(params: {
+    id: number;
+    userId: number;
+    name: string;
+    url: string;
+    displayUrl: string;
+    provider: ProviderType;
+    enabled: boolean;
+    maxItems: number;
+    processingSchedule: Nullable<string>;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    this._id = params.id;
+    this._userId = params.userId;
+    this._name = ListName.create(params.name);
+    this._url = ListUrl.create(params.url);
+    this._displayUrl = params.displayUrl;
+    this._provider = Provider.create(params.provider);
+    this._enabled = params.enabled;
+    this._maxItems = params.maxItems;
+    this._processingSchedule = params.processingSchedule;
+    this._createdAt = params.createdAt;
+    this._updatedAt = params.updatedAt;
   }
 
   // Getters - expose state for read access
@@ -199,7 +211,10 @@ export class MediaList {
    * Determine if scheduler needs to be reloaded based on changes
    * Scheduler reload is required when schedule or enabled state changes
    */
-  requiresSchedulerReload(changes: Partial<MediaListProps>): boolean {
+  requiresSchedulerReload(changes: {
+    processingSchedule?: unknown;
+    enabled?: unknown;
+  }): boolean {
     return (
       changes.processingSchedule !== undefined ||
       changes.enabled !== undefined

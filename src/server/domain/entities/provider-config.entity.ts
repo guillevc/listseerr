@@ -1,4 +1,4 @@
-import type { ProviderConfigProps, ProviderConfigData, TraktConfigData, MdbListConfigData } from '../types/provider-config.types';
+import type { ProviderConfigData, TraktConfigData, MdbListConfigData } from '../types/provider-config.types';
 import type { ProviderType } from '../../../shared/domain/value-objects/provider-type.value-object';
 import { InvalidProviderConfigError } from '../../../shared/domain/errors/provider-config.errors';
 import type { ProviderConfigDTO } from '../../../shared/application/dtos/core/provider-config.dto';
@@ -21,13 +21,20 @@ export class ProviderConfig {
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(props: ProviderConfigProps) {
-    this._id = props.id;
-    this._userId = props.userId;
-    this._provider = props.provider;
-    this._config = props.config;
-    this._createdAt = props.createdAt;
-    this._updatedAt = props.updatedAt;
+  constructor(params: {
+    id: number;
+    userId: number;
+    provider: ProviderType;
+    config: ProviderConfigData;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    this._id = params.id;
+    this._userId = params.userId;
+    this._provider = params.provider;
+    this._config = params.config;
+    this._createdAt = params.createdAt;
+    this._updatedAt = params.updatedAt;
   }
 
   // Getters - expose state for read access
