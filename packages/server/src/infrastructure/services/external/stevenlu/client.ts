@@ -1,4 +1,4 @@
-import { createLogger } from '../../logger.service';
+import { createLogger } from '../../core/logger.service';
 import { db } from '../../../db/client';
 import { providerCache } from '../../../db/schema';
 import { eq } from 'drizzle-orm';

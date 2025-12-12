@@ -1,9 +1,9 @@
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
-import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
+import type { IMediaFetcher } from '../../../application/services/media-fetcher.service.interface';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderConfigData } from '../../domain/types/provider-config.types';
-import { fetchStevenLuList } from './external/stevenlu/client';
+import type { ProviderConfigData } from '../../../domain/types/provider-config.types';
+import { fetchStevenLuList } from '../external/stevenlu/client';
 
 /**
  * StevenLu Media Fetcher Adapter

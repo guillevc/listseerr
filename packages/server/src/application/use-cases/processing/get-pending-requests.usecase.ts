@@ -2,7 +2,7 @@ import type { IJellyseerrConfigRepository } from '../../repositories/jellyseerr-
 import type { IJellyseerrStatsService } from '../../services/jellyseerr-stats.service.interface';
 import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
-import { createLogger } from '../../../infrastructure/services/logger.service';
+import { createLogger } from '../../../infrastructure/services/core/logger.service';
 
 const logger = createLogger('dashboard:pending-requests');
 

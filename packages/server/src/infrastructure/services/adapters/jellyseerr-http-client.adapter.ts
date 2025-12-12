@@ -3,9 +3,9 @@ import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
 import type {
   IJellyseerrClient,
   ProcessingResult,
-} from '../../application/services/jellyseerr-client.service.interface';
-import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
-import { requestItemsToJellyseerr } from './external/jellyseerr/client';
+} from '../../../application/services/jellyseerr-client.service.interface';
+import type { JellyseerrConfig } from '../../../domain/entities/jellyseerr-config.entity';
+import { requestItemsToJellyseerr } from '../external/jellyseerr/client';
 
 /**
  * Jellyseerr HTTP Client Adapter

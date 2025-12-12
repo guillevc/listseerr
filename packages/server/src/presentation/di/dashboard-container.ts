@@ -3,8 +3,8 @@ import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure
 import { DrizzleDashboardStatsRepository } from '../../infrastructure/repositories/drizzle-dashboard-stats.repository';
-import { JellyseerrStatsAdapter } from '../../infrastructure/services/jellyseerr-stats.adapter';
-import { SchedulerInfoAdapter } from '../../infrastructure/services/scheduler-info.adapter';
+import { JellyseerrStatsAdapter } from '../../infrastructure/services/adapters/jellyseerr-stats.adapter';
+import { SchedulerInfoAdapter } from '../../infrastructure/services/adapters/scheduler-info.adapter';
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
 
 // Use Cases

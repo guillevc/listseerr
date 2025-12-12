@@ -1,5 +1,5 @@
 // Infrastructure
-import { SchedulerService } from '../../infrastructure/services/scheduler.service';
+import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
 
 // Use Cases
 import { GetScheduledJobsUseCase } from '../../application/use-cases/scheduler/get-scheduled-jobs.usecase';

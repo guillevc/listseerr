@@ -1,5 +1,5 @@
 // Infrastructure
-import { LogBufferAdapter } from '../../infrastructure/services/log-buffer.adapter';
+import { LogBufferAdapter } from '../../infrastructure/services/adapters/log-buffer.adapter';
 
 // Use Cases
 import { GetLogsUseCase } from '../../application/use-cases/logs/get-logs.usecase';

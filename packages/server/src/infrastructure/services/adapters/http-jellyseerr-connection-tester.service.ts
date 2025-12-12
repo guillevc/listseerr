@@ -1,4 +1,4 @@
-import type { IJellyseerrConnectionTester } from '../../application/services/jellyseerr-connection-tester.service.interface';
+import type { IJellyseerrConnectionTester } from '../../../application/services/jellyseerr-connection-tester.service.interface';
 
 export class HttpJellyseerrConnectionTester implements IJellyseerrConnectionTester {
   async testConnection(

@@ -1,7 +1,7 @@
 import type {
   ILogBufferService,
   LogEntry,
-} from '../../application/services/log-buffer.service.interface';
+} from '../../../application/services/log-buffer.service.interface';
 
 class LogBuffer {
   private logs: LogEntry[] = [];

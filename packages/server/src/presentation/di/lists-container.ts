@@ -3,9 +3,9 @@ import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleMediaListRepository } from '../../infrastructure/repositories/drizzle-media-list.repository';
-import { ListUrlParserService } from '../../infrastructure/services/list-url-parser.service';
-import { SchedulerService } from '../../infrastructure/services/scheduler.service';
-import { LoggerService } from '../../infrastructure/services/logger.service';
+import { ListUrlParserService } from '../../infrastructure/services/adapters/list-url-parser.service';
+import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 
 // Application layer - Use cases
 import { GetAllMediaListsUseCase } from '../../application/use-cases/lists/get-all-media-lists.usecase';

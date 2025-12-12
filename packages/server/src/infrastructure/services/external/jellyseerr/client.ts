@@ -6,7 +6,7 @@ import type {
   ProcessingResult,
   JellyseerrPendingRequestsResponse,
 } from './types';
-import { createLogger } from '../../logger.service';
+import { createLogger } from '../../core/logger.service';
 
 const logger = createLogger('jellyseerr-client');
 

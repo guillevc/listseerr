@@ -1,4 +1,4 @@
-import { createLogger } from '../../logger.service';
+import { createLogger } from '../../core/logger.service';
 import { parseMdbListUrl, buildMdbListApiUrl } from './url-parser';
 import type { MdbListApiItem, MediaItem } from './types';
 

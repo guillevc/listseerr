@@ -1,13 +1,13 @@
 import type {
   ISchedulerService,
   ScheduledJob,
-} from '../../application/services/scheduler.service.interface';
+} from '../../../application/services/scheduler.service.interface';
 import { Cron } from 'croner';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
-import { generalSettings } from '../db/schema';
+import { generalSettings } from '../../db/schema';
 import { createLogger } from './logger.service';
-import * as schema from '../db/schema';
+import * as schema from '../../db/schema';
 
 const logger = createLogger('scheduler');
 

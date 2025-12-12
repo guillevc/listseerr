@@ -3,7 +3,7 @@ import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { HttpJellyseerrConnectionTester } from '../../infrastructure/services/http-jellyseerr-connection-tester.service';
+import { HttpJellyseerrConnectionTester } from '../../infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
 
 // Application layer - Use cases
 import { GetJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
@@ -12,7 +12,7 @@ import { TestJellyseerrConnectionUseCase } from '../../application/use-cases/jel
 import { DeleteJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/delete-jellyseerr-config.usecase';
 
 // Infrastructure services (existing)
-import { createLogger } from '../../infrastructure/services/logger.service';
+import { createLogger } from '../../infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for Jellyseerr Config Domain

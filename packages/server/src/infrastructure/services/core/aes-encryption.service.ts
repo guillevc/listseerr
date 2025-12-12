@@ -1,5 +1,5 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
-import type { IEncryptionService } from '../../application/services/encryption.service.interface';
+import type { IEncryptionService } from '../../../application/services/encryption.service.interface';
 import { EncryptionError } from 'shared/domain/errors/provider-config.errors';
 
 /**

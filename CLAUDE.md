@@ -313,6 +313,66 @@ This section strictly defines the responsibilities and dependencies of the Appli
 | **Service Implementation (Adapter)**    | **Infrastructure** | Implements a **Service Interface**. Handles external I/O (e.g., fetch, API client), cross-cutting tasks (e.g., encryption), or scheduling.                    | Depends on the **Application** interface it implements and necessary external libraries.               |
 | **Repository Implementation (Adapter)** | **Infrastructure** | Implements a **Repository Interface**. Handles **Database/ORM mapping** (e.g., Drizzle/SQL) to convert between the Entity (Domain) and the persistence layer. | Depends on **Drizzle ORM** (Infrastructure) and the **Domain Entity** it persists.                     |
 
+#### E. Infrastructure Services Organization (Adapters vs Core)
+
+Infrastructure services are organized into three subdirectories to clarify dependencies and responsibilities:
+
+**Directory Structure:**
+
+```
+infrastructure/services/
+├── adapters/           # Application interface implementations
+├── core/              # Base infrastructure services
+└── external/          # External API clients
+```
+
+**Key Distinction:** Both adapters and core services implement application interfaces, but they differ in their role within the infrastructure layer:
+
+| **Aspect**       | **Core Services**                                                              | **Adapters**                                                                       |
+| ---------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| **Purpose**      | Base infrastructure building blocks that other infrastructure layers depend on | Higher-level implementations that may use core services to fulfill their interface |
+| **Dependencies** | Independent or depend only on external libraries                               | May depend on core services (not the other way around)                             |
+| **Pattern**      | Often singletons or factory functions                                          | Instance-based implementations                                                     |
+| **Usage**        | Imported BY adapters, use cases, and other infrastructure                      | Import FROM core services                                                          |
+| **Examples**     | Logger, Scheduler, Encryption                                                  | Stats adapters, Media fetchers, Connection testers                                 |
+| **Scope**        | Cross-cutting concerns used everywhere                                         | Domain-specific or feature-specific implementations                                |
+
+**Dependency Direction:**
+
+```
+Application Layer (Interfaces)
+        ▲
+        │ implements
+        │
+    ┌───┴────┐
+    │        │
+  CORE    ADAPTERS
+    ▲        │
+    │        │
+    └────────┘
+     uses
+```
+
+**Core Services (`core/`):**
+
+- `logger.service.ts` - Logging factory and service (used throughout infrastructure)
+- `scheduler.service.ts` - Cron job management singleton (used by scheduler adapters)
+- `aes-encryption.service.ts` - Encryption utility (used by repositories)
+
+**Adapters (`adapters/`):**
+
+- `jellyseerr-stats.adapter.ts` - Implements `IJellyseerrStatsService`, uses logger from core
+- `scheduler-info.adapter.ts` - Implements `ISchedulerInfoService`, wraps scheduler from core
+- `*-media-fetcher.adapter.ts` - Implement `IMediaFetcher`, use logger from core
+
+**External Clients (`external/`):**
+
+- API-specific client implementations (Jellyseerr, Trakt, MDBList, StevenLu)
+- Used by adapters to communicate with external services
+- May use logger from core for observability
+
+**Critical Rule:** Adapters can import from `core/` ✅, but core must never import from `adapters/` ❌
+
 ---
 
 ### 4\. 🔧 Development Environment and Tooling

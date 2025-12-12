@@ -9,8 +9,8 @@ import { GetGeneralSettingsUseCase } from '../../application/use-cases/settings/
 import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/settings/update-general-settings.usecase';
 
 // Infrastructure services (existing)
-import { scheduler } from '../../infrastructure/services/scheduler.service';
-import { createLogger } from '../../infrastructure/services/logger.service';
+import { scheduler } from '../../infrastructure/services/core/scheduler.service';
+import { createLogger } from '../../infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for General Settings Domain

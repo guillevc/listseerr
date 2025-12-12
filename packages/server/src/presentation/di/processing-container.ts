@@ -7,11 +7,11 @@ import { DrizzleCacheRepository } from '../../infrastructure/repositories/drizzl
 import { DrizzleMediaListRepository } from '../../infrastructure/repositories/drizzle-media-list.repository';
 import { DrizzleProviderConfigRepository } from '../../infrastructure/repositories/drizzle-provider-config.repository';
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { TraktMediaFetcher } from '../../infrastructure/services/trakt-media-fetcher.adapter';
-import { MdbListMediaFetcher } from '../../infrastructure/services/mdblist-media-fetcher.adapter';
-import { StevenLuMediaFetcher } from '../../infrastructure/services/stevenlu-media-fetcher.adapter';
-import { JellyseerrHttpClient } from '../../infrastructure/services/jellyseerr-http-client.adapter';
-import { AesEncryptionService } from '../../infrastructure/services/aes-encryption.service';
+import { TraktMediaFetcher } from '../../infrastructure/services/adapters/trakt-media-fetcher.adapter';
+import { MdbListMediaFetcher } from '../../infrastructure/services/adapters/mdblist-media-fetcher.adapter';
+import { StevenLuMediaFetcher } from '../../infrastructure/services/adapters/stevenlu-media-fetcher.adapter';
+import { JellyseerrHttpClient } from '../../infrastructure/services/adapters/jellyseerr-http-client.adapter';
+import { AesEncryptionService } from '../../infrastructure/services/core/aes-encryption.service';
 
 // Use Cases
 import { ProcessListUseCase } from '../../application/use-cases/processing/process-list.usecase';
@@ -22,7 +22,7 @@ import { GetExecutionHistoryUseCase } from '../../application/use-cases/processi
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
 
 // Logger
-import { createLogger } from '../../infrastructure/services/logger.service';
+import { createLogger } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
 /**
