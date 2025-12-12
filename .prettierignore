@@ -17,3 +17,6 @@ data/
 *.db
 *.db-wal
 *.db-shm
+
+# editor
+.vscode
