@@ -4,7 +4,13 @@ when:
 
 steps:
   - name: ci-checks
+    image: oven/bun:1-alpine
+    commands:
+      - bun install --frozen-lockfile
+      - bun run ci
+
+  - name: docker-build
     image: woodpeckerci/plugin-docker-buildx
     settings:
-      dockerfile: docker/Dockerfile.ci
       dry_run: true
+      tags: listseerr:latest
