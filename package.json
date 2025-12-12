@@ -42,6 +42,7 @@
     "dev:server": "bun run --filter server dev",
     "build": "bun run --filter client build && bun run --filter server build",
     "build:client": "bun run --filter client build",
+    "build:client:analyze": "bun run --filter client build:analyze",
     "build:server": "bun run --filter server build",
     "typecheck": "bun run --filter '*' typecheck",
     "lint": "bun run --filter '*' lint",
