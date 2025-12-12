@@ -5,8 +5,12 @@ import type { ILogger } from '../../services/logger.interface';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
-export class UpdateMediaListUseCase {
+export class UpdateMediaListUseCase implements IUseCase<
+  UpdateMediaListCommand,
+  UpdateMediaListResponse
+> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly urlParserService: IListUrlParserService,

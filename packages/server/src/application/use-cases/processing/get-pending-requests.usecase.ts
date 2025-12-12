@@ -2,9 +2,7 @@ import type { IJellyseerrConfigRepository } from '../../repositories/jellyseerr-
 import type { IJellyseerrStatsService } from '../../services/jellyseerr-stats.service.interface';
 import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
-import { createLogger } from '../../../infrastructure/services/core/logger.service';
-
-const logger = createLogger('dashboard:pending-requests');
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * GetPendingRequestsUseCase
@@ -16,7 +14,10 @@ const logger = createLogger('dashboard:pending-requests');
  * - Returns "error" state if API call fails (graceful degradation)
  * - Never throws errors to client (dashboard should show partial data)
  */
-export class GetPendingRequestsUseCase {
+export class GetPendingRequestsUseCase implements IUseCase<
+  GetPendingRequestsCommand,
+  GetPendingRequestsResponse
+> {
   constructor(
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly jellyseerrStatsService: IJellyseerrStatsService
@@ -40,8 +41,8 @@ export class GetPendingRequestsUseCase {
       });
 
       return { count, configured: true, error: false };
-    } catch (error) {
-      logger.error({ error }, 'Failed to fetch pending requests count');
+    } catch {
+      // Error will be logged by LoggingUseCaseDecorator
       return { count: 0, configured: true, error: true };
     }
   }

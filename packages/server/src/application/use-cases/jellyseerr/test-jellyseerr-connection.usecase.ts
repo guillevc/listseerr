@@ -6,8 +6,12 @@ import type {
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { DomainError } from 'shared/domain/errors/domain.error';
+import type { IUseCase } from '../use-case.interface';
 
-export class TestJellyseerrConnectionUseCase {
+export class TestJellyseerrConnectionUseCase implements IUseCase<
+  TestJellyseerrConnectionCommand,
+  TestJellyseerrConnectionResponse
+> {
   constructor(private readonly connectionTester: IJellyseerrConnectionTester) {}
 
   async execute(

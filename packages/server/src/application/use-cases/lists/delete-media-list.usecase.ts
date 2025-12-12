@@ -3,8 +3,12 @@ import type { ISchedulerService } from '../../services/scheduler.service.interfa
 import type { ILogger } from '../../services/logger.interface';
 import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
-export class DeleteMediaListUseCase {
+export class DeleteMediaListUseCase implements IUseCase<
+  DeleteMediaListCommand,
+  DeleteMediaListResponse
+> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly schedulerService: ISchedulerService,

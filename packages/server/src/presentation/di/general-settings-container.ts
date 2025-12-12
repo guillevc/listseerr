@@ -3,10 +3,20 @@ import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '../../infrastructure/repositories/drizzle-general-settings.repository';
+import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Application layer - Use cases
 import { GetGeneralSettingsUseCase } from '../../application/use-cases/settings/get-general-settings.usecase';
 import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/settings/update-general-settings.usecase';
+import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import type {
+  GetGeneralSettingsCommand,
+  UpdateGeneralSettingsCommand,
+} from 'shared/application/dtos/general-settings/commands.dto';
+import type {
+  GetGeneralSettingsResponse,
+  UpdateGeneralSettingsResponse,
+} from 'shared/application/dtos/general-settings/responses.dto';
 
 // Infrastructure services (existing)
 import { scheduler } from '../../infrastructure/services/core/scheduler.service';
@@ -28,20 +38,36 @@ export class GeneralSettingsContainer {
   private readonly generalSettingsRepository: DrizzleGeneralSettingsRepository;
 
   // Application - Use Cases (public for consumption by routers)
-  public readonly getGeneralSettingsUseCase: GetGeneralSettingsUseCase;
-  public readonly updateGeneralSettingsUseCase: UpdateGeneralSettingsUseCase;
+  public readonly getGeneralSettingsUseCase: IUseCase<
+    GetGeneralSettingsCommand,
+    GetGeneralSettingsResponse
+  >;
+  public readonly updateGeneralSettingsUseCase: IUseCase<
+    UpdateGeneralSettingsCommand,
+    UpdateGeneralSettingsResponse
+  >;
 
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate infrastructure layer (adapters)
     this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(this.generalSettingsRepository);
+    const actualGetGeneralSettingsUseCase = new GetGeneralSettingsUseCase(
+      this.generalSettingsRepository
+    );
+    this.getGeneralSettingsUseCase = new LoggingUseCaseDecorator(
+      actualGetGeneralSettingsUseCase,
+      'settings:get'
+    );
 
-    this.updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
+    const actualUpdateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
       this.generalSettingsRepository,
       scheduler, // Existing scheduler singleton
       createLogger('general-settings') // Existing logger
+    );
+    this.updateGeneralSettingsUseCase = new LoggingUseCaseDecorator(
+      actualUpdateGeneralSettingsUseCase,
+      'settings:update'
     );
   }
 }

@@ -11,8 +11,12 @@ import {
   InvalidMdbListApiKeyError,
 } from 'shared/domain/errors/provider-config.errors';
 import type { Logger } from 'pino';
+import type { IUseCase } from '../use-case.interface';
 
-export class UpdateProviderConfigUseCase {
+export class UpdateProviderConfigUseCase implements IUseCase<
+  UpdateProviderConfigCommand,
+  UpdateProviderConfigResponse
+> {
   constructor(
     private readonly providerConfigRepository: IProviderConfigRepository,
     private readonly logger: Logger

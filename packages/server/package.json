@@ -7,7 +7,8 @@
     "./trpc": "./src/presentation/trpc/app.router.ts"
   },
   "scripts": {
-    "dev": "bun run --watch --env-file=.env src/index.ts",
+    "dev": "bun run --env-file=.env src/index.ts",
+    "dev:watch": "bun run --watch --env-file=.env src/index.ts",
     "build": "bun build src/index.ts --outdir ../../dist --target bun --production --minify --splitting",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

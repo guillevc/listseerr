@@ -4,8 +4,12 @@ import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/gene
 import { GeneralSettings } from '../../../domain/entities/general-settings.entity';
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 import type { Logger } from 'pino';
+import type { IUseCase } from '../use-case.interface';
 
-export class UpdateGeneralSettingsUseCase {
+export class UpdateGeneralSettingsUseCase implements IUseCase<
+  UpdateGeneralSettingsCommand,
+  UpdateGeneralSettingsResponse
+> {
   constructor(
     private readonly generalSettingsRepository: IGeneralSettingsRepository,
     private readonly scheduler: { loadScheduledLists: () => Promise<void> },

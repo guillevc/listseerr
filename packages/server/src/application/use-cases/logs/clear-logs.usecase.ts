@@ -1,6 +1,7 @@
 import type { ILogBufferService } from '../../services/log-buffer.service.interface';
 import type { ClearLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type { ClearLogsResponse } from 'shared/application/dtos/logs/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * ClearLogsUseCase
@@ -11,7 +12,7 @@ import type { ClearLogsResponse } from 'shared/application/dtos/logs/responses.d
  * - Clears all logs regardless of level or timestamp
  * - Operation is immediate and irreversible
  */
-export class ClearLogsUseCase {
+export class ClearLogsUseCase implements IUseCase<ClearLogsCommand, ClearLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
   async execute(

@@ -2,6 +2,7 @@ import type { IDashboardStatsRepository } from '../../repositories/dashboard-sta
 import type { ISchedulerInfoService } from '../../services/scheduler-info.service.interface';
 import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * GetDashboardStatsUseCase
@@ -16,7 +17,10 @@ import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/r
  * - Only shows successful scheduled executions for "last processing"
  * - Next processing is from global automatic processing job (listId: 0)
  */
-export class GetDashboardStatsUseCase {
+export class GetDashboardStatsUseCase implements IUseCase<
+  GetDashboardStatsCommand,
+  DashboardStatsResponse
+> {
   constructor(
     private readonly dashboardStatsRepository: IDashboardStatsRepository,
     private readonly schedulerInfoService: ISchedulerInfoService

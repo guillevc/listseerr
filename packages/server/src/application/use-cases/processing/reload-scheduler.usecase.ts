@@ -1,6 +1,7 @@
 import type { ISchedulerService } from '../../services/scheduler.service.interface';
 import type { ReloadSchedulerCommand } from 'shared/application/dtos/scheduler/commands.dto';
 import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * ReloadSchedulerUseCase
@@ -13,7 +14,10 @@ import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/
  * - Ensures scheduler state matches database state
  * - Used after list schedule changes
  */
-export class ReloadSchedulerUseCase {
+export class ReloadSchedulerUseCase implements IUseCase<
+  ReloadSchedulerCommand,
+  ReloadSchedulerResponse
+> {
   constructor(private readonly schedulerService: ISchedulerService) {}
 
   async execute(

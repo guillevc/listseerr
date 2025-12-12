@@ -6,8 +6,12 @@ import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
 import type { Logger } from 'pino';
+import type { IUseCase } from '../use-case.interface';
 
-export class UpdateJellyseerrConfigUseCase {
+export class UpdateJellyseerrConfigUseCase implements IUseCase<
+  UpdateJellyseerrConfigCommand,
+  UpdateJellyseerrConfigResponse
+> {
   constructor(
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly logger: Logger

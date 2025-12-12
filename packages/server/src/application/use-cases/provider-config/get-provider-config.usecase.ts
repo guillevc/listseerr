@@ -2,8 +2,12 @@ import type { IProviderConfigRepository } from '../../repositories/provider-conf
 import type { GetProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
 import type { GetProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import type { IUseCase } from '../use-case.interface';
 
-export class GetProviderConfigUseCase {
+export class GetProviderConfigUseCase implements IUseCase<
+  GetProviderConfigCommand,
+  GetProviderConfigResponse
+> {
   constructor(private readonly providerConfigRepository: IProviderConfigRepository) {}
 
   async execute(command: GetProviderConfigCommand): Promise<GetProviderConfigResponse> {

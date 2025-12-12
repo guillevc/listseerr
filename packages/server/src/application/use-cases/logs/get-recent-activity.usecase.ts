@@ -8,6 +8,7 @@ import type {
   ActivityGroup,
 } from 'shared/application/dtos/dashboard/responses.dto';
 import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * GetRecentActivityUseCase
@@ -21,7 +22,10 @@ import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
  * - Preserve order by startedAt DESC (most recent first)
  * - Include list names for better UX
  */
-export class GetRecentActivityUseCase {
+export class GetRecentActivityUseCase implements IUseCase<
+  GetRecentActivityCommand,
+  GetRecentActivityResponse
+> {
   constructor(private readonly dashboardStatsRepository: IDashboardStatsRepository) {}
 
   async execute(command: GetRecentActivityCommand): Promise<GetRecentActivityResponse> {

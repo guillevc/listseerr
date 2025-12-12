@@ -1,8 +1,12 @@
 import type { IGeneralSettingsRepository } from '../../repositories/general-settings.repository.interface';
 import type { GetGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { GetGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
-export class GetGeneralSettingsUseCase {
+export class GetGeneralSettingsUseCase implements IUseCase<
+  GetGeneralSettingsCommand,
+  GetGeneralSettingsResponse
+> {
   constructor(private readonly generalSettingsRepository: IGeneralSettingsRepository) {}
 
   async execute(command: GetGeneralSettingsCommand): Promise<GetGeneralSettingsResponse> {

@@ -3,8 +3,12 @@ import type { ISchedulerService } from '../../services/scheduler.service.interfa
 import type { ILogger } from '../../services/logger.interface';
 import type { ToggleListEnabledCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { ToggleListEnabledResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
-export class ToggleListEnabledUseCase {
+export class ToggleListEnabledUseCase implements IUseCase<
+  ToggleListEnabledCommand,
+  ToggleListEnabledResponse
+> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly schedulerService: ISchedulerService,

@@ -1,9 +1,15 @@
 // Infrastructure
 import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
+import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { GetScheduledJobsUseCase } from '../../application/use-cases/scheduler/get-scheduled-jobs.usecase';
 import { ReloadSchedulerUseCase } from '../../application/use-cases/processing/reload-scheduler.usecase';
+import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import type { GetScheduledJobsCommand } from 'shared/application/dtos/scheduler/commands.dto';
+import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler/responses.dto';
+import type { ReloadSchedulerCommand } from 'shared/application/dtos/scheduler/commands.dto';
+import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/responses.dto';
 
 /**
  * Scheduler Dependency Injection Container
@@ -21,15 +27,27 @@ export class SchedulerContainer {
   private readonly schedulerService: SchedulerService;
 
   // Application (public)
-  public readonly getScheduledJobsUseCase: GetScheduledJobsUseCase;
-  public readonly reloadSchedulerUseCase: ReloadSchedulerUseCase;
+  public readonly getScheduledJobsUseCase: IUseCase<
+    GetScheduledJobsCommand,
+    GetScheduledJobsResponse
+  >;
+  public readonly reloadSchedulerUseCase: IUseCase<ReloadSchedulerCommand, ReloadSchedulerResponse>;
 
   constructor() {
     // 1. Instantiate infrastructure layer
     this.schedulerService = new SchedulerService();
 
     // 2. Instantiate use cases with dependencies injected
-    this.getScheduledJobsUseCase = new GetScheduledJobsUseCase(this.schedulerService);
-    this.reloadSchedulerUseCase = new ReloadSchedulerUseCase(this.schedulerService);
+    const actualGetScheduledJobsUseCase = new GetScheduledJobsUseCase(this.schedulerService);
+    this.getScheduledJobsUseCase = new LoggingUseCaseDecorator(
+      actualGetScheduledJobsUseCase,
+      'scheduler:get-jobs'
+    );
+
+    const actualReloadSchedulerUseCase = new ReloadSchedulerUseCase(this.schedulerService);
+    this.reloadSchedulerUseCase = new LoggingUseCaseDecorator(
+      actualReloadSchedulerUseCase,
+      'scheduler:reload'
+    );
   }
 }

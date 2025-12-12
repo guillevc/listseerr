@@ -600,3 +600,6 @@ FROM oven/bun:1-alpine
 plugins: [
 react(),
 tailwindcss(),
+
+- feel free to modify CLAUDE.md with important decisions (design, build, etc) but do not include documentation about actual features, just stuff that is relevant to the code, style and architecture
+- automatic changes to the CLAUDE.md file should be done into a CLAUDE.draft.md file instead, before i manually integrate them into the actual CLAUDE.md file

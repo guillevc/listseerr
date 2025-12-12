@@ -6,8 +6,12 @@ import { MediaList } from '../../../domain/entities/media-list.entity';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
-export class CreateMediaListUseCase {
+export class CreateMediaListUseCase implements IUseCase<
+  CreateMediaListCommand,
+  CreateMediaListResponse
+> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly urlParserService: IListUrlParserService,

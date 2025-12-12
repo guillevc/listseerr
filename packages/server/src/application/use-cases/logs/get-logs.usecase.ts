@@ -1,6 +1,7 @@
 import type { ILogBufferService } from '../../services/log-buffer.service.interface';
 import type { GetLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type { GetLogsResponse } from 'shared/application/dtos/logs/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * GetLogsUseCase
@@ -11,7 +12,7 @@ import type { GetLogsResponse } from 'shared/application/dtos/logs/responses.dto
  * - Limit is enforced to prevent excessive memory usage
  * - Level filter applied by infrastructure layer
  */
-export class GetLogsUseCase {
+export class GetLogsUseCase implements IUseCase<GetLogsCommand, GetLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
   async execute(command: GetLogsCommand): Promise<GetLogsResponse> {

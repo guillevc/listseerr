@@ -1,6 +1,7 @@
 import type { IExecutionHistoryRepository } from '../../repositories/execution-history.repository.interface';
 import type { GetExecutionHistoryCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { GetExecutionHistoryResponse } from 'shared/application/dtos/processing/responses.dto';
+import type { IUseCase } from '../use-case.interface';
 
 /**
  * GetExecutionHistoryUseCase
@@ -9,7 +10,10 @@ import type { GetExecutionHistoryResponse } from 'shared/application/dtos/proces
  * 1. Fetch execution history (repository validates userId via JOIN - defense-in-depth)
  * 2. Convert to DTOs
  */
-export class GetExecutionHistoryUseCase {
+export class GetExecutionHistoryUseCase implements IUseCase<
+  GetExecutionHistoryCommand,
+  GetExecutionHistoryResponse
+> {
   constructor(private readonly executionHistoryRepository: IExecutionHistoryRepository) {}
 
   async execute(command: GetExecutionHistoryCommand): Promise<GetExecutionHistoryResponse> {

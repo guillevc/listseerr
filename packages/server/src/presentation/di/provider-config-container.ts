@@ -2,9 +2,21 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '../../infrastructure/db/schema';
 import { DrizzleProviderConfigRepository } from '../../infrastructure/repositories/drizzle-provider-config.repository';
 import { AesEncryptionService } from '../../infrastructure/services/core/aes-encryption.service';
+import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 import { GetProviderConfigUseCase } from '../../application/use-cases/provider-config/get-provider-config.usecase';
 import { UpdateProviderConfigUseCase } from '../../application/use-cases/provider-config/update-provider-config.usecase';
 import { DeleteProviderConfigUseCase } from '../../application/use-cases/provider-config/delete-provider-config.usecase';
+import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import type {
+  GetProviderConfigCommand,
+  UpdateProviderConfigCommand,
+  DeleteProviderConfigCommand,
+} from 'shared/application/dtos/provider-config/commands.dto';
+import type {
+  GetProviderConfigResponse,
+  UpdateProviderConfigResponse,
+  DeleteProviderConfigResponse,
+} from 'shared/application/dtos/provider-config/responses.dto';
 import { createLogger } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
@@ -20,9 +32,18 @@ export class ProviderConfigContainer {
   private readonly providerConfigRepository: DrizzleProviderConfigRepository;
 
   // Application layer (public)
-  public readonly getProviderConfigUseCase: GetProviderConfigUseCase;
-  public readonly updateProviderConfigUseCase: UpdateProviderConfigUseCase;
-  public readonly deleteProviderConfigUseCase: DeleteProviderConfigUseCase;
+  public readonly getProviderConfigUseCase: IUseCase<
+    GetProviderConfigCommand,
+    GetProviderConfigResponse
+  >;
+  public readonly updateProviderConfigUseCase: IUseCase<
+    UpdateProviderConfigCommand,
+    UpdateProviderConfigResponse
+  >;
+  public readonly deleteProviderConfigUseCase: IUseCase<
+    DeleteProviderConfigCommand,
+    DeleteProviderConfigResponse
+  >;
 
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate encryption service with validated key
@@ -40,16 +61,30 @@ export class ProviderConfigContainer {
     this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
 
     // 3. Instantiate use cases with dependencies injected
-    this.getProviderConfigUseCase = new GetProviderConfigUseCase(this.providerConfigRepository);
+    const actualGetProviderConfigUseCase = new GetProviderConfigUseCase(
+      this.providerConfigRepository
+    );
+    this.getProviderConfigUseCase = new LoggingUseCaseDecorator(
+      actualGetProviderConfigUseCase,
+      'provider:get-config'
+    );
 
-    this.updateProviderConfigUseCase = new UpdateProviderConfigUseCase(
+    const actualUpdateProviderConfigUseCase = new UpdateProviderConfigUseCase(
       this.providerConfigRepository,
       createLogger('provider-config')
     );
+    this.updateProviderConfigUseCase = new LoggingUseCaseDecorator(
+      actualUpdateProviderConfigUseCase,
+      'provider:update-config'
+    );
 
-    this.deleteProviderConfigUseCase = new DeleteProviderConfigUseCase(
+    const actualDeleteProviderConfigUseCase = new DeleteProviderConfigUseCase(
       this.providerConfigRepository,
       createLogger('provider-config')
+    );
+    this.deleteProviderConfigUseCase = new LoggingUseCaseDecorator(
+      actualDeleteProviderConfigUseCase,
+      'provider:delete-config'
     );
   }
 }

@@ -3,8 +3,12 @@ import type { DeleteProviderConfigCommand } from 'shared/application/dtos/provid
 import type { DeleteProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { Logger } from 'pino';
+import type { IUseCase } from '../use-case.interface';
 
-export class DeleteProviderConfigUseCase {
+export class DeleteProviderConfigUseCase implements IUseCase<
+  DeleteProviderConfigCommand,
+  DeleteProviderConfigResponse
+> {
   constructor(
     private readonly providerConfigRepository: IProviderConfigRepository,
     private readonly logger: Logger

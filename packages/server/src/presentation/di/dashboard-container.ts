@@ -6,11 +6,19 @@ import { DrizzleDashboardStatsRepository } from '../../infrastructure/repositori
 import { JellyseerrStatsAdapter } from '../../infrastructure/services/adapters/jellyseerr-stats.adapter';
 import { SchedulerInfoAdapter } from '../../infrastructure/services/adapters/scheduler-info.adapter';
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { GetDashboardStatsUseCase } from '../../application/use-cases/dashboard/get-dashboard-stats.usecase';
 import { GetRecentActivityUseCase } from '../../application/use-cases/logs/get-recent-activity.usecase';
 import { GetPendingRequestsUseCase } from '../../application/use-cases/processing/get-pending-requests.usecase';
+import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
+import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';
+import type { GetRecentActivityResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
+import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
 
 /**
  * Dashboard Dependency Injection Container
@@ -36,9 +44,18 @@ export class DashboardContainer {
   private readonly schedulerInfoService: SchedulerInfoAdapter;
 
   // Application (public)
-  public readonly getDashboardStatsUseCase: GetDashboardStatsUseCase;
-  public readonly getRecentActivityUseCase: GetRecentActivityUseCase;
-  public readonly getPendingRequestsUseCase: GetPendingRequestsUseCase;
+  public readonly getDashboardStatsUseCase: IUseCase<
+    GetDashboardStatsCommand,
+    DashboardStatsResponse
+  >;
+  public readonly getRecentActivityUseCase: IUseCase<
+    GetRecentActivityCommand,
+    GetRecentActivityResponse
+  >;
+  public readonly getPendingRequestsUseCase: IUseCase<
+    GetPendingRequestsCommand,
+    GetPendingRequestsResponse
+  >;
 
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate infrastructure layer
@@ -48,16 +65,30 @@ export class DashboardContainer {
     this.schedulerInfoService = new SchedulerInfoAdapter();
 
     // 2. Instantiate use cases with dependencies injected
-    this.getDashboardStatsUseCase = new GetDashboardStatsUseCase(
+    const actualGetDashboardStatsUseCase = new GetDashboardStatsUseCase(
       this.dashboardStatsRepository,
       this.schedulerInfoService
     );
+    this.getDashboardStatsUseCase = new LoggingUseCaseDecorator(
+      actualGetDashboardStatsUseCase,
+      'dashboard:stats'
+    );
 
-    this.getRecentActivityUseCase = new GetRecentActivityUseCase(this.dashboardStatsRepository);
+    const actualGetRecentActivityUseCase = new GetRecentActivityUseCase(
+      this.dashboardStatsRepository
+    );
+    this.getRecentActivityUseCase = new LoggingUseCaseDecorator(
+      actualGetRecentActivityUseCase,
+      'dashboard:activity'
+    );
 
-    this.getPendingRequestsUseCase = new GetPendingRequestsUseCase(
+    const actualGetPendingRequestsUseCase = new GetPendingRequestsUseCase(
       this.jellyseerrConfigRepository,
       this.jellyseerrStatsService
+    );
+    this.getPendingRequestsUseCase = new LoggingUseCaseDecorator(
+      actualGetPendingRequestsUseCase,
+      'dashboard:pending-requests'
     );
   }
 }

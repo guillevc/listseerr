@@ -12,6 +12,7 @@ import { MdbListMediaFetcher } from '../../infrastructure/services/adapters/mdbl
 import { StevenLuMediaFetcher } from '../../infrastructure/services/adapters/stevenlu-media-fetcher.adapter';
 import { JellyseerrHttpClient } from '../../infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { AesEncryptionService } from '../../infrastructure/services/core/aes-encryption.service';
+import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { ProcessListUseCase } from '../../application/use-cases/processing/process-list.usecase';
@@ -20,6 +21,17 @@ import { GetExecutionHistoryUseCase } from '../../application/use-cases/processi
 
 // Application interfaces
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
+import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import type {
+  ProcessListCommand,
+  ProcessBatchCommand,
+  GetExecutionHistoryCommand,
+} from 'shared/application/dtos/processing/commands.dto';
+import type {
+  ProcessListResponse,
+  ProcessBatchResponse,
+  GetExecutionHistoryResponse,
+} from 'shared/application/dtos/processing/responses.dto';
 
 // Logger
 import { createLogger } from '../../infrastructure/services/core/logger.service';
@@ -43,9 +55,12 @@ export class ProcessingContainer {
   private readonly jellyseerrClient: JellyseerrHttpClient;
 
   // Application (public)
-  public readonly processListUseCase: ProcessListUseCase;
-  public readonly processBatchUseCase: ProcessBatchUseCase;
-  public readonly getExecutionHistoryUseCase: GetExecutionHistoryUseCase;
+  public readonly processListUseCase: IUseCase<ProcessListCommand, ProcessListResponse>;
+  public readonly processBatchUseCase: IUseCase<ProcessBatchCommand, ProcessBatchResponse>;
+  public readonly getExecutionHistoryUseCase: IUseCase<
+    GetExecutionHistoryCommand,
+    GetExecutionHistoryResponse
+  >;
 
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate encryption service with validated key
@@ -78,7 +93,7 @@ export class ProcessingContainer {
     const logger = createLogger('processing');
 
     // 3. Instantiate use cases with dependencies injected
-    this.processListUseCase = new ProcessListUseCase(
+    const actualProcessListUseCase = new ProcessListUseCase(
       this.mediaListRepository,
       this.providerConfigRepository,
       this.jellyseerrConfigRepository,
@@ -88,8 +103,12 @@ export class ProcessingContainer {
       this.jellyseerrClient,
       logger
     );
+    this.processListUseCase = new LoggingUseCaseDecorator(
+      actualProcessListUseCase,
+      'processing:list'
+    );
 
-    this.processBatchUseCase = new ProcessBatchUseCase(
+    const actualProcessBatchUseCase = new ProcessBatchUseCase(
       this.mediaListRepository,
       this.providerConfigRepository,
       this.jellyseerrConfigRepository,
@@ -99,9 +118,17 @@ export class ProcessingContainer {
       this.jellyseerrClient,
       logger
     );
+    this.processBatchUseCase = new LoggingUseCaseDecorator(
+      actualProcessBatchUseCase,
+      'processing:batch'
+    );
 
-    this.getExecutionHistoryUseCase = new GetExecutionHistoryUseCase(
+    const actualGetExecutionHistoryUseCase = new GetExecutionHistoryUseCase(
       this.executionHistoryRepository
+    );
+    this.getExecutionHistoryUseCase = new LoggingUseCaseDecorator(
+      actualGetExecutionHistoryUseCase,
+      'processing:history'
     );
   }
 }

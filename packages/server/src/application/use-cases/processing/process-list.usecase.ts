@@ -8,6 +8,7 @@ import type { IJellyseerrClient } from '../../services/jellyseerr-client.service
 import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { Logger } from 'pino';
+import type { IUseCase } from '../use-case.interface';
 import { ProcessingExecution } from '../../../domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
@@ -30,7 +31,7 @@ import {
  * 6. Cache successful requests
  * 7. Update execution record (status: success/error)
  */
-export class ProcessListUseCase {
+export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessListResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly providerConfigRepository: IProviderConfigRepository,
