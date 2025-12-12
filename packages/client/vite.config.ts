@@ -23,47 +23,54 @@ export default defineConfig({
     },
   },
   build: {
+    emptyOutDir: true, // Allow cleaning output dir outside project root
     rollupOptions: {
       output: {
-        manualChunks: {
-          // React core libraries
-          'vendor-react': ['react', 'react-dom', 'react/jsx-runtime'],
+        manualChunks: (id) => {
+          // React core libraries (handle Bun's node_modules structure)
+          if (id.includes('react-dom') || id.includes('react/jsx-runtime') || id.includes('react/jsx-dev-runtime')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/react') && !id.includes('react-')) {
+            return 'vendor-react';
+          }
 
           // TanStack Router
-          'vendor-router': ['@tanstack/react-router'],
+          if (id.includes('@tanstack/react-router')) {
+            return 'vendor-router';
+          }
 
           // Data fetching & state management
-          'vendor-query': ['@tanstack/react-query', '@trpc/client', '@trpc/react-query'],
+          if (id.includes('@tanstack/react-query') || id.includes('@trpc/client') || id.includes('@trpc/react-query')) {
+            return 'vendor-query';
+          }
 
-          // Radix UI components (shadcn/ui dependencies)
-          'vendor-ui': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-label',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-tooltip',
-          ],
+          // Radix UI components
+          if (id.includes('@radix-ui/')) {
+            return 'vendor-ui';
+          }
 
-          // Table library (can be large)
-          'vendor-table': ['@tanstack/react-table'],
+          // Table library
+          if (id.includes('@tanstack/react-table')) {
+            return 'vendor-table';
+          }
 
-          // Icon library (can be large with many icons)
-          'vendor-icons': ['lucide-react'],
+          // Icon library
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons';
+          }
 
           // Utilities and smaller libraries
-          'vendor-utils': [
-            'clsx',
-            'tailwind-merge',
-            'tailwind-variants',
-            'next-themes',
-            'croner',
-            'zod',
-          ],
+          if (
+            id.includes('clsx') ||
+            id.includes('tailwind-merge') ||
+            id.includes('tailwind-variants') ||
+            id.includes('next-themes') ||
+            id.includes('croner') ||
+            id.includes('zod')
+          ) {
+            return 'vendor-utils';
+          }
         },
       },
     },
