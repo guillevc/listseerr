@@ -2,29 +2,16 @@
 FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
-# Copy all workspace files
+# Copy and build
 COPY package.json bun.lock ./
 COPY packages ./packages
+RUN bun install --frozen-lockfile && bun run build
 
-# Install all dependencies and build
-RUN bun install --frozen-lockfile && \
-    bun run build
-
-# Production stage
-FROM oven/bun:1-alpine AS release
+# Production stage - minimal image
+FROM oven/bun:1-alpine
 WORKDIR /app
 
-# Copy package files for production install
-COPY package.json bun.lock ./
-COPY packages/api-contract/package.json ./packages/api-contract/
-COPY packages/client/package.json ./packages/client/
-COPY packages/server/package.json ./packages/server/
-COPY packages/shared/package.json ./packages/shared/
-
-# Install only production dependencies
-RUN bun install --frozen-lockfile --production
-
-# Copy built artifacts from builder
+# Copy only built artifacts (no node_modules!)
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/packages/server/migrations ./migrations
 
@@ -38,7 +25,6 @@ ENV NODE_ENV=production \
     DATABASE_PATH=/app/data/listseerr.db \
     MIGRATIONS_FOLDER=/app/migrations
 
-# Run as non-root user
 USER bun
 EXPOSE 3000/tcp
 
