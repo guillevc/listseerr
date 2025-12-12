@@ -1,4 +1,4 @@
-import type { IMediaListRepository } from '../repositories/media-list.repository.interface';
+import type { IMediaListRepository } from '../../repositories/media-list.repository.interface';
 import type { GetAllMediaListsCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { GetAllMediaListsResponse } from 'shared/application/dtos/media-list/responses.dto';
 

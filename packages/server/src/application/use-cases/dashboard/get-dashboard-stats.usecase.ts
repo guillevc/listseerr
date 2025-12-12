@@ -1,5 +1,5 @@
-import type { IDashboardStatsRepository } from '../repositories/dashboard-stats.repository.interface';
-import type { ISchedulerInfoService } from '../services/scheduler-info.service.interface';
+import type { IDashboardStatsRepository } from '../../repositories/dashboard-stats.repository.interface';
+import type { ISchedulerInfoService } from '../../services/scheduler-info.service.interface';
 import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
 

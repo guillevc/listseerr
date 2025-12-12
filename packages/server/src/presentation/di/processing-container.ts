@@ -14,9 +14,9 @@ import { JellyseerrHttpClient } from '../../infrastructure/services/jellyseerr-h
 import { AesEncryptionService } from '../../infrastructure/services/aes-encryption.service';
 
 // Use Cases
-import { ProcessListUseCase } from '../../application/use-cases/process-list.usecase';
-import { ProcessBatchUseCase } from '../../application/use-cases/process-batch.usecase';
-import { GetExecutionHistoryUseCase } from '../../application/use-cases/get-execution-history.usecase';
+import { ProcessListUseCase } from '../../application/use-cases/processing/process-list.usecase';
+import { ProcessBatchUseCase } from '../../application/use-cases/processing/process-batch.usecase';
+import { GetExecutionHistoryUseCase } from '../../application/use-cases/processing/get-execution-history.usecase';
 
 // Application interfaces
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';

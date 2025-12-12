@@ -2,9 +2,9 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '../../infrastructure/db/schema';
 import { DrizzleProviderConfigRepository } from '../../infrastructure/repositories/drizzle-provider-config.repository';
 import { AesEncryptionService } from '../../infrastructure/services/aes-encryption.service';
-import { GetProviderConfigUseCase } from '../../application/use-cases/get-provider-config.usecase';
-import { UpdateProviderConfigUseCase } from '../../application/use-cases/update-provider-config.usecase';
-import { DeleteProviderConfigUseCase } from '../../application/use-cases/delete-provider-config.usecase';
+import { GetProviderConfigUseCase } from '../../application/use-cases/provider-config/get-provider-config.usecase';
+import { UpdateProviderConfigUseCase } from '../../application/use-cases/provider-config/update-provider-config.usecase';
+import { DeleteProviderConfigUseCase } from '../../application/use-cases/provider-config/delete-provider-config.usecase';
 import { createLogger } from '../../infrastructure/services/logger.service';
 import { env } from '../../env';
 

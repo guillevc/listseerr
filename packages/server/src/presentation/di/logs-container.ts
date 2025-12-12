@@ -2,8 +2,8 @@
 import { LogBufferAdapter } from '../../infrastructure/services/log-buffer.adapter';
 
 // Use Cases
-import { GetLogsUseCase } from '../../application/use-cases/get-logs.usecase';
-import { ClearLogsUseCase } from '../../application/use-cases/clear-logs.usecase';
+import { GetLogsUseCase } from '../../application/use-cases/logs/get-logs.usecase';
+import { ClearLogsUseCase } from '../../application/use-cases/logs/clear-logs.usecase';
 
 /**
  * Logs Dependency Injection Container

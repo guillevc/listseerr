@@ -2,8 +2,8 @@
 import { SchedulerService } from '../../infrastructure/services/scheduler.service';
 
 // Use Cases
-import { GetScheduledJobsUseCase } from '../../application/use-cases/get-scheduled-jobs.usecase';
-import { ReloadSchedulerUseCase } from '../../application/use-cases/reload-scheduler.usecase';
+import { GetScheduledJobsUseCase } from '../../application/use-cases/scheduler/get-scheduled-jobs.usecase';
+import { ReloadSchedulerUseCase } from '../../application/use-cases/processing/reload-scheduler.usecase';
 
 /**
  * Scheduler Dependency Injection Container

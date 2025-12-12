@@ -1,4 +1,4 @@
-import type { IJellyseerrConfigRepository } from '../repositories/jellyseerr-config.repository.interface';
+import type { IJellyseerrConfigRepository } from '../../repositories/jellyseerr-config.repository.interface';
 import type { GetJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { GetJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 

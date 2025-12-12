@@ -8,9 +8,9 @@ import { SchedulerInfoAdapter } from '../../infrastructure/services/scheduler-in
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
 
 // Use Cases
-import { GetDashboardStatsUseCase } from '../../application/use-cases/get-dashboard-stats.usecase';
-import { GetRecentActivityUseCase } from '../../application/use-cases/get-recent-activity.usecase';
-import { GetPendingRequestsUseCase } from '../../application/use-cases/get-pending-requests.usecase';
+import { GetDashboardStatsUseCase } from '../../application/use-cases/dashboard/get-dashboard-stats.usecase';
+import { GetRecentActivityUseCase } from '../../application/use-cases/logs/get-recent-activity.usecase';
+import { GetPendingRequestsUseCase } from '../../application/use-cases/processing/get-pending-requests.usecase';
 
 /**
  * Dashboard Dependency Injection Container

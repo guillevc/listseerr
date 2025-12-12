@@ -8,13 +8,13 @@ import { SchedulerService } from '../../infrastructure/services/scheduler.servic
 import { LoggerService } from '../../infrastructure/services/logger.service';
 
 // Application layer - Use cases
-import { GetAllMediaListsUseCase } from '../../application/use-cases/get-all-media-lists.usecase';
-import { GetMediaListByIdUseCase } from '../../application/use-cases/get-media-list-by-id.usecase';
-import { CreateMediaListUseCase } from '../../application/use-cases/create-media-list.usecase';
-import { UpdateMediaListUseCase } from '../../application/use-cases/update-media-list.usecase';
-import { DeleteMediaListUseCase } from '../../application/use-cases/delete-media-list.usecase';
-import { ToggleListEnabledUseCase } from '../../application/use-cases/toggle-list-enabled.usecase';
-import { EnableAllListsUseCase } from '../../application/use-cases/enable-all-lists.usecase';
+import { GetAllMediaListsUseCase } from '../../application/use-cases/lists/get-all-media-lists.usecase';
+import { GetMediaListByIdUseCase } from '../../application/use-cases/lists/get-media-list-by-id.usecase';
+import { CreateMediaListUseCase } from '../../application/use-cases/lists/create-media-list.usecase';
+import { UpdateMediaListUseCase } from '../../application/use-cases/lists/update-media-list.usecase';
+import { DeleteMediaListUseCase } from '../../application/use-cases/lists/delete-media-list.usecase';
+import { ToggleListEnabledUseCase } from '../../application/use-cases/lists/toggle-list-enabled.usecase';
+import { EnableAllListsUseCase } from '../../application/use-cases/lists/enable-all-lists.usecase';
 
 /**
  * Dependency Injection Container for Lists Management Domain

@@ -5,8 +5,8 @@ import * as schema from '../../infrastructure/db/schema';
 import { DrizzleGeneralSettingsRepository } from '../../infrastructure/repositories/drizzle-general-settings.repository';
 
 // Application layer - Use cases
-import { GetGeneralSettingsUseCase } from '../../application/use-cases/get-general-settings.usecase';
-import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/update-general-settings.usecase';
+import { GetGeneralSettingsUseCase } from '../../application/use-cases/settings/get-general-settings.usecase';
+import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/settings/update-general-settings.usecase';
 
 // Infrastructure services (existing)
 import { scheduler } from '../../infrastructure/services/scheduler.service';

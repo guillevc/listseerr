@@ -1,4 +1,4 @@
-import type { IJellyseerrConnectionTester } from '../services/jellyseerr-connection-tester.service.interface';
+import type { IJellyseerrConnectionTester } from '../../services/jellyseerr-connection-tester.service.interface';
 import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,

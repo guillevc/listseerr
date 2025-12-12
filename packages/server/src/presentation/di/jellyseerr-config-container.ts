@@ -6,10 +6,10 @@ import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/reposito
 import { HttpJellyseerrConnectionTester } from '../../infrastructure/services/http-jellyseerr-connection-tester.service';
 
 // Application layer - Use cases
-import { GetJellyseerrConfigUseCase } from '../../application/use-cases/get-jellyseerr-config.usecase';
-import { UpdateJellyseerrConfigUseCase } from '../../application/use-cases/update-jellyseerr-config.usecase';
-import { TestJellyseerrConnectionUseCase } from '../../application/use-cases/test-jellyseerr-connection.usecase';
-import { DeleteJellyseerrConfigUseCase } from '../../application/use-cases/delete-jellyseerr-config.usecase';
+import { GetJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
+import { UpdateJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/update-jellyseerr-config.usecase';
+import { TestJellyseerrConnectionUseCase } from '../../application/use-cases/jellyseerr/test-jellyseerr-connection.usecase';
+import { DeleteJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/delete-jellyseerr-config.usecase';
 
 // Infrastructure services (existing)
 import { createLogger } from '../../infrastructure/services/logger.service';

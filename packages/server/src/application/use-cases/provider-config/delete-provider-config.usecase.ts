@@ -1,4 +1,4 @@
-import type { IProviderConfigRepository } from '../repositories/provider-config.repository.interface';
+import type { IProviderConfigRepository } from '../../repositories/provider-config.repository.interface';
 import type { DeleteProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
 import type { DeleteProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
