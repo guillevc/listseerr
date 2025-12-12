@@ -1,17 +1,17 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../infrastructure/db/schema';
+import * as schema from '@/infrastructure/db/schema';
 
 // Infrastructure
-import { DrizzleDashboardStatsRepository } from '../../infrastructure/repositories/drizzle-dashboard-stats.repository';
-import { JellyseerrStatsAdapter } from '../../infrastructure/services/adapters/jellyseerr-stats.adapter';
-import { SchedulerInfoAdapter } from '../../infrastructure/services/adapters/scheduler-info.adapter';
-import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { DrizzleDashboardStatsRepository } from '@/infrastructure/repositories/drizzle-dashboard-stats.repository';
+import { JellyseerrStatsAdapter } from '@/infrastructure/services/adapters/jellyseerr-stats.adapter';
+import { SchedulerInfoAdapter } from '@/infrastructure/services/adapters/scheduler-info.adapter';
+import { DrizzleJellyseerrConfigRepository } from '@/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 
 // Use Cases
-import { GetDashboardStatsUseCase } from '../../application/use-cases/dashboard/get-dashboard-stats.usecase';
-import { GetRecentActivityUseCase } from '../../application/use-cases/logs/get-recent-activity.usecase';
-import { GetPendingRequestsUseCase } from '../../application/use-cases/processing/get-pending-requests.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import { GetDashboardStatsUseCase } from '@/application/use-cases/dashboard/get-dashboard-stats.usecase';
+import { GetRecentActivityUseCase } from '@/application/use-cases/logs/get-recent-activity.usecase';
+import { GetPendingRequestsUseCase } from '@/application/use-cases/processing/get-pending-requests.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
 import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';

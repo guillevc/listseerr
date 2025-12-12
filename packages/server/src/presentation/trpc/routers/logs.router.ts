@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../context';
-import { LogsContainer } from '../../di/logs-container';
+import { router, publicProcedure } from '@/presentation/trpc/context';
+import { LogsContainer } from '@/presentation/di/logs-container';
 
 /**
  * Logs Router - Thin presentation layer

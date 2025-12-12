@@ -1,10 +1,10 @@
 // Infrastructure
-import { LogBufferAdapter } from '../../infrastructure/services/adapters/log-buffer.adapter';
+import { LogBufferAdapter } from '@/infrastructure/services/adapters/log-buffer.adapter';
 
 // Use Cases
-import { GetLogsUseCase } from '../../application/use-cases/logs/get-logs.usecase';
-import { ClearLogsUseCase } from '../../application/use-cases/logs/clear-logs.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import { GetLogsUseCase } from '@/application/use-cases/logs/get-logs.usecase';
+import { ClearLogsUseCase } from '@/application/use-cases/logs/clear-logs.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type { GetLogsCommand, ClearLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type {
   GetLogsResponse,

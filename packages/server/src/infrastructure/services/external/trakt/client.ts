@@ -1,6 +1,6 @@
 import { parseTraktUrl, buildTraktApiUrl } from './url-parser';
 import type { TraktListItem, MediaItem } from './types';
-import { LoggerService } from '../../core/logger.service';
+import { LoggerService } from '@/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('trakt-client');
 

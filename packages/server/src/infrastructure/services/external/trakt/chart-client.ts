@@ -3,7 +3,7 @@ import { TraktChartTypeValues } from 'shared/domain/types/trakt-chart-type.types
 import type { TraktMediaType } from 'shared/domain/types/trakt-media-type.types';
 import { TraktMediaTypeValues } from 'shared/domain/types/trakt-media-type.types';
 import type { MediaItem } from './types';
-import { LoggerService } from '../../core/logger.service';
+import { LoggerService } from '@/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('trakt-chart-client');
 

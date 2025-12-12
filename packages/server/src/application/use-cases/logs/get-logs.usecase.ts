@@ -1,8 +1,8 @@
-import type { ILogBufferService } from '../../services/log-buffer.service.interface';
+import type { ILogBufferService } from '@/application/services/log-buffer.service.interface';
 import type { GetLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type { GetLogsResponse } from 'shared/application/dtos/logs/responses.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetLogsUseCase

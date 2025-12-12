@@ -1,5 +1,5 @@
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
-import { db, sqlite } from '../src/infrastructure/db/client';
+import { db, sqlite } from '@/infrastructure/db/client';
 
 console.log('Running migrations...');
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../context';
-import { JellyseerrConfigContainer } from '../../di/jellyseerr-config-container';
+import { router, publicProcedure } from '@/presentation/trpc/context';
+import { JellyseerrConfigContainer } from '@/presentation/di/jellyseerr-config-container';
 
 // Zod schemas for input validation
 const configInputSchema = z.object({
@@ -47,6 +47,6 @@ export function createJellyseerrConfigRouter(container: JellyseerrConfigContaine
 }
 
 // Export a singleton instance with the global db
-import { db } from '../../../infrastructure/db/client';
+import { db } from '@/infrastructure/db/client';
 const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
 export const jellyseerrConfigRouter = createJellyseerrConfigRouter(jellyseerrConfigContainer);

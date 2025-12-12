@@ -1,8 +1,8 @@
-import type { ISchedulerService } from '../../services/scheduler.service.interface';
+import type { ISchedulerService } from '@/application/services/scheduler.service.interface';
 import type { GetScheduledJobsCommand } from 'shared/application/dtos/scheduler/commands.dto';
 import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler/responses.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetScheduledJobsUseCase

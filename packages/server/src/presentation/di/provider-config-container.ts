@@ -1,11 +1,11 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../infrastructure/db/schema';
-import { DrizzleProviderConfigRepository } from '../../infrastructure/repositories/drizzle-provider-config.repository';
-import { AesEncryptionService } from '../../infrastructure/services/core/aes-encryption.service';
-import { GetProviderConfigUseCase } from '../../application/use-cases/provider-config/get-provider-config.usecase';
-import { UpdateProviderConfigUseCase } from '../../application/use-cases/provider-config/update-provider-config.usecase';
-import { DeleteProviderConfigUseCase } from '../../application/use-cases/provider-config/delete-provider-config.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import * as schema from '@/infrastructure/db/schema';
+import { DrizzleProviderConfigRepository } from '@/infrastructure/repositories/drizzle-provider-config.repository';
+import { AesEncryptionService } from '@/infrastructure/services/core/aes-encryption.service';
+import { GetProviderConfigUseCase } from '@/application/use-cases/provider-config/get-provider-config.usecase';
+import { UpdateProviderConfigUseCase } from '@/application/use-cases/provider-config/update-provider-config.usecase';
+import { DeleteProviderConfigUseCase } from '@/application/use-cases/provider-config/delete-provider-config.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type {
   GetProviderConfigCommand,
   UpdateProviderConfigCommand,
@@ -16,8 +16,8 @@ import type {
   UpdateProviderConfigResponse,
   DeleteProviderConfigResponse,
 } from 'shared/application/dtos/provider-config/responses.dto';
-import { LoggerService } from '../../infrastructure/services/core/logger.service';
-import { env } from '../../env';
+import { LoggerService } from '@/infrastructure/services/core/logger.service';
+import { env } from '@/env';
 
 /**
  * ProviderConfig Dependency Injection Container

@@ -1,8 +1,8 @@
-import type { IGeneralSettingsRepository } from '../../repositories/general-settings.repository.interface';
+import type { IGeneralSettingsRepository } from '@/application/repositories/general-settings.repository.interface';
 import type { GetGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { GetGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class GetGeneralSettingsUseCase implements IUseCase<
   GetGeneralSettingsCommand,

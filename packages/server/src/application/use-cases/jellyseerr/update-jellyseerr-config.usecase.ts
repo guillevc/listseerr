@@ -1,13 +1,13 @@
-import type { IJellyseerrConfigRepository } from '../../repositories/jellyseerr-config.repository.interface';
+import type { IJellyseerrConfigRepository } from '@/application/repositories/jellyseerr-config.repository.interface';
 import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
-import { JellyseerrConfig } from '../../../domain/entities/jellyseerr-config.entity';
+import { JellyseerrConfig } from '@/domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { ILogger } from '../../services/logger.interface';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { ILogger } from '@/application/services/logger.interface';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateJellyseerrConfigUseCase implements IUseCase<
   UpdateJellyseerrConfigCommand,

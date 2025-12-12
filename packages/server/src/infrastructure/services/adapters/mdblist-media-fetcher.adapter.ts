@@ -1,10 +1,10 @@
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
 import { ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
-import type { IMediaFetcher } from '../../../application/services/media-fetcher.service.interface';
+import type { IMediaFetcher } from '@/application/services/media-fetcher.service.interface';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderConfigData } from '../../../domain/types/provider-config.types';
-import { fetchMdbListList } from '../external/mdblist/client';
+import type { ProviderConfigData } from '@/domain/types/provider-config.types';
+import { fetchMdbListList } from '@/infrastructure/services/external/mdblist/client';
 
 /**
  * MDBList Media Fetcher Adapter

@@ -1,16 +1,16 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../infrastructure/db/schema';
+import * as schema from '@/infrastructure/db/schema';
 
 // Infrastructure layer
-import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { HttpJellyseerrConnectionTester } from '../../infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
+import { DrizzleJellyseerrConfigRepository } from '@/infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { HttpJellyseerrConnectionTester } from '@/infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
 
 // Application layer - Use cases
-import { GetJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
-import { UpdateJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/update-jellyseerr-config.usecase';
-import { TestJellyseerrConnectionUseCase } from '../../application/use-cases/jellyseerr/test-jellyseerr-connection.usecase';
-import { DeleteJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/delete-jellyseerr-config.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import { GetJellyseerrConfigUseCase } from '@/application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
+import { UpdateJellyseerrConfigUseCase } from '@/application/use-cases/jellyseerr/update-jellyseerr-config.usecase';
+import { TestJellyseerrConnectionUseCase } from '@/application/use-cases/jellyseerr/test-jellyseerr-connection.usecase';
+import { DeleteJellyseerrConfigUseCase } from '@/application/use-cases/jellyseerr/delete-jellyseerr-config.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type {
   GetJellyseerrConfigCommand,
   UpdateJellyseerrConfigCommand,
@@ -27,7 +27,7 @@ import type {
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
 
 // Infrastructure services (existing)
-import { LoggerService } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '@/infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for Jellyseerr Config Domain

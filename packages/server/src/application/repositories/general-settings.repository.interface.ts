@@ -1,4 +1,4 @@
-import type { GeneralSettings } from '../../domain/entities/general-settings.entity';
+import type { GeneralSettings } from '@/domain/entities/general-settings.entity';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**

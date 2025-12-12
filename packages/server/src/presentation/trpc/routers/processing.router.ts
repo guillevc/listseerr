@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../context';
-import { ProcessingContainer } from '../../di/processing-container';
-import { db } from '../../../infrastructure/db/client';
+import { router, publicProcedure } from '@/presentation/trpc/context';
+import { ProcessingContainer } from '@/presentation/di/processing-container';
+import { db } from '@/infrastructure/db/client';
 
 /**
  * Processing Router (tRPC)

@@ -1,15 +1,15 @@
 import type {
   IDashboardStatsRepository,
   ExecutionWithListName,
-} from '../../repositories/dashboard-stats.repository.interface';
+} from '@/application/repositories/dashboard-stats.repository.interface';
 import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type {
   GetRecentActivityResponse,
   ActivityGroup,
 } from 'shared/application/dtos/dashboard/responses.dto';
 import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetRecentActivityUseCase

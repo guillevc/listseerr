@@ -1,8 +1,8 @@
-import type { IExecutionHistoryRepository } from '../../repositories/execution-history.repository.interface';
+import type { IExecutionHistoryRepository } from '@/application/repositories/execution-history.repository.interface';
 import type { GetExecutionHistoryCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { GetExecutionHistoryResponse } from 'shared/application/dtos/processing/responses.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetExecutionHistoryUseCase

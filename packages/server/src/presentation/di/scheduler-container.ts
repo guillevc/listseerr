@@ -1,10 +1,10 @@
 // Infrastructure
-import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
+import { SchedulerService } from '@/infrastructure/services/core/scheduler.service';
 
 // Use Cases
-import { GetScheduledJobsUseCase } from '../../application/use-cases/scheduler/get-scheduled-jobs.usecase';
-import { ReloadSchedulerUseCase } from '../../application/use-cases/processing/reload-scheduler.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import { GetScheduledJobsUseCase } from '@/application/use-cases/scheduler/get-scheduled-jobs.usecase';
+import { ReloadSchedulerUseCase } from '@/application/use-cases/processing/reload-scheduler.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type { GetScheduledJobsCommand } from 'shared/application/dtos/scheduler/commands.dto';
 import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler/responses.dto';
 import type { ReloadSchedulerCommand } from 'shared/application/dtos/scheduler/commands.dto';

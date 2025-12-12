@@ -1,10 +1,10 @@
-import type { IMediaListRepository } from '../../repositories/media-list.repository.interface';
-import type { ISchedulerService } from '../../services/scheduler.service.interface';
-import type { ILogger } from '../../services/logger.interface';
+import type { IMediaListRepository } from '@/application/repositories/media-list.repository.interface';
+import type { ISchedulerService } from '@/application/services/scheduler.service.interface';
+import type { ILogger } from '@/application/services/logger.interface';
 import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
-import type { IUseCase } from '../use-case.interface';
-import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class DeleteMediaListUseCase implements IUseCase<
   DeleteMediaListCommand,

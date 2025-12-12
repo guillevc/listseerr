@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { db } from '../../infrastructure/db/client';
+import { db } from '@/infrastructure/db/client';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { DomainError } from 'shared/domain/errors/domain.error';
 

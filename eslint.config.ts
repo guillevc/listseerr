@@ -27,4 +27,21 @@ export default [
       'react-hooks/set-state-in-effect': 'off',
     },
   },
+  {
+    files: ['packages/server/**/*.{ts,tsx}', 'packages/api-contract/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*'],
+              message:
+                'Backward relative imports are not allowed. Use path aliases (@/domain/*, @/application/*, etc.) or same-level imports (./*).',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ] satisfies Linter.Config[];

@@ -1,13 +1,13 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../infrastructure/db/schema';
+import * as schema from '@/infrastructure/db/schema';
 
 // Infrastructure layer
-import { DrizzleGeneralSettingsRepository } from '../../infrastructure/repositories/drizzle-general-settings.repository';
+import { DrizzleGeneralSettingsRepository } from '@/infrastructure/repositories/drizzle-general-settings.repository';
 
 // Application layer - Use cases
-import { GetGeneralSettingsUseCase } from '../../application/use-cases/settings/get-general-settings.usecase';
-import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/settings/update-general-settings.usecase';
-import type { IUseCase } from '../../application/use-cases/use-case.interface';
+import { GetGeneralSettingsUseCase } from '@/application/use-cases/settings/get-general-settings.usecase';
+import { UpdateGeneralSettingsUseCase } from '@/application/use-cases/settings/update-general-settings.usecase';
+import type { IUseCase } from '@/application/use-cases/use-case.interface';
 import type {
   GetGeneralSettingsCommand,
   UpdateGeneralSettingsCommand,
@@ -18,8 +18,8 @@ import type {
 } from 'shared/application/dtos/general-settings/responses.dto';
 
 // Infrastructure services (existing)
-import { scheduler } from '../../infrastructure/services/core/scheduler.service';
-import { LoggerService } from '../../infrastructure/services/core/logger.service';
+import { scheduler } from '@/infrastructure/services/core/scheduler.service';
+import { LoggerService } from '@/infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for General Settings Domain
