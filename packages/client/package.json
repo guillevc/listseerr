@@ -5,7 +5,8 @@
   "exports": [],
   "scripts": {
     "dev": "vite --clearScreen false",
-    "build": "bunx --bun vite build --outDir ../../dist/client",
+    "build": "bun vite build --outDir ../../dist/client",
+    "build:analyze": "ANALYZE=true bun vite build --outDir ../../dist/client",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -51,6 +52,7 @@
     "eslint": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
     "eslint-plugin-react-refresh": "catalog:",
+    "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^4.1.17",
     "typescript": "catalog:",
     "vite": "^7.2.7"

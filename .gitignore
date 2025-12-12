@@ -44,3 +44,4 @@ data/
 # TypeScript
 *.tsbuildinfo
 .cache/
+packages/client/stats.html
