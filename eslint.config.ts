@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
+import type { Linter } from 'eslint';
 
 export default [
   { ignores: ['dist'] },
@@ -23,8 +24,7 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      // Allow setState in effects for legitimate data synchronization patterns
       'react-hooks/set-state-in-effect': 'off',
     },
   },
-];
+] satisfies Linter.Config[];
