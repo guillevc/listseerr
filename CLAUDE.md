@@ -321,31 +321,34 @@ This project uses modern tooling to enforce code quality, consistency, and effic
 
 #### A. Package Manager and Monorepo
 
-| **Tool** | **Version** | **Purpose** | **Configuration** |
-| --- | --- | --- | --- |
-| **Bun** | 1.3.4+ | Package manager, runtime, bundler, and test runner | `package.json` with workspace catalog for shared dependencies |
-| **Workspace Structure** | N/A | Monorepo with multiple packages | `packages/server`, `packages/client`, `packages/shared`, `packages/api-contract` |
+| **Tool**                | **Version** | **Purpose**                                        | **Configuration**                                                                |
+| ----------------------- | ----------- | -------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Bun**                 | 1.3.4+      | Package manager, runtime, bundler, and test runner | `package.json` with workspace catalog for shared dependencies                    |
+| **Workspace Structure** | N/A         | Monorepo with multiple packages                    | `packages/server`, `packages/client`, `packages/shared`, `packages/api-contract` |
 
 **Key Features:**
+
 - **Catalog Dependencies**: Shared version management across packages using `catalog:` references
 - **Workspace Filtering**: Run commands per package using `bun run --filter <package> <script>`
 - **Fast Installs**: Bun's native speed for dependency installation
 
 #### B. Code Quality Tools
 
-| **Tool** | **Purpose** | **Configuration** | **Usage** |
-| --- | --- | --- | --- |
-| **ESLint** | Linting (code quality rules) | `eslint.config.js` (FlatConfig format) | `bun run lint` |
-| **Prettier** | Formatting (code style) | `.prettierrc` | `bun run format` |
-| **TypeScript** | Type checking | Per-package `tsconfig.json` | `bun run typecheck` |
+| **Tool**       | **Purpose**                  | **Configuration**                      | **Usage**           |
+| -------------- | ---------------------------- | -------------------------------------- | ------------------- |
+| **ESLint**     | Linting (code quality rules) | `eslint.config.js` (FlatConfig format) | `bun run lint`      |
+| **Prettier**   | Formatting (code style)      | `.prettierrc`                          | `bun run format`    |
+| **TypeScript** | Type checking                | Per-package `tsconfig.json`            | `bun run typecheck` |
 
 **ESLint Configuration:**
+
 - Uses ESLint 9.x with FlatConfig format
 - Shared root config (`eslint.config.js`) automatically discovered by all packages
 - Includes React hooks and React refresh plugins for client
 - `eslint-config-prettier` disables formatting rules to avoid conflicts
 
 **Prettier Configuration:**
+
 - Single quotes (`singleQuote: true`)
 - Semicolons (`semi: true`)
 - 2-space indentation (`tabWidth: 2`)
@@ -353,6 +356,7 @@ This project uses modern tooling to enforce code quality, consistency, and effic
 - ES5 trailing commas (`trailingComma: "es5"`)
 
 **TypeScript Configuration:**
+
 - Workspace version ~5.9.3
 - Each package has its own `tsconfig.json`
 - `tsc --noEmit` for type checking (no emit, build uses Bun/Vite)
@@ -360,6 +364,7 @@ This project uses modern tooling to enforce code quality, consistency, and effic
 #### C. Scripts Organization
 
 **Root Package (`package.json`):**
+
 ```json
 {
   "scripts": {
@@ -376,6 +381,7 @@ This project uses modern tooling to enforce code quality, consistency, and effic
 
 **Per-Package Scripts:**
 Each package (`packages/*/package.json`) includes:
+
 ```json
 {
   "scripts": {
@@ -386,6 +392,7 @@ Each package (`packages/*/package.json`) includes:
 ```
 
 **Benefits:**
+
 - Run checks on all packages: `bun run lint`
 - Run checks on specific package: `bun run --filter server lint`
 - CI runs all checks: `bun run ci`
@@ -393,32 +400,37 @@ Each package (`packages/*/package.json`) includes:
 #### D. Editor Configuration (VS Code / VSCodium)
 
 **`.vscode/settings.json`:**
+
 - Format on save with Prettier
 - Auto-fix ESLint issues on save
 - Use workspace TypeScript version
 
 **`.vscode/extensions.json`:**
+
 - Recommended extensions: `prettier.prettier-vscode`, `dbaeumer.vscode-eslint`
 
 **Developer Experience:**
+
 - Save file → Auto-format with Prettier → Auto-fix with ESLint
 - No manual formatting needed
 - Consistent style across team
 
 #### E. Build and Bundling
 
-| **Package** | **Tool** | **Command** | **Output** |
-| --- | --- | --- | --- |
-| **Server** | Bun bundler | `bun build src/index.ts --outdir ../../dist --target bun --production --minify --splitting` | `dist/index.js` + chunks |
-| **Client** | Vite | `bunx --bun vite build --outDir ../../dist/client` | `dist/client/` |
+| **Package** | **Tool**    | **Command**                                                                                 | **Output**               |
+| ----------- | ----------- | ------------------------------------------------------------------------------------------- | ------------------------ |
+| **Server**  | Bun bundler | `bun build src/index.ts --outdir ../../dist --target bun --production --minify --splitting` | `dist/index.js` + chunks |
+| **Client**  | Vite        | `bunx --bun vite build --outDir ../../dist/client`                                          | `dist/client/`           |
 
 **Server Build Features:**
+
 - Minification (`--minify`)
 - Code splitting (`--splitting`)
 - Production mode (`--production`)
 - Bun-optimized output (`--target bun`)
 
 **Client Build Features:**
+
 - React + TypeScript via Vite
 - Tailwind CSS v4 via `@tailwindcss/vite`
 - TanStack Router for routing
@@ -427,6 +439,7 @@ Each package (`packages/*/package.json`) includes:
 #### F. Docker Optimization
 
 **Multi-stage Dockerfile:**
+
 ```dockerfile
 # Stage 1: Builder
 FROM oven/bun:1-alpine AS builder
@@ -439,6 +452,7 @@ FROM oven/bun:1-alpine
 ```
 
 **Optimizations Applied:**
+
 - Alpine base image (minimal size)
 - Server bundled with all dependencies
 - No `node_modules` in production image
@@ -446,6 +460,7 @@ FROM oven/bun:1-alpine
 - Final image: ~156MB (down from 500MB)
 
 **Key Learnings:**
+
 - Bundle server code to eliminate `node_modules` from production
 - Use `--minify --splitting` for smaller bundles
 - Move dev-only deps (pretty-loggers, etc.) to `devDependencies`
@@ -454,17 +469,20 @@ FROM oven/bun:1-alpine
 #### G. CI/CD
 
 **GitHub Actions (`.github/workflows/ci.yaml`):**
+
 - Uses `oven-sh/setup-bun@v2` for native Bun support
 - Runs `bun run ci` (lint + format:check + typecheck + build)
 - Fast feedback on PRs
 
 **Woodpecker CI (`.woodpecker.yaml`):**
+
 - Self-hosted CI with unlimited build minutes
 - Runs both CI checks AND Docker build
 - Uses native `oven/bun:1-alpine` image for checks
 - Uses `woodpeckerci/plugin-docker-buildx` for Docker builds
 
 **CI Pipeline:**
+
 1. Lint all packages
 2. Check Prettier formatting
 3. Type-check all packages

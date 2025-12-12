@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, desc, and } from 'drizzle-orm';
-import * as schema from '../../db/schema';
-import { executionHistory, mediaLists } from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
+import { executionHistory, mediaLists } from '../../infrastructure/db/schema';
 import { ProcessingExecution } from '../../domain/entities/processing-execution.entity';
 import { ExecutionStatus } from 'shared/domain/value-objects/execution-status.value-object';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';

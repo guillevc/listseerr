@@ -1,6 +1,6 @@
-import { createLogger } from '../../lib/logger';
-import { db } from '../../db';
-import { providerCache } from '../../db/schema';
+import { createLogger } from '../../logger.service';
+import { db } from '../../../db/client';
+import { providerCache } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import type { StevenLuItem, MediaItem } from './types';
 import { ProviderValues } from 'shared/domain/types/provider.types';

@@ -2,10 +2,10 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/bun';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '../trpc';
-import { createContext } from '../trpc/trpc';
-import { createLogger } from '../lib/logger';
-import { env } from '../env';
+import { appRouter } from '../trpc/app.router';
+import { createContext } from '../trpc/context';
+import { createLogger } from '../../infrastructure/services/logger.service';
+import { env } from '../../env';
 
 const logger = createLogger('http');
 

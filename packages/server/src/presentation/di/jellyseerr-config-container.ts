@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
@@ -12,7 +12,7 @@ import { TestJellyseerrConnectionUseCase } from '../../application/use-cases/tes
 import { DeleteJellyseerrConfigUseCase } from '../../application/use-cases/delete-jellyseerr-config.usecase';
 
 // Infrastructure services (existing)
-import { createLogger } from '../../lib/logger';
+import { createLogger } from '../../infrastructure/services/logger.service';
 
 /**
  * Dependency Injection Container for Jellyseerr Config Domain

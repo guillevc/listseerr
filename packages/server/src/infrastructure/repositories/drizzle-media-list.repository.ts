@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, desc, and } from 'drizzle-orm';
-import * as schema from '../../db/schema';
-import { mediaLists, executionHistory } from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
+import { mediaLists, executionHistory } from '../../infrastructure/db/schema';
 import { MediaList } from '../../domain/entities/media-list.entity';
 import type { IMediaListRepository } from '../../application/repositories/media-list.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';

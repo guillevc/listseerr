@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure
 import { DrizzleDashboardStatsRepository } from '../../infrastructure/repositories/drizzle-dashboard-stats.repository';

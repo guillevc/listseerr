@@ -1,6 +1,6 @@
 import { unlinkSync, existsSync } from 'fs';
 import { $ } from 'bun';
-import { env } from '../env';
+import { env } from '../src/env';
 
 const DB_PATH = env.DATABASE_PATH;
 const DB_FILES = [DB_PATH, `${DB_PATH}-shm`, `${DB_PATH}-wal`];

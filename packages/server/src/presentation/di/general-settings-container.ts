@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '../../infrastructure/repositories/drizzle-general-settings.repository';
@@ -9,8 +9,8 @@ import { GetGeneralSettingsUseCase } from '../../application/use-cases/get-gener
 import { UpdateGeneralSettingsUseCase } from '../../application/use-cases/update-general-settings.usecase';
 
 // Infrastructure services (existing)
-import { scheduler } from '../../lib/scheduler';
-import { createLogger } from '../../lib/logger';
+import { scheduler } from '../../infrastructure/services/scheduler.service';
+import { createLogger } from '../../infrastructure/services/logger.service';
 
 /**
  * Dependency Injection Container for General Settings Domain

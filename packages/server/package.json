@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./trpc": "./src/trpc/index.ts"
+    "./trpc": "./src/presentation/trpc/app.router.ts"
   },
   "scripts": {
     "dev": "bun run --watch --env-file=.env src/index.ts",
@@ -11,8 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "db:generate": "bun --env-file=.env drizzle-kit generate",
-    "db:migrate": "bun run --env-file=.env src/db/migrate.ts",
-    "db:reset": "bun run --env-file=.env src/db/reset.ts"
+    "db:migrate": "bun run --env-file=.env scripts/migrate.ts",
+    "db:reset": "bun run --env-file=.env scripts/reset.ts"
   },
   "dependencies": {
     "shared": "workspace:*",

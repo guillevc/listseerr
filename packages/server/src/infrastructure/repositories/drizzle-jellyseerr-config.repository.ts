@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
-import * as schema from '../../db/schema';
-import { jellyseerrConfigs } from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
+import { jellyseerrConfigs } from '../../infrastructure/db/schema';
 import { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';

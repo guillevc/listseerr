@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
-import * as schema from '../../db/schema';
-import { generalSettings } from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
+import { generalSettings } from '../../infrastructure/db/schema';
 import { GeneralSettings } from '../../domain/entities/general-settings.entity';
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 import type { IGeneralSettingsRepository } from '../../application/repositories/general-settings.repository.interface';

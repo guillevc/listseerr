@@ -1,9 +1,9 @@
-import { createLogger } from './lib/logger';
+import { createLogger } from './infrastructure/services/logger.service';
 import { env } from './env';
-import { db } from './db';
-import { runMigrations } from './app/bootstrap';
-import { createHttpApp } from './app/create-http-app';
-import { initializeScheduler } from './app/scheduler';
+import { db } from './infrastructure/db/client';
+import { runMigrations } from './presentation/bootstrap/database';
+import { createHttpApp } from './presentation/bootstrap/http-server';
+import { initializeScheduler } from './presentation/bootstrap/scheduler';
 
 const logger = createLogger('server');
 

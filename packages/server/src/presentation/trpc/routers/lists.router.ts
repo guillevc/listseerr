@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../../../trpc/trpc';
+import { router, publicProcedure } from '../context';
 import { ListsContainer } from '../../di/lists-container';
 import { ProviderValues } from 'shared/domain/types/provider.types';
 
@@ -91,6 +91,6 @@ export function createListsRouter(container: ListsContainer) {
 }
 
 // Export a singleton instance with the global db
-import { db } from '../../../db';
+import { db } from '../../../infrastructure/db/client';
 const listsContainer = new ListsContainer(db);
 export const listsRouter = createListsRouter(listsContainer);

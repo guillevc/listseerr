@@ -1,6 +1,55 @@
 import type { ILogger } from '../../application/services/logger.interface';
-import { createLogger } from '../../lib/logger';
 import type { Logger } from 'pino';
+import pino from 'pino';
+import { logBuffer } from './log-buffer.adapter';
+import { env } from '../../env';
+
+const isProduction = env.NODE_ENV === 'production';
+
+// Custom stream that captures logs for the buffer
+const logStream = pino.multistream([
+  // Pretty print for console
+  !isProduction
+    ? {
+        level: 'debug',
+        stream: pino.transport({
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'yyyy-mm-dd HH:MM:ss',
+            ignore: 'pid,hostname',
+            singleLine: false,
+          },
+        }),
+      }
+    : { level: 'info', stream: process.stdout },
+  // Capture for in-memory buffer (timestamps stored in UTC)
+  {
+    level: 'debug',
+    stream: {
+      write: (msg: string) => {
+        try {
+          const logObject = JSON.parse(msg);
+          logBuffer.addLog(logObject);
+        } catch {
+          // Ignore parsing errors
+        }
+      },
+    },
+  },
+]);
+
+const logger = pino(
+  {
+    level: env.LOG_LEVEL,
+  },
+  logStream
+);
+
+// Create child loggers for different modules
+export const createLogger = (module: string): Logger => {
+  return logger.child({ module });
+};
 
 export class LoggerService implements ILogger {
   private readonly logger: Logger;

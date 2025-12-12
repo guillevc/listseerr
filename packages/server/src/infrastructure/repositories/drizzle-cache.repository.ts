@@ -1,6 +1,6 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../db/schema';
-import { listItemsCache } from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
+import { listItemsCache } from '../../infrastructure/db/schema';
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import type { ICacheRepository } from '../../application/repositories/cache.repository.interface';
 

@@ -4,8 +4,8 @@ import type {
   IDashboardStatsRepository,
   ExecutionWithListName,
 } from '../../application/repositories/dashboard-stats.repository.interface';
-import { executionHistory, listItemsCache, mediaLists } from '../../db/schema';
-import * as schema from '../../db/schema';
+import { executionHistory, listItemsCache, mediaLists } from '../../infrastructure/db/schema';
+import * as schema from '../../infrastructure/db/schema';
 
 /**
  * DrizzleDashboardStatsRepository

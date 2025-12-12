@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../../db/schema';
+import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure
 import { DrizzleExecutionHistoryRepository } from '../../infrastructure/repositories/drizzle-execution-history.repository';
@@ -22,7 +22,7 @@ import { GetExecutionHistoryUseCase } from '../../application/use-cases/get-exec
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
 
 // Logger
-import { createLogger } from '../../lib/logger';
+import { createLogger } from '../../infrastructure/services/logger.service';
 import { env } from '../../env';
 
 /**

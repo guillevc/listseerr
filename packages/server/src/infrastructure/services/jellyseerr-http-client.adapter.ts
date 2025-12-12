@@ -5,7 +5,7 @@ import type {
   ProcessingResult,
 } from '../../application/services/jellyseerr-client.service.interface';
 import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
-import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
+import { requestItemsToJellyseerr } from './external/jellyseerr/client';
 
 /**
  * Jellyseerr HTTP Client Adapter

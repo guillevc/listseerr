@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '../db/schema';
-import { scheduler } from '../lib/scheduler';
-import { createLogger } from '../lib/logger';
+import * as schema from '../../infrastructure/db/schema';
+import { scheduler } from '../../infrastructure/services/scheduler.service';
+import { createLogger } from '../../infrastructure/services/logger.service';
 
 const logger = createLogger('scheduler');
 
@@ -19,7 +19,7 @@ async function processListCallback(
   logger.info({ listId }, 'Scheduler triggered - processing list');
 
   // Dynamic import to avoid circular dependencies
-  const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
+  const { processingContainer } = await import('../trpc/routers/processing.router');
 
   try {
     // Load the list to get the owner userId
@@ -67,7 +67,7 @@ async function processAllListsCallback(
 
   try {
     // Dynamic import to avoid circular dependencies
-    const { processingContainer } = await import('../presentation/trpc/routers/processing.router');
+    const { processingContainer } = await import('../trpc/routers/processing.router');
     // TODO: When multitenancy is implemented, process for all users separately
     // For now, process all lists for the default user (userId: 1)
     const result = await processingContainer.processBatchUseCase.execute({

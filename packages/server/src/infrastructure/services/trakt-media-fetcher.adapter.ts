@@ -4,8 +4,8 @@ import { ProviderNotConfiguredError } from 'shared/domain/errors/processing.erro
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
-import { fetchTraktList } from '../../services/trakt/client';
-import { fetchTraktChart } from '../../services/trakt/chart-client';
+import { fetchTraktList } from './external/trakt/client';
+import { fetchTraktChart } from './external/trakt/chart-client';
 
 /**
  * Trakt Media Fetcher Adapter

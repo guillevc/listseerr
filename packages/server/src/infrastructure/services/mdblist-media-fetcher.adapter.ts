@@ -4,7 +4,7 @@ import { ProviderNotConfiguredError } from 'shared/domain/errors/processing.erro
 import type { IMediaFetcher } from '../../application/services/media-fetcher.service.interface';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
-import { fetchMdbListList } from '../../services/mdblist/client';
+import { fetchMdbListList } from './external/mdblist/client';
 
 /**
  * MDBList Media Fetcher Adapter

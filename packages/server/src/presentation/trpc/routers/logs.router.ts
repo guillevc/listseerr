@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../../../trpc/trpc';
+import { router, publicProcedure } from '../context';
 import { LogsContainer } from '../../di/logs-container';
 
 /**

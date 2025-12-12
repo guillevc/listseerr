@@ -1,4 +1,4 @@
-import type { JellyseerrConfig } from '../../db/schema';
+import type { JellyseerrConfig } from '../../../db/schema';
 import type { MediaItem } from '../trakt/types';
 import type {
   JellyseerrRequestPayload,
@@ -6,7 +6,7 @@ import type {
   ProcessingResult,
   JellyseerrPendingRequestsResponse,
 } from './types';
-import { createLogger } from '../../lib/logger';
+import { createLogger } from '../../logger.service';
 
 const logger = createLogger('jellyseerr-client');
 

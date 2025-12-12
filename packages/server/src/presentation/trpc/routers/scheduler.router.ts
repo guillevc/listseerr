@@ -1,4 +1,4 @@
-import { router, publicProcedure } from '../../../trpc/trpc';
+import { router, publicProcedure } from '../context';
 import { SchedulerContainer } from '../../di/scheduler-container';
 
 /**
