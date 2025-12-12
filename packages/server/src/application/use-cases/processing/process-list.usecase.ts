@@ -9,6 +9,7 @@ import type { ProcessListCommand } from 'shared/application/dtos/processing/comm
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 import { ProcessingExecution } from '../../../domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
@@ -43,6 +44,7 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('processing:list')
   async execute(command: ProcessListCommand): Promise<ProcessListResponse> {
     this.logger.info(
       { listId: command.listId, triggerType: command.triggerType },

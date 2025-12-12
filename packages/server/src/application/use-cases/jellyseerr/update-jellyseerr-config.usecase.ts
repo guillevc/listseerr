@@ -7,6 +7,7 @@ import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key
 import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateJellyseerrConfigUseCase implements IUseCase<
   UpdateJellyseerrConfigCommand,
@@ -17,6 +18,7 @@ export class UpdateJellyseerrConfigUseCase implements IUseCase<
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('jellyseerr:update-config')
   async execute(command: UpdateJellyseerrConfigCommand): Promise<UpdateJellyseerrConfigResponse> {
     // 1. Load existing entity or create new one
     let config = await this.jellyseerrConfigRepository.findByUserId(command.userId);

@@ -9,6 +9,7 @@ import type { ProcessBatchCommand } from 'shared/application/dtos/processing/com
 import type { ProcessBatchResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 import type { MediaList } from '../../../domain/entities/media-list.entity';
 import { ProcessingExecution } from '../../../domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
@@ -44,6 +45,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('processing:batch')
   async execute(command: ProcessBatchCommand): Promise<ProcessBatchResponse> {
     this.logger.info({ triggerType: command.triggerType }, 'Starting batch processing');
 

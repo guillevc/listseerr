@@ -45,3 +45,6 @@ data/
 *.tsbuildinfo
 .cache/
 packages/client/stats.html
+
+# docs
+CLAUDE.draft.md

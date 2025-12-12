@@ -12,6 +12,7 @@ import {
 } from 'shared/domain/errors/provider-config.errors';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateProviderConfigUseCase implements IUseCase<
   UpdateProviderConfigCommand,
@@ -22,6 +23,7 @@ export class UpdateProviderConfigUseCase implements IUseCase<
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('provider:update-config')
   async execute(command: UpdateProviderConfigCommand): Promise<UpdateProviderConfigResponse> {
     // 1. Validate and create provider type VO
     const provider = Provider.create(command.provider);

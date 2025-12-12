@@ -7,6 +7,7 @@ import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class CreateMediaListUseCase implements IUseCase<
   CreateMediaListCommand,
@@ -19,6 +20,7 @@ export class CreateMediaListUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
+  @LogExecution('lists:create')
   async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
     // 1. Validate provider and parse URLs
     const provider = Provider.create(command.provider);

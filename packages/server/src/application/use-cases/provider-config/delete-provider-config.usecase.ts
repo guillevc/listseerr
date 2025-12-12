@@ -4,6 +4,7 @@ import type { DeleteProviderConfigResponse } from 'shared/application/dtos/provi
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class DeleteProviderConfigUseCase implements IUseCase<
   DeleteProviderConfigCommand,
@@ -14,6 +15,7 @@ export class DeleteProviderConfigUseCase implements IUseCase<
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('provider:delete-config')
   async execute(command: DeleteProviderConfigCommand): Promise<DeleteProviderConfigResponse> {
     // Validate provider type
     const provider = Provider.create(command.provider);

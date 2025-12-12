@@ -6,7 +6,6 @@ import { DrizzleMediaListRepository } from '../../infrastructure/repositories/dr
 import { ListUrlParserService } from '../../infrastructure/services/adapters/list-url-parser.service';
 import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
 import { LoggerService } from '../../infrastructure/services/core/logger.service';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Application layer - Use cases
 import { GetAllMediaListsUseCase } from '../../application/use-cases/lists/get-all-media-lists.usecase';
@@ -82,68 +81,40 @@ export class ListsContainer {
     this.logger = new LoggerService('lists');
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    const actualGetAllMediaListsUseCase = new GetAllMediaListsUseCase(this.mediaListRepository);
-    this.getAllMediaListsUseCase = new LoggingUseCaseDecorator(
-      actualGetAllMediaListsUseCase,
-      'lists:get-all'
-    );
+    this.getAllMediaListsUseCase = new GetAllMediaListsUseCase(this.mediaListRepository);
 
-    const actualGetMediaListByIdUseCase = new GetMediaListByIdUseCase(this.mediaListRepository);
-    this.getMediaListByIdUseCase = new LoggingUseCaseDecorator(
-      actualGetMediaListByIdUseCase,
-      'lists:get-by-id'
-    );
+    this.getMediaListByIdUseCase = new GetMediaListByIdUseCase(this.mediaListRepository);
 
-    const actualCreateMediaListUseCase = new CreateMediaListUseCase(
+    this.createMediaListUseCase = new CreateMediaListUseCase(
       this.mediaListRepository,
       this.urlParserService,
       this.schedulerService,
       this.logger
     );
-    this.createMediaListUseCase = new LoggingUseCaseDecorator(
-      actualCreateMediaListUseCase,
-      'lists:create'
-    );
 
-    const actualUpdateMediaListUseCase = new UpdateMediaListUseCase(
+    this.updateMediaListUseCase = new UpdateMediaListUseCase(
       this.mediaListRepository,
       this.urlParserService,
       this.schedulerService,
       this.logger
     );
-    this.updateMediaListUseCase = new LoggingUseCaseDecorator(
-      actualUpdateMediaListUseCase,
-      'lists:update'
-    );
 
-    const actualDeleteMediaListUseCase = new DeleteMediaListUseCase(
+    this.deleteMediaListUseCase = new DeleteMediaListUseCase(
       this.mediaListRepository,
       this.schedulerService,
       this.logger
     );
-    this.deleteMediaListUseCase = new LoggingUseCaseDecorator(
-      actualDeleteMediaListUseCase,
-      'lists:delete'
-    );
 
-    const actualToggleListEnabledUseCase = new ToggleListEnabledUseCase(
+    this.toggleListEnabledUseCase = new ToggleListEnabledUseCase(
       this.mediaListRepository,
       this.schedulerService,
       this.logger
     );
-    this.toggleListEnabledUseCase = new LoggingUseCaseDecorator(
-      actualToggleListEnabledUseCase,
-      'lists:toggle-enabled'
-    );
 
-    const actualEnableAllListsUseCase = new EnableAllListsUseCase(
+    this.enableAllListsUseCase = new EnableAllListsUseCase(
       this.mediaListRepository,
       this.schedulerService,
       this.logger
-    );
-    this.enableAllListsUseCase = new LoggingUseCaseDecorator(
-      actualEnableAllListsUseCase,
-      'lists:enable-all'
     );
   }
 }

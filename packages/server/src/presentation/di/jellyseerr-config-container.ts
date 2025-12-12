@@ -4,7 +4,6 @@ import * as schema from '../../infrastructure/db/schema';
 // Infrastructure layer
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { HttpJellyseerrConnectionTester } from '../../infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Application layer - Use cases
 import { GetJellyseerrConfigUseCase } from '../../application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
@@ -67,38 +66,22 @@ export class JellyseerrConfigContainer {
     this.connectionTester = new HttpJellyseerrConnectionTester();
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    const actualGetJellyseerrConfigUseCase = new GetJellyseerrConfigUseCase(
+    this.getJellyseerrConfigUseCase = new GetJellyseerrConfigUseCase(
       this.jellyseerrConfigRepository
     );
-    this.getJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
-      actualGetJellyseerrConfigUseCase,
-      'jellyseerr:get-config'
-    );
 
-    const actualUpdateJellyseerrConfigUseCase = new UpdateJellyseerrConfigUseCase(
+    this.updateJellyseerrConfigUseCase = new UpdateJellyseerrConfigUseCase(
       this.jellyseerrConfigRepository,
       createLogger('jellyseerr-config')
     );
-    this.updateJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
-      actualUpdateJellyseerrConfigUseCase,
-      'jellyseerr:update-config'
-    );
 
-    const actualTestJellyseerrConnectionUseCase = new TestJellyseerrConnectionUseCase(
+    this.testJellyseerrConnectionUseCase = new TestJellyseerrConnectionUseCase(
       this.connectionTester
     );
-    this.testJellyseerrConnectionUseCase = new LoggingUseCaseDecorator(
-      actualTestJellyseerrConnectionUseCase,
-      'jellyseerr:test-connection'
-    );
 
-    const actualDeleteJellyseerrConfigUseCase = new DeleteJellyseerrConfigUseCase(
+    this.deleteJellyseerrConfigUseCase = new DeleteJellyseerrConfigUseCase(
       this.jellyseerrConfigRepository,
       createLogger('jellyseerr-config')
-    );
-    this.deleteJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
-      actualDeleteJellyseerrConfigUseCase,
-      'jellyseerr:delete-config'
     );
   }
 }

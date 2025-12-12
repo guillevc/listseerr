@@ -1,6 +1,5 @@
 // Infrastructure
 import { LogBufferAdapter } from '../../infrastructure/services/adapters/log-buffer.adapter';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { GetLogsUseCase } from '../../application/use-cases/logs/get-logs.usecase';
@@ -36,10 +35,7 @@ export class LogsContainer {
     this.logBufferService = new LogBufferAdapter();
 
     // 2. Instantiate use cases with dependencies injected
-    const actualGetLogsUseCase = new GetLogsUseCase(this.logBufferService);
-    this.getLogsUseCase = new LoggingUseCaseDecorator(actualGetLogsUseCase, 'logs:get');
-
-    const actualClearLogsUseCase = new ClearLogsUseCase(this.logBufferService);
-    this.clearLogsUseCase = new LoggingUseCaseDecorator(actualClearLogsUseCase, 'logs:clear');
+    this.getLogsUseCase = new GetLogsUseCase(this.logBufferService);
+    this.clearLogsUseCase = new ClearLogsUseCase(this.logBufferService);
   }
 }

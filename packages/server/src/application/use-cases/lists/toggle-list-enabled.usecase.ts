@@ -4,6 +4,7 @@ import type { ILogger } from '../../services/logger.interface';
 import type { ToggleListEnabledCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { ToggleListEnabledResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class ToggleListEnabledUseCase implements IUseCase<
   ToggleListEnabledCommand,
@@ -15,6 +16,7 @@ export class ToggleListEnabledUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
+  @LogExecution('lists:toggle-enabled')
   async execute(command: ToggleListEnabledCommand): Promise<ToggleListEnabledResponse> {
     // 1. Load entity
     const list = await this.mediaListRepository.findById(command.id, command.userId);

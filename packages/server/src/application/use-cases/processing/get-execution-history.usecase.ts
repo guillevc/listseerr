@@ -2,6 +2,7 @@ import type { IExecutionHistoryRepository } from '../../repositories/execution-h
 import type { GetExecutionHistoryCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { GetExecutionHistoryResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetExecutionHistoryUseCase
@@ -16,6 +17,7 @@ export class GetExecutionHistoryUseCase implements IUseCase<
 > {
   constructor(private readonly executionHistoryRepository: IExecutionHistoryRepository) {}
 
+  @LogExecution('processing:history')
   async execute(command: GetExecutionHistoryCommand): Promise<GetExecutionHistoryResponse> {
     // Fetch execution history (repository validates userId ownership via JOIN)
     const executions = await this.executionHistoryRepository.findByListId(

@@ -5,6 +5,7 @@
     "lib": ["ES2023"],
     "module": "Preserve",
     "moduleResolution": "bundler",
+    "experimentalDecorators": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

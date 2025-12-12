@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "dev": "bun run --filter server:watch dev & bun run --filter client dev",
+    "dev": "bun run --filter server dev:watch & bun run --filter client dev",
     "dev:client": "bun run --filter client dev",
     "dev:server": "bun run --filter server dev",
     "dev:server:watch": "bun run --filter server dev:watch",

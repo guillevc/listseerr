@@ -6,7 +6,6 @@ import { DrizzleDashboardStatsRepository } from '../../infrastructure/repositori
 import { JellyseerrStatsAdapter } from '../../infrastructure/services/adapters/jellyseerr-stats.adapter';
 import { SchedulerInfoAdapter } from '../../infrastructure/services/adapters/scheduler-info.adapter';
 import { DrizzleJellyseerrConfigRepository } from '../../infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { GetDashboardStatsUseCase } from '../../application/use-cases/dashboard/get-dashboard-stats.usecase';
@@ -65,30 +64,16 @@ export class DashboardContainer {
     this.schedulerInfoService = new SchedulerInfoAdapter();
 
     // 2. Instantiate use cases with dependencies injected
-    const actualGetDashboardStatsUseCase = new GetDashboardStatsUseCase(
+    this.getDashboardStatsUseCase = new GetDashboardStatsUseCase(
       this.dashboardStatsRepository,
       this.schedulerInfoService
     );
-    this.getDashboardStatsUseCase = new LoggingUseCaseDecorator(
-      actualGetDashboardStatsUseCase,
-      'dashboard:stats'
-    );
 
-    const actualGetRecentActivityUseCase = new GetRecentActivityUseCase(
-      this.dashboardStatsRepository
-    );
-    this.getRecentActivityUseCase = new LoggingUseCaseDecorator(
-      actualGetRecentActivityUseCase,
-      'dashboard:activity'
-    );
+    this.getRecentActivityUseCase = new GetRecentActivityUseCase(this.dashboardStatsRepository);
 
-    const actualGetPendingRequestsUseCase = new GetPendingRequestsUseCase(
+    this.getPendingRequestsUseCase = new GetPendingRequestsUseCase(
       this.jellyseerrConfigRepository,
       this.jellyseerrStatsService
-    );
-    this.getPendingRequestsUseCase = new LoggingUseCaseDecorator(
-      actualGetPendingRequestsUseCase,
-      'dashboard:pending-requests'
     );
   }
 }

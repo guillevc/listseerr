@@ -3,6 +3,7 @@ import type { IJellyseerrStatsService } from '../../services/jellyseerr-stats.se
 import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetPendingRequestsUseCase
@@ -23,6 +24,7 @@ export class GetPendingRequestsUseCase implements IUseCase<
     private readonly jellyseerrStatsService: IJellyseerrStatsService
   ) {}
 
+  @LogExecution('dashboard:pending-requests')
   async execute(command: GetPendingRequestsCommand): Promise<GetPendingRequestsResponse> {
     // Get Jellyseerr config
     const config = await this.jellyseerrConfigRepository.findByUserId(command.userId);
@@ -42,7 +44,7 @@ export class GetPendingRequestsUseCase implements IUseCase<
 
       return { count, configured: true, error: false };
     } catch {
-      // Error will be logged by LoggingUseCaseDecorator
+      // Error will be logged by @LogExecution decorator
       return { count: 0, configured: true, error: true };
     }
   }

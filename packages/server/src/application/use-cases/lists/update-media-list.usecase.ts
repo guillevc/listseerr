@@ -6,6 +6,7 @@ import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateMediaListUseCase implements IUseCase<
   UpdateMediaListCommand,
@@ -18,6 +19,7 @@ export class UpdateMediaListUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
+  @LogExecution('lists:update')
   async execute(command: UpdateMediaListCommand): Promise<UpdateMediaListResponse> {
     // 1. Load entity from repository
     const list = await this.mediaListRepository.findById(command.id, command.userId);

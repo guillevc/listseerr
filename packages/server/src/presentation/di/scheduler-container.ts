@@ -1,6 +1,5 @@
 // Infrastructure
 import { SchedulerService } from '../../infrastructure/services/core/scheduler.service';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Use Cases
 import { GetScheduledJobsUseCase } from '../../application/use-cases/scheduler/get-scheduled-jobs.usecase';
@@ -38,16 +37,7 @@ export class SchedulerContainer {
     this.schedulerService = new SchedulerService();
 
     // 2. Instantiate use cases with dependencies injected
-    const actualGetScheduledJobsUseCase = new GetScheduledJobsUseCase(this.schedulerService);
-    this.getScheduledJobsUseCase = new LoggingUseCaseDecorator(
-      actualGetScheduledJobsUseCase,
-      'scheduler:get-jobs'
-    );
-
-    const actualReloadSchedulerUseCase = new ReloadSchedulerUseCase(this.schedulerService);
-    this.reloadSchedulerUseCase = new LoggingUseCaseDecorator(
-      actualReloadSchedulerUseCase,
-      'scheduler:reload'
-    );
+    this.getScheduledJobsUseCase = new GetScheduledJobsUseCase(this.schedulerService);
+    this.reloadSchedulerUseCase = new ReloadSchedulerUseCase(this.schedulerService);
   }
 }

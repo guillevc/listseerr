@@ -4,6 +4,7 @@ import type { ILogger } from '../../services/logger.interface';
 import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class DeleteMediaListUseCase implements IUseCase<
   DeleteMediaListCommand,
@@ -15,6 +16,7 @@ export class DeleteMediaListUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
+  @LogExecution('lists:delete')
   async execute(command: DeleteMediaListCommand): Promise<DeleteMediaListResponse> {
     // 1. Load entity
     const list = await this.mediaListRepository.findById(command.id, command.userId);

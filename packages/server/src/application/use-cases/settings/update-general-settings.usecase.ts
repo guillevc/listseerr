@@ -5,6 +5,7 @@ import { GeneralSettings } from '../../../domain/entities/general-settings.entit
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateGeneralSettingsUseCase implements IUseCase<
   UpdateGeneralSettingsCommand,
@@ -16,6 +17,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('settings:update')
   async execute(command: UpdateGeneralSettingsCommand): Promise<UpdateGeneralSettingsResponse> {
     // 1. Load existing entity or create new one
     let settings = await this.generalSettingsRepository.findByUserId(command.userId);

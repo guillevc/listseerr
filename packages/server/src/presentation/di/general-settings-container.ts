@@ -3,7 +3,6 @@ import * as schema from '../../infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '../../infrastructure/repositories/drizzle-general-settings.repository';
-import { LoggingUseCaseDecorator } from '../../infrastructure/services/core/decorators/logging-use-case.decorator';
 
 // Application layer - Use cases
 import { GetGeneralSettingsUseCase } from '../../application/use-cases/settings/get-general-settings.usecase';
@@ -52,22 +51,11 @@ export class GeneralSettingsContainer {
     this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    const actualGetGeneralSettingsUseCase = new GetGeneralSettingsUseCase(
-      this.generalSettingsRepository
-    );
-    this.getGeneralSettingsUseCase = new LoggingUseCaseDecorator(
-      actualGetGeneralSettingsUseCase,
-      'settings:get'
-    );
-
-    const actualUpdateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
+    this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(this.generalSettingsRepository);
+    this.updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
       this.generalSettingsRepository,
       scheduler, // Existing scheduler singleton
       createLogger('general-settings') // Existing logger
-    );
-    this.updateGeneralSettingsUseCase = new LoggingUseCaseDecorator(
-      actualUpdateGeneralSettingsUseCase,
-      'settings:update'
     );
   }
 }

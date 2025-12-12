@@ -3,6 +3,7 @@ import type { GetProviderConfigCommand } from 'shared/application/dtos/provider-
 import type { GetProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class GetProviderConfigUseCase implements IUseCase<
   GetProviderConfigCommand,
@@ -10,6 +11,7 @@ export class GetProviderConfigUseCase implements IUseCase<
 > {
   constructor(private readonly providerConfigRepository: IProviderConfigRepository) {}
 
+  @LogExecution('provider:get-config')
   async execute(command: GetProviderConfigCommand): Promise<GetProviderConfigResponse> {
     // Validate provider type
     const provider = Provider.create(command.provider);

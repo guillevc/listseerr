@@ -3,6 +3,7 @@ import type { DeleteJellyseerrConfigCommand } from 'shared/application/dtos/jell
 import type { DeleteJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 import type { Logger } from 'pino';
 import type { IUseCase } from '../use-case.interface';
+import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
 export class DeleteJellyseerrConfigUseCase implements IUseCase<
   DeleteJellyseerrConfigCommand,
@@ -13,6 +14,7 @@ export class DeleteJellyseerrConfigUseCase implements IUseCase<
     private readonly logger: Logger
   ) {}
 
+  @LogExecution('jellyseerr:delete-config')
   async execute(command: DeleteJellyseerrConfigCommand): Promise<DeleteJellyseerrConfigResponse> {
     await this.jellyseerrConfigRepository.deleteByUserId(command.userId);
 
