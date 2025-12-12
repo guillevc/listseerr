@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite --clearScreen false",
     "build": "bunx --bun vite build --outDir ../../dist/client",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint --config ../../eslint.config.js ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "shared": "workspace:*",

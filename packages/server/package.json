@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "bun run --watch --env-file=.env src/index.ts",
     "build": "bun build src/index.ts --outdir ../../dist --target bun --production --minify --splitting",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint --config ../../eslint.config.js .",
     "db:generate": "bun --env-file=.env drizzle-kit generate",
     "db:migrate": "bun run --env-file=.env src/db/migrate.ts",
     "db:reset": "bun run --env-file=.env src/db/reset.ts"

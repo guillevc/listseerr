@@ -24,6 +24,7 @@
       },
       "devDependencies": {
         "@types/bun": "catalog:",
+        "eslint": "catalog:",
         "typescript": "catalog:",
       },
     },
