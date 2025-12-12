@@ -22,45 +22,66 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+
+  server: {
+    port: 5173,
+    strictPort: false,
+    open: false,
+    host: true,
+  },
+
   build: {
-    emptyOutDir: true, // Allow cleaning output dir outside project root
+    // Output directory (outside project root for monorepo)
+    outDir: '../../dist/client',
+    emptyOutDir: true,
+
+    target: 'esnext',
+    cssCodeSplit: true,
+    sourcemap: false,
+    minify: 'esbuild',
+
+    chunkSizeWarningLimit: 500,
+    reportCompressedSize: true,
+
     rollupOptions: {
       output: {
         manualChunks: (id) => {
           // React core libraries (handle Bun's node_modules structure)
-          if (id.includes('react-dom') || id.includes('react/jsx-runtime') || id.includes('react/jsx-dev-runtime')) {
+          if (
+            id.includes('react-dom') ||
+            id.includes('react/jsx-runtime') ||
+            id.includes('react/jsx-dev-runtime')
+          ) {
             return 'vendor-react';
           }
           if (id.includes('node_modules/react') && !id.includes('react-')) {
             return 'vendor-react';
           }
 
-          // TanStack Router
           if (id.includes('@tanstack/react-router')) {
             return 'vendor-router';
           }
 
-          // Data fetching & state management
-          if (id.includes('@tanstack/react-query') || id.includes('@trpc/client') || id.includes('@trpc/react-query')) {
+          if (
+            id.includes('@tanstack/react-query') ||
+            id.includes('@trpc/client') ||
+            id.includes('@trpc/react-query')
+          ) {
             return 'vendor-query';
           }
 
-          // Radix UI components
           if (id.includes('@radix-ui/')) {
             return 'vendor-ui';
           }
 
-          // Table library
           if (id.includes('@tanstack/react-table')) {
             return 'vendor-table';
           }
 
-          // Icon library
           if (id.includes('lucide-react')) {
             return 'vendor-icons';
           }
 
-          // Utilities and smaller libraries
           if (
             id.includes('clsx') ||
             id.includes('tailwind-merge') ||

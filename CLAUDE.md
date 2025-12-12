@@ -531,3 +531,12 @@ FROM oven/bun:1-alpine
 │           └── server.ts                # 4. Presentation: Bun startup, Hono/DI Composition Root.
 └── package.json
 ```
+
+- run bun run format "path" on the files that we are modifying after we are done
+- do not add unnecessary comments that are selfexplanatory reading variable names or simple logic
+- avoid heading type comments like:
+
+// ==================== Plugins ====================
+plugins: [
+react(),
+tailwindcss(),
