@@ -1,12 +1,12 @@
-import type { IMediaListRepository } from '@/application/repositories/media-list.repository.interface';
-import type { IListUrlParserService } from '@/application/services/list-url-parser.service.interface';
-import type { ISchedulerService } from '@/application/services/scheduler.service.interface';
-import type { ILogger } from '@/application/services/logger.interface';
+import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
+import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
+import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
+import type { ILogger } from '@/server/application/services/logger.interface';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
-import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateMediaListUseCase implements IUseCase<
   UpdateMediaListCommand,

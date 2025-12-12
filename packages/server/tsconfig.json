@@ -13,7 +13,8 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/server/*": ["./src/*"],
+      "@/shared/*": ["../shared/src/*"]
     },
     "types": ["@types/bun"],
     "strict": true,

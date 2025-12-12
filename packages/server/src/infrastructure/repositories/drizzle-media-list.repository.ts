@@ -1,9 +1,9 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, desc, and } from 'drizzle-orm';
-import * as schema from '@/infrastructure/db/schema';
-import { mediaLists, executionHistory } from '@/infrastructure/db/schema';
-import { MediaList } from '@/domain/entities/media-list.entity';
-import type { IMediaListRepository } from '@/application/repositories/media-list.repository.interface';
+import * as schema from '@/server/infrastructure/db/schema';
+import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema';
+import { MediaList } from '@/server/domain/entities/media-list.entity';
+import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 import type { ProviderType } from 'shared/domain/types/provider.types';
 

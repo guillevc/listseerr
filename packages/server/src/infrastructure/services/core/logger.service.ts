@@ -1,8 +1,8 @@
-import type { ILogger } from '@/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/logger.interface';
 import type { Logger } from 'pino';
 import pino from 'pino';
-import { logBuffer } from '@/infrastructure/services/adapters/log-buffer.adapter';
-import { env } from '@/env';
+import { logBuffer } from '@/server/infrastructure/services/adapters/log-buffer.adapter';
+import { env } from '@/server/env';
 
 const isProduction = env.NODE_ENV === 'production';
 

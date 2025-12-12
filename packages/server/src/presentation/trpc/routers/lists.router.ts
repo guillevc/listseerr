@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '@/presentation/trpc/context';
-import { ListsContainer } from '@/presentation/di/lists-container';
+import { router, publicProcedure } from '@/server/presentation/trpc/context';
+import { ListsContainer } from '@/server/presentation/di/lists-container';
 import { ProviderValues } from 'shared/domain/types/provider.types';
 
 // Zod schemas for input validation
@@ -91,6 +91,6 @@ export function createListsRouter(container: ListsContainer) {
 }
 
 // Export a singleton instance with the global db
-import { db } from '@/infrastructure/db/client';
+import { db } from '@/server/infrastructure/db/client';
 const listsContainer = new ListsContainer(db);
 export const listsRouter = createListsRouter(listsContainer);

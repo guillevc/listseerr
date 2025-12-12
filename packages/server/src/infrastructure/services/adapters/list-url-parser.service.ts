@@ -3,9 +3,9 @@ import { ProviderValues } from 'shared/domain/types/provider.types';
 import type {
   IListUrlParserService,
   ParsedUrls,
-} from '@/application/services/list-url-parser.service.interface';
-import { convertDisplayUrlToApiUrl as convertTraktUrl } from '@/infrastructure/services/external/trakt/url-parser';
-import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '@/infrastructure/services/external/trakt/chart-client';
+} from '@/server/application/services/list-url-parser.service.interface';
+import { convertDisplayUrlToApiUrl as convertTraktUrl } from '@/server/infrastructure/services/external/trakt/url-parser';
+import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '@/server/infrastructure/services/external/trakt/chart-client';
 
 export class ListUrlParserService implements IListUrlParserService {
   parseUrlForProvider(url: string, provider: Provider, providedDisplayUrl?: string): ParsedUrls {

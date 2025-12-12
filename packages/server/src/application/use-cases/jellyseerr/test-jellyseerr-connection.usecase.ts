@@ -1,4 +1,4 @@
-import type { IJellyseerrConnectionTester } from '@/application/services/jellyseerr-connection-tester.service.interface';
+import type { IJellyseerrConnectionTester } from '@/server/application/services/jellyseerr-connection-tester.service.interface';
 import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
@@ -6,8 +6,8 @@ import type {
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { DomainError } from 'shared/domain/errors/domain.error';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
-import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class TestJellyseerrConnectionUseCase implements IUseCase<
   TestJellyseerrConnectionCommand,

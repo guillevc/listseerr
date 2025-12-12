@@ -1,4 +1,4 @@
-import type { MediaList } from '@/domain/entities/media-list.entity';
+import type { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { Nullable } from 'shared/domain/types/utility.types';
 import type { ProviderType } from 'shared/domain/types/provider.types';
 

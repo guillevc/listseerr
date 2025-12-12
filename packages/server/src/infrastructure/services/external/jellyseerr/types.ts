@@ -1,4 +1,4 @@
-import type { MediaItem } from '@/infrastructure/services/external/trakt/types';
+import type { MediaItem } from '@/server/infrastructure/services/external/trakt/types';
 
 export interface JellyseerrRequestPayload {
   mediaType: 'movie' | 'tv';

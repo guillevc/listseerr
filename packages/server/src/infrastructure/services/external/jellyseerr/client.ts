@@ -1,12 +1,12 @@
-import type { JellyseerrConfig } from '@/infrastructure/db/schema';
-import type { MediaItem } from '@/infrastructure/services/external/trakt/types';
+import type { JellyseerrConfig } from '@/server/infrastructure/db/schema';
+import type { MediaItem } from '@/server/infrastructure/services/external/trakt/types';
 import type {
   JellyseerrRequestPayload,
   JellyseerrRequestResponse,
   ProcessingResult,
   JellyseerrPendingRequestsResponse,
 } from './types';
-import { LoggerService } from '@/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('jellyseerr-client');
 

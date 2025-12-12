@@ -1,8 +1,8 @@
-import type { IJellyseerrConfigRepository } from '@/application/repositories/jellyseerr-config.repository.interface';
+import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { GetJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { GetJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
-import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class GetJellyseerrConfigUseCase implements IUseCase<
   GetJellyseerrConfigCommand,

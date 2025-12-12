@@ -1,5 +1,5 @@
 import type { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
-import type { JellyseerrConfig } from '@/domain/entities/jellyseerr-config.entity';
+import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 
 /**
  * Processing Result from Jellyseerr request batch

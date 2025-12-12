@@ -1,12 +1,12 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
-import * as schema from '@/infrastructure/db/schema';
-import { jellyseerrConfigs } from '@/infrastructure/db/schema';
-import { JellyseerrConfig } from '@/domain/entities/jellyseerr-config.entity';
+import * as schema from '@/server/infrastructure/db/schema';
+import { jellyseerrConfigs } from '@/server/infrastructure/db/schema';
+import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { IJellyseerrConfigRepository } from '@/application/repositories/jellyseerr-config.repository.interface';
+import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepository {

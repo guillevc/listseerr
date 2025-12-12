@@ -1,4 +1,4 @@
-import { LoggerService } from '@/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 import { parseMdbListUrl, buildMdbListApiUrl } from './url-parser';
 import type { MdbListApiItem, MediaItem } from './types';
 

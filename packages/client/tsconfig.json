@@ -13,9 +13,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/client/*": ["./src/*"],
+      "@/server/*": ["../server/src/*"],
+      "@/shared/*": ["../shared/src/*"]
     },
     "types": ["@types/bun"],
     "strict": true,

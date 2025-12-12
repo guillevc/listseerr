@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '@/presentation/trpc/context';
-import { DashboardContainer } from '@/presentation/di/dashboard-container';
+import { router, publicProcedure } from '@/server/presentation/trpc/context';
+import { DashboardContainer } from '@/server/presentation/di/dashboard-container';
 
 /**
  * Dashboard Router - Thin presentation layer

@@ -1,8 +1,8 @@
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 import { resolve } from 'path';
-import { db } from '@/infrastructure/db/client';
-import { LoggerService } from '@/infrastructure/services/core/logger.service';
-import { env } from '@/env';
+import { db } from '@/server/infrastructure/db/client';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { env } from '@/server/env';
 
 const logger = new LoggerService('bootstrap');
 

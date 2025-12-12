@@ -1,9 +1,9 @@
 import type {
   IJellyseerrStatsService,
   JellyseerrConfigDTO,
-} from '@/application/services/jellyseerr-stats.service.interface';
-import { getPendingRequestsCount } from '@/infrastructure/services/external/jellyseerr/client';
-import type { JellyseerrConfig } from '@/infrastructure/db/schema';
+} from '@/server/application/services/jellyseerr-stats.service.interface';
+import { getPendingRequestsCount } from '@/server/infrastructure/services/external/jellyseerr/client';
+import type { JellyseerrConfig } from '@/server/infrastructure/db/schema';
 
 /**
  * JellyseerrStatsAdapter

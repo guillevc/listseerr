@@ -1,9 +1,9 @@
-import type { IDashboardStatsRepository } from '@/application/repositories/dashboard-stats.repository.interface';
-import type { ISchedulerInfoService } from '@/application/services/scheduler-info.service.interface';
+import type { IDashboardStatsRepository } from '@/server/application/repositories/dashboard-stats.repository.interface';
+import type { ISchedulerInfoService } from '@/server/application/services/scheduler-info.service.interface';
 import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
-import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetDashboardStatsUseCase

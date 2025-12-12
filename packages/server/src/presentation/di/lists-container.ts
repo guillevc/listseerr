@@ -1,21 +1,21 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '@/infrastructure/db/schema';
+import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure layer
-import { DrizzleMediaListRepository } from '@/infrastructure/repositories/drizzle-media-list.repository';
-import { ListUrlParserService } from '@/infrastructure/services/adapters/list-url-parser.service';
-import { SchedulerService } from '@/infrastructure/services/core/scheduler.service';
-import { LoggerService } from '@/infrastructure/services/core/logger.service';
+import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
+import { ListUrlParserService } from '@/server/infrastructure/services/adapters/list-url-parser.service';
+import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 // Application layer - Use cases
-import { GetAllMediaListsUseCase } from '@/application/use-cases/lists/get-all-media-lists.usecase';
-import { GetMediaListByIdUseCase } from '@/application/use-cases/lists/get-media-list-by-id.usecase';
-import { CreateMediaListUseCase } from '@/application/use-cases/lists/create-media-list.usecase';
-import { UpdateMediaListUseCase } from '@/application/use-cases/lists/update-media-list.usecase';
-import { DeleteMediaListUseCase } from '@/application/use-cases/lists/delete-media-list.usecase';
-import { ToggleListEnabledUseCase } from '@/application/use-cases/lists/toggle-list-enabled.usecase';
-import { EnableAllListsUseCase } from '@/application/use-cases/lists/enable-all-lists.usecase';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import { GetAllMediaListsUseCase } from '@/server/application/use-cases/lists/get-all-media-lists.usecase';
+import { GetMediaListByIdUseCase } from '@/server/application/use-cases/lists/get-media-list-by-id.usecase';
+import { CreateMediaListUseCase } from '@/server/application/use-cases/lists/create-media-list.usecase';
+import { UpdateMediaListUseCase } from '@/server/application/use-cases/lists/update-media-list.usecase';
+import { DeleteMediaListUseCase } from '@/server/application/use-cases/lists/delete-media-list.usecase';
+import { ToggleListEnabledUseCase } from '@/server/application/use-cases/lists/toggle-list-enabled.usecase';
+import { EnableAllListsUseCase } from '@/server/application/use-cases/lists/enable-all-lists.usecase';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   GetAllMediaListsCommand,
   GetMediaListByIdCommand,

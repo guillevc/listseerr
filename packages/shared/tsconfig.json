@@ -11,11 +11,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/shared/*": ["./src/*"]
     },
-    "types": ["@types/node"],
+    "types": ["@types/bun"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

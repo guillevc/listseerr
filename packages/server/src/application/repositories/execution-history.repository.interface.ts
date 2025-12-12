@@ -1,4 +1,4 @@
-import type { ProcessingExecution } from '@/domain/entities/processing-execution.entity';
+import type { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**

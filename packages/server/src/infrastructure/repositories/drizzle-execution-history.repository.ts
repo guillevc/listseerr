@@ -1,12 +1,12 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, desc, and } from 'drizzle-orm';
-import * as schema from '@/infrastructure/db/schema';
-import { executionHistory, mediaLists } from '@/infrastructure/db/schema';
-import { ProcessingExecution } from '@/domain/entities/processing-execution.entity';
+import * as schema from '@/server/infrastructure/db/schema';
+import { executionHistory, mediaLists } from '@/server/infrastructure/db/schema';
+import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { ExecutionStatus } from 'shared/domain/value-objects/execution-status.value-object';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
-import type { IExecutionHistoryRepository } from '@/application/repositories/execution-history.repository.interface';
+import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepository {

@@ -3,9 +3,9 @@ import { eq, desc, sql, and, gte } from 'drizzle-orm';
 import type {
   IDashboardStatsRepository,
   ExecutionWithListName,
-} from '@/application/repositories/dashboard-stats.repository.interface';
-import { executionHistory, listItemsCache, mediaLists } from '@/infrastructure/db/schema';
-import * as schema from '@/infrastructure/db/schema';
+} from '@/server/application/repositories/dashboard-stats.repository.interface';
+import { executionHistory, listItemsCache, mediaLists } from '@/server/infrastructure/db/schema';
+import * as schema from '@/server/infrastructure/db/schema';
 
 /**
  * DrizzleDashboardStatsRepository

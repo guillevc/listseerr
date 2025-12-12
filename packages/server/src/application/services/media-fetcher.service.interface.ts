@@ -1,6 +1,6 @@
 import type { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderConfigData } from '@/domain/types/provider-config.types';
+import type { ProviderConfigData } from '@/server/domain/types/provider-config.types';
 
 /**
  * Media Fetcher Service Interface (Port)

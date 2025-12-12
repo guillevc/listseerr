@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { tv, type VariantProps } from 'tailwind-variants';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/client/lib/utils';
 
 const ToastProvider = ToastPrimitives.Provider;
 

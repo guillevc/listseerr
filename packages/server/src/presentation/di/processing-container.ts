@@ -1,26 +1,26 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import * as schema from '@/infrastructure/db/schema';
+import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure
-import { DrizzleExecutionHistoryRepository } from '@/infrastructure/repositories/drizzle-execution-history.repository';
-import { DrizzleCacheRepository } from '@/infrastructure/repositories/drizzle-cache.repository';
-import { DrizzleMediaListRepository } from '@/infrastructure/repositories/drizzle-media-list.repository';
-import { DrizzleProviderConfigRepository } from '@/infrastructure/repositories/drizzle-provider-config.repository';
-import { DrizzleJellyseerrConfigRepository } from '@/infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { TraktMediaFetcher } from '@/infrastructure/services/adapters/trakt-media-fetcher.adapter';
-import { MdbListMediaFetcher } from '@/infrastructure/services/adapters/mdblist-media-fetcher.adapter';
-import { StevenLuMediaFetcher } from '@/infrastructure/services/adapters/stevenlu-media-fetcher.adapter';
-import { JellyseerrHttpClient } from '@/infrastructure/services/adapters/jellyseerr-http-client.adapter';
-import { AesEncryptionService } from '@/infrastructure/services/core/aes-encryption.service';
+import { DrizzleExecutionHistoryRepository } from '@/server/infrastructure/repositories/drizzle-execution-history.repository';
+import { DrizzleCacheRepository } from '@/server/infrastructure/repositories/drizzle-cache.repository';
+import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
+import { DrizzleProviderConfigRepository } from '@/server/infrastructure/repositories/drizzle-provider-config.repository';
+import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { TraktMediaFetcher } from '@/server/infrastructure/services/adapters/trakt-media-fetcher.adapter';
+import { MdbListMediaFetcher } from '@/server/infrastructure/services/adapters/mdblist-media-fetcher.adapter';
+import { StevenLuMediaFetcher } from '@/server/infrastructure/services/adapters/stevenlu-media-fetcher.adapter';
+import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
+import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
 
 // Use Cases
-import { ProcessListUseCase } from '@/application/use-cases/processing/process-list.usecase';
-import { ProcessBatchUseCase } from '@/application/use-cases/processing/process-batch.usecase';
-import { GetExecutionHistoryUseCase } from '@/application/use-cases/processing/get-execution-history.usecase';
+import { ProcessListUseCase } from '@/server/application/use-cases/processing/process-list.usecase';
+import { ProcessBatchUseCase } from '@/server/application/use-cases/processing/process-batch.usecase';
+import { GetExecutionHistoryUseCase } from '@/server/application/use-cases/processing/get-execution-history.usecase';
 
 // Application interfaces
-import type { IMediaFetcher } from '@/application/services/media-fetcher.service.interface';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
+import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   ProcessListCommand,
   ProcessBatchCommand,
@@ -33,8 +33,8 @@ import type {
 } from 'shared/application/dtos/processing/responses.dto';
 
 // Logger
-import { LoggerService } from '@/infrastructure/services/core/logger.service';
-import { env } from '@/env';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { env } from '@/server/env';
 
 /**
  * Processing Dependency Injection Container

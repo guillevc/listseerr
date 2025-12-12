@@ -1,5 +1,5 @@
-import { router, publicProcedure } from '@/presentation/trpc/context';
-import { SchedulerContainer } from '@/presentation/di/scheduler-container';
+import { router, publicProcedure } from '@/server/presentation/trpc/context';
+import { SchedulerContainer } from '@/server/presentation/di/scheduler-container';
 
 /**
  * Scheduler Router - Thin presentation layer

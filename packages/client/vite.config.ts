@@ -19,30 +19,24 @@ export default defineConfig({
   ].filter(Boolean),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@/client': path.resolve(__dirname, './src'),
     },
   },
-
   server: {
     port: 5173,
     strictPort: false,
     open: false,
     host: true,
   },
-
   build: {
-    // Output directory (outside project root for monorepo)
     outDir: '../../dist/client',
     emptyOutDir: true,
-
     target: 'esnext',
     cssCodeSplit: true,
     sourcemap: false,
     minify: 'esbuild',
-
     chunkSizeWarningLimit: 500,
     reportCompressedSize: true,
-
     rollupOptions: {
       output: {
         manualChunks: (id) => {

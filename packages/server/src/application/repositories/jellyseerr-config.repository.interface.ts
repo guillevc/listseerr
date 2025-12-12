@@ -1,4 +1,4 @@
-import type { JellyseerrConfig } from '@/domain/entities/jellyseerr-config.entity';
+import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**

@@ -5,8 +5,8 @@ import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import { cn } from '@/lib/utils';
-import { trpc } from '@/lib/trpc';
+import { cn } from '@/client/lib/utils';
+import { trpc } from '@/client/lib/trpc';
 
 export function Navigation() {
   const router = useRouterState();

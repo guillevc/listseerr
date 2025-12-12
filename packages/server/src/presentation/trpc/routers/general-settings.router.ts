@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '@/presentation/trpc/context';
-import { GeneralSettingsContainer } from '@/presentation/di/general-settings-container';
+import { router, publicProcedure } from '@/server/presentation/trpc/context';
+import { GeneralSettingsContainer } from '@/server/presentation/di/general-settings-container';
 
 // Zod schemas for input validation
 const settingsInputSchema = z.object({
@@ -36,6 +36,6 @@ export function createGeneralSettingsRouter(container: GeneralSettingsContainer)
 }
 
 // Export a singleton instance with the global db
-import { db } from '@/infrastructure/db/client';
+import { db } from '@/server/infrastructure/db/client';
 const generalSettingsContainer = new GeneralSettingsContainer(db);
 export const generalSettingsRouter = createGeneralSettingsRouter(generalSettingsContainer);

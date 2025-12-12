@@ -1,18 +1,18 @@
-import type { IProviderConfigRepository } from '@/application/repositories/provider-config.repository.interface';
+import type { IProviderConfigRepository } from '@/server/application/repositories/provider-config.repository.interface';
 import type { UpdateProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
 import type { UpdateProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
-import { ProviderConfig } from '@/domain/entities/provider-config.entity';
+import { ProviderConfig } from '@/server/domain/entities/provider-config.entity';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
 import { MdbListApiKey } from 'shared/domain/value-objects/mdblist-api-key.value-object';
-import type { ProviderConfigData } from '@/domain/types/provider-config.types';
+import type { ProviderConfigData } from '@/server/domain/types/provider-config.types';
 import {
   InvalidTraktClientIdError,
   InvalidMdbListApiKeyError,
 } from 'shared/domain/errors/provider-config.errors';
-import type { ILogger } from '@/application/services/logger.interface';
-import type { IUseCase } from '@/application/use-cases/use-case.interface';
-import { LogExecution } from '@/infrastructure/services/core/decorators/log-execution.decorator';
+import type { ILogger } from '@/server/application/services/logger.interface';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateProviderConfigUseCase implements IUseCase<
   UpdateProviderConfigCommand,
