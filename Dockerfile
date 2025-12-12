@@ -58,13 +58,15 @@ COPY --from=prerelease /app/packages/server/migrations ./migrations
 # Create data directory for SQLite database
 RUN mkdir -p /app/data
 
-# Environment variables
-ENV NODE_ENV=production
-ENV DATABASE_PATH=/app/data/listseerr.db
-ENV MIGRATIONS_FOLDER=/app/migrations
+# Environment variable defaults (can be overridden at runtime)
+ENV NODE_ENV=production \
+    PORT=3000 \
+    LOG_LEVEL=info \
+    DATABASE_PATH=/app/data/listseerr.db \
+    MIGRATIONS_FOLDER=/app/migrations
 
-# Run as non-root user
+# Run as non-root user (can be overridden with --user flag or UID/GID env vars)
 USER bun
 EXPOSE 3000/tcp
 
-CMD ["bun", "run", "./dist/index.js"]
+CMD ["bun", "./dist/index.js"]

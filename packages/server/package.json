@@ -6,17 +6,17 @@
     "./trpc": "./src/trpc/index.ts"
   },
   "scripts": {
-    "dev": "bun run --watch --env-file=../../.env src/index.ts",
+    "dev": "bun run --watch --env-file=.env src/index.ts",
     "build": "bun build src/index.ts --outdir ../../dist --target bun --production --sourcemap=external",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --config ../../eslint.config.js .",
-    "db:generate": "bun --env-file=../../.env drizzle-kit generate",
-    "db:migrate": "bun run --env-file=../../.env src/db/migrate.ts",
-    "db:reset": "bun run --env-file=../../.env src/db/reset.ts"
+    "db:generate": "bun --env-file=.env drizzle-kit generate",
+    "db:migrate": "bun run --env-file=.env src/db/migrate.ts",
+    "db:reset": "bun run --env-file=.env src/db/reset.ts"
   },
   "dependencies": {
     "shared": "workspace:*",
-    "@t3-oss/env-core": "^0.13.8",
+    "@t3-oss/env-core": "catalog:",
     "@trpc/server": "catalog:",
     "croner": "catalog:",
     "drizzle-orm": "^0.45.0",

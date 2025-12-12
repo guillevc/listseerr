@@ -15,6 +15,7 @@
     "packages": ["packages/*"],
     "catalog": {
       "zod": "^4.1.13",
+      "@t3-oss/env-core": "^0.13.8",
       "@trpc/server": "^11.7.2",
       "@trpc/client": "^11.7.2",
       "@trpc/react-query": "^11.7.2",

@@ -33,7 +33,13 @@ dev-dist
 data/
 
 # Environment variables
+# Ignore actual env files with secrets
 .env
+.env.local
+.env.*.local
+
+# Keep example files (these should be committed)
+!.env.example
 
 # TypeScript
 *.tsbuildinfo

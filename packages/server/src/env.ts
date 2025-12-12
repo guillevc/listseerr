@@ -8,7 +8,7 @@ export const env = createEnv({
    */
   server: {
     PORT: z.coerce.number().default(3000),
-    DATABASE_PATH: z.string().default('./data/listseerr.db'),
+    DATABASE_PATH: z.string().default('../../data/listseerr.db'),
     MIGRATIONS_FOLDER: z.string().default('./migrations'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('debug'),
