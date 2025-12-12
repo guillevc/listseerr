@@ -1,6 +1,9 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq, desc, sql, and, gte } from 'drizzle-orm';
-import type { IDashboardStatsRepository, ExecutionWithListName } from '../../application/repositories/dashboard-stats.repository.interface';
+import type {
+  IDashboardStatsRepository,
+  ExecutionWithListName,
+} from '../../application/repositories/dashboard-stats.repository.interface';
 import { executionHistory, listItemsCache, mediaLists } from '../../db/schema';
 import * as schema from '../../db/schema';
 
@@ -41,10 +44,7 @@ export class DrizzleDashboardStatsRepository implements IDashboardStatsRepositor
       .select({ completedAt: executionHistory.completedAt })
       .from(executionHistory)
       .where(
-        and(
-          eq(executionHistory.triggerType, 'scheduled'),
-          eq(executionHistory.status, 'success')
-        )
+        and(eq(executionHistory.triggerType, 'scheduled'), eq(executionHistory.status, 'success'))
       )
       .orderBy(desc(executionHistory.completedAt))
       .limit(1);

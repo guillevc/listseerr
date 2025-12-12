@@ -17,7 +17,7 @@ export class TraktClientId {
     if (!hexPattern.test(trimmed)) {
       throw new InvalidTraktClientIdError(
         'Trakt Client ID must be exactly 64 hexadecimal characters (0-9, a-f). ' +
-        'Get your Client ID from https://trakt.tv/oauth/applications'
+          'Get your Client ID from https://trakt.tv/oauth/applications'
       );
     }
 

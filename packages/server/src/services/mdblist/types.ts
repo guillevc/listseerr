@@ -4,7 +4,7 @@ export interface MdbListUrlParts {
 }
 
 export interface MdbListApiItem {
-  id: number;              // TMDB ID
+  id: number; // TMDB ID
   title: string;
   mediatype: 'movie' | 'show';
   release_year: number;

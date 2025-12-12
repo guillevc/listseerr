@@ -114,8 +114,7 @@ export class GeneralSettings {
    */
   hasValidSchedule(): boolean {
     return (
-      !!this._automaticProcessingSchedule &&
-      this._automaticProcessingSchedule.trim().length > 0
+      !!this._automaticProcessingSchedule && this._automaticProcessingSchedule.trim().length > 0
     );
   }
 

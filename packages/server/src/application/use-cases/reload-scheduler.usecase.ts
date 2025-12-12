@@ -14,9 +14,7 @@ import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/
  * - Used after list schedule changes
  */
 export class ReloadSchedulerUseCase {
-  constructor(
-    private readonly schedulerService: ISchedulerService
-  ) {}
+  constructor(private readonly schedulerService: ISchedulerService) {}
 
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

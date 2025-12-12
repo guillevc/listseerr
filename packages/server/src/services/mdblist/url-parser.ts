@@ -6,7 +6,9 @@ export function parseMdbListUrl(url: string): MdbListUrlParts {
   const match = url.match(urlPattern);
 
   if (!match) {
-    throw new Error('Invalid MDBList URL format. Expected: https://mdblist.com/lists/{username}/{list-slug}');
+    throw new Error(
+      'Invalid MDBList URL format. Expected: https://mdblist.com/lists/{username}/{list-slug}'
+    );
   }
 
   return {
@@ -22,7 +24,7 @@ export function buildMdbListApiUrl(parts: MdbListUrlParts, limit: number, apiKey
   const params = new URLSearchParams({
     limit: limit.toString(),
     apikey: apiKey,
-    unified: 'true',  // Return both movies and shows together
+    unified: 'true', // Return both movies and shows together
   });
 
   return `${baseUrl}${path}?${params.toString()}`;

@@ -30,22 +30,17 @@ export class ProviderConfigContainer {
     if (encryptionKey.length !== 32) {
       throw new Error(
         `ENCRYPTION_KEY must be 32 bytes (64 hex characters). ` +
-        `Got ${encryptionKey.length} bytes. ` +
-        `Generate a valid key with: openssl rand -hex 32`
+          `Got ${encryptionKey.length} bytes. ` +
+          `Generate a valid key with: openssl rand -hex 32`
       );
     }
     const encryptionService = new AesEncryptionService(encryptionKey);
 
     // 2. Instantiate infrastructure layer with encryption
-    this.providerConfigRepository = new DrizzleProviderConfigRepository(
-      db,
-      encryptionService
-    );
+    this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
 
     // 3. Instantiate use cases with dependencies injected
-    this.getProviderConfigUseCase = new GetProviderConfigUseCase(
-      this.providerConfigRepository
-    );
+    this.getProviderConfigUseCase = new GetProviderConfigUseCase(this.providerConfigRepository);
 
     this.updateProviderConfigUseCase = new UpdateProviderConfigUseCase(
       this.providerConfigRepository,

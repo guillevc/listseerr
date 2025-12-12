@@ -25,10 +25,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
       .select()
       .from(providerConfigs)
       .where(
-        and(
-          eq(providerConfigs.userId, userId),
-          eq(providerConfigs.provider, provider.getValue())
-        )
+        and(eq(providerConfigs.userId, userId), eq(providerConfigs.provider, provider.getValue()))
       )
       .limit(1);
 
@@ -43,8 +40,12 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
       const [row] = await this.db
         .update(providerConfigs)
         .set({
-          clientId: this.encryptValue(entity.isTraktConfig() ? entity.config.clientId.getValue() : null),
-          apiKey: this.encryptValue(entity.isMdbListConfig() ? entity.config.apiKey.getValue() : null),
+          clientId: this.encryptValue(
+            entity.isTraktConfig() ? entity.config.clientId.getValue() : null
+          ),
+          apiKey: this.encryptValue(
+            entity.isMdbListConfig() ? entity.config.apiKey.getValue() : null
+          ),
           updatedAt: entity.updatedAt,
         })
         .where(
@@ -63,8 +64,12 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
         .values({
           userId: entity.userId,
           provider: entity.provider.getValue(),
-          clientId: this.encryptValue(entity.isTraktConfig() ? entity.config.clientId.getValue() : null),
-          apiKey: this.encryptValue(entity.isMdbListConfig() ? entity.config.apiKey.getValue() : null),
+          clientId: this.encryptValue(
+            entity.isTraktConfig() ? entity.config.clientId.getValue() : null
+          ),
+          apiKey: this.encryptValue(
+            entity.isMdbListConfig() ? entity.config.apiKey.getValue() : null
+          ),
         })
         .returning();
 
@@ -76,10 +81,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
     await this.db
       .delete(providerConfigs)
       .where(
-        and(
-          eq(providerConfigs.userId, userId),
-          eq(providerConfigs.provider, provider.getValue())
-        )
+        and(eq(providerConfigs.userId, userId), eq(providerConfigs.provider, provider.getValue()))
       );
   }
 
@@ -91,10 +93,7 @@ export class DrizzleProviderConfigRepository implements IProviderConfigRepositor
       .select({ id: providerConfigs.id })
       .from(providerConfigs)
       .where(
-        and(
-          eq(providerConfigs.userId, userId),
-          eq(providerConfigs.provider, provider.getValue())
-        )
+        and(eq(providerConfigs.userId, userId), eq(providerConfigs.provider, provider.getValue()))
       )
       .limit(1);
 

@@ -11,7 +11,7 @@ export const env = createEnv({
     DATABASE_PATH: z.string().default('../../data/listseerr.db'),
     MIGRATIONS_FOLDER: z.string().default('./migrations'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
-    LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('debug'),
+    LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('debug'),
     ENCRYPTION_KEY: z.string().min(1, 'ENCRYPTION_KEY is required for encrypting API keys'),
   },
 

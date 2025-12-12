@@ -31,9 +31,7 @@ export function ListsHeader({
                   disabled={!jellyseerrConfigured || processingLists.size > 0}
                 >
                   <RefreshCw
-                    className={`h-4 w-4 ${
-                      processingLists.size > 0 ? 'animate-spin' : ''
-                    }`}
+                    className={`h-4 w-4 ${processingLists.size > 0 ? 'animate-spin' : ''}`}
                   />
                   Process All
                 </Button>

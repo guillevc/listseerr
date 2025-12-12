@@ -22,7 +22,11 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
     return row ? this.toDomain(row) : null;
   }
 
-  async findByListId(listId: number, userId: number, limit: number): Promise<ProcessingExecution[]> {
+  async findByListId(
+    listId: number,
+    userId: number,
+    limit: number
+  ): Promise<ProcessingExecution[]> {
     // Defense-in-depth: JOIN with mediaLists to ensure the list belongs to the user
     const rows = await this.db
       .select({
@@ -30,16 +34,11 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
       })
       .from(executionHistory)
       .innerJoin(mediaLists, eq(executionHistory.listId, mediaLists.id))
-      .where(
-        and(
-          eq(executionHistory.listId, listId),
-          eq(mediaLists.userId, userId)
-        )
-      )
+      .where(and(eq(executionHistory.listId, listId), eq(mediaLists.userId, userId)))
       .orderBy(desc(executionHistory.startedAt))
       .limit(limit);
 
-    return rows.map(row => this.toDomain(row.eh));
+    return rows.map((row) => this.toDomain(row.eh));
   }
 
   async findByBatchId(batchId: string): Promise<ProcessingExecution[]> {
@@ -49,7 +48,7 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
       .where(eq(executionHistory.batchId, batchId))
       .orderBy(desc(executionHistory.startedAt));
 
-    return rows.map(row => this.toDomain(row));
+    return rows.map((row) => this.toDomain(row));
   }
 
   async save(execution: ProcessingExecution): Promise<ProcessingExecution> {

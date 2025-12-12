@@ -28,4 +28,4 @@ export const MediaTypeValues = {
  * - MediaItemDTO
  * - All media-related domain logic
  */
-export type MediaType = typeof MediaTypeValues[keyof typeof MediaTypeValues];
+export type MediaType = (typeof MediaTypeValues)[keyof typeof MediaTypeValues];

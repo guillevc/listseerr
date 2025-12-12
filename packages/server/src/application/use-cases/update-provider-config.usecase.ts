@@ -6,7 +6,10 @@ import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
 import { MdbListApiKey } from 'shared/domain/value-objects/mdblist-api-key.value-object';
 import type { ProviderConfigData } from '../../domain/types/provider-config.types';
-import { InvalidTraktClientIdError, InvalidMdbListApiKeyError } from 'shared/domain/errors/provider-config.errors';
+import {
+  InvalidTraktClientIdError,
+  InvalidMdbListApiKeyError,
+} from 'shared/domain/errors/provider-config.errors';
 import type { Logger } from 'pino';
 
 export class UpdateProviderConfigUseCase {

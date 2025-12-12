@@ -17,20 +17,22 @@ export interface IMediaListRepository {
   // Query operations - return entities or DTOs
   findAll(userId: number): Promise<MediaList[]>;
   findById(id: number, userId: number): Promise<Nullable<MediaList>>;
-  findAllWithLastProcessed(userId: number): Promise<{
-    id: number;
-    userId: number;
-    name: string;
-    url: string;
-    displayUrl: string;
-    provider: ProviderType;
-    enabled: boolean;
-    maxItems: number;
-    processingSchedule: Nullable<string>;
-    createdAt: Date;
-    updatedAt: Date;
-    lastProcessed: Nullable<Date>;
-  }[]>;
+  findAllWithLastProcessed(userId: number): Promise<
+    {
+      id: number;
+      userId: number;
+      name: string;
+      url: string;
+      displayUrl: string;
+      provider: ProviderType;
+      enabled: boolean;
+      maxItems: number;
+      processingSchedule: Nullable<string>;
+      createdAt: Date;
+      updatedAt: Date;
+      lastProcessed: Nullable<Date>;
+    }[]
+  >;
 
   // Command operations - work with entities
   /**

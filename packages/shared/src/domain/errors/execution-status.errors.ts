@@ -6,9 +6,7 @@
  */
 export class InvalidExecutionStatusError extends Error {
   constructor(status: string) {
-    super(
-      `Invalid execution status: ${status}. Must be one of: running, success, error`
-    );
+    super(`Invalid execution status: ${status}. Must be one of: running, success, error`);
     this.name = 'InvalidExecutionStatusError';
   }
 }

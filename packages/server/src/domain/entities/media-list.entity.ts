@@ -211,14 +211,8 @@ export class MediaList {
    * Determine if scheduler needs to be reloaded based on changes
    * Scheduler reload is required when schedule or enabled state changes
    */
-  requiresSchedulerReload(changes: {
-    processingSchedule?: unknown;
-    enabled?: unknown;
-  }): boolean {
-    return (
-      changes.processingSchedule !== undefined ||
-      changes.enabled !== undefined
-    );
+  requiresSchedulerReload(changes: { processingSchedule?: unknown; enabled?: unknown }): boolean {
+    return changes.processingSchedule !== undefined || changes.enabled !== undefined;
   }
 
   /**
@@ -230,8 +224,8 @@ export class MediaList {
     return {
       id: this._id,
       userId: this._userId,
-      name: this._name.getValue(),       // Unwrap VO
-      url: this._url.getValue(),         // Unwrap VO
+      name: this._name.getValue(), // Unwrap VO
+      url: this._url.getValue(), // Unwrap VO
       displayUrl: this._displayUrl,
       provider: this._provider.getValue(), // Unwrap VO
       enabled: this._enabled,

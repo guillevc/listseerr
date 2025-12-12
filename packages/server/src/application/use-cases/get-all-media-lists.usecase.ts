@@ -3,9 +3,7 @@ import type { GetAllMediaListsCommand } from 'shared/application/dtos/media-list
 import type { GetAllMediaListsResponse } from 'shared/application/dtos/media-list/responses.dto';
 
 export class GetAllMediaListsUseCase {
-  constructor(
-    private readonly mediaListRepository: IMediaListRepository
-  ) {}
+  constructor(private readonly mediaListRepository: IMediaListRepository) {}
 
   async execute(command: GetAllMediaListsCommand): Promise<GetAllMediaListsResponse> {
     const listsFromRepo = await this.mediaListRepository.findAllWithLastProcessed(command.userId);

@@ -18,10 +18,10 @@ export type { ProviderType, Nullable };
 export interface MediaListDTO {
   id: number;
   userId: number;
-  name: string;              // Unwrapped from ListName VO
-  url: string;               // Unwrapped from ListUrl VO
+  name: string; // Unwrapped from ListName VO
+  url: string; // Unwrapped from ListUrl VO
   displayUrl: string;
-  provider: ProviderType;    // Unwrapped from Provider VO
+  provider: ProviderType; // Unwrapped from Provider VO
   enabled: boolean;
   maxItems: number;
   processingSchedule: Nullable<string>;

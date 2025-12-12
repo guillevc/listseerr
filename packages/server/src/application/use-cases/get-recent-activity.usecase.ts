@@ -1,6 +1,12 @@
-import type { IDashboardStatsRepository, ExecutionWithListName } from '../repositories/dashboard-stats.repository.interface';
+import type {
+  IDashboardStatsRepository,
+  ExecutionWithListName,
+} from '../repositories/dashboard-stats.repository.interface';
 import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { GetRecentActivityResponse, ActivityGroup } from 'shared/application/dtos/dashboard/responses.dto';
+import type {
+  GetRecentActivityResponse,
+  ActivityGroup,
+} from 'shared/application/dtos/dashboard/responses.dto';
 import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
 
 /**
@@ -16,9 +22,7 @@ import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
  * - Include list names for better UX
  */
 export class GetRecentActivityUseCase {
-  constructor(
-    private readonly dashboardStatsRepository: IDashboardStatsRepository
-  ) {}
+  constructor(private readonly dashboardStatsRepository: IDashboardStatsRepository) {}
 
   async execute(command: GetRecentActivityCommand): Promise<GetRecentActivityResponse> {
     // Get recent executions from repository (already filtered to last 24h)
@@ -49,9 +53,7 @@ export class GetRecentActivityUseCase {
 
       // Try batch grouping first (Process All operations)
       if (execution.batchId) {
-        const batchGroup = grouped.find(
-          g => g.executions[0]?.batchId === execution.batchId
-        );
+        const batchGroup = grouped.find((g) => g.executions[0]?.batchId === execution.batchId);
 
         if (batchGroup) {
           batchGroup.executions.push(this.toDTO(execution));
@@ -65,9 +67,7 @@ export class GetRecentActivityUseCase {
 
         if (lastGroup && !lastGroup.executions[0]?.batchId) {
           // Only try time-based grouping if last group is not a batch
-          const timeDiff = Math.abs(
-            execution.startedAt.getTime() - lastGroup.timestamp.getTime()
-          );
+          const timeDiff = Math.abs(execution.startedAt.getTime() - lastGroup.timestamp.getTime());
 
           if (
             lastGroup.triggerType === execution.triggerType &&

@@ -15,7 +15,7 @@ export interface UpdateProviderConfigCommand {
   provider: string;
   config: {
     clientId?: string; // Trakt
-    apiKey?: string;   // MDBList
+    apiKey?: string; // MDBList
   };
 }
 

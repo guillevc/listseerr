@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const env = createEnv({
   client: {
-    VITE_API_URL: z.string().default('http://localhost:3000')
+    VITE_API_URL: z.string().default('http://localhost:3000'),
   },
   runtimeEnv: import.meta.env,
   clientPrefix: 'VITE_',

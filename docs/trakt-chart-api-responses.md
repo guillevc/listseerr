@@ -41,9 +41,7 @@ This document contains examples of API responses from different Trakt chart endp
     "comment_count": 364,
     "updated_at": "2025-12-04T17:48:33.000Z",
     "language": "en",
-    "languages": [
-      "en"
-    ],
+    "languages": ["en"],
     "available_translations": [
       "ar",
       "bg",
@@ -83,44 +81,19 @@ This document contains examples of API responses from different Trakt chart endp
       "vi",
       "zh"
     ],
-    "genres": [
-      "superhero",
-      "science-fiction",
-      "action",
-      "adventure"
-    ],
-    "subgenres": [
-      "amused",
-      "super-power",
-      "based-on-comic",
-      "supervillain"
-    ],
+    "genres": ["superhero", "science-fiction", "action", "adventure"],
+    "subgenres": ["amused", "super-power", "based-on-comic", "supervillain"],
     "original_title": "Superman",
     "images": {
-      "fanart": [
-        "media.trakt.tv/images/movies/000/853/702/fanarts/medium/b627398f5e.jpg.webp"
-      ],
-      "poster": [
-        "media.trakt.tv/images/movies/000/853/702/posters/medium/a69dbb1e7e.jpg.webp"
-      ],
-      "logo": [
-        "media.trakt.tv/images/movies/000/853/702/logos/medium/4a25f4afc2.png.webp"
-      ],
-      "banner": [
-        "media.trakt.tv/images/movies/000/853/702/banners/medium/cf2dfc2ea2.jpg.webp"
-      ],
-      "thumb": [
-        "media.trakt.tv/images/movies/000/853/702/thumbs/medium/4a69101258.jpg.webp"
-      ],
-      "clearart": [
-        "media.trakt.tv/images/movies/000/853/702/cleararts/medium/469f4f7983.png.webp"
-      ]
+      "fanart": ["media.trakt.tv/images/movies/000/853/702/fanarts/medium/b627398f5e.jpg.webp"],
+      "poster": ["media.trakt.tv/images/movies/000/853/702/posters/medium/a69dbb1e7e.jpg.webp"],
+      "logo": ["media.trakt.tv/images/movies/000/853/702/logos/medium/4a25f4afc2.png.webp"],
+      "banner": ["media.trakt.tv/images/movies/000/853/702/banners/medium/cf2dfc2ea2.jpg.webp"],
+      "thumb": ["media.trakt.tv/images/movies/000/853/702/thumbs/medium/4a69101258.jpg.webp"],
+      "clearart": ["media.trakt.tv/images/movies/000/853/702/cleararts/medium/469f4f7983.png.webp"]
     },
     "colors": {
-      "poster": [
-        "#CA9B96",
-        "#3A0D1A"
-      ]
+      "poster": ["#CA9B96", "#3A0D1A"]
     },
     "released": "2025-07-11",
     "after_credits": true,
@@ -152,11 +125,7 @@ This document contains examples of API responses from different Trakt chart endp
     "comment_count": 247,
     "updated_at": "2025-12-06T17:36:34.000Z",
     "language": "en",
-    "languages": [
-      "en",
-      "it",
-      "ru"
-    ],
+    "languages": ["en", "it", "ru"],
     "available_translations": [
       "ar",
       "az",
@@ -197,12 +166,7 @@ This document contains examples of API responses from different Trakt chart endp
       "vi",
       "zh"
     ],
-    "genres": [
-      "action",
-      "adventure",
-      "science-fiction",
-      "superhero"
-    ],
+    "genres": ["action", "adventure", "science-fiction", "superhero"],
     "subgenres": [
       "father-daughter-relationship",
       "based-on-comic",
@@ -211,30 +175,15 @@ This document contains examples of API responses from different Trakt chart endp
     ],
     "original_title": "Thunderbolts*",
     "images": {
-      "fanart": [
-        "media.trakt.tv/images/movies/000/792/299/fanarts/medium/6d635b6627.jpg.webp"
-      ],
-      "poster": [
-        "media.trakt.tv/images/movies/000/792/299/posters/medium/36d0bdcb38.jpg.webp"
-      ],
-      "logo": [
-        "media.trakt.tv/images/movies/000/792/299/logos/medium/43d5365342.png.webp"
-      ],
-      "banner": [
-        "media.trakt.tv/images/movies/000/792/299/banners/medium/3ec623a577.jpg.webp"
-      ],
-      "thumb": [
-        "media.trakt.tv/images/movies/000/792/299/thumbs/medium/8cd206cb8b.jpg.webp"
-      ],
-      "clearart": [
-        "media.trakt.tv/images/movies/000/792/299/cleararts/medium/72f5cc0493.png.webp"
-      ]
+      "fanart": ["media.trakt.tv/images/movies/000/792/299/fanarts/medium/6d635b6627.jpg.webp"],
+      "poster": ["media.trakt.tv/images/movies/000/792/299/posters/medium/36d0bdcb38.jpg.webp"],
+      "logo": ["media.trakt.tv/images/movies/000/792/299/logos/medium/43d5365342.png.webp"],
+      "banner": ["media.trakt.tv/images/movies/000/792/299/banners/medium/3ec623a577.jpg.webp"],
+      "thumb": ["media.trakt.tv/images/movies/000/792/299/thumbs/medium/8cd206cb8b.jpg.webp"],
+      "clearart": ["media.trakt.tv/images/movies/000/792/299/cleararts/medium/72f5cc0493.png.webp"]
     },
     "colors": {
-      "poster": [
-        "#B89E6D",
-        "#26221C"
-      ]
+      "poster": ["#B89E6D", "#26221C"]
     },
     "released": "2025-05-02",
     "after_credits": true,
@@ -280,9 +229,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 79,
       "updated_at": "2025-12-06T17:42:30.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "ar",
         "bg",
@@ -320,40 +267,21 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "science-fiction",
-        "adventure",
-        "action"
-      ],
-      "subgenres": [
-        "artificial-intelligence-a-i"
-      ],
+      "genres": ["science-fiction", "adventure", "action"],
+      "subgenres": ["artificial-intelligence-a-i"],
       "original_title": "TRON: Ares",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/movies/000/385/396/fanarts/medium/f805a92248.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/movies/000/385/396/posters/medium/9198618b70.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/movies/000/385/396/logos/medium/3416df40bf.png.webp"
-        ],
-        "banner": [
-          "media.trakt.tv/images/movies/000/385/396/banners/medium/bbdd83539c.jpg.webp"
-        ],
-        "thumb": [
-          "media.trakt.tv/images/movies/000/385/396/thumbs/medium/9f64043b10.jpg.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/movies/000/385/396/fanarts/medium/f805a92248.jpg.webp"],
+        "poster": ["media.trakt.tv/images/movies/000/385/396/posters/medium/9198618b70.jpg.webp"],
+        "logo": ["media.trakt.tv/images/movies/000/385/396/logos/medium/3416df40bf.png.webp"],
+        "banner": ["media.trakt.tv/images/movies/000/385/396/banners/medium/bbdd83539c.jpg.webp"],
+        "thumb": ["media.trakt.tv/images/movies/000/385/396/thumbs/medium/9f64043b10.jpg.webp"],
         "clearart": [
           "media.trakt.tv/images/movies/000/385/396/cleararts/medium/930f40096c.png.webp"
         ]
       },
       "colors": {
-        "poster": [
-          "#B36A59",
-          "#37130F"
-        ]
+        "poster": ["#B36A59", "#37130F"]
       },
       "released": "2025-10-10",
       "after_credits": false,
@@ -388,9 +316,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 79,
       "updated_at": "2025-12-06T08:19:30.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "ar",
         "bg",
@@ -428,40 +354,21 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "science-fiction",
-        "action",
-        "adventure"
-      ],
-      "subgenres": [
-        "survival"
-      ],
+      "genres": ["science-fiction", "action", "adventure"],
+      "subgenres": ["survival"],
       "original_title": "Predator: Badlands",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/movies/001/006/226/fanarts/medium/57604f5fdc.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/movies/001/006/226/posters/medium/7a93eaf74f.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/movies/001/006/226/logos/medium/97091ba980.png.webp"
-        ],
-        "banner": [
-          "media.trakt.tv/images/movies/001/006/226/banners/medium/1e6201e9fd.jpg.webp"
-        ],
-        "thumb": [
-          "media.trakt.tv/images/movies/001/006/226/thumbs/medium/01362ecb50.jpg.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/movies/001/006/226/fanarts/medium/57604f5fdc.jpg.webp"],
+        "poster": ["media.trakt.tv/images/movies/001/006/226/posters/medium/7a93eaf74f.jpg.webp"],
+        "logo": ["media.trakt.tv/images/movies/001/006/226/logos/medium/97091ba980.png.webp"],
+        "banner": ["media.trakt.tv/images/movies/001/006/226/banners/medium/1e6201e9fd.jpg.webp"],
+        "thumb": ["media.trakt.tv/images/movies/001/006/226/thumbs/medium/01362ecb50.jpg.webp"],
         "clearart": [
           "media.trakt.tv/images/movies/001/006/226/cleararts/medium/d7748a88e4.png.webp"
         ]
       },
       "colors": {
-        "poster": [
-          "#919B90",
-          "#202C2E"
-        ]
+        "poster": ["#919B90", "#202C2E"]
       },
       "released": "2025-11-07",
       "after_credits": false,
@@ -672,9 +579,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 3,
       "updated_at": "2025-12-06T08:17:47.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "ar",
         "bg",
@@ -714,38 +619,21 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "adventure",
-        "science-fiction",
-        "fantasy"
-      ],
+      "genres": ["adventure", "science-fiction", "fantasy"],
       "subgenres": [],
       "original_title": "Avatar: Fire and Ash",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/movies/000/062/544/fanarts/medium/8f80150fd6.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/movies/000/062/544/posters/medium/53ba7ba809.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/movies/000/062/544/logos/medium/6879bb24fb.png.webp"
-        ],
-        "banner": [
-          "media.trakt.tv/images/movies/000/062/544/banners/medium/a1378d798e.jpg.webp"
-        ],
-        "thumb": [
-          "media.trakt.tv/images/movies/000/062/544/thumbs/medium/e6a80f7f50.jpg.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/movies/000/062/544/fanarts/medium/8f80150fd6.jpg.webp"],
+        "poster": ["media.trakt.tv/images/movies/000/062/544/posters/medium/53ba7ba809.jpg.webp"],
+        "logo": ["media.trakt.tv/images/movies/000/062/544/logos/medium/6879bb24fb.png.webp"],
+        "banner": ["media.trakt.tv/images/movies/000/062/544/banners/medium/a1378d798e.jpg.webp"],
+        "thumb": ["media.trakt.tv/images/movies/000/062/544/thumbs/medium/e6a80f7f50.jpg.webp"],
         "clearart": [
           "media.trakt.tv/images/movies/000/062/544/cleararts/medium/d7d7e49a5e.png.webp"
         ]
       },
       "colors": {
-        "poster": [
-          "#CC997A",
-          "#3C3037"
-        ]
+        "poster": ["#CC997A", "#3C3037"]
       },
       "released": "2025-12-19",
       "after_credits": false,
@@ -779,9 +667,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 1,
       "updated_at": "2025-12-06T08:24:56.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "cs",
         "en",
@@ -801,36 +687,19 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "science-fiction",
-        "action",
-        "adventure",
-        "superhero"
-      ],
-      "subgenres": [
-        "based-on-comic",
-        "marvel-cinematic-universe-mcu"
-      ],
+      "genres": ["science-fiction", "action", "adventure", "superhero"],
+      "subgenres": ["based-on-comic", "marvel-cinematic-universe-mcu"],
       "original_title": "Spider-Man: Brand New Day",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/movies/000/905/132/fanarts/medium/638a312284.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/movies/000/905/132/posters/medium/ff77450a46.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/movies/000/905/132/logos/medium/0af84e42ac.png.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/movies/000/905/132/fanarts/medium/638a312284.jpg.webp"],
+        "poster": ["media.trakt.tv/images/movies/000/905/132/posters/medium/ff77450a46.jpg.webp"],
+        "logo": ["media.trakt.tv/images/movies/000/905/132/logos/medium/0af84e42ac.png.webp"],
         "banner": [],
         "thumb": [],
         "clearart": []
       },
       "colors": {
-        "poster": [
-          "#CD2923",
-          "#020203"
-        ]
+        "poster": ["#CD2923", "#020203"]
       },
       "released": "2026-07-31",
       "after_credits": false,
@@ -877,9 +746,7 @@ This document contains examples of API responses from different Trakt chart endp
     "comment_count": 125,
     "updated_at": "2025-11-28T15:11:38.000Z",
     "language": "en",
-    "languages": [
-      "en"
-    ],
+    "languages": ["en"],
     "available_translations": [
       "ar",
       "bg",
@@ -920,10 +787,7 @@ This document contains examples of API responses from different Trakt chart endp
       "vi",
       "zh"
     ],
-    "genres": [
-      "crime",
-      "drama"
-    ],
+    "genres": ["crime", "drama"],
     "subgenres": [
       "intense",
       "miniseries",
@@ -934,28 +798,15 @@ This document contains examples of API responses from different Trakt chart endp
     ],
     "original_title": "Adolescence",
     "images": {
-      "fanart": [
-        "media.trakt.tv/images/shows/000/230/892/fanarts/medium/552b62d4dd.jpg.webp"
-      ],
-      "poster": [
-        "media.trakt.tv/images/shows/000/230/892/posters/medium/0ec8ee0876.jpg.webp"
-      ],
-      "logo": [
-        "media.trakt.tv/images/shows/000/230/892/logos/medium/318ead85e2.png.webp"
-      ],
-      "banner": [
-        "media.trakt.tv/images/shows/000/230/892/banners/medium/f586ee00f9.jpg.webp"
-      ],
-      "thumb": [
-        "media.trakt.tv/images/shows/000/230/892/thumbs/medium/e7a13d0c07.jpg.webp"
-      ],
+      "fanart": ["media.trakt.tv/images/shows/000/230/892/fanarts/medium/552b62d4dd.jpg.webp"],
+      "poster": ["media.trakt.tv/images/shows/000/230/892/posters/medium/0ec8ee0876.jpg.webp"],
+      "logo": ["media.trakt.tv/images/shows/000/230/892/logos/medium/318ead85e2.png.webp"],
+      "banner": ["media.trakt.tv/images/shows/000/230/892/banners/medium/f586ee00f9.jpg.webp"],
+      "thumb": ["media.trakt.tv/images/shows/000/230/892/thumbs/medium/e7a13d0c07.jpg.webp"],
       "clearart": []
     },
     "colors": {
-      "poster": [
-        "#969589",
-        "#4D3B29"
-      ]
+      "poster": ["#969589", "#4D3B29"]
     },
     "first_aired": "2025-03-13T04:00:00.000Z",
     "aired_episodes": 4,
@@ -993,9 +844,7 @@ This document contains examples of API responses from different Trakt chart endp
     "comment_count": 60,
     "updated_at": "2025-11-27T16:20:58.000Z",
     "language": "en",
-    "languages": [
-      "en"
-    ],
+    "languages": ["en"],
     "available_translations": [
       "ar",
       "bg",
@@ -1032,41 +881,19 @@ This document contains examples of API responses from different Trakt chart endp
       "vi",
       "zh"
     ],
-    "genres": [
-      "drama",
-      "crime"
-    ],
-    "subgenres": [
-      "betrayal",
-      "gangster",
-      "murder"
-    ],
+    "genres": ["drama", "crime"],
+    "subgenres": ["betrayal", "gangster", "murder"],
     "original_title": "MobLand",
     "images": {
-      "fanart": [
-        "media.trakt.tv/images/shows/000/228/595/fanarts/medium/f08edbdd28.jpg.webp"
-      ],
-      "poster": [
-        "media.trakt.tv/images/shows/000/228/595/posters/medium/e48e8ff899.jpg.webp"
-      ],
-      "logo": [
-        "media.trakt.tv/images/shows/000/228/595/logos/medium/a249cbb88d.png.webp"
-      ],
-      "banner": [
-        "media.trakt.tv/images/shows/000/228/595/banners/medium/c12bf5bbb1.jpg.webp"
-      ],
-      "thumb": [
-        "media.trakt.tv/images/shows/000/228/595/thumbs/medium/6074f6ff5a.jpg.webp"
-      ],
-      "clearart": [
-        "media.trakt.tv/images/shows/000/228/595/cleararts/medium/b29a313363.png.webp"
-      ]
+      "fanart": ["media.trakt.tv/images/shows/000/228/595/fanarts/medium/f08edbdd28.jpg.webp"],
+      "poster": ["media.trakt.tv/images/shows/000/228/595/posters/medium/e48e8ff899.jpg.webp"],
+      "logo": ["media.trakt.tv/images/shows/000/228/595/logos/medium/a249cbb88d.png.webp"],
+      "banner": ["media.trakt.tv/images/shows/000/228/595/banners/medium/c12bf5bbb1.jpg.webp"],
+      "thumb": ["media.trakt.tv/images/shows/000/228/595/thumbs/medium/6074f6ff5a.jpg.webp"],
+      "clearart": ["media.trakt.tv/images/shows/000/228/595/cleararts/medium/b29a313363.png.webp"]
     },
     "colors": {
-      "poster": [
-        "#C25F61",
-        "#191B21"
-      ]
+      "poster": ["#C25F61", "#191B21"]
     },
     "first_aired": "2025-03-30T07:00:00.000Z",
     "aired_episodes": 10,
@@ -1118,11 +945,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 46,
       "updated_at": "2025-12-06T21:22:53.000Z",
       "language": "en",
-      "languages": [
-        "en",
-        "fr",
-        "es"
-      ],
+      "languages": ["en", "fr", "es"],
       "available_translations": [
         "ar",
         "bg",
@@ -1159,40 +982,19 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "drama",
-        "fantasy",
-        "science-fiction"
-      ],
-      "subgenres": [
-        "virus"
-      ],
+      "genres": ["drama", "fantasy", "science-fiction"],
+      "subgenres": ["virus"],
       "original_title": "Pluribus",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/shows/000/206/790/fanarts/medium/27e7ef3b00.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/shows/000/206/790/posters/medium/f192887596.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/shows/000/206/790/logos/medium/d445cdd790.png.webp"
-        ],
-        "banner": [
-          "media.trakt.tv/images/shows/000/206/790/banners/medium/b713b94755.jpg.webp"
-        ],
-        "thumb": [
-          "media.trakt.tv/images/shows/000/206/790/thumbs/medium/de60665b9a.jpg.webp"
-        ],
-        "clearart": [
-          "media.trakt.tv/images/shows/000/206/790/cleararts/medium/5917104d2b.png.webp"
-        ]
+        "fanart": ["media.trakt.tv/images/shows/000/206/790/fanarts/medium/27e7ef3b00.jpg.webp"],
+        "poster": ["media.trakt.tv/images/shows/000/206/790/posters/medium/f192887596.jpg.webp"],
+        "logo": ["media.trakt.tv/images/shows/000/206/790/logos/medium/d445cdd790.png.webp"],
+        "banner": ["media.trakt.tv/images/shows/000/206/790/banners/medium/b713b94755.jpg.webp"],
+        "thumb": ["media.trakt.tv/images/shows/000/206/790/thumbs/medium/de60665b9a.jpg.webp"],
+        "clearart": ["media.trakt.tv/images/shows/000/206/790/cleararts/medium/5917104d2b.png.webp"]
       },
       "colors": {
-        "poster": [
-          "#EBCE17",
-          "#A7795C"
-        ]
+        "poster": ["#EBCE17", "#A7795C"]
       },
       "first_aired": "2025-11-07T02:00:00.000Z",
       "aired_episodes": 6,
@@ -1233,9 +1035,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 204,
       "updated_at": "2025-12-06T19:50:46.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "ar",
         "bg",
@@ -1281,14 +1081,7 @@ This document contains examples of API responses from different Trakt chart endp
         "vi",
         "zh"
       ],
-      "genres": [
-        "fantasy",
-        "science-fiction",
-        "mystery",
-        "action",
-        "adventure",
-        "horror"
-      ],
+      "genres": ["fantasy", "science-fiction", "mystery", "action", "adventure", "horror"],
       "subgenres": [
         "friendship",
         "monster",
@@ -1304,30 +1097,15 @@ This document contains examples of API responses from different Trakt chart endp
       ],
       "original_title": "Stranger Things",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/shows/000/104/439/fanarts/medium/08ffc0eae9.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/shows/000/104/439/posters/medium/84177ad9b8.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/shows/000/104/439/logos/medium/4193c17ea9.png.webp"
-        ],
-        "banner": [
-          "media.trakt.tv/images/shows/000/104/439/banners/medium/b7f2406aed.jpg.webp"
-        ],
-        "thumb": [
-          "media.trakt.tv/images/shows/000/104/439/thumbs/medium/064a38f738.jpg.webp"
-        ],
-        "clearart": [
-          "media.trakt.tv/images/shows/000/104/439/cleararts/medium/42ae109f8d.png.webp"
-        ]
+        "fanart": ["media.trakt.tv/images/shows/000/104/439/fanarts/medium/08ffc0eae9.jpg.webp"],
+        "poster": ["media.trakt.tv/images/shows/000/104/439/posters/medium/84177ad9b8.jpg.webp"],
+        "logo": ["media.trakt.tv/images/shows/000/104/439/logos/medium/4193c17ea9.png.webp"],
+        "banner": ["media.trakt.tv/images/shows/000/104/439/banners/medium/b7f2406aed.jpg.webp"],
+        "thumb": ["media.trakt.tv/images/shows/000/104/439/thumbs/medium/064a38f738.jpg.webp"],
+        "clearart": ["media.trakt.tv/images/shows/000/104/439/cleararts/medium/42ae109f8d.png.webp"]
       },
       "colors": {
-        "poster": [
-          "#BCA38C",
-          "#2D2F2C"
-        ]
+        "poster": ["#BCA38C", "#2D2F2C"]
       },
       "first_aired": "2016-07-16T00:00:00.000Z",
       "aired_episodes": 38,
@@ -1563,9 +1341,7 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 2,
       "updated_at": "2025-12-06T15:28:49.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
+      "languages": ["en"],
       "available_translations": [
         "ar",
         "bg",
@@ -1583,32 +1359,19 @@ This document contains examples of API responses from different Trakt chart endp
         "uk",
         "zh"
       ],
-      "genres": [
-        "drama",
-        "fantasy",
-        "science-fiction"
-      ],
+      "genres": ["drama", "fantasy", "science-fiction"],
       "subgenres": [],
       "original_title": "A Knight of the Seven Kingdoms",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/shows/000/204/141/fanarts/medium/40fb57e72d.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/shows/000/204/141/posters/medium/ba681f33fc.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/shows/000/204/141/logos/medium/e4718bddda.png.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/shows/000/204/141/fanarts/medium/40fb57e72d.jpg.webp"],
+        "poster": ["media.trakt.tv/images/shows/000/204/141/posters/medium/ba681f33fc.jpg.webp"],
+        "logo": ["media.trakt.tv/images/shows/000/204/141/logos/medium/e4718bddda.png.webp"],
         "banner": [],
         "thumb": [],
         "clearart": []
       },
       "colors": {
-        "poster": [
-          "#AEA897",
-          "#252219"
-        ]
+        "poster": ["#AEA897", "#252219"]
       },
       "first_aired": "2026-01-18T05:00:00.000Z",
       "aired_episodes": 0,
@@ -1648,47 +1411,21 @@ This document contains examples of API responses from different Trakt chart endp
       "comment_count": 1,
       "updated_at": "2025-12-06T15:21:14.000Z",
       "language": "en",
-      "languages": [
-        "en"
-      ],
-      "available_translations": [
-        "en",
-        "ja",
-        "ko",
-        "nl",
-        "pt",
-        "ro",
-        "ru",
-        "uk",
-        "zh"
-      ],
-      "genres": [
-        "comedy"
-      ],
-      "subgenres": [
-        "based-on-comic",
-        "marvel-cinematic-universe-mcu"
-      ],
+      "languages": ["en"],
+      "available_translations": ["en", "ja", "ko", "nl", "pt", "ro", "ru", "uk", "zh"],
+      "genres": ["comedy"],
+      "subgenres": ["based-on-comic", "marvel-cinematic-universe-mcu"],
       "original_title": "Wonder Man",
       "images": {
-        "fanart": [
-          "media.trakt.tv/images/shows/000/196/325/fanarts/medium/72f1cf564a.jpg.webp"
-        ],
-        "poster": [
-          "media.trakt.tv/images/shows/000/196/325/posters/medium/c60afc89d0.jpg.webp"
-        ],
-        "logo": [
-          "media.trakt.tv/images/shows/000/196/325/logos/medium/4d0f909a50.png.webp"
-        ],
+        "fanart": ["media.trakt.tv/images/shows/000/196/325/fanarts/medium/72f1cf564a.jpg.webp"],
+        "poster": ["media.trakt.tv/images/shows/000/196/325/posters/medium/c60afc89d0.jpg.webp"],
+        "logo": ["media.trakt.tv/images/shows/000/196/325/logos/medium/4d0f909a50.png.webp"],
         "banner": [],
         "thumb": [],
         "clearart": []
       },
       "colors": {
-        "poster": [
-          "#D3B1A2",
-          "#301D15"
-        ]
+        "poster": ["#D3B1A2", "#301D15"]
       },
       "first_aired": "2026-01-28T02:00:00.000Z",
       "aired_episodes": 0,
@@ -1708,12 +1445,12 @@ This document contains examples of API responses from different Trakt chart endp
 
 ## Summary Table
 
-| Chart Type | Movies Format | Shows Format | Key Difference |
-|-----------|---------------|--------------|----------------|
-| `popular` | Simple | Simple | Data at root level |
-| `trending` | Wrapped | Wrapped | Data in `movie`/`show` property with `watchers` count |
-| `favorited` | Wrapped | Wrapped | Data in `movie`/`show` property with `user_count` |
-| `played` | Wrapped | Wrapped | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count` |
-| `watched` | Wrapped | Wrapped | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count` |
-| `collected` | Wrapped | Wrapped | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count`, `collector_count` |
-| `anticipated` | Wrapped | Wrapped | Data in `movie`/`show` property with `list_count` |
+| Chart Type    | Movies Format | Shows Format | Key Difference                                                                                           |
+| ------------- | ------------- | ------------ | -------------------------------------------------------------------------------------------------------- |
+| `popular`     | Simple        | Simple       | Data at root level                                                                                       |
+| `trending`    | Wrapped       | Wrapped      | Data in `movie`/`show` property with `watchers` count                                                    |
+| `favorited`   | Wrapped       | Wrapped      | Data in `movie`/`show` property with `user_count`                                                        |
+| `played`      | Wrapped       | Wrapped      | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count`                    |
+| `watched`     | Wrapped       | Wrapped      | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count`                    |
+| `collected`   | Wrapped       | Wrapped      | Data in `movie`/`show` property with `watcher_count`, `play_count`, `collected_count`, `collector_count` |
+| `anticipated` | Wrapped       | Wrapped      | Data in `movie`/`show` property with `list_count`                                                        |

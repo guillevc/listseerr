@@ -29,20 +29,16 @@ export function createJellyseerrConfigRouter(container: JellyseerrConfigContaine
       return await container.getJellyseerrConfigUseCase.execute({ userId: ctx.userId });
     }),
 
-    set: publicProcedure
-      .input(configInputSchema)
-      .mutation(async ({ input, ctx }) => {
-        return await container.updateJellyseerrConfigUseCase.execute({
-          userId: ctx.userId,
-          data: input,
-        });
-      }),
+    set: publicProcedure.input(configInputSchema).mutation(async ({ input, ctx }) => {
+      return await container.updateJellyseerrConfigUseCase.execute({
+        userId: ctx.userId,
+        data: input,
+      });
+    }),
 
-    test: publicProcedure
-      .input(testConnectionInputSchema)
-      .mutation(async ({ input }) => {
-        return await container.testJellyseerrConnectionUseCase.execute(input);
-      }),
+    test: publicProcedure.input(testConnectionInputSchema).mutation(async ({ input }) => {
+      return await container.testJellyseerrConnectionUseCase.execute(input);
+    }),
 
     delete: publicProcedure.mutation(async ({ ctx }) => {
       return await container.deleteJellyseerrConfigUseCase.execute({ userId: ctx.userId });

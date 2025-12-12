@@ -28,4 +28,4 @@ export const TriggerTypeValues = {
  * - Processing DTOs
  * - All execution-related domain logic
  */
-export type TriggerType = typeof TriggerTypeValues[keyof typeof TriggerTypeValues];
+export type TriggerType = (typeof TriggerTypeValues)[keyof typeof TriggerTypeValues];

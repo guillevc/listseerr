@@ -13,7 +13,10 @@ import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-obje
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
+import {
+  JellyseerrNotConfiguredError,
+  ProviderNotConfiguredError,
+} from 'shared/domain/errors/processing.errors';
 
 /**
  * ProcessListUseCase
@@ -40,7 +43,10 @@ export class ProcessListUseCase {
   ) {}
 
   async execute(command: ProcessListCommand): Promise<ProcessListResponse> {
-    this.logger.info({ listId: command.listId, triggerType: command.triggerType }, 'Starting list processing');
+    this.logger.info(
+      { listId: command.listId, triggerType: command.triggerType },
+      'Starting list processing'
+    );
 
     // 1. Load list (with userId check for multitenancy)
     const list = await this.mediaListRepository.findById(command.listId, command.userId);
@@ -63,14 +69,25 @@ export class ProcessListUseCase {
 
       // 4. Fetch items using strategy pattern
       const fetcher = this.findFetcherFor(list.provider);
-      this.logger.debug({ provider: list.provider.getValue(), url: list.url.getValue() }, 'Fetching items from provider');
-      const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems, providerConfig.config);
+      this.logger.debug(
+        { provider: list.provider.getValue(), url: list.url.getValue() },
+        'Fetching items from provider'
+      );
+      const items = await fetcher.fetchItems(
+        list.url.getValue(),
+        list.maxItems,
+        providerConfig.config
+      );
       this.logger.info({ itemCount: items.length }, 'Items fetched from provider');
 
       // 5. Filter cached items
       const newItems = await this.cacheRepository.filterAlreadyCached(items);
       this.logger.info(
-        { totalItems: items.length, newItems: newItems.length, cached: items.length - newItems.length },
+        {
+          totalItems: items.length,
+          newItems: newItems.length,
+          cached: items.length - newItems.length,
+        },
         'Filtered cached items'
       );
 
@@ -92,14 +109,20 @@ export class ProcessListUseCase {
       savedExecution.markAsSuccess(items.length, results.successful.length, results.failed.length);
       await this.executionHistoryRepository.save(savedExecution);
 
-      this.logger.info({ executionId: savedExecution.id }, 'List processing completed successfully');
+      this.logger.info(
+        { executionId: savedExecution.id },
+        'List processing completed successfully'
+      );
 
       // 9. Return response
       return { execution: savedExecution.toDTO() };
     } catch (error) {
       // Error handling: mark execution as failed
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error({ error: errorMessage, executionId: savedExecution.id }, 'List processing failed');
+      this.logger.error(
+        { error: errorMessage, executionId: savedExecution.id },
+        'List processing failed'
+      );
 
       savedExecution.markAsError(errorMessage);
       await this.executionHistoryRepository.save(savedExecution);
@@ -134,7 +157,7 @@ export class ProcessListUseCase {
    * Find the appropriate media fetcher for the provider type
    */
   private findFetcherFor(provider: Provider): IMediaFetcher {
-    const fetcher = this.mediaFetchers.find(f => f.supports(provider));
+    const fetcher = this.mediaFetchers.find((f) => f.supports(provider));
     if (!fetcher) {
       throw new Error(`No fetcher found for provider: ${provider.getValue()}`);
     }

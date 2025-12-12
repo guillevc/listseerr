@@ -6,12 +6,7 @@ import { settingsRoute } from '../routes/settings';
 import { logsRoute } from '../routes/logs';
 
 // Create the route tree
-const routeTree = rootRoute.addChildren([
-  dashboardRoute,
-  listsRoute,
-  settingsRoute,
-  logsRoute,
-]);
+const routeTree = rootRoute.addChildren([dashboardRoute, listsRoute, settingsRoute, logsRoute]);
 
 // Create and export the router instance
 export const router = createRouter({

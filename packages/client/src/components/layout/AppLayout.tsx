@@ -8,9 +8,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 container mx-auto p-4 md:p-8 max-w-6xl">
-        {children}
-      </main>
+      <main className="flex-1 container mx-auto p-4 md:p-8 max-w-6xl">{children}</main>
     </div>
   );
 }

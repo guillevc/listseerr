@@ -14,7 +14,9 @@ export function parseTraktUrl(url: string): TraktUrlParts {
     const pathParts = urlObj.pathname.split('/').filter(Boolean);
 
     if (pathParts.length < 4 || pathParts[0] !== 'users' || pathParts[2] !== 'lists') {
-      throw new Error('Invalid Trakt URL format. Expected: https://trakt.tv/users/{username}/lists/{listSlug}');
+      throw new Error(
+        'Invalid Trakt URL format. Expected: https://trakt.tv/users/{username}/lists/{listSlug}'
+      );
     }
 
     const username = pathParts[1];
@@ -68,11 +70,7 @@ export function convertDisplayUrlToApiUrl(displayUrl: string): string {
   return `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
 }
 
-export function buildTraktApiUrl(
-  parts: TraktUrlParts,
-  page: number = 1,
-  limit?: number
-): string {
+export function buildTraktApiUrl(parts: TraktUrlParts, page: number = 1, limit?: number): string {
   const { username, listSlug, sortField, sortOrder, mediaFilter } = parts;
 
   // Base API URL

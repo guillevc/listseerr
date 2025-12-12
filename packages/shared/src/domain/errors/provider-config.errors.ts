@@ -6,7 +6,9 @@ import { DomainError } from './domain.error';
 
 export class InvalidProviderTypeError extends DomainError {
   constructor(provider: string) {
-    super(`Invalid provider type: ${provider}. Must be one of: trakt, mdblist, traktChart, stevenlu`);
+    super(
+      `Invalid provider type: ${provider}. Must be one of: trakt, mdblist, traktChart, stevenlu`
+    );
   }
 }
 

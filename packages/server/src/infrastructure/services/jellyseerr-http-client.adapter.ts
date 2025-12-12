@@ -1,6 +1,9 @@
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
-import type { IJellyseerrClient, ProcessingResult } from '../../application/services/jellyseerr-client.service.interface';
+import type {
+  IJellyseerrClient,
+  ProcessingResult,
+} from '../../application/services/jellyseerr-client.service.interface';
 import type { JellyseerrConfig } from '../../domain/entities/jellyseerr-config.entity';
 import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
 
@@ -11,12 +14,9 @@ import { requestItemsToJellyseerr } from '../../services/jellyseerr/client';
  * Delegates to infrastructure service while working with domain types.
  */
 export class JellyseerrHttpClient implements IJellyseerrClient {
-  async requestItems(
-    items: MediaItem[],
-    config: JellyseerrConfig
-  ): Promise<ProcessingResult> {
+  async requestItems(items: MediaItem[], config: JellyseerrConfig): Promise<ProcessingResult> {
     // Transform domain MediaItem VOs to DTOs for infrastructure layer
-    const itemDTOs = items.map(item => item.toDTO());
+    const itemDTOs = items.map((item) => item.toDTO());
 
     // Transform JellyseerrConfig entity to database schema format
     // The existing infrastructure function expects the full database row type
@@ -35,24 +35,20 @@ export class JellyseerrHttpClient implements IJellyseerrClient {
 
     // Transform result DTOs back to domain MediaItem VOs
     return {
-      successful: result.successful.map(dto =>
+      successful: result.successful.map((dto) =>
         MediaItem.create({
           title: dto.title,
           year: dto.year,
           tmdbId: dto.tmdbId,
-          mediaType: dto.mediaType === 'movie'
-            ? MediaType.movie()
-            : MediaType.tv(),
+          mediaType: dto.mediaType === 'movie' ? MediaType.movie() : MediaType.tv(),
         })
       ),
-      failed: result.failed.map(failure => ({
+      failed: result.failed.map((failure) => ({
         item: MediaItem.create({
           title: failure.item.title,
           year: failure.item.year,
           tmdbId: failure.item.tmdbId,
-          mediaType: failure.item.mediaType === 'movie'
-            ? MediaType.movie()
-            : MediaType.tv(),
+          mediaType: failure.item.mediaType === 'movie' ? MediaType.movie() : MediaType.tv(),
         }),
         error: failure.error,
       })),

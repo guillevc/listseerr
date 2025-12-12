@@ -160,11 +160,7 @@ export function JellyseerrSettings() {
               onClick={() => setShowApiKey(!showApiKey)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
             >
-              {showApiKey ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
+              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
         </div>
@@ -181,17 +177,10 @@ export function JellyseerrSettings() {
         </div>
 
         <div className="flex gap-2 pt-4">
-          <Button
-            variant="outline"
-            onClick={handleTest}
-            disabled={testMutation.isPending}
-          >
+          <Button variant="outline" onClick={handleTest} disabled={testMutation.isPending}>
             {testMutation.isPending ? 'Testing...' : 'Test Connection'}
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={saveMutation.isPending}
-          >
+          <Button onClick={handleSave} disabled={saveMutation.isPending}>
             {saveMutation.isPending ? 'Saving...' : 'Save Configuration'}
           </Button>
         </div>

@@ -46,7 +46,7 @@ export async function requestToJellyseerr(
 
     // Check for success status codes (200/201)
     if (response.status === 200 || response.status === 201) {
-      const data = await response.json() as JellyseerrRequestResponse;
+      const data = (await response.json()) as JellyseerrRequestResponse;
       // Validate that the response matches our request
       if (data.media?.tmdbId === item.tmdbId) {
         logger.info(
@@ -239,16 +239,13 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
   logger.debug('Fetching pending requests count from Jellyseerr');
 
   try {
-    const response = await fetch(
-      `${config.url}/api/v1/request?filter=pending&take=1000`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': config.apiKey,
-          'X-Api-User': config.userIdJellyseerr.toString(),
-        },
-      }
-    );
+    const response = await fetch(`${config.url}/api/v1/request?filter=pending&take=1000`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': config.apiKey,
+        'X-Api-User': config.userIdJellyseerr.toString(),
+      },
+    });
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => '');
@@ -264,13 +261,10 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
       throw new Error(`Jellyseerr API error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json() as JellyseerrPendingRequestsResponse;
+    const data = (await response.json()) as JellyseerrPendingRequestsResponse;
     const count = data.pageInfo.results;
 
-    logger.info(
-      { pendingRequestsCount: count },
-      'Successfully fetched pending requests count'
-    );
+    logger.info({ pendingRequestsCount: count }, 'Successfully fetched pending requests count');
 
     return count;
   } catch (error) {

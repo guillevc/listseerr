@@ -10,9 +10,7 @@ import type { GetExecutionHistoryResponse } from 'shared/application/dtos/proces
  * 2. Convert to DTOs
  */
 export class GetExecutionHistoryUseCase {
-  constructor(
-    private readonly executionHistoryRepository: IExecutionHistoryRepository
-  ) {}
+  constructor(private readonly executionHistoryRepository: IExecutionHistoryRepository) {}
 
   async execute(command: GetExecutionHistoryCommand): Promise<GetExecutionHistoryResponse> {
     // Fetch execution history (repository validates userId ownership via JOIN)
@@ -24,7 +22,7 @@ export class GetExecutionHistoryUseCase {
 
     // Convert to DTOs
     return {
-      executions: executions.map(e => e.toDTO()),
+      executions: executions.map((e) => e.toDTO()),
     };
   }
 }

@@ -1,4 +1,8 @@
-import type { ProviderConfigData, TraktConfigData, MdbListConfigData } from '../types/provider-config.types';
+import type {
+  ProviderConfigData,
+  TraktConfigData,
+  MdbListConfigData,
+} from '../types/provider-config.types';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { InvalidProviderConfigError } from 'shared/domain/errors/provider-config.errors';
 import type { ProviderConfigDTO } from 'shared/application/dtos/core/provider-config.dto';

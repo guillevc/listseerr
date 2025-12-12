@@ -142,11 +142,7 @@ export function JellyseerrConfigDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className={config ? "relative pl-8" : ""}
-        >
+        <Button variant="outline" size="sm" className={config ? 'relative pl-8' : ''}>
           {config ? (
             <>
               <span className="absolute left-3 top-1/2 -translate-y-1/2 flex h-2 w-2">

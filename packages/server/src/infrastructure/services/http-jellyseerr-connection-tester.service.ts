@@ -1,7 +1,10 @@
 import type { IJellyseerrConnectionTester } from '../../application/services/jellyseerr-connection-tester.service.interface';
 
 export class HttpJellyseerrConnectionTester implements IJellyseerrConnectionTester {
-  async testConnection(url: string, apiKey: string): Promise<{
+  async testConnection(
+    url: string,
+    apiKey: string
+  ): Promise<{
     success: boolean;
     message: string;
   }> {

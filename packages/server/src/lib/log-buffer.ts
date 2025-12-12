@@ -34,9 +34,7 @@ class LogBuffer {
 
     if (level && level !== 'all') {
       const levelPriority = this.getLevelPriority(level);
-      filtered = this.logs.filter(
-        (log) => this.getLevelPriority(log.level) >= levelPriority
-      );
+      filtered = this.logs.filter((log) => this.getLevelPriority(log.level) >= levelPriority);
     }
 
     return filtered.slice(0, limit);

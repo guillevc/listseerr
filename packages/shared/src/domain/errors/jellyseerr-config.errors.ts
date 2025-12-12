@@ -6,11 +6,7 @@ import { DomainError } from './domain.error';
 
 export class InvalidJellyseerrUrlError extends DomainError {
   constructor(url: string, reason?: string) {
-    super(
-      reason
-        ? `Invalid Jellyseerr URL: ${url}. ${reason}`
-        : `Invalid Jellyseerr URL: ${url}`
-    );
+    super(reason ? `Invalid Jellyseerr URL: ${url}. ${reason}` : `Invalid Jellyseerr URL: ${url}`);
   }
 }
 

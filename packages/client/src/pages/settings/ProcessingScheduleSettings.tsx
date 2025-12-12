@@ -50,7 +50,8 @@ function validateAndParseCron(cronExpression: string): CronValidation {
       } else if (error.message.includes('illegal stepping')) {
         errorMessage = 'Invalid step value. Use format like */6 for every 6 units.';
       } else if (error.message.includes('out of range')) {
-        errorMessage = 'Value out of range. Check minute (0-59), hour (0-23), day (1-31), month (1-12).';
+        errorMessage =
+          'Value out of range. Check minute (0-59), hour (0-23), day (1-31), month (1-12).';
       } else {
         errorMessage = error.message;
       }
@@ -118,9 +119,25 @@ function generateCronDescription(cronExpression: string): string {
 
   // Handle month
   if (month !== '*') {
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     if (month.includes(',')) {
-      const months = month.split(',').map(m => monthNames[parseInt(m) - 1]).join(', ');
+      const months = month
+        .split(',')
+        .map((m) => monthNames[parseInt(m) - 1])
+        .join(', ');
       description += ` in ${months}`;
     } else {
       description += ` in ${monthNames[parseInt(month) - 1]}`;
@@ -131,7 +148,10 @@ function generateCronDescription(cronExpression: string): string {
   if (dayOfWeek !== '*') {
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     if (dayOfWeek.includes(',')) {
-      const days = dayOfWeek.split(',').map(d => dayNames[parseInt(d)]).join(', ');
+      const days = dayOfWeek
+        .split(',')
+        .map((d) => dayNames[parseInt(d)])
+        .join(', ');
       description += ` on ${days}`;
     } else {
       description += ` on ${dayNames[parseInt(dayOfWeek)]}`;
@@ -175,15 +195,16 @@ export function ProcessingScheduleSettings() {
       setCronExpression(data.automaticProcessingSchedule || '');
       setIsEnabled(data.automaticProcessingEnabled);
 
-      const wasJustEnabled = data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled;
+      const wasJustEnabled =
+        data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled;
 
       toast({
         title: 'Success',
         description: wasJustEnabled
           ? `Automatic processing enabled with schedule: ${cronExpression}. All lists have been enabled.`
           : data.automaticProcessingEnabled
-          ? `Automatic processing updated with schedule: ${cronExpression}`
-          : 'Automatic processing disabled',
+            ? `Automatic processing updated with schedule: ${cronExpression}`
+            : 'Automatic processing disabled',
       });
     },
     onError: (error) => {
@@ -247,7 +268,8 @@ export function ProcessingScheduleSettings() {
       <div>
         <h3 className="text-lg font-semibold">Automatic Processing</h3>
         <p className="text-sm text-muted mt-1">
-          Schedule automatic processing for all enabled lists. Lists are processed sequentially (oldest to newest) to avoid rate limits.
+          Schedule automatic processing for all enabled lists. Lists are processed sequentially
+          (oldest to newest) to avoid rate limits.
         </p>
       </div>
 
@@ -262,14 +284,11 @@ export function ProcessingScheduleSettings() {
                 Enable Automatic Processing
               </Label>
               <p className="text-sm text-muted">
-                Process all enabled lists on the same schedule. Lists are processed sequentially from oldest to newest.
+                Process all enabled lists on the same schedule. Lists are processed sequentially
+                from oldest to newest.
               </p>
             </div>
-            <Switch
-              id="schedule-enabled"
-              checked={isEnabled}
-              onCheckedChange={setIsEnabled}
-            />
+            <Switch id="schedule-enabled" checked={isEnabled} onCheckedChange={setIsEnabled} />
           </div>
         </CardContent>
       </Card>
@@ -349,9 +368,7 @@ export function ProcessingScheduleSettings() {
                     <div className="flex-1">
                       <p className="text-sm font-medium leading-5">{validation.description}</p>
                       {validation.nextRun && (
-                        <p className="text-xs mt-1">
-                          Next run: {validation.nextRun}
-                        </p>
+                        <p className="text-xs mt-1">Next run: {validation.nextRun}</p>
                       )}
                     </div>
                   </div>

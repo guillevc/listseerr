@@ -7,15 +7,11 @@ interface ValidationResult {
 }
 
 const providerPatterns: Record<ProviderType, RegExp[]> = {
-  trakt: [
-    /^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?$/i,
-  ],
+  trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?$/i],
   traktChart: [
     /^https?:\/\/(www\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i,
   ],
-  mdblist: [
-    /^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?$/i,
-  ],
+  mdblist: [/^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?$/i],
   stevenlu: [
     // StevenLu doesn't use user-provided URLs, but we include a pattern for internal use
     /^https?:\/\/movies\.stevenlu\.com\/?$/i,

@@ -12,10 +12,7 @@ export class DeleteJellyseerrConfigUseCase {
   async execute(command: DeleteJellyseerrConfigCommand): Promise<DeleteJellyseerrConfigResponse> {
     await this.jellyseerrConfigRepository.deleteByUserId(command.userId);
 
-    this.logger.info(
-      { userId: command.userId },
-      'Jellyseerr config deleted'
-    );
+    this.logger.info({ userId: command.userId }, 'Jellyseerr config deleted');
 
     return { success: true };
   }

@@ -12,9 +12,7 @@ import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler
  * - Read-only operation, no side effects
  */
 export class GetScheduledJobsUseCase {
-  constructor(
-    private readonly schedulerService: ISchedulerService
-  ) {}
+  constructor(private readonly schedulerService: ISchedulerService) {}
 
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

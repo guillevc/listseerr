@@ -11,7 +11,10 @@ export const users = sqliteTable('users', {
 // Jellyseerr configuration
 export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' })
+    .unique(),
   url: text('url').notNull(),
   apiKey: text('api_key').notNull(),
   userIdJellyseerr: integer('user_id_jellyseerr').notNull(),
@@ -22,7 +25,9 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
 // Provider configurations (Trakt, MDBList)
 export const providerConfigs = sqliteTable('provider_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
   clientId: text('client_id'),
   apiKey: text('api_key'),
@@ -33,9 +38,14 @@ export const providerConfigs = sqliteTable('provider_configs', {
 // General settings
 export const generalSettings = sqliteTable('general_settings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' })
+    .unique(),
   timezone: text('timezone').notNull().default('UTC'),
-  automaticProcessingEnabled: integer('automatic_processing_enabled', { mode: 'boolean' }).notNull().default(false),
+  automaticProcessingEnabled: integer('automatic_processing_enabled', { mode: 'boolean' })
+    .notNull()
+    .default(false),
   automaticProcessingSchedule: text('automatic_processing_schedule'), // cron expression for global processing
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -44,7 +54,9 @@ export const generalSettings = sqliteTable('general_settings', {
 // Media lists
 export const mediaLists = sqliteTable('media_lists', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   url: text('url').notNull(), // API URL used internally for fetching
   displayUrl: text('display_url'), // User-facing URL shown in UI (optional, falls back to url if not set)
@@ -59,12 +71,16 @@ export const mediaLists = sqliteTable('media_lists', {
 // Execution history
 export const executionHistory = sqliteTable('execution_history', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  listId: integer('list_id').notNull().references(() => mediaLists.id, { onDelete: 'cascade' }),
+  listId: integer('list_id')
+    .notNull()
+    .references(() => mediaLists.id, { onDelete: 'cascade' }),
   batchId: text('batch_id'), // Groups executions from the same batch operation (e.g., "Process All")
   startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
   completedAt: integer('completed_at', { mode: 'timestamp' }),
   status: text('status', { enum: ['running', 'success', 'error'] }).notNull(),
-  triggerType: text('trigger_type', { enum: ['manual', 'scheduled'] }).notNull().default('manual'),
+  triggerType: text('trigger_type', { enum: ['manual', 'scheduled'] })
+    .notNull()
+    .default('manual'),
   itemsFound: integer('items_found'),
   itemsRequested: integer('items_requested'),
   itemsFailed: integer('items_failed'),
@@ -76,7 +92,9 @@ export const executionHistory = sqliteTable('execution_history', {
 // listId tracks which list first requested the item (for reference only)
 export const listItemsCache = sqliteTable('list_items_cache', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  listId: integer('list_id').notNull().references(() => mediaLists.id, { onDelete: 'cascade' }),
+  listId: integer('list_id')
+    .notNull()
+    .references(() => mediaLists.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
   year: integer('year'),
   tmdbId: integer('tmdb_id').unique(), // Unique constraint enforces global cache
@@ -88,7 +106,9 @@ export const listItemsCache = sqliteTable('list_items_cache', {
 // Stores cached responses from providers with timestamps for cache invalidation
 export const providerCache = sqliteTable('provider_cache', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  provider: text('provider', { enum: ['stevenlu'] }).notNull().unique(),
+  provider: text('provider', { enum: ['stevenlu'] })
+    .notNull()
+    .unique(),
   data: text('data').notNull(), // JSON string of the cached response
   cachedAt: integer('cached_at', { mode: 'timestamp' }).notNull(),
 });

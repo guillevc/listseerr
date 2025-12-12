@@ -12,9 +12,7 @@ import type { ClearLogsResponse } from 'shared/application/dtos/logs/responses.d
  * - Operation is immediate and irreversible
  */
 export class ClearLogsUseCase {
-  constructor(
-    private readonly logBufferService: ILogBufferService
-  ) {}
+  constructor(private readonly logBufferService: ILogBufferService) {}
 
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

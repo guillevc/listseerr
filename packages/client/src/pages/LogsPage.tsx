@@ -81,38 +81,44 @@ export function LogsPage() {
       if (value === null) {
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: null
+            {'    '}
+            {key}: null
           </div>
         );
       } else if (value === undefined) {
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: undefined
+            {'    '}
+            {key}: undefined
           </div>
         );
       } else if (typeof value === 'string') {
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: {`"${value}"`}
+            {'    '}
+            {key}: {`"${value}"`}
           </div>
         );
       } else if (typeof value === 'number' || typeof value === 'boolean') {
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: {value}
+            {'    '}
+            {key}: {value}
           </div>
         );
       } else if (Array.isArray(value)) {
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: {JSON.stringify(value)}
+            {'    '}
+            {key}: {JSON.stringify(value)}
           </div>
         );
       } else if (typeof value === 'object') {
         // Nested object
         lines.push(
           <div key={key} className="text-muted">
-            {'    '}{key}: {'{'}
+            {'    '}
+            {key}: {'{'}
           </div>
         );
         const entries = Object.entries(value);
@@ -121,13 +127,21 @@ export function LogsPage() {
           const comma = isLast ? '' : ',';
           lines.push(
             <div key={`${key}.${k}`} className="text-muted">
-              {'      '}{`"${k}"`}: {typeof v === 'string' ? `"${v}"` : typeof v === 'number' || typeof v === 'boolean' ? v : JSON.stringify(v)}{comma}
+              {'      '}
+              {`"${k}"`}:{' '}
+              {typeof v === 'string'
+                ? `"${v}"`
+                : typeof v === 'number' || typeof v === 'boolean'
+                  ? v
+                  : JSON.stringify(v)}
+              {comma}
             </div>
           );
         });
         lines.push(
           <div key={`${key}-close`} className="text-muted">
-            {'    '}{'}'}
+            {'    '}
+            {'}'}
           </div>
         );
       }
@@ -144,15 +158,11 @@ export function LogsPage() {
     return (
       <div key={log.id || index} className="mb-1">
         <div>
-          <span className="text-muted">[{timestamp}]</span>
-          {' '}
-          <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}:</span>
-          {' '}
+          <span className="text-muted">[{timestamp}]</span>{' '}
+          <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}:</span>{' '}
           <span className="text-foreground">{log.msg}</span>
         </div>
-        {log.data && Object.keys(log.data).length > 0 && (
-          <div>{formatData(log.data)}</div>
-        )}
+        {log.data && Object.keys(log.data).length > 0 && <div>{formatData(log.data)}</div>}
       </div>
     );
   };
@@ -161,9 +171,7 @@ export function LogsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Server Logs</h1>
-        <p className="text-muted mt-1">
-          Real-time server logs (auto-refreshes every 2 seconds)
-        </p>
+        <p className="text-muted mt-1">Real-time server logs (auto-refreshes every 2 seconds)</p>
       </div>
 
       <Card className="bg-background border-light-ui dark:border-dark-ui">
@@ -171,11 +179,7 @@ export function LogsPage() {
           {/* Controls Bar */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-light-ui dark:border-dark-ui">
             <div className="flex items-center gap-2">
-              <Switch
-                id="auto-scroll"
-                checked={autoScroll}
-                onCheckedChange={setAutoScroll}
-              />
+              <Switch id="auto-scroll" checked={autoScroll} onCheckedChange={setAutoScroll} />
               <Label htmlFor="auto-scroll" className="cursor-pointer text-muted text-sm">
                 Auto-scroll
               </Label>
@@ -195,7 +199,9 @@ export function LogsPage() {
           <div
             ref={logsContainerRef}
             className="p-4 h-[calc(100vh-280px)] overflow-y-auto font-mono text-xs whitespace-pre"
-            style={{ fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace' }}
+            style={{
+              fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
+            }}
           >
             {!logs || logs.length === 0 ? (
               <div className="text-muted">No logs available</div>

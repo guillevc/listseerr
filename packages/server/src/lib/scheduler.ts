@@ -110,10 +110,7 @@ class Scheduler {
       }
 
       const job = new Cron(cronExpression, cronOptions, async () => {
-        logger.info(
-          { listId, cronExpression },
-          'Cron job triggered - processing list'
-        );
+        logger.info({ listId, cronExpression }, 'Cron job triggered - processing list');
 
         try {
           if (this.processListCallback) {

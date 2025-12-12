@@ -80,9 +80,7 @@ export class UpdateGeneralSettingsUseCase {
           newSchedule: newSchedule || 'none',
           userId: command.userId,
         },
-        newEnabled
-          ? '⚙️ Automatic processing enabled'
-          : '⏸️ Automatic processing disabled'
+        newEnabled ? '⚙️ Automatic processing enabled' : '⏸️ Automatic processing disabled'
       );
     }
 

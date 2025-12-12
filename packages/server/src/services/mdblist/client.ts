@@ -15,7 +15,7 @@ export async function fetchMdbListList(
     logger.info({ urlParts }, 'Parsed MDBList URL');
 
     // Determine limit
-    const limit = maxItems ? Math.min(maxItems, 50) : 50;  // Max 50 per API docs
+    const limit = maxItems ? Math.min(maxItems, 50) : 50; // Max 50 per API docs
 
     // Build API URL
     const apiUrl = buildMdbListApiUrl(urlParts, limit, apiKey);
@@ -43,7 +43,7 @@ export async function fetchMdbListList(
       throw new Error(`MDBList API error: ${response.statusText}`);
     }
 
-    const data = await response.json() as MdbListApiItem[];
+    const data = (await response.json()) as MdbListApiItem[];
     logger.info({ count: data.length }, 'Received items from MDBList');
 
     // Transform to MediaItem format
@@ -51,10 +51,13 @@ export async function fetchMdbListList(
       .map(transformMdbListItem)
       .filter((item): item is MediaItem => item !== null);
 
-    logger.info({
-      total: data.length,
-      withTmdbId: mediaItems.length
-    }, 'Transformed MDBList items');
+    logger.info(
+      {
+        total: data.length,
+        withTmdbId: mediaItems.length,
+      },
+      'Transformed MDBList items'
+    );
 
     return mediaItems;
   } catch (error) {
@@ -72,7 +75,7 @@ function transformMdbListItem(item: MdbListApiItem): MediaItem | null {
   return {
     title: item.title,
     year: item.release_year || null,
-    tmdbId: item.id,  // MDBList 'id' field is TMDB ID
-    mediaType: item.mediatype === 'show' ? 'tv' : 'movie',  // Convert 'show' to 'tv'
+    tmdbId: item.id, // MDBList 'id' field is TMDB ID
+    mediaType: item.mediatype === 'show' ? 'tv' : 'movie', // Convert 'show' to 'tv'
   };
 }

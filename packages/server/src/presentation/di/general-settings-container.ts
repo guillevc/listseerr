@@ -36,9 +36,7 @@ export class GeneralSettingsContainer {
     this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(
-      this.generalSettingsRepository
-    );
+    this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(this.generalSettingsRepository);
 
     this.updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
       this.generalSettingsRepository,

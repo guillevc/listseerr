@@ -37,16 +37,14 @@ export class MediaItem {
       throw new Error(`Invalid TMDB ID: ${props.tmdbId}. Must be a positive integer.`);
     }
 
-    if (props.year !== null && (!Number.isInteger(props.year) || props.year < 1800 || props.year > 2100)) {
+    if (
+      props.year !== null &&
+      (!Number.isInteger(props.year) || props.year < 1800 || props.year > 2100)
+    ) {
       throw new Error(`Invalid year: ${props.year}. Must be between 1800 and 2100.`);
     }
 
-    return new MediaItem(
-      props.title.trim(),
-      props.year,
-      props.tmdbId,
-      props.mediaType
-    );
+    return new MediaItem(props.title.trim(), props.year, props.tmdbId, props.mediaType);
   }
 
   get title(): string {

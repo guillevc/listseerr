@@ -8,16 +8,14 @@ export class DrizzleCacheRepository implements ICacheRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
   async getRequestedTmdbIds(): Promise<Set<number>> {
-    const rows = await this.db
-      .select({ tmdbId: listItemsCache.tmdbId })
-      .from(listItemsCache);
+    const rows = await this.db.select({ tmdbId: listItemsCache.tmdbId }).from(listItemsCache);
 
-    return new Set(rows.map(row => row.tmdbId).filter((id): id is number => id !== null));
+    return new Set(rows.map((row) => row.tmdbId).filter((id): id is number => id !== null));
   }
 
   async filterAlreadyCached(items: MediaItem[]): Promise<MediaItem[]> {
     const cachedIds = await this.getRequestedTmdbIds();
-    return items.filter(item => !cachedIds.has(item.tmdbId));
+    return items.filter((item) => !cachedIds.has(item.tmdbId));
   }
 
   async cacheItems(listId: number, items: MediaItem[]): Promise<void> {
@@ -26,7 +24,7 @@ export class DrizzleCacheRepository implements ICacheRepository {
     await this.db
       .insert(listItemsCache)
       .values(
-        items.map(item => ({
+        items.map((item) => ({
           listId,
           title: item.title,
           year: item.year,

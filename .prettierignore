@@ -1,0 +1,19 @@
+# Build outputs
+dist
+node_modules
+.cache
+
+# Lockfiles
+bun.lock
+package-lock.json
+yarn.lock
+
+# Generated files
+*.min.js
+*.min.css
+
+# Data
+data/
+*.db
+*.db-wal
+*.db-shm

@@ -30,7 +30,7 @@ export class MdbListMediaFetcher implements IMediaFetcher {
     const rawItems = await fetchMdbListList(url, maxItems, apiKey);
 
     // Transform raw items to domain MediaItem value objects
-    return rawItems.map(item =>
+    return rawItems.map((item) =>
       MediaItem.create({
         title: item.title,
         year: item.year,

@@ -36,33 +36,27 @@ const deleteConfigSchema = z.object({
  */
 export function createProviderConfigRouter(container: ProviderConfigContainer) {
   return router({
-    get: publicProcedure
-      .input(getConfigSchema)
-      .query(async ({ input, ctx }) => {
-        return await container.getProviderConfigUseCase.execute({
-          userId: ctx.userId,
-          provider: input.provider,
-        });
-      }),
+    get: publicProcedure.input(getConfigSchema).query(async ({ input, ctx }) => {
+      return await container.getProviderConfigUseCase.execute({
+        userId: ctx.userId,
+        provider: input.provider,
+      });
+    }),
 
-    set: publicProcedure
-      .input(updateConfigSchema)
-      .mutation(async ({ input, ctx }) => {
-        return await container.updateProviderConfigUseCase.execute({
-          userId: ctx.userId,
-          provider: input.provider,
-          config: input.config,
-        });
-      }),
+    set: publicProcedure.input(updateConfigSchema).mutation(async ({ input, ctx }) => {
+      return await container.updateProviderConfigUseCase.execute({
+        userId: ctx.userId,
+        provider: input.provider,
+        config: input.config,
+      });
+    }),
 
-    delete: publicProcedure
-      .input(deleteConfigSchema)
-      .mutation(async ({ input, ctx }) => {
-        return await container.deleteProviderConfigUseCase.execute({
-          userId: ctx.userId,
-          provider: input.provider,
-        });
-      }),
+    delete: publicProcedure.input(deleteConfigSchema).mutation(async ({ input, ctx }) => {
+      return await container.deleteProviderConfigUseCase.execute({
+        userId: ctx.userId,
+        provider: input.provider,
+      });
+    }),
   });
 }
 

@@ -15,10 +15,7 @@ export class DeleteProviderConfigUseCase {
     const provider = Provider.create(command.provider);
 
     // Delete config
-    await this.providerConfigRepository.deleteByUserIdAndProvider(
-      command.userId,
-      provider
-    );
+    await this.providerConfigRepository.deleteByUserIdAndProvider(command.userId, provider);
 
     // Log deletion
     this.logger.info(

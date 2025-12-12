@@ -10,13 +10,7 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useToast } from '../../hooks/use-toast';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
@@ -39,20 +33,23 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
     if (list.provider === 'traktChart') {
       const url = list.displayUrl || list.url;
       // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
-      const urlPattern = /https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)/i;
+      const urlPattern =
+        /https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)/i;
       const match = url.match(urlPattern);
 
       if (match) {
         return {
           mediaType: match[3] as 'movies' | 'shows',
-          chartType: match[4].toLowerCase()
+          chartType: match[4].toLowerCase(),
         };
       }
     }
     return { mediaType: 'movies' as const, chartType: 'trending' };
   }, [list]);
 
-  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(parsedChartInfo.mediaType);
+  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(
+    parsedChartInfo.mediaType
+  );
   const [selectedChartType, setSelectedChartType] = useState<string>(parsedChartInfo.chartType);
 
   // Reset form when dialog state changes
@@ -120,9 +117,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit List</DialogTitle>
-          <DialogDescription>
-            Update list settings
-          </DialogDescription>
+          <DialogDescription>Update list settings</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">

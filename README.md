@@ -41,27 +41,29 @@ Listseerr is built as a monorepo with three distinct layers that work together:
 **Technology:** tRPC with React Query
 
 The client makes type-safe API calls to the server without writing any HTTP request code. tRPC automatically:
+
 - Validates inputs using Zod schemas
 - Infers TypeScript types from server to client
 - Handles serialization/deserialization
 
 **Example:** When you click "Add List" in the UI:
+
 ```typescript
 // Client code (AddListDialog.tsx)
 const createMutation = trpc.lists.create.useMutation({
   onSuccess: (newList) => {
     // newList is fully typed!
     utils.lists.getAll.invalidate();
-  }
+  },
 });
 
 // Server code (lists.ts router)
 create: publicProcedure
-  .input(listInputSchema)  // Zod validates this
+  .input(listInputSchema) // Zod validates this
   .mutation(async ({ ctx, input }) => {
     // input is typed from the schema
     return await ctx.db.insert(mediaLists).values(input);
-  })
+  });
 ```
 
 ### 2. Server → Database Communication
@@ -69,11 +71,13 @@ create: publicProcedure
 **Technology:** Drizzle ORM with Bun's native SQLite
 
 The server interacts with the database using Drizzle, which provides:
+
 - Type-safe query building
 - Automatic TypeScript inference
 - Zero runtime overhead
 
 **Example:** Creating a new list:
+
 ```typescript
 // schema.ts defines the types
 export const mediaLists = sqliteTable('media_lists', {
@@ -118,46 +122,55 @@ User sees new list in table
 ### Frontend Layer
 
 #### **React 18**
+
 - **Purpose:** UI library for building interactive interfaces
 - **Layer:** Client
 - **Why:** Industry standard, great ecosystem, hooks API
 
 #### **TypeScript**
+
 - **Purpose:** Type safety across entire application
 - **Layer:** All layers
 - **Why:** Catches bugs at compile time, better IDE support
 
 #### **Vite 6**
+
 - **Purpose:** Build tool and development server
 - **Layer:** Build/Dev
 - **Why:** Fast HMR, optimized builds, great DX
 
 #### **Tailwind CSS**
+
 - **Purpose:** Utility-first styling
 - **Layer:** Client
 - **Why:** Rapid UI development, consistent design system
 
 #### **Radix UI**
+
 - **Purpose:** Unstyled, accessible component primitives
 - **Layer:** Client (UI components)
 - **Why:** WAI-ARIA compliant, fully accessible, customizable
 
 #### **TanStack Table**
+
 - **Purpose:** Headless table library
 - **Layer:** Client (ListsTable component)
 - **Why:** Powerful sorting, filtering, flexible rendering
 
 #### **TanStack Query (React Query)**
+
 - **Purpose:** Data fetching and caching
 - **Layer:** Client (data management)
 - **Why:** Works seamlessly with tRPC, automatic cache invalidation
 
 #### **Framer Motion**
+
 - **Purpose:** Animation library
 - **Layer:** Client (UI animations)
 - **Why:** Smooth, physics-based animations
 
 #### **next-themes**
+
 - **Purpose:** Theme management (dark/light mode)
 - **Layer:** Client
 - **Why:** System preference detection, localStorage persistence
@@ -165,31 +178,37 @@ User sees new list in table
 ### Backend Layer
 
 #### **Bun**
+
 - **Purpose:** JavaScript runtime and package manager
 - **Layer:** Runtime/Server
 - **Why:** Faster than Node.js, native TypeScript support, built-in SQLite
 
 #### **Hono**
+
 - **Purpose:** Web framework
 - **Layer:** Server (HTTP layer)
 - **Why:** Lightweight (13KB), fast, edge-compatible, simple API
 
 #### **tRPC v11**
+
 - **Purpose:** End-to-end type-safe APIs
 - **Layer:** Client ↔ Server bridge
 - **Why:** No code generation, automatic type inference, great DX
 
 #### **Drizzle ORM**
+
 - **Purpose:** TypeScript ORM for database queries
 - **Layer:** Server → Database
 - **Why:** Type-safe, performant, great migrations system
 
 #### **SQLite with WAL**
+
 - **Purpose:** Embedded database
 - **Layer:** Database
 - **Why:** Serverless, simple deployment, WAL mode for better concurrency
 
 #### **Zod**
+
 - **Purpose:** Schema validation
 - **Layer:** Server (tRPC input validation)
 - **Why:** Required by tRPC, runtime validation, TypeScript inference
@@ -197,11 +216,13 @@ User sees new list in table
 ### Build/Dev Tools
 
 #### **drizzle-kit**
+
 - **Purpose:** Database migration tool
 - **Layer:** Database management
 - **Why:** Type-safe migrations, automatic schema generation
 
 #### **ESLint + typescript-eslint**
+
 - **Purpose:** Code linting
 - **Layer:** Development
 - **Why:** Code quality, consistency, catch errors early
@@ -246,6 +267,7 @@ bun run db:migrate
 ```
 
 This creates:
+
 - SQLite database at `./data/listseerr.db`
 - All required tables (users, jellyseerr_configs, media_lists, etc.)
 - A default user account
@@ -255,11 +277,13 @@ This creates:
 Run both frontend and backend servers:
 
 **Terminal 1 - Backend:**
+
 ```bash
 bun run dev:server
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 bun run dev
 ```
@@ -277,6 +301,7 @@ bun run build
 ```
 
 This builds both:
+
 - Frontend static files → `dist/client/`
 - Backend bundle → `dist/index.js`
 
@@ -364,26 +389,31 @@ listseerr/
 ### Tables
 
 #### **users**
+
 - Single user by default (single-user application)
 - Stores username and creation timestamp
 
 #### **jellyseerr_configs**
+
 - Jellyseerr instance URL, API key, user ID
 - One config per user
 - Tested before saving
 
 #### **media_lists**
+
 - List name, URL, provider type
 - Max items limit, sync schedule
 - Enabled/disabled state
 - Timestamps (created, updated, last sync)
 
 #### **sync_history**
+
 - Record of all sync operations
 - Success/failure status, error logs
 - Items found/requested counts
 
 #### **list_items_cache**
+
 - Cached items from list providers
 - Reduces API calls to external services
 - Stores TMDB IDs and media types
@@ -393,6 +423,7 @@ listseerr/
 All API routes are available under `/trpc` and are fully type-safe:
 
 ### `lists.*`
+
 - `getAll` - Fetch all lists for user
 - `create` - Add a new list
 - `update` - Modify list settings
@@ -400,16 +431,19 @@ All API routes are available under `/trpc` and are fully type-safe:
 - `toggleEnabled` - Enable/disable a list
 
 ### `config.*`
+
 - `get` - Get Jellyseerr configuration
 - `set` - Save Jellyseerr configuration
 - `test` - Test connection to Jellyseerr
 - `delete` - Remove configuration
 
 ### `sync.*`
+
 - `syncList` - Sync a specific list to Jellyseerr
 - `getHistory` - Get sync operation history
 
 ### `scheduler.*` (planned)
+
 - Schedule automatic syncs with cron expressions
 
 ## Configuration
@@ -417,6 +451,7 @@ All API routes are available under `/trpc` and are fully type-safe:
 ### Environment Variables
 
 #### **DATABASE_PATH**
+
 Database file location (default: `./data/listseerr.db`)
 
 ```bash
@@ -424,6 +459,7 @@ DATABASE_PATH=./data/listseerr.db
 ```
 
 #### **PORT**
+
 Backend server port (default: `3000`)
 
 ```bash
@@ -441,6 +477,7 @@ PORT=3000
 ### Type Safety Flow
 
 When you modify a tRPC router:
+
 1. Change the input/output schema
 2. TypeScript immediately shows type errors in client code
 3. Fix the client code with full autocomplete
@@ -449,18 +486,22 @@ When you modify a tRPC router:
 ## Why This Stack?
 
 ### Type Safety First
+
 Every layer is type-safe: React components → tRPC client → tRPC server → Drizzle ORM → SQLite. Change a database column, and TypeScript will tell you everywhere that needs updating.
 
 ### Simple Deployment
+
 Single database file (SQLite), single server binary (Bun), static frontend files. No Redis, no PostgreSQL setup, no microservices.
 
 ### Great Developer Experience
+
 - Instant HMR with Vite
 - Auto-restart with Bun watch
 - Type inference everywhere
 - Simple configuration
 
 ### Modern & Fast
+
 - Bun is faster than Node.js
 - Hono is lightweight and edge-ready
 - SQLite with WAL mode handles concurrent reads well

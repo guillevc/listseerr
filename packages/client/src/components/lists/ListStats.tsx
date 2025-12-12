@@ -16,9 +16,7 @@ export function ListStats({ lists }: ListStatsProps) {
     <div className="flex items-center gap-2 text-sm text-muted">
       <span className="font-medium text-foreground">{total} All</span>
       <span>•</span>
-      <span className="font-medium text-green-600">
-        {enabled} Enabled
-      </span>
+      <span className="font-medium text-green-600">{enabled} Enabled</span>
       <span>•</span>
       <span className="font-medium">{disabled} Disabled</span>
     </div>

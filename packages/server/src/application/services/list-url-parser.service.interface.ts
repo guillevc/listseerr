@@ -6,9 +6,5 @@ export interface ParsedUrls {
 }
 
 export interface IListUrlParserService {
-  parseUrlForProvider(
-    url: string,
-    provider: Provider,
-    providedDisplayUrl?: string
-  ): ParsedUrls;
+  parseUrlForProvider(url: string, provider: Provider, providedDisplayUrl?: string): ParsedUrls;
 }

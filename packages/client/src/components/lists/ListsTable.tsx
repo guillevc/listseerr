@@ -7,7 +7,18 @@ import {
   createColumnHelper,
   SortingState,
 } from '@tanstack/react-table';
-import { RefreshCw, Trash2, ExternalLink, Clock, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, AlertCircle } from 'lucide-react';
+import {
+  RefreshCw,
+  Trash2,
+  ExternalLink,
+  Clock,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  MoreHorizontal,
+  Pencil,
+  AlertCircle,
+} from 'lucide-react';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -18,14 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { getProviderName, getProviderColor } from '../../lib/url-validator';
 import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
@@ -51,7 +55,12 @@ const truncateTail = (text: string, maxLength: number = 30): string => {
   return `${text.substring(0, maxLength)}...`;
 };
 
-export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfigured = true }: Props) {
+export function ListsTable({
+  lists,
+  onProcess,
+  processingLists,
+  jellyseerrConfigured = true,
+}: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
   const [mutatingListId, setMutatingListId] = useState<number | null>(null);
@@ -69,13 +78,16 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
   const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
   const mdbListConfig = mdbListData?.config;
 
-  const isProviderConfigured = useCallback((provider: string) => {
-    if (provider === 'trakt') return !!traktConfig?.clientId;
-    if (provider === 'traktChart') return !!traktConfig?.clientId;
-    if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
-    if (provider === 'stevenlu') return true; // StevenLu doesn't require configuration
-    return false; // Other providers not yet implemented
-  }, [traktConfig, mdbListConfig]);
+  const isProviderConfigured = useCallback(
+    (provider: string) => {
+      if (provider === 'trakt') return !!traktConfig?.clientId;
+      if (provider === 'traktChart') return !!traktConfig?.clientId;
+      if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
+      if (provider === 'stevenlu') return true; // StevenLu doesn't require configuration
+      return false; // Other providers not yet implemented
+    },
+    [traktConfig, mdbListConfig]
+  );
 
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
@@ -138,7 +150,10 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
 
           return (
             <div className="flex items-center gap-2 whitespace-nowrap">
-              <Badge variant="outline" className={`whitespace-nowrap border-0 ${getProviderColor(info.getValue())}`}>
+              <Badge
+                variant="outline"
+                className={`whitespace-nowrap border-0 ${getProviderColor(info.getValue())}`}
+              >
                 {getProviderName(info.getValue())}
               </Badge>
               {!providerConfigured && (
@@ -149,8 +164,15 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        {info.getValue() === 'trakt' ? 'Trakt' : info.getValue() === 'traktChart' ? 'Trakt Chart' : info.getValue() === 'mdblist' ? 'MDBList' : info.getValue()} provider is not configured.
-                        Configure API key in Settings → API Keys to enable processing.
+                        {info.getValue() === 'trakt'
+                          ? 'Trakt'
+                          : info.getValue() === 'traktChart'
+                            ? 'Trakt Chart'
+                            : info.getValue() === 'mdblist'
+                              ? 'MDBList'
+                              : info.getValue()}{' '}
+                        provider is not configured. Configure API key in Settings → API Keys to
+                        enable processing.
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -176,9 +198,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                     rel="noopener noreferrer"
                     className="text-sm text-muted hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
                   >
-                    <span className="truncate">
-                      {truncateTail(displayUrl, 30)}
-                    </span>
+                    <span className="truncate">{truncateTail(displayUrl, 30)}</span>
                     <ExternalLink className="h-3 w-3 shrink-0" />
                   </a>
                 </TooltipTrigger>
@@ -196,13 +216,9 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
         header: 'Max',
         cell: (info) => {
           const maxItems = info.getValue();
-          return (
-            <span className="text-sm">
-              {maxItems ?? '—'}
-            </span>
-          );
+          return <span className="text-sm">{maxItems ?? '—'}</span>;
         },
-        enableSorting: false
+        enableSorting: false,
       }),
       columnHelper.accessor('lastProcessed', {
         header: 'Processed',
@@ -222,8 +238,12 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
           </TooltipProvider>
         ),
         sortingFn: (rowA, rowB) => {
-          const dateA = rowA.original.lastProcessed ? new Date(rowA.original.lastProcessed).getTime() : 0;
-          const dateB = rowB.original.lastProcessed ? new Date(rowB.original.lastProcessed).getTime() : 0;
+          const dateA = rowA.original.lastProcessed
+            ? new Date(rowA.original.lastProcessed).getTime()
+            : 0;
+          const dateB = rowB.original.lastProcessed
+            ? new Date(rowB.original.lastProcessed).getTime()
+            : 0;
           return dateA - dateB;
         },
         size: 150,
@@ -237,7 +257,8 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
           const isMutating = mutatingListId === list.id;
           const isDisabled = !isAutomaticProcessingEnabled || isMutating || !providerConfigured;
           // Show as OFF when automatic processing is disabled or provider not configured
-          const checkedState = isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
+          const checkedState =
+            isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
 
           return (
             <TooltipProvider>
@@ -255,14 +276,19 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                 <TooltipContent>
                   {!providerConfigured ? (
                     <p>
-                      {list.provider === 'trakt' ? 'Trakt' : list.provider === 'traktChart' ? 'Trakt Chart' : 'MDBList'} provider is not configured.{' '}
-                      Configure API key in{' '}
+                      {list.provider === 'trakt'
+                        ? 'Trakt'
+                        : list.provider === 'traktChart'
+                          ? 'Trakt Chart'
+                          : 'MDBList'}{' '}
+                      provider is not configured. Configure API key in{' '}
                       <span className="font-medium">Settings → API Keys</span> to enable processing.
                     </p>
                   ) : !isAutomaticProcessingEnabled ? (
                     <p>
                       Automatic processing is disabled. Enable it in{' '}
-                      <span className="font-medium">Settings → Automatic Processing</span> to enable scheduled processing.
+                      <span className="font-medium">Settings → Automatic Processing</span> to enable
+                      scheduled processing.
                     </p>
                   ) : (
                     <p>Toggle scheduled automatic processing for this list</p>
@@ -296,9 +322,7 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
                     <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
                     Process
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setEditingList(list)}
-                  >
+                  <DropdownMenuItem onClick={() => setEditingList(list)}>
                     <Pencil className="h-4 w-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
@@ -317,7 +341,16 @@ export function ListsTable({ lists, onProcess, processingLists, jellyseerrConfig
         },
       }),
     ],
-    [onProcess, processingLists, deleteMutation, toggleMutation, isAutomaticProcessingEnabled, isProviderConfigured, mutatingListId, jellyseerrConfigured]
+    [
+      onProcess,
+      processingLists,
+      deleteMutation,
+      toggleMutation,
+      isAutomaticProcessingEnabled,
+      isProviderConfigured,
+      mutatingListId,
+      jellyseerrConfigured,
+    ]
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library

@@ -56,9 +56,7 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
   }
 
   async deleteByUserId(userId: number): Promise<void> {
-    await this.db
-      .delete(jellyseerrConfigs)
-      .where(eq(jellyseerrConfigs.userId, userId));
+    await this.db.delete(jellyseerrConfigs).where(eq(jellyseerrConfigs.userId, userId));
   }
 
   /**

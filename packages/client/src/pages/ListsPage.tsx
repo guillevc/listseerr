@@ -9,7 +9,8 @@ import { useListProcessor } from '../hooks/use-list-processor';
 export function ListsPage() {
   const { data, isLoading: listsLoading } = trpc.lists.getAll.useQuery();
   const lists = data?.lists ?? [];
-  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig, isLoadingConfig } = useListProcessor();
+  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig, isLoadingConfig } =
+    useListProcessor();
 
   if (listsLoading) {
     return (
@@ -48,9 +49,7 @@ export function ListsPage() {
       />
 
       {/* Stats */}
-      {lists.length > 0 && (
-        <ListStats lists={lists} />
-      )}
+      {lists.length > 0 && <ListStats lists={lists} />}
 
       {/* Lists Table or Empty State */}
       {lists.length === 0 ? (

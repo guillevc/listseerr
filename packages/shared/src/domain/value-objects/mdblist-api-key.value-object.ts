@@ -17,7 +17,7 @@ export class MdbListApiKey {
     if (!pattern.test(trimmed)) {
       throw new InvalidMdbListApiKeyError(
         'MDBList API key must be 20-50 alphanumeric characters. ' +
-        'Get your API key from https://mdblist.com/preferences/'
+          'Get your API key from https://mdblist.com/preferences/'
       );
     }
 

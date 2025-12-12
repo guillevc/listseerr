@@ -1,4 +1,7 @@
-import type { ILogBufferService, LogEntry } from '../../application/services/log-buffer.service.interface';
+import type {
+  ILogBufferService,
+  LogEntry,
+} from '../../application/services/log-buffer.service.interface';
 import { logBuffer } from '../../lib/log-buffer';
 
 /**

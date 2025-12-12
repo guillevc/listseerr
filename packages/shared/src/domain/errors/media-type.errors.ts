@@ -6,9 +6,7 @@
  */
 export class InvalidMediaTypeError extends Error {
   constructor(mediaType: string) {
-    super(
-      `Invalid media type: ${mediaType}. Must be one of: movie, tv`
-    );
+    super(`Invalid media type: ${mediaType}. Must be one of: movie, tv`);
     this.name = 'InvalidMediaTypeError';
   }
 }

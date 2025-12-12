@@ -83,7 +83,9 @@ export function useListProcessor() {
 
       if (result.success) {
         const skipped = result.totalItemsFound - result.itemsRequested - result.itemsFailed;
-        const parts = [`Processed ${result.processedLists} list(s): ${result.totalItemsFound} items found`];
+        const parts = [
+          `Processed ${result.processedLists} list(s): ${result.totalItemsFound} items found`,
+        ];
 
         if (result.itemsRequested > 0) {
           parts.push(`${result.itemsRequested} requested`);
@@ -153,7 +155,7 @@ export function useListProcessor() {
     }
 
     // Mark all enabled lists as processing
-    setProcessingLists(new Set(enabledLists.map(l => l.id)));
+    setProcessingLists(new Set(enabledLists.map((l) => l.id)));
 
     // Use batch processing mutation
     processAllMutation.mutate();

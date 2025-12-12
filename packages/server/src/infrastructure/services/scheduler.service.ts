@@ -1,4 +1,7 @@
-import type { ISchedulerService, ScheduledJob } from '../../application/services/scheduler.service.interface';
+import type {
+  ISchedulerService,
+  ScheduledJob,
+} from '../../application/services/scheduler.service.interface';
 import { scheduler } from '../../lib/scheduler';
 
 export class SchedulerService implements ISchedulerService {
@@ -14,7 +17,7 @@ export class SchedulerService implements ISchedulerService {
     const jobs = scheduler.getScheduledJobs();
 
     // Transform to richer DTO format
-    return jobs.map(job => ({
+    return jobs.map((job) => ({
       name: `List ${job.listId}`,
       cronExpression: '', // Not available from current scheduler implementation
       nextRun: job.nextRun ? new Date(job.nextRun) : null,

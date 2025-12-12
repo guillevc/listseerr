@@ -6,9 +6,7 @@
  */
 export class InvalidTriggerTypeError extends Error {
   constructor(triggerType: string) {
-    super(
-      `Invalid trigger type: ${triggerType}. Must be one of: manual, scheduled`
-    );
+    super(`Invalid trigger type: ${triggerType}. Must be one of: manual, scheduled`);
     this.name = 'InvalidTriggerTypeError';
   }
 }

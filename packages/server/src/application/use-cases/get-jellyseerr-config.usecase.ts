@@ -3,9 +3,7 @@ import type { GetJellyseerrConfigCommand } from 'shared/application/dtos/jellyse
 import type { GetJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 
 export class GetJellyseerrConfigUseCase {
-  constructor(
-    private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository
-  ) {}
+  constructor(private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository) {}
 
   async execute(command: GetJellyseerrConfigCommand): Promise<GetJellyseerrConfigResponse> {
     const config = await this.jellyseerrConfigRepository.findByUserId(command.userId);

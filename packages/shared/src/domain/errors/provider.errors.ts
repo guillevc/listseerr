@@ -6,9 +6,7 @@
  */
 export class InvalidProviderError extends Error {
   constructor(provider: string) {
-    super(
-      `Invalid provider: ${provider}. Must be one of: trakt, mdblist, traktChart, stevenlu`
-    );
+    super(`Invalid provider: ${provider}. Must be one of: trakt, mdblist, traktChart, stevenlu`);
     this.name = 'InvalidProviderError';
   }
 }

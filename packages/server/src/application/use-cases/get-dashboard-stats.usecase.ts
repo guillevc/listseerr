@@ -36,7 +36,7 @@ export class GetDashboardStatsUseCase {
     // Get next scheduled processing time from scheduler
     // Global automatic processing job has listId: 0
     const scheduledJobs = this.schedulerInfoService.getScheduledJobs();
-    const globalJob = scheduledJobs.find(job => job.listId === 0);
+    const globalJob = scheduledJobs.find((job) => job.listId === 0);
     const nextScheduledProcessing = globalJob?.nextRun || null;
 
     return {

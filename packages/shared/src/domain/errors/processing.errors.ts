@@ -25,7 +25,7 @@ export class ProviderNotConfiguredError extends DomainError {
   constructor(provider: string) {
     super(
       `${provider} provider is not configured. ` +
-      `Please configure API keys in Settings → API Keys.`
+        `Please configure API keys in Settings → API Keys.`
     );
   }
 }

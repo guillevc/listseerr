@@ -24,29 +24,28 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     const [row] = await this.db
       .select()
       .from(mediaLists)
-      .where(and(
-        eq(mediaLists.id, id),
-        eq(mediaLists.userId, userId)
-      ))
+      .where(and(eq(mediaLists.id, id), eq(mediaLists.userId, userId)))
       .limit(1);
 
     return row ? this.toDomain(row) : null;
   }
 
-  async findAllWithLastProcessed(userId: number): Promise<{
-    id: number;
-    userId: number;
-    name: string;
-    url: string;
-    displayUrl: string;
-    provider: ProviderType;
-    enabled: boolean;
-    maxItems: number;
-    processingSchedule: Nullable<string>;
-    createdAt: Date;
-    updatedAt: Date;
-    lastProcessed: Nullable<Date>;
-  }[]> {
+  async findAllWithLastProcessed(userId: number): Promise<
+    {
+      id: number;
+      userId: number;
+      name: string;
+      url: string;
+      displayUrl: string;
+      provider: ProviderType;
+      enabled: boolean;
+      maxItems: number;
+      processingSchedule: Nullable<string>;
+      createdAt: Date;
+      updatedAt: Date;
+      lastProcessed: Nullable<Date>;
+    }[]
+  > {
     // Subquery to get the most recent successful execution for each list
     const latestExecutions = this.db
       .select({
@@ -65,10 +64,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
         lastProcessed: latestExecutions.completedAt,
       })
       .from(mediaLists)
-      .leftJoin(
-        latestExecutions,
-        eq(mediaLists.id, latestExecutions.listId)
-      )
+      .leftJoin(latestExecutions, eq(mediaLists.id, latestExecutions.listId))
       .where(eq(mediaLists.userId, userId))
       .orderBy(desc(mediaLists.createdAt));
 
@@ -145,10 +141,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     const [row] = await this.db
       .select({ id: mediaLists.id })
       .from(mediaLists)
-      .where(and(
-        eq(mediaLists.id, id),
-        eq(mediaLists.userId, userId)
-      ))
+      .where(and(eq(mediaLists.id, id), eq(mediaLists.userId, userId)))
       .limit(1);
 
     return !!row;

@@ -4,9 +4,7 @@ import type { GetProviderConfigResponse } from 'shared/application/dtos/provider
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 
 export class GetProviderConfigUseCase {
-  constructor(
-    private readonly providerConfigRepository: IProviderConfigRepository
-  ) {}
+  constructor(private readonly providerConfigRepository: IProviderConfigRepository) {}
 
   async execute(command: GetProviderConfigCommand): Promise<GetProviderConfigResponse> {
     // Validate provider type

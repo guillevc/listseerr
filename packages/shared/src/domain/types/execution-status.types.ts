@@ -29,4 +29,4 @@ export const ExecutionStatusValues = {
  * - Execution DTOs
  * - All processing-related domain logic
  */
-export type ExecutionStatus = typeof ExecutionStatusValues[keyof typeof ExecutionStatusValues];
+export type ExecutionStatus = (typeof ExecutionStatusValues)[keyof typeof ExecutionStatusValues];

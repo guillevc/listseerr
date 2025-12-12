@@ -5,7 +5,13 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { Switch } from '../../components/ui/switch';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 
@@ -146,7 +152,7 @@ export function ApiKeysSettings() {
     }
     saveTraktMutation.mutate({
       provider: 'trakt',
-      config: { clientId: traktClientId.trim() }
+      config: { clientId: traktClientId.trim() },
     });
   };
 
@@ -176,7 +182,7 @@ export function ApiKeysSettings() {
     }
     saveMdbListMutation.mutate({
       provider: 'mdblist',
-      config: { apiKey: mdbListApiKey.trim() }
+      config: { apiKey: mdbListApiKey.trim() },
     });
   };
 
@@ -184,9 +190,7 @@ export function ApiKeysSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">API Keys</h3>
-        <p className="text-sm text-muted mt-1">
-          Manage API keys for third-party services
-        </p>
+        <p className="text-sm text-muted mt-1">Manage API keys for third-party services</p>
       </div>
 
       <Separator />
@@ -225,7 +229,8 @@ export function ApiKeysSettings() {
           {!traktEnabled && (
             <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
               <p className="text-sm text-orange-800 dark:text-orange-200">
-                Provider disabled - Trakt lists and charts cannot be processed. Enable to configure API key.
+                Provider disabled - Trakt lists and charts cannot be processed. Enable to configure
+                API key.
               </p>
             </div>
           )}
@@ -239,7 +244,9 @@ export function ApiKeysSettings() {
                 placeholder="Your Trakt.tv Client ID"
                 value={traktClientId}
                 onChange={(e) => setTraktClientId(e.target.value)}
-                disabled={!traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending}
+                disabled={
+                  !traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending
+                }
                 className="pr-10"
               />
               {traktEnabled && (
@@ -249,11 +256,7 @@ export function ApiKeysSettings() {
                     onClick={() => setShowTraktKey(!showTraktKey)}
                     className="text-muted hover:text-foreground"
                   >
-                    {showTraktKey ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showTraktKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               )}
@@ -266,9 +269,15 @@ export function ApiKeysSettings() {
           <div className="flex gap-2">
             <Button
               onClick={handleTraktSave}
-              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending || (traktEnabled && !traktClientId.trim())}
+              disabled={
+                saveTraktMutation.isPending ||
+                deleteTraktMutation.isPending ||
+                (traktEnabled && !traktClientId.trim())
+              }
             >
-              {saveTraktMutation.isPending || deleteTraktMutation.isPending ? 'Saving...' : 'Save Changes'}
+              {saveTraktMutation.isPending || deleteTraktMutation.isPending
+                ? 'Saving...'
+                : 'Save Changes'}
             </Button>
           </div>
         </CardContent>
@@ -322,7 +331,11 @@ export function ApiKeysSettings() {
                 placeholder="Your MDBList API Key"
                 value={mdbListApiKey}
                 onChange={(e) => setTmdbApiKey(e.target.value)}
-                disabled={!mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+                disabled={
+                  !mdbListEnabled ||
+                  saveMdbListMutation.isPending ||
+                  deleteMdbListMutation.isPending
+                }
                 className="pr-10"
               />
               {mdbListEnabled && (
@@ -332,11 +345,7 @@ export function ApiKeysSettings() {
                     onClick={() => setShowTmdbKey(!showMdbListKey)}
                     className="text-muted hover:text-foreground"
                   >
-                    {showMdbListKey ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showMdbListKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               )}
@@ -346,9 +355,15 @@ export function ApiKeysSettings() {
           <div className="flex gap-2">
             <Button
               onClick={handleMdbListSave}
-              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending || (mdbListEnabled && !mdbListApiKey.trim())}
+              disabled={
+                saveMdbListMutation.isPending ||
+                deleteMdbListMutation.isPending ||
+                (mdbListEnabled && !mdbListApiKey.trim())
+              }
             >
-              {saveMdbListMutation.isPending || deleteMdbListMutation.isPending ? 'Saving...' : 'Save Changes'}
+              {saveMdbListMutation.isPending || deleteMdbListMutation.isPending
+                ? 'Saving...'
+                : 'Save Changes'}
             </Button>
           </div>
         </CardContent>

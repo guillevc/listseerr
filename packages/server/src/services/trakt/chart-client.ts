@@ -64,7 +64,8 @@ export function parseTraktChartUrl(url: string): {
   chartType: TraktChartType;
 } {
   // Accept both display URLs (trakt.tv) and API URLs (api.trakt.tv)
-  const urlPattern = /^https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i;
+  const urlPattern =
+    /^https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i;
   const match = url.match(urlPattern);
 
   if (!match) {
@@ -160,7 +161,7 @@ export async function fetchTraktChart(
     // Determine if this is a wrapped or simple chart type
     const isWrappedChart = WRAPPED_CHART_TYPES.includes(chartType);
 
-    const rawItems = await response.json() as (TraktSimpleChartItem | TraktWrappedChartItem)[];
+    const rawItems = (await response.json()) as (TraktSimpleChartItem | TraktWrappedChartItem)[];
 
     logger.debug(
       {
@@ -174,9 +175,10 @@ export async function fetchTraktChart(
 
     // Transform chart items to MediaItem format
     const mediaItems: MediaItem[] = rawItems
-      .map((item) => isWrappedChart
-        ? transformWrappedChartItem(item as TraktWrappedChartItem, mediaType)
-        : transformSimpleChartItem(item as TraktSimpleChartItem, mediaType)
+      .map((item) =>
+        isWrappedChart
+          ? transformWrappedChartItem(item as TraktWrappedChartItem, mediaType)
+          : transformSimpleChartItem(item as TraktSimpleChartItem, mediaType)
       )
       .filter((item): item is MediaItem => item !== null);
 
@@ -191,10 +193,7 @@ export async function fetchTraktChart(
     );
 
     if (skippedCount > 0) {
-      logger.warn(
-        { skippedCount },
-        'Some items were skipped due to missing TMDB IDs'
-      );
+      logger.warn({ skippedCount }, 'Some items were skipped due to missing TMDB IDs');
     }
 
     return mediaItems;
@@ -218,10 +217,7 @@ function transformSimpleChartItem(
   const tmdbId = item.ids.tmdb;
 
   if (!tmdbId) {
-    logger.debug(
-      { title: item.title, year: item.year, mediaType },
-      'Skipping item - no TMDB ID'
-    );
+    logger.debug({ title: item.title, year: item.year, mediaType }, 'Skipping item - no TMDB ID');
     return null;
   }
 

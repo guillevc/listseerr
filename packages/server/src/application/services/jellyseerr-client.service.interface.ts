@@ -22,8 +22,5 @@ export interface IJellyseerrClient {
    * @param config - Jellyseerr connection configuration
    * @returns Result with successful and failed items
    */
-  requestItems(
-    items: MediaItem[],
-    config: JellyseerrConfig
-  ): Promise<ProcessingResult>;
+  requestItems(items: MediaItem[], config: JellyseerrConfig): Promise<ProcessingResult>;
 }

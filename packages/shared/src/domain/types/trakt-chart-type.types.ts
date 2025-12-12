@@ -33,4 +33,4 @@ export const TraktChartTypeValues = {
  * - Trakt chart client
  * - All Trakt chart-related domain logic
  */
-export type TraktChartType = typeof TraktChartTypeValues[keyof typeof TraktChartTypeValues];
+export type TraktChartType = (typeof TraktChartTypeValues)[keyof typeof TraktChartTypeValues];

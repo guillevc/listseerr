@@ -31,4 +31,4 @@ export const ProviderValues = {
  * - Provider Value Object
  * - All provider-related domain logic
  */
-export type ProviderType = typeof ProviderValues[keyof typeof ProviderValues];
+export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];

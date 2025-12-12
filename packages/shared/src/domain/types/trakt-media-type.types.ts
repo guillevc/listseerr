@@ -30,4 +30,4 @@ export const TraktMediaTypeValues = {
  * - Trakt chart client
  * - All Trakt-related domain logic
  */
-export type TraktMediaType = typeof TraktMediaTypeValues[keyof typeof TraktMediaTypeValues];
+export type TraktMediaType = (typeof TraktMediaTypeValues)[keyof typeof TraktMediaTypeValues];

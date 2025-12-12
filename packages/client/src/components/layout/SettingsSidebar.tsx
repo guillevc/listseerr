@@ -43,9 +43,7 @@ interface SettingsSidebarProps {
   activeCategory?: string;
 }
 
-export function SettingsSidebar({
-  activeCategory = 'general',
-}: SettingsSidebarProps) {
+export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarProps) {
   return (
     <aside className="w-full md:w-64">
       <nav className="space-y-1 p-2">

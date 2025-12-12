@@ -12,9 +12,7 @@ import type { GetLogsResponse } from 'shared/application/dtos/logs/responses.dto
  * - Level filter applied by infrastructure layer
  */
 export class GetLogsUseCase {
-  constructor(
-    private readonly logBufferService: ILogBufferService
-  ) {}
+  constructor(private readonly logBufferService: ILogBufferService) {}
 
   async execute(command: GetLogsCommand): Promise<GetLogsResponse> {
     // Delegate to infrastructure service

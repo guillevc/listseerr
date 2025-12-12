@@ -37,9 +37,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
     : null;
 
   const lastScheduledText = getRelativeTime(lastScheduledDate);
-  const lastScheduledFullDate = lastScheduledDate
-    ? lastScheduledDate.toLocaleString()
-    : 'Never';
+  const lastScheduledFullDate = lastScheduledDate ? lastScheduledDate.toLocaleString() : 'Never';
 
   // Get next scheduled processing time from stats
   const nextScheduledDate = dashboardStats?.nextScheduledProcessing
@@ -56,9 +54,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       {/* Lists */}
       <Card className="lg:col-span-1 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Lists
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Lists</CardTitle>
           <List className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
@@ -70,9 +66,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       {/* Requests */}
       <Card className="lg:col-span-1 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Requests
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Requests</CardTitle>
           <PackageSearch className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
@@ -86,9 +80,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       {/* Automatic Processing - Merged Card */}
       <Card className="md:col-span-2 lg:col-span-2 hover:border-border-hover">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Automatic Processing
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Automatic Processing</CardTitle>
           <Clock className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>

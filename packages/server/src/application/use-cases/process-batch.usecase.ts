@@ -14,7 +14,10 @@ import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-obje
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
+import {
+  JellyseerrNotConfiguredError,
+  ProviderNotConfiguredError,
+} from 'shared/domain/errors/processing.errors';
 
 /**
  * ProcessBatchUseCase
@@ -45,7 +48,7 @@ export class ProcessBatchUseCase {
 
     // 1. Load all enabled lists
     const allLists = await this.mediaListRepository.findAll(command.userId);
-    const enabledLists = allLists.filter(list => list.enabled);
+    const enabledLists = allLists.filter((list) => list.enabled);
 
     this.logger.info(
       { totalLists: allLists.length, enabledLists: enabledLists.length },
@@ -67,7 +70,12 @@ export class ProcessBatchUseCase {
     // 2. Fetch items from all lists (with rate limiting)
     const triggerType = TriggerType.create(command.triggerType);
     const batchId = BatchId.generate(triggerType);
-    const listsWithItems = await this.fetchFromAllLists(enabledLists, command.userId, batchId, triggerType);
+    const listsWithItems = await this.fetchFromAllLists(
+      enabledLists,
+      command.userId,
+      batchId,
+      triggerType
+    );
 
     // 3. Global deduplication (aggregate all TMDB IDs)
     const globalItemsMap = this.deduplicateGlobally(listsWithItems);
@@ -82,7 +90,11 @@ export class ProcessBatchUseCase {
     // 4. Filter already cached items
     const newItems = await this.cacheRepository.filterAlreadyCached(uniqueItems);
     this.logger.info(
-      { uniqueItems: uniqueItems.length, newItems: newItems.length, cached: uniqueItems.length - newItems.length },
+      {
+        uniqueItems: uniqueItems.length,
+        newItems: newItems.length,
+        cached: uniqueItems.length - newItems.length,
+      },
       'Filtered cached items'
     );
 
@@ -104,7 +116,10 @@ export class ProcessBatchUseCase {
     // 7. Update all execution histories
     const executions = await this.updateAllExecutions(listsWithItems, results);
 
-    this.logger.info({ processedLists: enabledLists.length }, 'Batch processing completed successfully');
+    this.logger.info(
+      { processedLists: enabledLists.length },
+      'Batch processing completed successfully'
+    );
 
     // 8. Return aggregate response
     return {
@@ -113,7 +128,7 @@ export class ProcessBatchUseCase {
       totalItemsFound,
       itemsRequested: results.successful.length,
       itemsFailed: results.failed.length,
-      executions: executions.map(e => e.toDTO()),
+      executions: executions.map((e) => e.toDTO()),
     };
   }
 
@@ -126,7 +141,8 @@ export class ProcessBatchUseCase {
     batchId: BatchId,
     triggerType: TriggerType
   ): Promise<Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }>> {
-    const results: Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }> = [];
+    const results: Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }> =
+      [];
 
     for (const list of lists) {
       // Create execution record (status: running)
@@ -147,9 +163,16 @@ export class ProcessBatchUseCase {
           { listId: list.id, provider: list.provider.getValue(), url: list.url.getValue() },
           'Fetching items from provider'
         );
-        const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems, providerConfig.config);
+        const items = await fetcher.fetchItems(
+          list.url.getValue(),
+          list.maxItems,
+          providerConfig.config
+        );
 
-        this.logger.info({ listId: list.id, itemCount: items.length }, 'Items fetched from provider');
+        this.logger.info(
+          { listId: list.id, itemCount: items.length },
+          'Items fetched from provider'
+        );
 
         results.push({ list, items, execution: savedExecution });
       } catch (error) {
@@ -208,9 +231,9 @@ export class ProcessBatchUseCase {
       }
 
       // Calculate successful/failed counts for this list's items
-      const listTmdbIds = new Set(items.map(i => i.tmdbId));
-      const successfulCount = results.successful.filter(i => listTmdbIds.has(i.tmdbId)).length;
-      const failedCount = results.failed.filter(f => listTmdbIds.has(f.item.tmdbId)).length;
+      const listTmdbIds = new Set(items.map((i) => i.tmdbId));
+      const successfulCount = results.successful.filter((i) => listTmdbIds.has(i.tmdbId)).length;
+      const failedCount = results.failed.filter((f) => listTmdbIds.has(f.item.tmdbId)).length;
 
       // Mark execution as success
       execution.markAsSuccess(items.length, successfulCount, failedCount);
@@ -247,7 +270,7 @@ export class ProcessBatchUseCase {
    * Find the appropriate media fetcher for the provider type
    */
   private findFetcherFor(provider: Provider): IMediaFetcher {
-    const fetcher = this.mediaFetchers.find(f => f.supports(provider));
+    const fetcher = this.mediaFetchers.find((f) => f.supports(provider));
     if (!fetcher) {
       throw new Error(`No fetcher found for provider: ${provider.getValue()}`);
     }

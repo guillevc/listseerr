@@ -4,12 +4,7 @@ import { Menu, ExternalLink } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/lib/trpc';
 
@@ -40,9 +35,7 @@ export function Navigation() {
       name: 'Requests',
       path: jellyseerrRequestsUrl,
       type: 'external',
-      badge: pendingRequests?.error
-        ? '!'
-        : pendingRequests?.count || "0",
+      badge: pendingRequests?.error ? '!' : pendingRequests?.count || '0',
       disabled: !pendingRequests?.configured,
     },
   ];
@@ -74,11 +67,10 @@ export function Navigation() {
             {/* Nav Tabs */}
             <div className="hidden md:flex gap-1">
               {navItems.map((item) => {
-                const isActive = item.type === 'internal' && item.path && (
-                  item.path === '/'
-                    ? currentPath === '/'
-                    : currentPath.startsWith(item.path)
-                );
+                const isActive =
+                  item.type === 'internal' &&
+                  item.path &&
+                  (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
 
                 if (item.disabled) {
                   return (
@@ -93,12 +85,7 @@ export function Navigation() {
 
                 if (item.type === 'external' && item.path) {
                   return (
-                    <Button
-                      key={item.path}
-                      variant="outline"
-                      size="sm"
-                      asChild
-                    >
+                    <Button key={item.path} variant="outline" size="sm" asChild>
                       <a
                         href={item.path}
                         target="_blank"
@@ -106,7 +93,10 @@ export function Navigation() {
                         className="flex items-center gap-2 text-light-pu-2 border-light-pu-2 hover:border-light-pu dark:text-dark-pu-2 dark:border-dark-pu-2 dark:hover:border-dark-pu"
                       >
                         {item.badge && (
-                          <Badge variant="simple" className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper'}`}>
+                          <Badge
+                            variant="simple"
+                            className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper'}`}
+                          >
                             {item.badge}
                           </Badge>
                         )}
@@ -161,11 +151,10 @@ export function Navigation() {
           </SheetHeader>
           <div className="flex flex-col gap-2 mt-6">
             {navItems.map((item) => {
-              const isActive = item.type === 'internal' && item.path && (
-                item.path === '/'
-                  ? currentPath === '/'
-                  : currentPath.startsWith(item.path)
-              );
+              const isActive =
+                item.type === 'internal' &&
+                item.path &&
+                (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
 
               if (item.disabled) {
                 return (
@@ -180,12 +169,7 @@ export function Navigation() {
 
               if (item.type === 'external' && item.path) {
                 return (
-                  <Button
-                    key={item.path}
-                    variant="outline"
-                    size="sm"
-                    asChild
-                  >
+                  <Button key={item.path} variant="outline" size="sm" asChild>
                     <a
                       href={item.path}
                       target="_blank"
@@ -194,7 +178,9 @@ export function Navigation() {
                       className="flex items-center gap-2 w-full border-light-pu dark:border-dark-pu"
                     >
                       {item.badge && (
-                        <Badge className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-foreground hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}>
+                        <Badge
+                          className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-foreground hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}
+                        >
                           {item.badge}
                         </Badge>
                       )}

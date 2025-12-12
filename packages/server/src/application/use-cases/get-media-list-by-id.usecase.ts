@@ -3,9 +3,7 @@ import type { GetMediaListByIdCommand } from 'shared/application/dtos/media-list
 import type { GetMediaListByIdResponse } from 'shared/application/dtos/media-list/responses.dto';
 
 export class GetMediaListByIdUseCase {
-  constructor(
-    private readonly mediaListRepository: IMediaListRepository
-  ) {}
+  constructor(private readonly mediaListRepository: IMediaListRepository) {}
 
   async execute(command: GetMediaListByIdCommand): Promise<GetMediaListByIdResponse> {
     const list = await this.mediaListRepository.findById(command.id, command.userId);

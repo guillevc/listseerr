@@ -15,10 +15,13 @@ export function createHttpApp(): Hono {
 
   // CORS for development
   if (isDev) {
-    app.use('/*', cors({
-      origin: 'http://localhost:5173', // Vite dev server
-      credentials: true,
-    }));
+    app.use(
+      '/*',
+      cors({
+        origin: 'http://localhost:5173', // Vite dev server
+        credentials: true,
+      })
+    );
   }
 
   // Health check endpoint

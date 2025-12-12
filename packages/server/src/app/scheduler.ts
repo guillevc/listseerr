@@ -61,7 +61,9 @@ async function processAllListsCallback(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _db: BunSQLiteDatabase<typeof schema>
 ): Promise<void> {
-  logger.info('Global automatic processing triggered - using batch processing with global deduplication');
+  logger.info(
+    'Global automatic processing triggered - using batch processing with global deduplication'
+  );
 
   try {
     // Dynamic import to avoid circular dependencies
@@ -80,9 +82,10 @@ async function processAllListsCallback(
         itemsRequested: result.itemsRequested,
         itemsFailed: result.itemsFailed,
         duplicatesEliminated: result.totalItemsFound - result.itemsRequested,
-        efficiencyGain: result.totalItemsFound > 0
-          ? `${(((result.totalItemsFound - result.itemsRequested) / result.totalItemsFound) * 100).toFixed(1)}%`
-          : 'N/A',
+        efficiencyGain:
+          result.totalItemsFound > 0
+            ? `${(((result.totalItemsFound - result.itemsRequested) / result.totalItemsFound) * 100).toFixed(1)}%`
+            : 'N/A',
       },
       'Completed global automatic processing with batch deduplication'
     );
@@ -102,9 +105,7 @@ async function processAllListsCallback(
  *
  * @param db - Database instance
  */
-export async function initializeScheduler(
-  db: BunSQLiteDatabase<typeof schema>
-): Promise<void> {
+export async function initializeScheduler(db: BunSQLiteDatabase<typeof schema>): Promise<void> {
   try {
     // Initialize scheduler with database and process callbacks
     scheduler.initialize(

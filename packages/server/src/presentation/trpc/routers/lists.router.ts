@@ -8,12 +8,14 @@ const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
   displayUrl: z.string().optional(),
-  provider: z.enum([
-    ProviderValues.TRAKT,
-    ProviderValues.MDBLIST,
-    ProviderValues.TRAKT_CHART,
-    ProviderValues.STEVENLU
-  ] as const).default(ProviderValues.TRAKT),
+  provider: z
+    .enum([
+      ProviderValues.TRAKT,
+      ProviderValues.MDBLIST,
+      ProviderValues.TRAKT_CHART,
+      ProviderValues.STEVENLU,
+    ] as const)
+    .default(ProviderValues.TRAKT),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),
@@ -36,24 +38,20 @@ export function createListsRouter(container: ListsContainer) {
       return await container.getAllMediaListsUseCase.execute({ userId: ctx.userId });
     }),
 
-    getById: publicProcedure
-      .input(z.object({ id: z.number() }))
-      .query(async ({ input, ctx }) => {
-        return await container.getMediaListByIdUseCase.execute({
-          id: input.id,
-          userId: ctx.userId,
-        });
-      }),
+    getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input, ctx }) => {
+      return await container.getMediaListByIdUseCase.execute({
+        id: input.id,
+        userId: ctx.userId,
+      });
+    }),
 
-    create: publicProcedure
-      .input(listInputSchema)
-      .mutation(async ({ input, ctx }) => {
-        return await container.createMediaListUseCase.execute({
-          ...input,
-          userId: ctx.userId,
-          processingSchedule: input.processingSchedule ?? null, // Convert undefined to null
-        });
-      }),
+    create: publicProcedure.input(listInputSchema).mutation(async ({ input, ctx }) => {
+      return await container.createMediaListUseCase.execute({
+        ...input,
+        userId: ctx.userId,
+        processingSchedule: input.processingSchedule ?? null, // Convert undefined to null
+      });
+    }),
 
     update: publicProcedure
       .input(
@@ -70,14 +68,12 @@ export function createListsRouter(container: ListsContainer) {
         });
       }),
 
-    delete: publicProcedure
-      .input(z.object({ id: z.number() }))
-      .mutation(async ({ input, ctx }) => {
-        return await container.deleteMediaListUseCase.execute({
-          id: input.id,
-          userId: ctx.userId,
-        });
-      }),
+    delete: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+      return await container.deleteMediaListUseCase.execute({
+        id: input.id,
+        userId: ctx.userId,
+      });
+    }),
 
     toggleEnabled: publicProcedure
       .input(z.object({ id: z.number() }))

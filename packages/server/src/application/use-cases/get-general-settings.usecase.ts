@@ -3,9 +3,7 @@ import type { GetGeneralSettingsCommand } from 'shared/application/dtos/general-
 import type { GetGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 
 export class GetGeneralSettingsUseCase {
-  constructor(
-    private readonly generalSettingsRepository: IGeneralSettingsRepository
-  ) {}
+  constructor(private readonly generalSettingsRepository: IGeneralSettingsRepository) {}
 
   async execute(command: GetGeneralSettingsCommand): Promise<GetGeneralSettingsResponse> {
     const settings = await this.generalSettingsRepository.findByUserId(command.userId);

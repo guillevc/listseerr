@@ -26,14 +26,12 @@ export function createGeneralSettingsRouter(container: GeneralSettingsContainer)
       return await container.getGeneralSettingsUseCase.execute({ userId: ctx.userId });
     }),
 
-    set: publicProcedure
-      .input(settingsInputSchema)
-      .mutation(async ({ input, ctx }) => {
-        return await container.updateGeneralSettingsUseCase.execute({
-          userId: ctx.userId,
-          data: input,
-        });
-      }),
+    set: publicProcedure.input(settingsInputSchema).mutation(async ({ input, ctx }) => {
+      return await container.updateGeneralSettingsUseCase.execute({
+        userId: ctx.userId,
+        data: input,
+      });
+    }),
   });
 }
 

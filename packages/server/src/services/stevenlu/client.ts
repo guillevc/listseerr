@@ -17,9 +17,7 @@ const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
  * @param maxItems - Maximum number of items to return (takes first N items)
  * @returns Array of MediaItem objects
  */
-export async function fetchStevenLuList(
-  maxItems: number | null
-): Promise<MediaItem[]> {
+export async function fetchStevenLuList(maxItems: number | null): Promise<MediaItem[]> {
   try {
     logger.info({ maxItems }, 'Fetching StevenLu popular movies list');
 
@@ -41,13 +39,16 @@ export async function fetchStevenLuList(
         logger.info(
           {
             cacheAge: Math.floor(cacheAge / 1000 / 60), // minutes
-            cacheExpiresIn: Math.floor((CACHE_DURATION_MS - cacheAge) / 1000 / 60) // minutes
+            cacheExpiresIn: Math.floor((CACHE_DURATION_MS - cacheAge) / 1000 / 60), // minutes
           },
           'Using cached StevenLu data'
         );
         items = JSON.parse(cachedData.data);
       } else {
-        logger.info({ cacheAge: Math.floor(cacheAge / 1000 / 60) }, 'Cache expired, fetching fresh data');
+        logger.info(
+          { cacheAge: Math.floor(cacheAge / 1000 / 60) },
+          'Cache expired, fetching fresh data'
+        );
       }
     } else {
       logger.info('No cache found, fetching fresh data');
@@ -78,7 +79,7 @@ export async function fetchStevenLuList(
         throw new Error(`StevenLu API error: ${response.statusText}`);
       }
 
-      items = await response.json() as StevenLuItem[];
+      items = (await response.json()) as StevenLuItem[];
       logger.info({ count: items.length }, 'Received items from StevenLu API');
 
       // Update cache
@@ -97,13 +98,11 @@ export async function fetchStevenLuList(
         logger.info('Updated StevenLu cache');
       } else {
         // Insert new cache entry
-        await db
-          .insert(providerCache)
-          .values({
-            provider: ProviderValues.STEVENLU,
-            data: dataJson,
-            cachedAt: now,
-          });
+        await db.insert(providerCache).values({
+          provider: ProviderValues.STEVENLU,
+          data: dataJson,
+          cachedAt: now,
+        });
 
         logger.info('Created StevenLu cache');
       }
@@ -117,7 +116,7 @@ export async function fetchStevenLuList(
         {
           totalItems: items.length,
           requestedMax: maxItems,
-          returnedItems: limitedItems.length
+          returnedItems: limitedItems.length,
         },
         'Applied maxItems limit'
       );
@@ -128,10 +127,13 @@ export async function fetchStevenLuList(
       .map(transformStevenLuItem)
       .filter((item): item is MediaItem => item !== null);
 
-    logger.info({
-      total: limitedItems.length,
-      withTmdbId: mediaItems.length
-    }, 'Transformed StevenLu items');
+    logger.info(
+      {
+        total: limitedItems.length,
+        withTmdbId: mediaItems.length,
+      },
+      'Transformed StevenLu items'
+    );
 
     return mediaItems;
   } catch (error) {

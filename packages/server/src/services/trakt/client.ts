@@ -43,15 +43,18 @@ export async function fetchTraktList(
       throw new Error(`Trakt API error: ${response.status} ${response.statusText}`);
     }
 
-    const items = await response.json() as TraktListItem[];
+    const items = (await response.json()) as TraktListItem[];
 
     logger.debug(
       {
         totalItems: items.length,
-        itemTypes: items.reduce((acc, item) => {
-          acc[item.type] = (acc[item.type] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
+        itemTypes: items.reduce(
+          (acc, item) => {
+            acc[item.type] = (acc[item.type] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
       },
       'Received items from Trakt API'
     );
@@ -67,19 +70,19 @@ export async function fetchTraktList(
       {
         validItems: mediaItems.length,
         skippedItems: skippedCount,
-        mediaTypes: mediaItems.reduce((acc, item) => {
-          acc[item.mediaType] = (acc[item.mediaType] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
+        mediaTypes: mediaItems.reduce(
+          (acc, item) => {
+            acc[item.mediaType] = (acc[item.mediaType] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
       },
       'Transformed Trakt items to MediaItem format'
     );
 
     if (skippedCount > 0) {
-      logger.warn(
-        { skippedCount },
-        'Some items were skipped due to missing TMDB IDs'
-      );
+      logger.warn({ skippedCount }, 'Some items were skipped due to missing TMDB IDs');
     }
 
     return mediaItems;
@@ -116,10 +119,7 @@ function transformTraktItem(item: TraktListItem): MediaItem | null {
   if (item.type === 'show' && item.show) {
     const tmdbId = item.show.ids.tmdb;
     if (!tmdbId) {
-      logger.debug(
-        { title: item.show.title, year: item.show.year },
-        'Skipping show - no TMDB ID'
-      );
+      logger.debug({ title: item.show.title, year: item.show.year }, 'Skipping show - no TMDB ID');
       return null;
     }
 

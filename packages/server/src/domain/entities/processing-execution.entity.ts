@@ -130,10 +130,7 @@ export class ProcessingExecution {
    */
   markAsSuccess(itemsFound: number, itemsRequested: number, itemsFailed: number): void {
     if (this._status.isCompleted()) {
-      throw new InvalidExecutionStatusTransitionError(
-        this._status.getValue(),
-        'success'
-      );
+      throw new InvalidExecutionStatusTransitionError(this._status.getValue(), 'success');
     }
 
     this._status = ExecutionStatus.success();
@@ -150,10 +147,7 @@ export class ProcessingExecution {
    */
   markAsError(errorMessage: string): void {
     if (this._status.isCompleted()) {
-      throw new InvalidExecutionStatusTransitionError(
-        this._status.getValue(),
-        'error'
-      );
+      throw new InvalidExecutionStatusTransitionError(this._status.getValue(), 'error');
     }
 
     this._status = ExecutionStatus.error();

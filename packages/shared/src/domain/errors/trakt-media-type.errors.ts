@@ -6,9 +6,7 @@
  */
 export class InvalidTraktMediaTypeError extends Error {
   constructor(mediaType: string) {
-    super(
-      `Invalid Trakt media type: ${mediaType}. Must be one of: movies, shows`
-    );
+    super(`Invalid Trakt media type: ${mediaType}. Must be one of: movies, shows`);
     this.name = 'InvalidTraktMediaTypeError';
   }
 }

@@ -9,7 +9,10 @@ export interface IJellyseerrConnectionTester {
    * Test connection to Jellyseerr instance
    * Returns success status and message
    */
-  testConnection(url: string, apiKey: string): Promise<{
+  testConnection(
+    url: string,
+    apiKey: string
+  ): Promise<{
     success: boolean;
     message: string;
   }>;

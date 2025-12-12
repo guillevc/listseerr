@@ -26,7 +26,7 @@ export class AesEncryptionService implements IEncryptionService {
     if (encryptionKey.length !== 32) {
       throw new Error(
         `Invalid encryption key length: ${encryptionKey.length} bytes. ` +
-        `AES-256 requires exactly 32 bytes (64 hex characters)`
+          `AES-256 requires exactly 32 bytes (64 hex characters)`
       );
     }
   }
@@ -43,17 +43,10 @@ export class AesEncryptionService implements IEncryptionService {
       const iv = randomBytes(AesEncryptionService.IV_LENGTH);
 
       // Create cipher
-      const cipher = createCipheriv(
-        AesEncryptionService.ALGORITHM,
-        this.encryptionKey,
-        iv
-      );
+      const cipher = createCipheriv(AesEncryptionService.ALGORITHM, this.encryptionKey, iv);
 
       // Encrypt the plaintext
-      const encrypted = Buffer.concat([
-        cipher.update(plaintext, 'utf8'),
-        cipher.final(),
-      ]);
+      const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
 
       // Get the authentication tag (GCM provides this for integrity verification)
       const authTag = cipher.getAuthTag();
@@ -118,20 +111,13 @@ export class AesEncryptionService implements IEncryptionService {
       }
 
       // Create decipher
-      const decipher = createDecipheriv(
-        AesEncryptionService.ALGORITHM,
-        this.encryptionKey,
-        iv
-      );
+      const decipher = createDecipheriv(AesEncryptionService.ALGORITHM, this.encryptionKey, iv);
 
       // Set the auth tag for verification
       decipher.setAuthTag(authTag);
 
       // Decrypt and verify
-      const decrypted = Buffer.concat([
-        decipher.update(encrypted),
-        decipher.final(),
-      ]);
+      const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
 
       return decrypted.toString('utf8');
     } catch (error) {

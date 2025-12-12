@@ -37,7 +37,7 @@ export class TraktMediaFetcher implements IMediaFetcher {
       : await fetchTraktChart(url, maxItems, clientId);
 
     // Transform raw items to domain MediaItem value objects
-    return rawItems.map(item =>
+    return rawItems.map((item) =>
       MediaItem.create({
         title: item.title,
         year: item.year,

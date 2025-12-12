@@ -28,7 +28,7 @@ export class StevenLuMediaFetcher implements IMediaFetcher {
     const rawItems = await fetchStevenLuList(maxItems);
 
     // Transform raw items to domain MediaItem value objects
-    return rawItems.map(item =>
+    return rawItems.map((item) =>
       MediaItem.create({
         title: item.title,
         year: item.year,

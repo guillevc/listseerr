@@ -1,4 +1,7 @@
-import type { ISchedulerInfoService, ScheduledJobInfo } from '../../application/services/scheduler-info.service.interface';
+import type {
+  ISchedulerInfoService,
+  ScheduledJobInfo,
+} from '../../application/services/scheduler-info.service.interface';
 import { scheduler } from '../../lib/scheduler';
 
 /**

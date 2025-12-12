@@ -53,9 +53,7 @@ export class DashboardContainer {
       this.schedulerInfoService
     );
 
-    this.getRecentActivityUseCase = new GetRecentActivityUseCase(
-      this.dashboardStatsRepository
-    );
+    this.getRecentActivityUseCase = new GetRecentActivityUseCase(this.dashboardStatsRepository);
 
     this.getPendingRequestsUseCase = new GetPendingRequestsUseCase(
       this.jellyseerrConfigRepository,

@@ -53,13 +53,9 @@ export class ListsContainer {
     this.logger = new LoggerService('lists');
 
     // 2. Instantiate application layer (use cases) with injected dependencies
-    this.getAllMediaListsUseCase = new GetAllMediaListsUseCase(
-      this.mediaListRepository
-    );
+    this.getAllMediaListsUseCase = new GetAllMediaListsUseCase(this.mediaListRepository);
 
-    this.getMediaListByIdUseCase = new GetMediaListByIdUseCase(
-      this.mediaListRepository
-    );
+    this.getMediaListByIdUseCase = new GetMediaListByIdUseCase(this.mediaListRepository);
 
     this.createMediaListUseCase = new CreateMediaListUseCase(
       this.mediaListRepository,

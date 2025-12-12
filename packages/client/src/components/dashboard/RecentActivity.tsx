@@ -66,15 +66,21 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
           <div className="space-y-1 text-xs">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-3 w-3 text-green-600" />
-              <span>Requested: {requested} ({requestedPercent.toFixed(1)}%)</span>
+              <span>
+                Requested: {requested} ({requestedPercent.toFixed(1)}%)
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <AlertCircle className="h-3 w-3 text-blue-500" />
-              <span>Skipped: {skipped} ({skippedPercent.toFixed(1)}%)</span>
+              <span>
+                Skipped: {skipped} ({skippedPercent.toFixed(1)}%)
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <XCircle className="h-3 w-3 text-red-600" />
-              <span>Failed: {failed} ({failedPercent.toFixed(1)}%)</span>
+              <span>
+                Failed: {failed} ({failedPercent.toFixed(1)}%)
+              </span>
             </div>
           </div>
         </TooltipContent>
@@ -111,9 +117,7 @@ export function RecentActivity() {
             <Activity className="h-5 w-5" />
             Recent Activity
           </CardTitle>
-          <CardDescription>
-            Recent list processing and events (last 24 hours)
-          </CardDescription>
+          <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted">
@@ -133,9 +137,7 @@ export function RecentActivity() {
             <Activity className="h-5 w-5" />
             Recent Activity
           </CardTitle>
-          <CardDescription>
-            Recent list processing and events (last 24 hours)
-          </CardDescription>
+          <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted">
@@ -154,9 +156,7 @@ export function RecentActivity() {
           <Activity className="h-5 w-5" />
           Recent Activity
         </CardTitle>
-        <CardDescription>
-          Recent list processing and events
-        </CardDescription>
+        <CardDescription>Recent list processing and events</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
@@ -171,7 +171,10 @@ export function RecentActivity() {
                 {/* Group header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
                   <div className="flex items-center gap-2">
-                    <Badge variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
                       {group.triggerType === 'scheduled' ? (
                         <>
                           <Calendar className="h-3 w-3 mr-1" />
@@ -182,7 +185,8 @@ export function RecentActivity() {
                       )}
                     </Badge>
                     <span className="text-sm text-muted">
-                      {group.executions.length} {group.executions.length === 1 ? 'list' : 'lists'} processed
+                      {group.executions.length} {group.executions.length === 1 ? 'list' : 'lists'}{' '}
+                      processed
                     </span>
                   </div>
                   <TooltipProvider>
@@ -237,26 +241,36 @@ export function RecentActivity() {
                         );
                       })}
                       {/* Batch Summary Row (only show if multiple lists in batch) */}
-                      {group.executions.length > 1 && (() => {
-                        const totalFound = group.executions.reduce((sum, e) => sum + (e.itemsFound ?? 0), 0);
-                        const totalRequested = group.executions.reduce((sum, e) => sum + (e.itemsRequested ?? 0), 0);
-                        const totalFailed = group.executions.reduce((sum, e) => sum + (e.itemsFailed ?? 0), 0);
-                        const totalSkipped = totalFound - totalRequested - totalFailed;
+                      {group.executions.length > 1 &&
+                        (() => {
+                          const totalFound = group.executions.reduce(
+                            (sum, e) => sum + (e.itemsFound ?? 0),
+                            0
+                          );
+                          const totalRequested = group.executions.reduce(
+                            (sum, e) => sum + (e.itemsRequested ?? 0),
+                            0
+                          );
+                          const totalFailed = group.executions.reduce(
+                            (sum, e) => sum + (e.itemsFailed ?? 0),
+                            0
+                          );
+                          const totalSkipped = totalFound - totalRequested - totalFailed;
 
-                        return (
-                          <TableRow className="bg-card/50 font-semibold border-t-2 border-border">
-                            <TableCell>Batch Total</TableCell>
-                            <TableCell className="text-right">{totalFound}</TableCell>
-                            <TableCell className="w-[500px]">
-                              <ProcessingBar
-                                requested={totalRequested}
-                                skipped={totalSkipped}
-                                failed={totalFailed}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })()}
+                          return (
+                            <TableRow className="bg-card/50 font-semibold border-t-2 border-border">
+                              <TableCell>Batch Total</TableCell>
+                              <TableCell className="text-right">{totalFound}</TableCell>
+                              <TableCell className="w-[500px]">
+                                <ProcessingBar
+                                  requested={totalRequested}
+                                  skipped={totalSkipped}
+                                  failed={totalFailed}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })()}
                     </TableBody>
                   </Table>
                 </div>

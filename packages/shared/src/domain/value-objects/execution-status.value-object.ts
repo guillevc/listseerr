@@ -63,7 +63,9 @@ export class ExecutionStatus {
 
   // Domain logic method
   isCompleted(): boolean {
-    return this.value === ExecutionStatusValues.SUCCESS || this.value === ExecutionStatusValues.ERROR;
+    return (
+      this.value === ExecutionStatusValues.SUCCESS || this.value === ExecutionStatusValues.ERROR
+    );
   }
 
   // Equality comparison
