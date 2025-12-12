@@ -4,10 +4,10 @@ import { serveStatic } from 'hono/bun';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '../trpc/app.router';
 import { createContext } from '../trpc/context';
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
-const logger = createLogger('http');
+const logger = new LoggerService('http');
 
 export function createHttpApp(): Hono {
   const app = new Hono();

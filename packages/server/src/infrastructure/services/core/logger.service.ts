@@ -46,8 +46,8 @@ const logger = pino(
   logStream
 );
 
-// Create child loggers for different modules
-export const createLogger = (module: string): Logger => {
+// Create child loggers for different modules (private - only used internally)
+const createLogger = (module: string): Logger => {
   return logger.child({ module });
 };
 

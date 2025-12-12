@@ -1,10 +1,10 @@
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 import { resolve } from 'path';
 import { db } from '../../infrastructure/db/client';
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
-const logger = createLogger('bootstrap');
+const logger = new LoggerService('bootstrap');
 
 export async function runMigrations(): Promise<void> {
   try {

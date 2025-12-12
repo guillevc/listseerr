@@ -16,7 +16,7 @@ import type {
   UpdateProviderConfigResponse,
   DeleteProviderConfigResponse,
 } from 'shared/application/dtos/provider-config/responses.dto';
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
 /**
@@ -29,6 +29,7 @@ import { env } from '../../env';
 export class ProviderConfigContainer {
   // Infrastructure layer (private)
   private readonly providerConfigRepository: DrizzleProviderConfigRepository;
+  private readonly logger: LoggerService;
 
   // Application layer (public)
   public readonly getProviderConfigUseCase: IUseCase<
@@ -58,16 +59,17 @@ export class ProviderConfigContainer {
 
     // 2. Instantiate infrastructure layer with encryption
     this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
+    this.logger = new LoggerService('provider-config');
 
     // 3. Instantiate use cases with dependencies injected
     this.getProviderConfigUseCase = new GetProviderConfigUseCase(this.providerConfigRepository);
     this.updateProviderConfigUseCase = new UpdateProviderConfigUseCase(
       this.providerConfigRepository,
-      createLogger('provider-config')
+      this.logger
     );
     this.deleteProviderConfigUseCase = new DeleteProviderConfigUseCase(
       this.providerConfigRepository,
-      createLogger('provider-config')
+      this.logger
     );
   }
 }

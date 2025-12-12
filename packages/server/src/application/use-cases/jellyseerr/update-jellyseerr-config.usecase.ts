@@ -5,7 +5,7 @@ import { JellyseerrConfig } from '../../../domain/entities/jellyseerr-config.ent
 import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
@@ -15,7 +15,7 @@ export class UpdateJellyseerrConfigUseCase implements IUseCase<
 > {
   constructor(
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('jellyseerr:update-config')

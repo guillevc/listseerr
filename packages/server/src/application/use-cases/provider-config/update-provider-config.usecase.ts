@@ -10,7 +10,7 @@ import {
   InvalidTraktClientIdError,
   InvalidMdbListApiKeyError,
 } from 'shared/domain/errors/provider-config.errors';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
@@ -20,7 +20,7 @@ export class UpdateProviderConfigUseCase implements IUseCase<
 > {
   constructor(
     private readonly providerConfigRepository: IProviderConfigRepository,
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('provider:update-config')

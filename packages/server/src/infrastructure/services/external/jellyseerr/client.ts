@@ -6,9 +6,9 @@ import type {
   ProcessingResult,
   JellyseerrPendingRequestsResponse,
 } from './types';
-import { createLogger } from '../../core/logger.service';
+import { LoggerService } from '../../core/logger.service';
 
-const logger = createLogger('jellyseerr-client');
+const logger = new LoggerService('jellyseerr-client');
 
 export async function requestToJellyseerr(
   item: MediaItem,

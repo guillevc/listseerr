@@ -33,7 +33,7 @@ import type {
 } from 'shared/application/dtos/processing/responses.dto';
 
 // Logger
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 import { env } from '../../env';
 
 /**
@@ -52,6 +52,7 @@ export class ProcessingContainer {
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly mediaFetchers: IMediaFetcher[];
   private readonly jellyseerrClient: JellyseerrHttpClient;
+  private readonly logger: LoggerService;
 
   // Application (public)
   public readonly processListUseCase: IUseCase<ProcessListCommand, ProcessListResponse>;
@@ -89,7 +90,7 @@ export class ProcessingContainer {
 
     this.jellyseerrClient = new JellyseerrHttpClient();
 
-    const logger = createLogger('processing');
+    this.logger = new LoggerService('processing');
 
     // 3. Instantiate use cases with dependencies injected
     this.processListUseCase = new ProcessListUseCase(
@@ -100,7 +101,7 @@ export class ProcessingContainer {
       this.cacheRepository,
       this.mediaFetchers,
       this.jellyseerrClient,
-      logger
+      this.logger
     );
 
     this.processBatchUseCase = new ProcessBatchUseCase(
@@ -111,7 +112,7 @@ export class ProcessingContainer {
       this.cacheRepository,
       this.mediaFetchers,
       this.jellyseerrClient,
-      logger
+      this.logger
     );
 
     this.getExecutionHistoryUseCase = new GetExecutionHistoryUseCase(

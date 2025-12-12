@@ -1,9 +1,9 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '../../infrastructure/db/schema';
 import { scheduler } from '../../infrastructure/services/core/scheduler.service';
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 
-const logger = createLogger('scheduler');
+const logger = new LoggerService('scheduler');
 
 /**
  * Callback for processing a single list when triggered by scheduler.

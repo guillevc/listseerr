@@ -1,7 +1,7 @@
 import type { IJellyseerrConfigRepository } from '../../repositories/jellyseerr-config.repository.interface';
 import type { DeleteJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { DeleteJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
@@ -11,7 +11,7 @@ export class DeleteJellyseerrConfigUseCase implements IUseCase<
 > {
   constructor(
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('jellyseerr:delete-config')

@@ -2,7 +2,7 @@ import type { IProviderConfigRepository } from '../../repositories/provider-conf
 import type { DeleteProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
 import type { DeleteProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
@@ -12,7 +12,7 @@ export class DeleteProviderConfigUseCase implements IUseCase<
 > {
   constructor(
     private readonly providerConfigRepository: IProviderConfigRepository,
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('provider:delete-config')

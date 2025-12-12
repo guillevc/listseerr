@@ -1,5 +1,4 @@
-import type { Logger } from 'pino';
-import { createLogger } from '../logger.service';
+import { LoggerService } from '../logger.service';
 
 /**
  * LogExecution Method Decorator
@@ -33,7 +32,7 @@ export function LogExecution(context: string) {
     descriptor: PropertyDescriptor
   ): PropertyDescriptor {
     const originalMethod = descriptor.value;
-    const logger: Logger = createLogger(context);
+    const logger = new LoggerService(context);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = async function (this: any, ...args: any[]) {

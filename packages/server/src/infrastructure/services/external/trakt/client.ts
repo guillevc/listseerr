@@ -1,8 +1,8 @@
 import { parseTraktUrl, buildTraktApiUrl } from './url-parser';
 import type { TraktListItem, MediaItem } from './types';
-import { createLogger } from '../../core/logger.service';
+import { LoggerService } from '../../core/logger.service';
 
-const logger = createLogger('trakt-client');
+const logger = new LoggerService('trakt-client');
 
 export async function fetchTraktList(
   url: string,

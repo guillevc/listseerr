@@ -7,7 +7,7 @@ import type { IMediaFetcher } from '../../services/media-fetcher.service.interfa
 import type { IJellyseerrClient } from '../../services/jellyseerr-client.service.interface';
 import type { ProcessBatchCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessBatchResponse } from 'shared/application/dtos/processing/responses.dto';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 import type { MediaList } from '../../../domain/entities/media-list.entity';
@@ -42,7 +42,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     private readonly cacheRepository: ICacheRepository,
     private readonly mediaFetchers: IMediaFetcher[],
     private readonly jellyseerrClient: IJellyseerrClient,
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('processing:batch')

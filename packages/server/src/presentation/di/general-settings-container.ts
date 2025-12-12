@@ -19,7 +19,7 @@ import type {
 
 // Infrastructure services (existing)
 import { scheduler } from '../../infrastructure/services/core/scheduler.service';
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for General Settings Domain
@@ -35,6 +35,7 @@ import { createLogger } from '../../infrastructure/services/core/logger.service'
 export class GeneralSettingsContainer {
   // Infrastructure - Repositories
   private readonly generalSettingsRepository: DrizzleGeneralSettingsRepository;
+  private readonly logger: LoggerService;
 
   // Application - Use Cases (public for consumption by routers)
   public readonly getGeneralSettingsUseCase: IUseCase<
@@ -49,13 +50,14 @@ export class GeneralSettingsContainer {
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate infrastructure layer (adapters)
     this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
+    this.logger = new LoggerService('general-settings');
 
     // 2. Instantiate application layer (use cases) with injected dependencies
     this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(this.generalSettingsRepository);
     this.updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
       this.generalSettingsRepository,
       scheduler, // Existing scheduler singleton
-      createLogger('general-settings') // Existing logger
+      this.logger
     );
   }
 }

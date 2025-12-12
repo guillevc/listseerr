@@ -1,11 +1,11 @@
-import { createLogger } from './infrastructure/services/core/logger.service';
+import { LoggerService } from './infrastructure/services/core/logger.service';
 import { env } from './env';
 import { db } from './infrastructure/db/client';
 import { runMigrations } from './presentation/bootstrap/database';
 import { createHttpApp } from './presentation/bootstrap/http-server';
 import { initializeScheduler } from './presentation/bootstrap/scheduler';
 
-const logger = createLogger('server');
+const logger = new LoggerService('server');
 
 await runMigrations();
 

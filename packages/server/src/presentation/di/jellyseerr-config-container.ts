@@ -27,7 +27,7 @@ import type {
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
 
 // Infrastructure services (existing)
-import { createLogger } from '../../infrastructure/services/core/logger.service';
+import { LoggerService } from '../../infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for Jellyseerr Config Domain
@@ -41,6 +41,7 @@ export class JellyseerrConfigContainer {
   // Infrastructure - Repositories & Services (private)
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly connectionTester: HttpJellyseerrConnectionTester;
+  private readonly logger: LoggerService;
 
   // Application - Use Cases (public for consumption by routers)
   public readonly getJellyseerrConfigUseCase: IUseCase<
@@ -64,6 +65,7 @@ export class JellyseerrConfigContainer {
     // 1. Instantiate infrastructure layer (adapters)
     this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
     this.connectionTester = new HttpJellyseerrConnectionTester();
+    this.logger = new LoggerService('jellyseerr-config');
 
     // 2. Instantiate application layer (use cases) with injected dependencies
     this.getJellyseerrConfigUseCase = new GetJellyseerrConfigUseCase(
@@ -72,7 +74,7 @@ export class JellyseerrConfigContainer {
 
     this.updateJellyseerrConfigUseCase = new UpdateJellyseerrConfigUseCase(
       this.jellyseerrConfigRepository,
-      createLogger('jellyseerr-config')
+      this.logger
     );
 
     this.testJellyseerrConnectionUseCase = new TestJellyseerrConnectionUseCase(
@@ -81,7 +83,7 @@ export class JellyseerrConfigContainer {
 
     this.deleteJellyseerrConfigUseCase = new DeleteJellyseerrConfigUseCase(
       this.jellyseerrConfigRepository,
-      createLogger('jellyseerr-config')
+      this.logger
     );
   }
 }

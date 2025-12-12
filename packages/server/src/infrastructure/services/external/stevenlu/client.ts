@@ -1,11 +1,11 @@
-import { createLogger } from '../../core/logger.service';
+import { LoggerService } from '../../core/logger.service';
 import { db } from '../../../db/client';
 import { providerCache } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import type { StevenLuItem, MediaItem } from './types';
 import { ProviderValues } from 'shared/domain/types/provider.types';
 
-const logger = createLogger('stevenlu-client');
+const logger = new LoggerService('stevenlu-client');
 
 // StevenLu constants
 const STEVENLU_API_URL = 'https://s3.amazonaws.com/popular-movies/movies.json';

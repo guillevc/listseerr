@@ -3,7 +3,7 @@ import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/gener
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '../../../domain/entities/general-settings.entity';
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
-import type { Logger } from 'pino';
+import type { ILogger } from '../../services/logger.interface';
 import type { IUseCase } from '../use-case.interface';
 import { LogExecution } from '../../../infrastructure/services/core/decorators/log-execution.decorator';
 
@@ -14,7 +14,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
   constructor(
     private readonly generalSettingsRepository: IGeneralSettingsRepository,
     private readonly scheduler: { loadScheduledLists: () => Promise<void> },
-    private readonly logger: Logger
+    private readonly logger: ILogger
   ) {}
 
   @LogExecution('settings:update')

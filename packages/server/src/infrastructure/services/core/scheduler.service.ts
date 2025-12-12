@@ -6,10 +6,10 @@ import { Cron } from 'croner';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
 import { generalSettings } from '../../db/schema';
-import { createLogger } from './logger.service';
+import { LoggerService } from './logger.service';
 import * as schema from '../../db/schema';
 
-const logger = createLogger('scheduler');
+const logger = new LoggerService('scheduler');
 
 interface SchedulerJob {
   listId: number;

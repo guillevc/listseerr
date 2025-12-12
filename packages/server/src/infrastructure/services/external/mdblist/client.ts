@@ -1,8 +1,8 @@
-import { createLogger } from '../../core/logger.service';
+import { LoggerService } from '../../core/logger.service';
 import { parseMdbListUrl, buildMdbListApiUrl } from './url-parser';
 import type { MdbListApiItem, MediaItem } from './types';
 
-const logger = createLogger('mdblist-client');
+const logger = new LoggerService('mdblist-client');
 
 export async function fetchMdbListList(
   url: string,
