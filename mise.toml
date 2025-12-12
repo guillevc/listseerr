@@ -4,6 +4,7 @@
 [tasks.docker-build]
   run = [
     "docker build -t listseerr .",
+    "docker images listseerr | awk 'NR==2 {print \"📦 Image size: \" $7}'",
     "echo '✅ Docker build successful!' 1>/dev/null"
   ]
 
