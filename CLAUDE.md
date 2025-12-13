@@ -17,10 +17,18 @@ The system adheres to the concentric layer model on the server and uses a peer-b
 
 #### B. Outer Layers (Server)
 
-| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                                        | **Dependency Rule**                                |
-| ----------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`.                 | Depends on **Application** and **Domain** layers.  |
-| **4. Presentation/API** | External entry point, system wiring, **Data Adaptation**.              | **`app.router.ts`** (**tRPC** router), `server.ts` (Bun startup and DI Composition Root). | Depends on **Application** and **Infrastructure**. |
+| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                        | **Dependency Rule**                               |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------- |
+| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`. | Depends on **Application** and **Domain** layers. |
+| **4. Presentation/API** | External entry point. Handles HTTP requests and **Data Adaptation**.   | **`app.router.ts`** (**tRPC** router).                                    | Depends on **Application** layer only.            |
+
+#### C. Composition Root (Bootstrap)
+
+| **Component** | **Responsibility**                                                    | **Key Components**                                          | **Dependency Rule**                                         |
+| ------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| **Bootstrap** | Application startup, DI wiring, migrations, scheduler initialization. | `database.ts`, `http-server.ts`, `scheduler.ts`, `index.ts` | Can access **all layers** (wires concrete implementations). |
+
+The Composition Root is **not a layer** in the Onion model - it's the one place where all layers meet to resolve Dependency Inversion by wiring concrete implementations to interfaces.
 
 ---
 
@@ -286,14 +294,14 @@ Errors must be handled exclusively by translating Domain or Application errors i
 
 #### C. Dependency Injection Composition Root
 
-The `server.ts` file acts as the Composition Root. All concrete dependency wiring must occur here, adhering to DIP.
+The `bootstrap/` directory acts as the Composition Root. All concrete dependency wiring must occur here, adhering to DIP.
 
-| **File**    | **Definition**                                                                                                                                                                                |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `server.ts` | Define a `Dependencies` object or container that holds all wired use cases and concrete repositories, ensuring the Use Cases receive interfaces (`IUserRepository`) and not concrete classes. |
+| **File**      | **Definition**                                                                                                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap/*` | Define `Dependencies` objects or containers that hold all wired use cases and concrete repositories, ensuring the Use Cases receive interfaces (`IUserRepository`) and not concrete classes. |
 
 ```typescript
-// Example DI Object Structure in server.ts
+// Example DI Object Structure in bootstrap
 interface Dependencies {
   userRepository: IUserRepository; // Concrete SqliteUserRepository instance
   createUserUseCase: CreateUserUseCase; // Instance injected with userRepository
@@ -568,6 +576,10 @@ FROM oven/bun:1-alpine
 │   │           └── create-user.dto.ts   # SHARED: Defines Command/Response interfaces & Zod Schemas.
 │   │
 │   └── server/
+│       ├── bootstrap/                   # Composition Root (can access all layers)
+│       │   ├── database.ts              # DB migrations
+│       │   ├── http-server.ts           # Hono app setup, static files
+│       │   └── scheduler.ts             # Scheduler initialization
 │       ├── domain/
 │       │   └── user.entity.ts           # 1. Domain: Defines the User Entity, imports VO from shared.
 │       ├── application/
@@ -585,10 +597,10 @@ FROM oven/bun:1-alpine
 │       │   │   └── sqlite-user.repository.ts # 3. Infrastructure: Implements IUserRepository using Drizzle.
 │       │   └── scheduling/
 │       │       └── cron-job.service.ts       # 3. Infrastructure: Implements ISchedulerService.
-│       └── presentation/
-│           ├── trpc/
-│           │   └── app.router.ts        # 4. Presentation: tRPC router, calls Use Cases.
-│           └── server.ts                # 4. Presentation: Bun startup, Hono/DI Composition Root.
+│       ├── presentation/
+│       │   └── trpc/
+│       │       └── app.router.ts        # 4. Presentation: tRPC router, calls Use Cases.
+│       └── index.ts                     # Entry point, calls bootstrap modules.
 └── package.json
 ```
 
