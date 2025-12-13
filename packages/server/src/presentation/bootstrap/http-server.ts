@@ -41,13 +41,13 @@ export function createHttpApp(): Hono {
 
   // Serve static files in production builds
   if (!isDev) {
-    logger.info('Serving static files from ./dist');
+    logger.info('Serving static files from ./dist/client');
     // Serve static assets
-    app.use('/assets/*', serveStatic({ root: './dist' }));
-    app.use('/vite.svg', serveStatic({ path: './dist/vite.svg' }));
+    app.use('/assets/*', serveStatic({ root: './dist/client' }));
+    app.use('/vite.svg', serveStatic({ path: './dist/client/vite.svg' }));
 
     // Serve index.html for all other routes (SPA fallback)
-    app.get('*', serveStatic({ path: './dist/index.html' }));
+    app.get('*', serveStatic({ path: './dist/client/index.html' }));
   } else {
     logger.info('Development mode - static files served by Vite');
   }

@@ -5,7 +5,7 @@
   "type": "module",
   "exports": [],
   "scripts": {
-    "dev": "vite --clearScreen false",
+    "dev": "bun vite",
     "build": "bun vite build --outDir ../../dist/client",
     "build:analyze": "ANALYZE=true bun vite build --outDir ../../dist/client",
     "lint": "eslint .",
@@ -14,8 +14,6 @@
   "dependencies": {
     "shared": "workspace:*",
     "server": "workspace:*",
-    "@t3-oss/env-core": "catalog:",
-    "zod": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/react-query": "catalog:",
@@ -42,20 +40,19 @@
     "tailwind-variants": "^3.2.2"
   },
   "devDependencies": {
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-react-refresh": "catalog:",
+    "tailwindcss": "^4.1.17",
     "@tailwindcss/cli": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/router-devtools": "^1.140.0",
     "@tanstack/router-vite-plugin": "^1.140.0",
-    "@types/bun": "catalog:",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
-    "eslint": "catalog:",
-    "eslint-plugin-react-hooks": "catalog:",
-    "eslint-plugin-react-refresh": "catalog:",
     "rollup-plugin-visualizer": "^6.0.5",
-    "tailwindcss": "^4.1.17",
-    "typescript": "catalog:",
     "vite": "^7.2.7"
   }
 }

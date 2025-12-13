@@ -35,11 +35,15 @@ data/
 # Environment variables
 # Ignore actual env files with secrets
 .env
+.env.dev
+.env.docker
 .env.local
 .env.*.local
 
 # Keep example files (these should be committed)
 !.env.example
+!.env.dev.example
+!.env.docker.example
 
 # TypeScript
 *.tsbuildinfo
