@@ -1,7 +1,23 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
-import { ProviderConfigContainer } from '@/server/presentation/di/provider-config-container';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import type {
+  GetProviderConfigCommand,
+  UpdateProviderConfigCommand,
+  DeleteProviderConfigCommand,
+} from 'shared/application/dtos/provider-config/commands.dto';
+import type {
+  GetProviderConfigResponse,
+  UpdateProviderConfigResponse,
+  DeleteProviderConfigResponse,
+} from 'shared/application/dtos/provider-config/responses.dto';
 import { ProviderValues } from 'shared/domain/types/provider.types';
+
+export interface ProviderConfigRouterDeps {
+  getProviderConfigUseCase: IUseCase<GetProviderConfigCommand, GetProviderConfigResponse>;
+  updateProviderConfigUseCase: IUseCase<UpdateProviderConfigCommand, UpdateProviderConfigResponse>;
+  deleteProviderConfigUseCase: IUseCase<DeleteProviderConfigCommand, DeleteProviderConfigResponse>;
+}
 
 // Zod schemas for input validation
 const getConfigSchema = z.object({
@@ -25,26 +41,21 @@ const deleteConfigSchema = z.object({
  *
  * This router is a thin adapter that:
  * 1. Validates input with Zod schemas
- * 2. Delegates to use cases via DI container
+ * 2. Delegates to use cases via injected dependencies
  * 3. Returns Response DTOs directly (tRPC handles serialization)
  * 4. Contains ZERO business logic
- *
- * New API (3 endpoints instead of 6):
- * - get({ provider })
- * - set({ provider, config })
- * - delete({ provider })
  */
-export function createProviderConfigRouter(container: ProviderConfigContainer) {
+export function createProviderConfigRouter(deps: ProviderConfigRouterDeps) {
   return router({
     get: publicProcedure.input(getConfigSchema).query(async ({ input, ctx }) => {
-      return await container.getProviderConfigUseCase.execute({
+      return await deps.getProviderConfigUseCase.execute({
         userId: ctx.userId,
         provider: input.provider,
       });
     }),
 
     set: publicProcedure.input(updateConfigSchema).mutation(async ({ input, ctx }) => {
-      return await container.updateProviderConfigUseCase.execute({
+      return await deps.updateProviderConfigUseCase.execute({
         userId: ctx.userId,
         provider: input.provider,
         config: input.config,
@@ -52,15 +63,10 @@ export function createProviderConfigRouter(container: ProviderConfigContainer) {
     }),
 
     delete: publicProcedure.input(deleteConfigSchema).mutation(async ({ input, ctx }) => {
-      return await container.deleteProviderConfigUseCase.execute({
+      return await deps.deleteProviderConfigUseCase.execute({
         userId: ctx.userId,
         provider: input.provider,
       });
     }),
   });
 }
-
-// Export a singleton instance with the global db
-import { db } from '@/server/infrastructure/db/client';
-const providerConfigContainer = new ProviderConfigContainer(db);
-export const providerConfigRouter = createProviderConfigRouter(providerConfigContainer);

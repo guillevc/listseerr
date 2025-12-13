@@ -1,6 +1,22 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
-import { GeneralSettingsContainer } from '@/server/presentation/di/general-settings-container';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import type {
+  GetGeneralSettingsCommand,
+  UpdateGeneralSettingsCommand,
+} from 'shared/application/dtos/general-settings/commands.dto';
+import type {
+  GetGeneralSettingsResponse,
+  UpdateGeneralSettingsResponse,
+} from 'shared/application/dtos/general-settings/responses.dto';
+
+export interface GeneralSettingsRouterDeps {
+  getGeneralSettingsUseCase: IUseCase<GetGeneralSettingsCommand, GetGeneralSettingsResponse>;
+  updateGeneralSettingsUseCase: IUseCase<
+    UpdateGeneralSettingsCommand,
+    UpdateGeneralSettingsResponse
+  >;
+}
 
 // Zod schemas for input validation
 const settingsInputSchema = z.object({
@@ -14,28 +30,23 @@ const settingsInputSchema = z.object({
  *
  * This router is a thin adapter that:
  * 1. Validates input with Zod schemas
- * 2. Delegates to use cases via DI container
+ * 2. Delegates to use cases via injected dependencies
  * 3. Returns Response DTOs directly (tRPC handles serialization)
  * 4. Contains ZERO business logic
  *
  * All business logic lives in the use cases (application layer).
  */
-export function createGeneralSettingsRouter(container: GeneralSettingsContainer) {
+export function createGeneralSettingsRouter(deps: GeneralSettingsRouterDeps) {
   return router({
     get: publicProcedure.query(async ({ ctx }) => {
-      return await container.getGeneralSettingsUseCase.execute({ userId: ctx.userId });
+      return await deps.getGeneralSettingsUseCase.execute({ userId: ctx.userId });
     }),
 
     set: publicProcedure.input(settingsInputSchema).mutation(async ({ input, ctx }) => {
-      return await container.updateGeneralSettingsUseCase.execute({
+      return await deps.updateGeneralSettingsUseCase.execute({
         userId: ctx.userId,
         data: input,
       });
     }),
   });
 }
-
-// Export a singleton instance with the global db
-import { db } from '@/server/infrastructure/db/client';
-const generalSettingsContainer = new GeneralSettingsContainer(db);
-export const generalSettingsRouter = createGeneralSettingsRouter(generalSettingsContainer);

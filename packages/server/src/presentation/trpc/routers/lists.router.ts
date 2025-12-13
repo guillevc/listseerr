@@ -1,7 +1,35 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
-import { ListsContainer } from '@/server/presentation/di/lists-container';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import type {
+  GetAllMediaListsCommand,
+  GetMediaListByIdCommand,
+  CreateMediaListCommand,
+  UpdateMediaListCommand,
+  DeleteMediaListCommand,
+  ToggleListEnabledCommand,
+  EnableAllListsCommand,
+} from 'shared/application/dtos/media-list/commands.dto';
+import type {
+  GetAllMediaListsResponse,
+  GetMediaListByIdResponse,
+  CreateMediaListResponse,
+  UpdateMediaListResponse,
+  DeleteMediaListResponse,
+  ToggleListEnabledResponse,
+  EnableAllListsResponse,
+} from 'shared/application/dtos/media-list/responses.dto';
 import { ProviderValues } from 'shared/domain/types/provider.types';
+
+export interface ListsRouterDeps {
+  getAllMediaListsUseCase: IUseCase<GetAllMediaListsCommand, GetAllMediaListsResponse>;
+  getMediaListByIdUseCase: IUseCase<GetMediaListByIdCommand, GetMediaListByIdResponse>;
+  createMediaListUseCase: IUseCase<CreateMediaListCommand, CreateMediaListResponse>;
+  updateMediaListUseCase: IUseCase<UpdateMediaListCommand, UpdateMediaListResponse>;
+  deleteMediaListUseCase: IUseCase<DeleteMediaListCommand, DeleteMediaListResponse>;
+  toggleListEnabledUseCase: IUseCase<ToggleListEnabledCommand, ToggleListEnabledResponse>;
+  enableAllListsUseCase: IUseCase<EnableAllListsCommand, EnableAllListsResponse>;
+}
 
 // Zod schemas for input validation
 const listInputSchema = z.object({
@@ -26,30 +54,30 @@ const listInputSchema = z.object({
  *
  * This router is a thin adapter that:
  * 1. Validates input with Zod schemas
- * 2. Delegates to use cases via DI container
+ * 2. Delegates to use cases via injected dependencies
  * 3. Returns Response DTOs directly (tRPC handles serialization)
  * 4. Contains ZERO business logic
  *
  * All business logic lives in the use cases (application layer).
  */
-export function createListsRouter(container: ListsContainer) {
+export function createListsRouter(deps: ListsRouterDeps) {
   return router({
     getAll: publicProcedure.query(async ({ ctx }) => {
-      return await container.getAllMediaListsUseCase.execute({ userId: ctx.userId });
+      return await deps.getAllMediaListsUseCase.execute({ userId: ctx.userId });
     }),
 
     getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input, ctx }) => {
-      return await container.getMediaListByIdUseCase.execute({
+      return await deps.getMediaListByIdUseCase.execute({
         id: input.id,
         userId: ctx.userId,
       });
     }),
 
     create: publicProcedure.input(listInputSchema).mutation(async ({ input, ctx }) => {
-      return await container.createMediaListUseCase.execute({
+      return await deps.createMediaListUseCase.execute({
         ...input,
         userId: ctx.userId,
-        processingSchedule: input.processingSchedule ?? null, // Convert undefined to null
+        processingSchedule: input.processingSchedule ?? null,
       });
     }),
 
@@ -61,7 +89,7 @@ export function createListsRouter(container: ListsContainer) {
         })
       )
       .mutation(async ({ input, ctx }) => {
-        return await container.updateMediaListUseCase.execute({
+        return await deps.updateMediaListUseCase.execute({
           id: input.id,
           userId: ctx.userId,
           data: input.data,
@@ -69,7 +97,7 @@ export function createListsRouter(container: ListsContainer) {
       }),
 
     delete: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
-      return await container.deleteMediaListUseCase.execute({
+      return await deps.deleteMediaListUseCase.execute({
         id: input.id,
         userId: ctx.userId,
       });
@@ -78,19 +106,14 @@ export function createListsRouter(container: ListsContainer) {
     toggleEnabled: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input, ctx }) => {
-        return await container.toggleListEnabledUseCase.execute({
+        return await deps.toggleListEnabledUseCase.execute({
           id: input.id,
           userId: ctx.userId,
         });
       }),
 
     enableAll: publicProcedure.mutation(async ({ ctx }) => {
-      return await container.enableAllListsUseCase.execute({ userId: ctx.userId });
+      return await deps.enableAllListsUseCase.execute({ userId: ctx.userId });
     }),
   });
 }
-
-// Export a singleton instance with the global db
-import { db } from '@/server/infrastructure/db/client';
-const listsContainer = new ListsContainer(db);
-export const listsRouter = createListsRouter(listsContainer);

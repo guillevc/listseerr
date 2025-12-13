@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/bun';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '@/server/presentation/trpc/app.router';
+import { appRouter } from './app.router';
 import { createContext } from '@/server/presentation/trpc/context';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 import { env } from '@/server/env';

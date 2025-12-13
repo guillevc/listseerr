@@ -1,67 +1,66 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
-import { ProcessingContainer } from '@/server/presentation/di/processing-container';
-import { db } from '@/server/infrastructure/db/client';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import type {
+  ProcessListCommand,
+  ProcessBatchCommand,
+  GetExecutionHistoryCommand,
+} from 'shared/application/dtos/processing/commands.dto';
+import type {
+  ProcessListResponse,
+  ProcessBatchResponse,
+  GetExecutionHistoryResponse,
+} from 'shared/application/dtos/processing/responses.dto';
+
+export interface ProcessingRouterDeps {
+  processListUseCase: IUseCase<ProcessListCommand, ProcessListResponse>;
+  processBatchUseCase: IUseCase<ProcessBatchCommand, ProcessBatchResponse>;
+  getExecutionHistoryUseCase: IUseCase<GetExecutionHistoryCommand, GetExecutionHistoryResponse>;
+}
 
 /**
  * Processing Router (tRPC)
  *
  * Exposes processing operations via tRPC procedures.
- * Delegates to use cases through DI container.
+ * Delegates to use cases through injected dependencies.
  */
+export function createProcessingRouter(deps: ProcessingRouterDeps) {
+  return router({
+    processList: publicProcedure
+      .input(
+        z.object({
+          listId: z.number(),
+          triggerType: z.enum(['manual', 'scheduled']).default('manual'),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        return await deps.processListUseCase.execute({
+          listId: input.listId,
+          triggerType: input.triggerType,
+          userId: ctx.userId,
+        });
+      }),
 
-// Singleton container instance
-const processingContainer = new ProcessingContainer(db);
-
-export const processingRouter = router({
-  /**
-   * Process a single list
-   */
-  processList: publicProcedure
-    .input(
-      z.object({
-        listId: z.number(),
-        triggerType: z.enum(['manual', 'scheduled']).default('manual'),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const response = await processingContainer.processListUseCase.execute({
-        listId: input.listId,
-        triggerType: input.triggerType,
+    processAll: publicProcedure.mutation(async ({ ctx }) => {
+      return await deps.processBatchUseCase.execute({
+        triggerType: 'manual',
         userId: ctx.userId,
       });
-      return response; // Return full ProcessListResponse wrapper
     }),
 
-  /**
-   * Process all enabled lists with global deduplication
-   */
-  processAll: publicProcedure.mutation(async ({ ctx }) => {
-    return await processingContainer.processBatchUseCase.execute({
-      triggerType: 'manual',
-      userId: ctx.userId,
-    });
-  }),
-
-  /**
-   * Get execution history for a list
-   */
-  getHistory: publicProcedure
-    .input(
-      z.object({
-        listId: z.number(),
-        limit: z.number().positive().default(10),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const response = await processingContainer.getExecutionHistoryUseCase.execute({
-        listId: input.listId,
-        limit: input.limit,
-        userId: ctx.userId,
-      });
-      return response; // Return full GetExecutionHistoryResponse wrapper
-    }),
-});
-
-// Export singleton container for scheduler integration
-export { processingContainer };
+    getHistory: publicProcedure
+      .input(
+        z.object({
+          listId: z.number(),
+          limit: z.number().positive().default(10),
+        })
+      )
+      .query(async ({ input, ctx }) => {
+        return await deps.getExecutionHistoryUseCase.execute({
+          listId: input.listId,
+          limit: input.limit,
+          userId: ctx.userId,
+        });
+      }),
+  });
+}

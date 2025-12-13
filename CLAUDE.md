@@ -17,18 +17,39 @@ The system adheres to the concentric layer model on the server and uses a peer-b
 
 #### B. Outer Layers (Server)
 
-| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                        | **Dependency Rule**                               |
-| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------- |
-| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`. | Depends on **Application** and **Domain** layers. |
-| **4. Presentation/API** | External entry point. Handles HTTP requests and **Data Adaptation**.   | **`app.router.ts`** (**tRPC** router).                                    | Depends on **Application** layer only.            |
+| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                        | **Dependency Rule**                                                                                      |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`. | Depends on **Application** and **Domain** layers.                                                        |
+| **4. Presentation/API** | Defines router factory functions. Pure presentation logic only.        | `routers/*.router.ts` (factory functions), `context.ts` (tRPC context).   | Depends on **Application** layer only. Can import from `shared/application/` and `shared/presentation/`. |
 
 #### C. Composition Root (Bootstrap)
 
-| **Component** | **Responsibility**                                                    | **Key Components**                                          | **Dependency Rule**                                         |
-| ------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| **Bootstrap** | Application startup, DI wiring, migrations, scheduler initialization. | `database.ts`, `http-server.ts`, `scheduler.ts`, `index.ts` | Can access **all layers** (wires concrete implementations). |
+| **Component** | **Responsibility**                                           | **Key Components**                                                                    | **Dependency Rule**                                         |
+| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Bootstrap** | Application startup, DI wiring, router assembly, migrations. | `di/`, `routers.ts`, `app.router.ts`, `database.ts`, `http-server.ts`, `scheduler.ts` | Can access **all layers** (wires concrete implementations). |
 
 The Composition Root is **not a layer** in the Onion model - it's the one place where all layers meet to resolve Dependency Inversion by wiring concrete implementations to interfaces.
+
+**Router Factory Pattern:**
+
+- Presentation exports factory functions: `createListsRouter(container)`
+- Bootstrap imports factories and builds routers with containers
+- This inverts the dependency: Bootstrap depends on Presentation, not vice versa
+
+#### D. Layer Dependency Matrix
+
+| **Server Layer** | **Can Import From (Server)** | **Can Import From (Shared)**                  |
+| ---------------- | ---------------------------- | --------------------------------------------- |
+| Domain           | Nothing                      | `shared/domain/`                              |
+| Application      | Domain                       | `shared/domain/`, `shared/application/`       |
+| Infrastructure   | Application, Domain          | `shared/domain/`, `shared/application/`       |
+| Presentation     | Application only             | `shared/application/`, `shared/presentation/` |
+| Bootstrap        | All layers                   | All shared layers                             |
+
+**Key Constraints:**
+
+- Presentation **cannot** import from: `@/server/infrastructure/`, `@/server/bootstrap/`, `@/server/domain/`, `shared/domain/`
+- Each layer defines its own dependency interfaces; concrete implementations are wired in Bootstrap
 
 ---
 
@@ -577,6 +598,10 @@ FROM oven/bun:1-alpine
 │   │
 │   └── server/
 │       ├── bootstrap/                   # Composition Root (can access all layers)
+│       │   ├── di/                      # DI containers (wire infrastructure + application)
+│       │   │   └── lists-container.ts   # Example: Creates repos, services, use cases
+│       │   ├── routers.ts               # Builds all routers with their containers
+│       │   ├── app.router.ts            # Assembles sub-routers into app router
 │       │   ├── database.ts              # DB migrations
 │       │   ├── http-server.ts           # Hono app setup, static files
 │       │   └── scheduler.ts             # Scheduler initialization
@@ -599,7 +624,9 @@ FROM oven/bun:1-alpine
 │       │       └── cron-job.service.ts       # 3. Infrastructure: Implements ISchedulerService.
 │       ├── presentation/
 │       │   └── trpc/
-│       │       └── app.router.ts        # 4. Presentation: tRPC router, calls Use Cases.
+│       │       ├── context.ts           # 4. Presentation: tRPC context and router factory.
+│       │       └── routers/             # 4. Presentation: Router factory functions (no instantiation).
+│       │           └── lists.router.ts  # Exports createListsRouter(container)
 │       └── index.ts                     # Entry point, calls bootstrap modules.
 └── package.json
 ```

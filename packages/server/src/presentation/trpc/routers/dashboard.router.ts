@@ -1,61 +1,57 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
-import { DashboardContainer } from '@/server/presentation/di/dashboard-container';
+import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import type {
+  GetDashboardStatsCommand,
+  GetRecentActivityCommand,
+  GetPendingRequestsCommand,
+} from 'shared/application/dtos/dashboard/commands.dto';
+import type {
+  DashboardStatsResponse,
+  GetRecentActivityResponse,
+  GetPendingRequestsResponse,
+} from 'shared/application/dtos/dashboard/responses.dto';
+
+export interface DashboardRouterDeps {
+  getDashboardStatsUseCase: IUseCase<GetDashboardStatsCommand, DashboardStatsResponse>;
+  getRecentActivityUseCase: IUseCase<GetRecentActivityCommand, GetRecentActivityResponse>;
+  getPendingRequestsUseCase: IUseCase<GetPendingRequestsCommand, GetPendingRequestsResponse>;
+}
 
 /**
  * Dashboard Router - Thin presentation layer
  *
  * This router is a thin adapter that:
  * 1. Validates input with Zod schemas
- * 2. Delegates to use cases via DI container
+ * 2. Delegates to use cases via injected dependencies
  * 3. Returns Response DTOs directly
  * 4. Contains ZERO business logic
- *
- * Follows CLAUDE.md Section 2.A mandate:
- * - Returns full wrapped Response DTOs (no destructuring)
- * - All business logic in use cases (including grouping algorithm)
- *
- * Critical: Dashboard container requires database instance
  */
-
-// Lazy-initialized container (needs db from context)
-let dashboardContainer: DashboardContainer | null = null;
-
-export const dashboardRouter = router({
-  getStats: publicProcedure.query(async ({ ctx }) => {
-    if (!dashboardContainer) {
-      dashboardContainer = new DashboardContainer(ctx.db);
-    }
-
-    return await dashboardContainer.getDashboardStatsUseCase.execute({
-      userId: ctx.userId,
-    });
-  }),
-
-  getRecentActivity: publicProcedure
-    .input(
-      z.object({
-        limit: z.number().positive().default(20),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      if (!dashboardContainer) {
-        dashboardContainer = new DashboardContainer(ctx.db);
-      }
-
-      return await dashboardContainer.getRecentActivityUseCase.execute({
+export function createDashboardRouter(deps: DashboardRouterDeps) {
+  return router({
+    getStats: publicProcedure.query(async ({ ctx }) => {
+      return await deps.getDashboardStatsUseCase.execute({
         userId: ctx.userId,
-        limit: input.limit,
       });
     }),
 
-  getPendingRequests: publicProcedure.query(async ({ ctx }) => {
-    if (!dashboardContainer) {
-      dashboardContainer = new DashboardContainer(ctx.db);
-    }
+    getRecentActivity: publicProcedure
+      .input(
+        z.object({
+          limit: z.number().positive().default(20),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        return await deps.getRecentActivityUseCase.execute({
+          userId: ctx.userId,
+          limit: input.limit,
+        });
+      }),
 
-    return await dashboardContainer.getPendingRequestsUseCase.execute({
-      userId: ctx.userId,
-    });
-  }),
-});
+    getPendingRequests: publicProcedure.query(async ({ ctx }) => {
+      return await deps.getPendingRequestsUseCase.execute({
+        userId: ctx.userId,
+      });
+    }),
+  });
+}
