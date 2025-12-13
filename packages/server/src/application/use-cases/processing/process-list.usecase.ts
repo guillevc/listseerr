@@ -1,9 +1,8 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { IProviderConfigRepository } from '@/server/application/repositories/provider-config.repository.interface';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
-import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
+import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
 import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
@@ -13,12 +12,13 @@ import { LogExecution } from '@/server/infrastructure/services/core/decorators/l
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
-import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
 import {
   JellyseerrNotConfiguredError,
   ProviderNotConfiguredError,
 } from 'shared/domain/errors/processing.errors';
+import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 
 /**
  * ProcessListUseCase
@@ -35,11 +35,10 @@ import {
 export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessListResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly providerConfigRepository: IProviderConfigRepository,
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
     private readonly cacheRepository: ICacheRepository,
-    private readonly mediaFetchers: IMediaFetcher[],
+    private readonly mediaFetcherFactory: IMediaFetcherFactory,
     private readonly jellyseerrClient: IJellyseerrClient,
     private readonly logger: ILogger
   ) {}
@@ -68,19 +67,14 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     try {
       // 3. Load configs
       const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
-      const providerConfig = await this.loadProviderConfig(list.provider, command.userId);
 
-      // 4. Fetch items using strategy pattern
-      const fetcher = this.findFetcherFor(list.provider);
+      // 4. Fetch items using factory pattern
+      const fetcher = await this.createFetcherFor(list.provider, command.userId);
       this.logger.debug(
         { provider: list.provider.getValue(), url: list.url.getValue() },
         'Fetching items from provider'
       );
-      const items = await fetcher.fetchItems(
-        list.url.getValue(),
-        list.maxItems,
-        providerConfig.config
-      );
+      const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems);
       this.logger.info({ itemCount: items.length }, 'Items fetched from provider');
 
       // 5. Filter cached items
@@ -146,23 +140,12 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
   }
 
   /**
-   * Load provider configuration for user
+   * Create media fetcher for provider using factory
    */
-  private async loadProviderConfig(provider: Provider, userId: number) {
-    const config = await this.providerConfigRepository.findByUserIdAndProvider(userId, provider);
-    if (!config) {
-      throw new ProviderNotConfiguredError(provider.getValue());
-    }
-    return config;
-  }
-
-  /**
-   * Find the appropriate media fetcher for the provider type
-   */
-  private findFetcherFor(provider: Provider): IMediaFetcher {
-    const fetcher = this.mediaFetchers.find((f) => f.supports(provider));
+  private async createFetcherFor(provider: Provider, userId: number): Promise<IMediaFetcher> {
+    const fetcher = await this.mediaFetcherFactory.createFetcher(provider, userId);
     if (!fetcher) {
-      throw new Error(`No fetcher found for provider: ${provider.getValue()}`);
+      throw new ProviderNotConfiguredError(provider.getValue());
     }
     return fetcher;
   }

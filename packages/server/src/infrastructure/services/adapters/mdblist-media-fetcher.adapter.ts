@@ -1,9 +1,7 @@
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
-import { ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
+import type { MdbListApiKey } from 'shared/domain/value-objects/mdblist-api-key.value-object';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderConfigData } from '@/server/domain/types/provider-config.types';
 import { fetchMdbListList } from '@/server/infrastructure/services/external/mdblist/client';
 
 /**
@@ -12,22 +10,11 @@ import { fetchMdbListList } from '@/server/infrastructure/services/external/mdbl
  * Adapts existing MDBList client function to IMediaFetcher interface.
  */
 export class MdbListMediaFetcher implements IMediaFetcher {
-  supports(provider: Provider): boolean {
-    return provider.isMdbList();
-  }
+  constructor(private readonly apiKey: MdbListApiKey) {}
 
-  async fetchItems(
-    url: string,
-    maxItems: number,
-    providerConfig: ProviderConfigData
-  ): Promise<MediaItem[]> {
-    // Validate config has apiKey (MDBList-specific)
-    if (!('apiKey' in providerConfig)) {
-      throw new ProviderNotConfiguredError('MDBList');
-    }
-
-    const apiKey = providerConfig.apiKey.getValue();
-    const rawItems = await fetchMdbListList(url, maxItems, apiKey);
+  async fetchItems(url: string, maxItems: number): Promise<MediaItem[]> {
+    const apiKeyValue = this.apiKey.getValue();
+    const rawItems = await fetchMdbListList(url, maxItems, apiKeyValue);
 
     // Transform raw items to domain MediaItem value objects
     return rawItems.map((item) =>

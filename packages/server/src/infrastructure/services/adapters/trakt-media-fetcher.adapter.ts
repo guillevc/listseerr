@@ -1,9 +1,7 @@
 import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
 import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
-import { ProviderNotConfiguredError } from 'shared/domain/errors/processing.errors';
+import type { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderConfigData } from '@/server/domain/types/provider-config.types';
 import { fetchTraktList } from '@/server/infrastructure/services/external/trakt/client';
 import { fetchTraktChart } from '@/server/infrastructure/services/external/trakt/chart-client';
 
@@ -14,27 +12,16 @@ import { fetchTraktChart } from '@/server/infrastructure/services/external/trakt
  * Supports both 'trakt' (lists) and 'traktChart' (charts) provider types.
  */
 export class TraktMediaFetcher implements IMediaFetcher {
-  supports(provider: Provider): boolean {
-    return provider.isTrakt() || provider.isTraktChart();
-  }
+  constructor(private readonly clientId: TraktClientId) {}
 
-  async fetchItems(
-    url: string,
-    maxItems: number,
-    providerConfig: ProviderConfigData
-  ): Promise<MediaItem[]> {
-    // Validate config has clientId (Trakt-specific)
-    if (!('clientId' in providerConfig)) {
-      throw new ProviderNotConfiguredError('Trakt');
-    }
-
-    const clientId = providerConfig.clientId.getValue();
+  async fetchItems(url: string, maxItems: number): Promise<MediaItem[]> {
+    const clientIdValue = this.clientId.getValue();
 
     // Determine which client to use based on URL pattern
     const isList = url.includes('/lists/');
     const rawItems = isList
-      ? await fetchTraktList(url, maxItems, clientId)
-      : await fetchTraktChart(url, maxItems, clientId);
+      ? await fetchTraktList(url, maxItems, clientIdValue)
+      : await fetchTraktChart(url, maxItems, clientIdValue);
 
     // Transform raw items to domain MediaItem value objects
     return rawItems.map((item) =>

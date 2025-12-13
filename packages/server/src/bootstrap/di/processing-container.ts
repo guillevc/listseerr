@@ -7,9 +7,7 @@ import { DrizzleCacheRepository } from '@/server/infrastructure/repositories/dri
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
 import { DrizzleProviderConfigRepository } from '@/server/infrastructure/repositories/drizzle-provider-config.repository';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { TraktMediaFetcher } from '@/server/infrastructure/services/adapters/trakt-media-fetcher.adapter';
-import { MdbListMediaFetcher } from '@/server/infrastructure/services/adapters/mdblist-media-fetcher.adapter';
-import { StevenLuMediaFetcher } from '@/server/infrastructure/services/adapters/stevenlu-media-fetcher.adapter';
+import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
 
@@ -19,7 +17,6 @@ import { ProcessBatchUseCase } from '@/server/application/use-cases/processing/p
 import { GetExecutionHistoryUseCase } from '@/server/application/use-cases/processing/get-execution-history.usecase';
 
 // Application interfaces
-import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   ProcessListCommand,
@@ -50,7 +47,7 @@ export class ProcessingContainer {
   private readonly mediaListRepository: DrizzleMediaListRepository;
   private readonly providerConfigRepository: DrizzleProviderConfigRepository;
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
-  private readonly mediaFetchers: IMediaFetcher[];
+  private readonly mediaFetcherFactory: MediaFetcherFactory;
   private readonly jellyseerrClient: JellyseerrHttpClient;
   private readonly logger: LoggerService;
 
@@ -81,12 +78,8 @@ export class ProcessingContainer {
     this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
     this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
 
-    // Media fetchers (strategy pattern)
-    this.mediaFetchers = [
-      new TraktMediaFetcher(),
-      new MdbListMediaFetcher(),
-      new StevenLuMediaFetcher(),
-    ];
+    // Media fetcher factory (creates fetchers on-demand with fresh credentials)
+    this.mediaFetcherFactory = new MediaFetcherFactory(this.providerConfigRepository);
 
     this.jellyseerrClient = new JellyseerrHttpClient();
 
@@ -95,22 +88,20 @@ export class ProcessingContainer {
     // 3. Instantiate use cases with dependencies injected
     this.processListUseCase = new ProcessListUseCase(
       this.mediaListRepository,
-      this.providerConfigRepository,
       this.jellyseerrConfigRepository,
       this.executionHistoryRepository,
       this.cacheRepository,
-      this.mediaFetchers,
+      this.mediaFetcherFactory,
       this.jellyseerrClient,
       this.logger
     );
 
     this.processBatchUseCase = new ProcessBatchUseCase(
       this.mediaListRepository,
-      this.providerConfigRepository,
       this.jellyseerrConfigRepository,
       this.executionHistoryRepository,
       this.cacheRepository,
-      this.mediaFetchers,
+      this.mediaFetcherFactory,
       this.jellyseerrClient,
       this.logger
     );

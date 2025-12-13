@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./trpc": "./src/presentation/trpc/app.router.ts"
+    "./trpc": "./src/bootstrap/app.router.ts"
   },
   "scripts": {
     "lint": "eslint .",
