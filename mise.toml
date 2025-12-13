@@ -15,11 +15,3 @@
     "docker run -p 3000:3000 -v $(pwd)/data:/app/data listseerr",
     "echo 'Container stopped.' 1>/dev/null"
   ]
-
-[tasks.docker-ci]
-  run = [
-    "docker build -f docker/Dockerfile.ci -t listseerr-ci .",
-    "docker images listseerr-ci | awk 'NR==2 {print \"📦 Image size: \" $7}'",
-    "docker rmi listseerr-ci",
-    "echo '✅ CI image build and cleanup successful!'"
-  ]

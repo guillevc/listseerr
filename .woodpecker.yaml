@@ -14,5 +14,10 @@ steps:
   - name: docker-build
     image: woodpeckerci/plugin-docker-buildx
     settings:
-      dry_run: true
-      tags: listseerr:latest
+      repo: git.lan.guillevc.xyz/guille/listseerr
+      registry: git.lan.guillevc.xyz
+      username:
+        from_secret: registry_user
+      password:
+        from_secret: registry_password
+      tags: latest
