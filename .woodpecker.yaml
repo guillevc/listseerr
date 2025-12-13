@@ -20,4 +20,4 @@ steps:
         from_secret: registry_user
       password:
         from_secret: registry_password
-      tags: latest
+      tags: dev
