@@ -19,12 +19,14 @@ initializeScheduler(db).catch((error) =>
 );
 
 const port = env.PORT;
-logger.info({ port }, 'Server starting');
-logger.info(`Server running on http://localhost:${port}`);
-logger.info(`tRPC endpoint: http://localhost:${port}/trpc`);
-logger.info(`Health check: http://localhost:${port}/health`);
+const hostname = env.HOST;
+logger.info({ port, hostname }, 'Server starting');
+logger.info(`Server running on http://${hostname}:${port}`);
+logger.info(`tRPC endpoint: http://${hostname}:${port}/trpc`);
+logger.info(`Health check: http://${hostname}:${port}/health`);
 
 export default {
   port,
+  hostname,
   fetch: app.fetch,
 };
