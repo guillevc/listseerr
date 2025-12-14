@@ -69,7 +69,11 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 | Response DTO      | `<Action><Entity>Response` | `shared/application/dtos/`      | `SaveTraktConfigResponse` |
 | Core DTO          | `<Entity>DTO`              | `shared/application/dtos/core/` | `MediaListDTO`            |
 
+**Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
+
 ### Type-Safe Enum Pattern
+
+**In types file (exported for external access):**
 
 ```typescript
 // shared/domain/types/provider.types.ts
@@ -80,6 +84,30 @@ export const ProviderValues = {
 
 export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 ```
+
+**In VO file (private, validation only):**
+
+```typescript
+// shared/domain/value-objects/provider.vo.ts
+const Values = {
+  TRAKT: 'trakt',
+  MDBLIST: 'mdblist',
+} as const;
+
+export class ProviderVO {
+  static create(value: string): ProviderVO {
+    if (!Object.values(Values).includes(value as ProviderType)) {
+      throw new InvalidProviderError(value);
+    }
+    // ...
+  }
+}
+```
+
+**When to use each:**
+
+- Export `<Name>Values` in types file when primitives need external access (switch statements, UI)
+- Use private `const Values` in VO when only needed for internal validation
 
 ### Value Object Pattern
 
@@ -184,14 +212,13 @@ export interface IMediaListRepository {
   findAll(userId: number): Promise<MediaList[]>;
   save(entity: MediaList): Promise<MediaList>;
   delete(entity: MediaList): Promise<void>;
-  exists(id: number, userId: number): Promise<boolean>;
 }
 ```
 
 ### Implementation (Infrastructure Layer)
 
 ```typescript
-async exists(id: number, userId: number): Promise<boolean> {
+private async exists(id: number, userId: number): Promise<boolean> {
   if (id === 0) return false;  // New entity shortcut
   const [row] = await this.db
     .select({ id: table.id })
@@ -240,8 +267,30 @@ private toDomain(row: typeof table.$inferSelect): MediaList {
 }
 ```
 
-**Infrastructure can:** Import Entities/VOs, call `VO.create()`, call Entity constructors, read via getters.  
+**Infrastructure can:** Import Entities/VOs, call `VO.create()`, call Entity constructors, read via getters.
 **Infrastructure cannot:** Call mutation methods (`entity.update()`), trigger business logic.
+
+### Singleton-per-User Repository Variant
+
+For entities where each user has exactly one record (e.g., `JellyseerrConfig`, `GeneralSettings`):
+
+```typescript
+private async exists(userId: number): Promise<boolean> {
+  const [row] = await this.db
+    .select({ id: table.id })
+    .from(table)
+    .where(eq(table.userId, userId))
+    .limit(1);
+  return !!row;
+}
+
+async save(entity: JellyseerrConfig): Promise<JellyseerrConfig> {
+  const entityExists = await this.exists(entity.userId);
+  // INSERT if !entityExists, UPDATE otherwise
+}
+```
+
+**Key difference:** Uses `exists(userId)` instead of `exists(id, userId)` because the semantic is "does this user have a config?" not "does this specific entity exist?"
 
 ---
 

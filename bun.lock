@@ -86,6 +86,9 @@
     },
     "packages/shared": {
       "name": "shared",
+      "dependencies": {
+        "zod": "catalog:",
+      },
       "devDependencies": {
         "@types/bun": "catalog:",
         "eslint": "catalog:",
