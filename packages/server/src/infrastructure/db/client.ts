@@ -4,15 +4,12 @@ import * as schema from './schema';
 import { env } from '@/server/env';
 
 export type DbClient = BunSQLiteDatabase<typeof schema>;
-import { resolve, join } from 'path';
+import { resolve, dirname } from 'path';
 
-// Use absolute path based on project root (3 levels up from this file)
-const projectRoot = resolve(import.meta.dir, '../../..');
-const DB_PATH = join(projectRoot, env.DATABASE_PATH.replace(/^\.\//, ''));
+const DB_PATH = resolve(env.DATABASE_PATH);
 
 // Create data directory if it doesn't exist
 import { mkdirSync } from 'fs';
-import { dirname } from 'path';
 
 try {
   mkdirSync(dirname(DB_PATH), { recursive: true });
