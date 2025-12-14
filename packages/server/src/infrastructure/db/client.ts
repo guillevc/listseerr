@@ -1,15 +1,13 @@
+import { mkdirSync } from 'fs';
+import { resolve, dirname } from 'path';
 import { Database } from 'bun:sqlite';
 import { drizzle, type BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from './schema';
 import { env } from '@/server/env';
 
 export type DbClient = BunSQLiteDatabase<typeof schema>;
-import { resolve, dirname } from 'path';
 
 const DB_PATH = resolve(env.DATABASE_PATH);
-
-// Create data directory if it doesn't exist
-import { mkdirSync } from 'fs';
 
 try {
   mkdirSync(dirname(DB_PATH), { recursive: true });
