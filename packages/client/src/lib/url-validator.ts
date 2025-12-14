@@ -1,4 +1,4 @@
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 
 interface ValidationResult {
   isValid: boolean;
@@ -52,22 +52,22 @@ export function validateAndDetectProvider(url: string): ValidationResult {
   };
 }
 
-export function getProviderName(provider: ProviderType): string {
-  const names: Record<ProviderType, string> = {
+export function getProviderName(provider: string): string {
+  const names: Record<string, string> = {
     trakt: 'Trakt List',
     traktChart: 'Trakt Chart',
     mdblist: 'MDBList',
     stevenlu: 'StevenLu',
   };
-  return names[provider];
+  return names[provider] ?? provider;
 }
 
-export function getProviderColor(provider: ProviderType): string {
-  const colors: Record<ProviderType, string> = {
+export function getProviderColor(provider: string): string {
+  const colors: Record<string, string> = {
     trakt: 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-100',
     traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
     mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
     stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
   };
-  return colors[provider];
+  return colors[provider] ?? '';
 }

@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
 import { listItemsCache } from '@/server/infrastructure/db/schema';
-import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
+import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
 
 export class DrizzleCacheRepository implements ICacheRepository {
@@ -13,12 +13,12 @@ export class DrizzleCacheRepository implements ICacheRepository {
     return new Set(rows.map((row) => row.tmdbId).filter((id): id is number => id !== null));
   }
 
-  async filterAlreadyCached(items: MediaItem[]): Promise<MediaItem[]> {
+  async filterAlreadyCached(items: MediaItemVO[]): Promise<MediaItemVO[]> {
     const cachedIds = await this.getRequestedTmdbIds();
     return items.filter((item) => !cachedIds.has(item.tmdbId));
   }
 
-  async cacheItems(listId: number, items: MediaItem[]): Promise<void> {
+  async cacheItems(listId: number, items: MediaItemVO[]): Promise<void> {
     if (items.length === 0) return;
 
     await this.db

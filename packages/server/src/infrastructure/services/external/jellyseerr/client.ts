@@ -1,5 +1,5 @@
 import type { JellyseerrConfig } from '@/server/infrastructure/db/schema';
-import type { MediaItem } from '@/server/infrastructure/services/external/trakt/types';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import type {
   JellyseerrRequestPayload,
   JellyseerrRequestResponse,
@@ -11,7 +11,7 @@ import { LoggerService } from '@/server/infrastructure/services/core/logger.serv
 const logger = new LoggerService('jellyseerr-client');
 
 export async function requestToJellyseerr(
-  item: MediaItem,
+  item: MediaItemDTO,
   config: JellyseerrConfig
 ): Promise<boolean> {
   logger.debug(
@@ -169,7 +169,7 @@ export async function requestToJellyseerr(
 }
 
 export async function requestItemsToJellyseerr(
-  items: MediaItem[],
+  items: MediaItemDTO[],
   config: JellyseerrConfig
 ): Promise<ProcessingResult> {
   logger.info({ totalItems: items.length }, 'Starting batch Jellyseerr requests');

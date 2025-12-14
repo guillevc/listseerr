@@ -9,10 +9,3 @@ export interface StevenLuItem {
   poster_url: string;
   genres: string[];
 }
-
-export interface MediaItem {
-  title: string;
-  year: number | null;
-  tmdbId: number;
-  mediaType: 'movie' | 'tv';
-}

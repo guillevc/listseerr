@@ -1,5 +1,5 @@
 export interface TraktListItem {
-  type: 'movie' | 'show';
+  type: 'movie' | 'show'; // External API type
   movie?: {
     title: string;
     year: number;
@@ -14,11 +14,4 @@ export interface TraktListItem {
       tmdb: number;
     };
   };
-}
-
-export interface MediaItem {
-  title: string;
-  year: number | null;
-  tmdbId: number;
-  mediaType: 'movie' | 'tv';
 }

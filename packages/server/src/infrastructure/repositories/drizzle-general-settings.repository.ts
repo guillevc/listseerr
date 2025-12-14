@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { generalSettings } from '@/server/infrastructure/db/schema';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
+import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
@@ -77,7 +77,7 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
     return new GeneralSettings({
       id: row.id,
       userId: row.userId,
-      timezone: Timezone.create(row.timezone),
+      timezone: TimezoneVO.create(row.timezone),
       automaticProcessingEnabled: row.automaticProcessingEnabled,
       automaticProcessingSchedule: row.automaticProcessingSchedule || null,
       createdAt: row.createdAt || new Date(),

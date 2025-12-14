@@ -1,8 +1,8 @@
 import type { Nullable } from '../../../domain/types/utility.types';
-import type { ProviderType } from '../../../domain/types/provider.types';
+import type { ProviderType } from '../../../domain/value-objects/provider.vo';
 
 // Re-export for convenience
-export type { ProviderType, Nullable };
+export type { Nullable };
 
 /**
  * MediaList Core DTO
@@ -21,7 +21,7 @@ export interface MediaListDTO {
   name: string; // Unwrapped from ListName VO
   url: string; // Unwrapped from ListUrl VO
   displayUrl: string;
-  provider: ProviderType; // Unwrapped from Provider VO
+  provider: ProviderType;
   enabled: boolean;
   maxItems: number;
   processingSchedule: Nullable<string>;
@@ -58,7 +58,7 @@ export interface SerializedMediaList {
   url: string;
   displayUrl: Nullable<string>;
   updatedAt: Nullable<string>;
-  provider: ProviderType;
+  provider: string;
   enabled: boolean;
   maxItems: Nullable<number>;
   processingSchedule: Nullable<string>;

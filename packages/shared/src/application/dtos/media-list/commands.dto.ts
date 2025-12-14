@@ -1,4 +1,3 @@
-import type { ProviderType } from '../core/media-list.dto';
 import type { Nullable } from '../../../domain/types/utility.types';
 
 /**
@@ -12,7 +11,7 @@ export interface CreateMediaListCommand {
   name: string;
   url: string;
   displayUrl?: string;
-  provider: ProviderType;
+  provider: string;
   enabled: boolean;
   maxItems: number;
   processingSchedule: Nullable<string>;
@@ -26,7 +25,7 @@ export interface UpdateMediaListCommand {
     name?: string;
     url?: string;
     displayUrl?: string;
-    provider?: ProviderType;
+    provider?: string;
     enabled?: boolean;
     maxItems?: number;
     processingSchedule?: Nullable<string>;

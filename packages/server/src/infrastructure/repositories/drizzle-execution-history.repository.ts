@@ -3,9 +3,9 @@ import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { executionHistory, mediaLists } from '@/server/infrastructure/db/schema';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { ExecutionStatus } from 'shared/domain/value-objects/execution-status.value-object';
-import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
-import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
+import { ExecutionStatusVO } from 'shared/domain/value-objects/execution-status.vo';
+import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
@@ -113,9 +113,9 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
     return new ProcessingExecution({
       id: row.id,
       listId: row.listId,
-      batchId: BatchId.fromString(row.batchId),
-      status: ExecutionStatus.create(row.status),
-      triggerType: TriggerType.create(row.triggerType),
+      batchId: BatchIdVO.fromString(row.batchId),
+      status: ExecutionStatusVO.create(row.status),
+      triggerType: TriggerTypeVO.create(row.triggerType),
       startedAt: row.startedAt,
       completedAt: row.completedAt,
       itemsFound: row.itemsFound || 0,

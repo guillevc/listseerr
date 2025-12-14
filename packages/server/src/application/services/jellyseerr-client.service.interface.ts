@@ -1,12 +1,12 @@
-import type { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
+import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 
 /**
  * Processing Result from Jellyseerr request batch
  */
 export interface ProcessingResult {
-  successful: MediaItem[];
-  failed: Array<{ item: MediaItem; error: string }>;
+  successful: MediaItemVO[];
+  failed: Array<{ item: MediaItemVO; error: string }>;
 }
 
 /**
@@ -22,5 +22,5 @@ export interface IJellyseerrClient {
    * @param config - Jellyseerr connection configuration
    * @returns Result with successful and failed items
    */
-  requestItems(items: MediaItem[], config: JellyseerrConfig): Promise<ProcessingResult>;
+  requestItems(items: MediaItemVO[], config: JellyseerrConfig): Promise<ProcessingResult>;
 }

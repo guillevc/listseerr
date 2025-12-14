@@ -3,7 +3,7 @@ import { GeneralSettingsMapper } from '@/server/application/mappers/general-sett
 import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
+import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
@@ -26,7 +26,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
       settings = new GeneralSettings({
         id: 0, // Temporary ID, DB will assign real ID
         userId: command.userId,
-        timezone: Timezone.create(command.data.timezone || 'UTC'),
+        timezone: TimezoneVO.create(command.data.timezone || 'UTC'),
         automaticProcessingEnabled: command.data.automaticProcessingEnabled ?? false,
         automaticProcessingSchedule: command.data.automaticProcessingSchedule ?? null,
         createdAt: new Date(),
@@ -41,7 +41,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
 
     // 3. Apply changes using entity mutation methods
     if (command.data.timezone !== undefined) {
-      const timezoneVO = Timezone.create(command.data.timezone);
+      const timezoneVO = TimezoneVO.create(command.data.timezone);
       settings.changeTimezone(timezoneVO);
     }
 

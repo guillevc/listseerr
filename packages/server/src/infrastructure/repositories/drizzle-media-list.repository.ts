@@ -5,10 +5,9 @@ import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema'
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
-import type { ProviderType } from 'shared/domain/types/provider.types';
-import { ListName } from 'shared/domain/value-objects/list-name.value-object';
-import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
-import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
+import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
+import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -158,10 +157,10 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return new MediaList({
       id: params.id,
       userId: params.userId,
-      name: ListName.create(params.name),
-      url: ListUrl.create(params.url),
+      name: ListNameVO.create(params.name),
+      url: ListUrlVO.create(params.url),
       displayUrl: params.displayUrl,
-      provider: Provider.create(params.provider),
+      provider: ProviderVO.create(params.provider),
       enabled: params.enabled,
       maxItems: params.maxItems,
       processingSchedule: params.processingSchedule,

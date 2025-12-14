@@ -1,9 +1,6 @@
-import type { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
-import type { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
-import type { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
-import { JellyseerrUrl as JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey as JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId as JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
 /**
  * JellyseerrConfig Entity - Domain Model with Rich Behavior
  *
@@ -16,18 +13,18 @@ export class JellyseerrConfig {
   // Private state - encapsulated
   private readonly _id: number;
   private readonly _userId: number;
-  private _url: JellyseerrUrl;
-  private _apiKey: JellyseerrApiKey;
-  private _userIdJellyseerr: JellyseerrUserId;
+  private _url: JellyseerrUrlVO;
+  private _apiKey: JellyseerrApiKeyVO;
+  private _userIdJellyseerr: JellyseerrUserIdVO;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
   constructor(params: {
     id: number;
     userId: number;
-    url: JellyseerrUrl;
-    apiKey: JellyseerrApiKey;
-    userIdJellyseerr: JellyseerrUserId;
+    url: JellyseerrUrlVO;
+    apiKey: JellyseerrApiKeyVO;
+    userIdJellyseerr: JellyseerrUserIdVO;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -49,15 +46,15 @@ export class JellyseerrConfig {
     return this._userId;
   }
 
-  get url(): JellyseerrUrl {
+  get url(): JellyseerrUrlVO {
     return this._url;
   }
 
-  get apiKey(): JellyseerrApiKey {
+  get apiKey(): JellyseerrApiKeyVO {
     return this._apiKey;
   }
 
-  get userIdJellyseerr(): JellyseerrUserId {
+  get userIdJellyseerr(): JellyseerrUserIdVO {
     return this._userIdJellyseerr;
   }
 

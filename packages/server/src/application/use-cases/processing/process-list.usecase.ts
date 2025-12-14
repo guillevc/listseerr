@@ -10,9 +10,9 @@ import type { ProcessListResponse } from 'shared/application/dtos/processing/res
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
-import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
+import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
 import {
   JellyseerrNotConfiguredError,
@@ -58,8 +58,8 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     // 2. Create execution entity (status: running)
     const execution = ProcessingExecution.create({
       listId: command.listId,
-      batchId: BatchId.generate(TriggerType.create(command.triggerType)),
-      triggerType: TriggerType.create(command.triggerType),
+      batchId: BatchIdVO.generate(TriggerTypeVO.create(command.triggerType)),
+      triggerType: TriggerTypeVO.create(command.triggerType),
     });
     const savedExecution = await this.executionHistoryRepository.save(execution);
 
@@ -141,7 +141,7 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
   /**
    * Create media fetcher for provider using factory
    */
-  private async createFetcherFor(provider: Provider, userId: number): Promise<IMediaFetcher> {
+  private async createFetcherFor(provider: ProviderVO, userId: number): Promise<IMediaFetcher> {
     const fetcher = await this.mediaFetcherFactory.createFetcher(provider, userId);
     if (!fetcher) {
       throw new ProviderNotConfiguredError(provider.getValue());

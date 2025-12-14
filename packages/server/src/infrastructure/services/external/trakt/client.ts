@@ -1,5 +1,6 @@
 import { parseTraktUrl, buildTraktApiUrl } from './url-parser';
-import type { TraktListItem, MediaItem } from './types';
+import type { TraktListItem } from './types';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('trakt-client');
@@ -8,7 +9,7 @@ export async function fetchTraktList(
   url: string,
   maxItems: number | null,
   clientId: string
-): Promise<MediaItem[]> {
+): Promise<MediaItemDTO[]> {
   try {
     // Parse the Trakt URL
     const urlParts = parseTraktUrl(url);
@@ -59,10 +60,10 @@ export async function fetchTraktList(
       'Received items from Trakt API'
     );
 
-    // Transform Trakt items to MediaItem format
-    const mediaItems: MediaItem[] = items
+    // Transform Trakt items to MediaItemDTO format
+    const mediaItems: MediaItemDTO[] = items
       .map((item) => transformTraktItem(item))
-      .filter((item): item is MediaItem => item !== null);
+      .filter((item): item is MediaItemDTO => item !== null);
 
     const skippedCount = items.length - mediaItems.length;
 
@@ -95,7 +96,7 @@ export async function fetchTraktList(
   }
 }
 
-function transformTraktItem(item: TraktListItem): MediaItem | null {
+function transformTraktItem(item: TraktListItem): MediaItemDTO | null {
   // Handle movie items
   if (item.type === 'movie' && item.movie) {
     const tmdbId = item.movie.ids.tmdb;

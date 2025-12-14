@@ -13,15 +13,19 @@ import {
   dashboardRouter,
   logsRouter,
   schedulerRouter,
-  providerConfigRouter,
   generalSettingsRouter,
   jellyseerrConfigRouter,
+  traktConfigRouter,
+  mdblistConfigRouter,
+  providersRouter,
 } from './routers';
 
 export const appRouter = router({
   lists: listsRouter,
   config: jellyseerrConfigRouter,
-  providerConfig: providerConfigRouter,
+  traktConfig: traktConfigRouter,
+  mdblistConfig: mdblistConfigRouter,
+  providers: providersRouter,
   generalSettings: generalSettingsRouter,
   processor: processingRouter,
   scheduler: schedulerRouter,

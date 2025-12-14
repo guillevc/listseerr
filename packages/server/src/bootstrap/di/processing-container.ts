@@ -5,7 +5,8 @@ import * as schema from '@/server/infrastructure/db/schema';
 import { DrizzleExecutionHistoryRepository } from '@/server/infrastructure/repositories/drizzle-execution-history.repository';
 import { DrizzleCacheRepository } from '@/server/infrastructure/repositories/drizzle-cache.repository';
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
-import { DrizzleProviderConfigRepository } from '@/server/infrastructure/repositories/drizzle-provider-config.repository';
+import { DrizzleTraktConfigRepository } from '@/server/infrastructure/repositories/drizzle-trakt-config.repository';
+import { DrizzleMdbListConfigRepository } from '@/server/infrastructure/repositories/drizzle-mdblist-config.repository';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
@@ -46,7 +47,8 @@ export class ProcessingContainer {
   private readonly executionHistoryRepository: DrizzleExecutionHistoryRepository;
   private readonly cacheRepository: DrizzleCacheRepository;
   private readonly mediaListRepository: DrizzleMediaListRepository;
-  private readonly providerConfigRepository: DrizzleProviderConfigRepository;
+  private readonly traktConfigRepository: DrizzleTraktConfigRepository;
+  private readonly mdbListConfigRepository: DrizzleMdbListConfigRepository;
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly mediaFetcherFactory: MediaFetcherFactory;
   private readonly jellyseerrClient: JellyseerrHttpClient;
@@ -76,11 +78,15 @@ export class ProcessingContainer {
     this.executionHistoryRepository = new DrizzleExecutionHistoryRepository(db);
     this.cacheRepository = new DrizzleCacheRepository(db);
     this.mediaListRepository = new DrizzleMediaListRepository(db);
-    this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
+    this.traktConfigRepository = new DrizzleTraktConfigRepository(db, encryptionService);
+    this.mdbListConfigRepository = new DrizzleMdbListConfigRepository(db, encryptionService);
     this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
 
     // Media fetcher factory (creates fetchers on-demand with fresh credentials)
-    this.mediaFetcherFactory = new MediaFetcherFactory(this.providerConfigRepository);
+    this.mediaFetcherFactory = new MediaFetcherFactory(
+      this.traktConfigRepository,
+      this.mdbListConfigRepository
+    );
 
     this.jellyseerrClient = new JellyseerrHttpClient();
 

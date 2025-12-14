@@ -1,3 +1,6 @@
+import type { ExecutionStatusType } from '../../../domain/value-objects/execution-status.vo';
+import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
+
 /**
  * Execution Core DTO
  *
@@ -17,8 +20,8 @@ export interface ExecutionDTO {
   batchId: string | null;
   startedAt: Date;
   completedAt: Date | null;
-  status: 'running' | 'success' | 'error';
-  triggerType: 'manual' | 'scheduled';
+  status: ExecutionStatusType;
+  triggerType: TriggerType;
   itemsFound: number | null;
   itemsRequested: number | null;
   itemsFailed: number | null;
@@ -33,6 +36,6 @@ export interface ExecutionDTO {
  */
 export interface ActivityGroup {
   timestamp: Date;
-  triggerType: 'manual' | 'scheduled';
+  triggerType: TriggerType;
   executions: ExecutionDTO[];
 }

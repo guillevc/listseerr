@@ -1,5 +1,5 @@
-import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
-import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
+import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
+import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
 import type {
   IJellyseerrClient,
   ProcessingResult,
@@ -14,7 +14,7 @@ import { requestItemsToJellyseerr } from '@/server/infrastructure/services/exter
  * Delegates to infrastructure service while working with domain types.
  */
 export class JellyseerrHttpClient implements IJellyseerrClient {
-  async requestItems(items: MediaItem[], config: JellyseerrConfig): Promise<ProcessingResult> {
+  async requestItems(items: MediaItemVO[], config: JellyseerrConfig): Promise<ProcessingResult> {
     // Transform domain MediaItem VOs to DTOs for infrastructure layer
     const itemDTOs = items.map((item) => item.toDTO());
 
@@ -36,19 +36,19 @@ export class JellyseerrHttpClient implements IJellyseerrClient {
     // Transform result DTOs back to domain MediaItem VOs
     return {
       successful: result.successful.map((dto) =>
-        MediaItem.create({
+        MediaItemVO.create({
           title: dto.title,
           year: dto.year,
           tmdbId: dto.tmdbId,
-          mediaType: dto.mediaType === 'movie' ? MediaType.movie() : MediaType.tv(),
+          mediaType: dto.mediaType === 'movie' ? MediaTypeVO.movie() : MediaTypeVO.tv(),
         })
       ),
       failed: result.failed.map((failure) => ({
-        item: MediaItem.create({
+        item: MediaItemVO.create({
           title: failure.item.title,
           year: failure.item.year,
           tmdbId: failure.item.tmdbId,
-          mediaType: failure.item.mediaType === 'movie' ? MediaType.movie() : MediaType.tv(),
+          mediaType: failure.item.mediaType === 'movie' ? MediaTypeVO.movie() : MediaTypeVO.tv(),
         }),
         error: failure.error,
       })),

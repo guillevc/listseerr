@@ -11,10 +11,10 @@ import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
-import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
-import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
+import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
+import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import {
   JellyseerrNotConfiguredError,
@@ -69,8 +69,8 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     }
 
     // 2. Fetch items from all lists (with rate limiting)
-    const triggerType = TriggerType.create(command.triggerType);
-    const batchId = BatchId.generate(triggerType);
+    const triggerType = TriggerTypeVO.create(command.triggerType);
+    const batchId = BatchIdVO.generate(triggerType);
     const listsWithItems = await this.fetchFromAllLists(
       enabledLists,
       command.userId,
@@ -139,11 +139,14 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
   private async fetchFromAllLists(
     lists: MediaList[],
     userId: number,
-    batchId: BatchId,
-    triggerType: TriggerType
-  ): Promise<Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }>> {
-    const results: Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }> =
-      [];
+    batchId: BatchIdVO,
+    triggerType: TriggerTypeVO
+  ): Promise<Array<{ list: MediaList; items: MediaItemVO[]; execution: ProcessingExecution }>> {
+    const results: Array<{
+      list: MediaList;
+      items: MediaItemVO[];
+      execution: ProcessingExecution;
+    }> = [];
 
     for (const list of lists) {
       // Create execution record (status: running)
@@ -193,9 +196,9 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
    * Global deduplication: Aggregate all items by TMDB ID
    */
   private deduplicateGlobally(
-    listsWithItems: Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }>
-  ): Map<number, MediaItem> {
-    const itemsMap = new Map<number, MediaItem>();
+    listsWithItems: Array<{ list: MediaList; items: MediaItemVO[]; execution: ProcessingExecution }>
+  ): Map<number, MediaItemVO> {
+    const itemsMap = new Map<number, MediaItemVO>();
 
     for (const { items } of listsWithItems) {
       for (const item of items) {
@@ -213,8 +216,12 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
    * Update execution records for all lists
    */
   private async updateAllExecutions(
-    listsWithItems: Array<{ list: MediaList; items: MediaItem[]; execution: ProcessingExecution }>,
-    results: { successful: MediaItem[]; failed: Array<{ item: MediaItem; error: string }> }
+    listsWithItems: Array<{
+      list: MediaList;
+      items: MediaItemVO[];
+      execution: ProcessingExecution;
+    }>,
+    results: { successful: MediaItemVO[]; failed: Array<{ item: MediaItemVO; error: string }> }
   ): Promise<ProcessingExecution[]> {
     const updatedExecutions: ProcessingExecution[] = [];
 
@@ -253,7 +260,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
   /**
    * Create media fetcher for provider using factory
    */
-  private async createFetcherFor(provider: Provider, userId: number): Promise<IMediaFetcher> {
+  private async createFetcherFor(provider: ProviderVO, userId: number): Promise<IMediaFetcher> {
     const fetcher = await this.mediaFetcherFactory.createFetcher(provider, userId);
     if (!fetcher) {
       throw new ProviderNotConfiguredError(provider.getValue());

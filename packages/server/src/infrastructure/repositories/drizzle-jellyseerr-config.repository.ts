@@ -3,9 +3,9 @@ import { eq } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { jellyseerrConfigs } from '@/server/infrastructure/db/schema';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
@@ -79,9 +79,9 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
     return new JellyseerrConfig({
       id: row.id,
       userId: row.userId,
-      url: JellyseerrUrl.create(row.url),
-      apiKey: JellyseerrApiKey.create(row.apiKey),
-      userIdJellyseerr: JellyseerrUserId.create(row.userIdJellyseerr),
+      url: JellyseerrUrlVO.create(row.url),
+      apiKey: JellyseerrApiKeyVO.create(row.apiKey),
+      userIdJellyseerr: JellyseerrUserIdVO.create(row.userIdJellyseerr),
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
     });

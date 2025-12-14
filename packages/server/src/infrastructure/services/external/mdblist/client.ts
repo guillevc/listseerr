@@ -1,6 +1,7 @@
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 import { parseMdbListUrl, buildMdbListApiUrl } from './url-parser';
-import type { MdbListApiItem, MediaItem } from './types';
+import type { MdbListApiItem } from './types';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 
 const logger = new LoggerService('mdblist-client');
 
@@ -8,7 +9,7 @@ export async function fetchMdbListList(
   url: string,
   maxItems: number | null,
   apiKey: string
-): Promise<MediaItem[]> {
+): Promise<MediaItemDTO[]> {
   try {
     // Parse the MDBList URL
     const urlParts = parseMdbListUrl(url);
@@ -46,10 +47,10 @@ export async function fetchMdbListList(
     const data = (await response.json()) as MdbListApiItem[];
     logger.info({ count: data.length }, 'Received items from MDBList');
 
-    // Transform to MediaItem format
+    // Transform to MediaItemDTO format
     const mediaItems = data
       .map(transformMdbListItem)
-      .filter((item): item is MediaItem => item !== null);
+      .filter((item): item is MediaItemDTO => item !== null);
 
     logger.info(
       {
@@ -66,7 +67,7 @@ export async function fetchMdbListList(
   }
 }
 
-function transformMdbListItem(item: MdbListApiItem): MediaItem | null {
+function transformMdbListItem(item: MdbListApiItem): MediaItemDTO | null {
   // Skip items without TMDB ID (required for Jellyseerr)
   if (!item.id) {
     return null;

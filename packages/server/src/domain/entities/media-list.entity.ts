@@ -1,10 +1,6 @@
-import type { ListName } from 'shared/domain/value-objects/list-name.value-object';
-import type { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import { ListName as ListNameVO } from 'shared/domain/value-objects/list-name.value-object';
-import { ListUrl as ListUrlVO } from 'shared/domain/value-objects/list-url.value-object';
-import { Provider as ProviderVO } from 'shared/domain/value-objects/provider.value-object';
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
+import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
+import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
@@ -23,10 +19,10 @@ export class MediaList {
   // Private state - encapsulated
   private readonly _id: number;
   private readonly _userId: number;
-  private _name: ListName;
-  private _url: ListUrl;
+  private _name: ListNameVO;
+  private _url: ListUrlVO;
   private _displayUrl: string;
-  private _provider: Provider;
+  private _provider: ProviderVO;
   private _enabled: boolean;
   private _maxItems: number;
   private _processingSchedule: Nullable<string>;
@@ -36,10 +32,10 @@ export class MediaList {
   constructor(params: {
     id: number;
     userId: number;
-    name: ListName;
-    url: ListUrl;
+    name: ListNameVO;
+    url: ListUrlVO;
     displayUrl: string;
-    provider: Provider;
+    provider: ProviderVO;
     enabled: boolean;
     maxItems: number;
     processingSchedule: Nullable<string>;
@@ -68,11 +64,11 @@ export class MediaList {
     return this._userId;
   }
 
-  get name(): ListName {
+  get name(): ListNameVO {
     return this._name;
   }
 
-  get url(): ListUrl {
+  get url(): ListUrlVO {
     return this._url;
   }
 
@@ -80,7 +76,7 @@ export class MediaList {
     return this._displayUrl;
   }
 
-  get provider(): Provider {
+  get provider(): ProviderVO {
     return this._provider;
   }
 
@@ -136,7 +132,7 @@ export class MediaList {
    * Change the provider
    * Validates the new provider via Provider VO
    */
-  changeProvider(newProvider: ProviderType): void {
+  changeProvider(newProvider: string): void {
     this._provider = ProviderVO.create(newProvider);
     this._updatedAt = new Date();
   }

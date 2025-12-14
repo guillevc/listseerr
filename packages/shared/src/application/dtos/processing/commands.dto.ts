@@ -1,3 +1,5 @@
+import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
+
 /**
  * Processing Command DTOs
  *
@@ -7,12 +9,12 @@
 
 export interface ProcessListCommand {
   listId: number;
-  triggerType: 'manual' | 'scheduled';
+  triggerType: TriggerType;
   userId: number;
 }
 
 export interface ProcessBatchCommand {
-  triggerType: 'manual' | 'scheduled';
+  triggerType: TriggerType;
   userId: number;
 }
 

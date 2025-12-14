@@ -16,9 +16,10 @@ import { ProcessingContainer } from './di/processing-container';
 import { DashboardContainer } from './di/dashboard-container';
 import { LogsContainer } from './di/logs-container';
 import { SchedulerContainer } from './di/scheduler-container';
-import { ProviderConfigContainer } from './di/provider-config-container';
 import { GeneralSettingsContainer } from './di/general-settings-container';
 import { JellyseerrConfigContainer } from './di/jellyseerr-config-container';
+import { TraktConfigContainer } from './di/trakt-config-container';
+import { MdbListConfigContainer } from './di/mdblist-config-container';
 
 // Import router factories from presentation
 import { createListsRouter } from '@/server/presentation/trpc/routers/lists.router';
@@ -26,9 +27,11 @@ import { createProcessingRouter } from '@/server/presentation/trpc/routers/proce
 import { createDashboardRouter } from '@/server/presentation/trpc/routers/dashboard.router';
 import { createLogsRouter } from '@/server/presentation/trpc/routers/logs.router';
 import { createSchedulerRouter } from '@/server/presentation/trpc/routers/scheduler.router';
-import { createProviderConfigRouter } from '@/server/presentation/trpc/routers/provider-config.router';
 import { createGeneralSettingsRouter } from '@/server/presentation/trpc/routers/general-settings.router';
 import { createJellyseerrConfigRouter } from '@/server/presentation/trpc/routers/jellyseerr-config.router';
+import { createTraktConfigRouter } from '@/server/presentation/trpc/routers/trakt-config.router';
+import { createMdbListConfigRouter } from '@/server/presentation/trpc/routers/mdblist-config.router';
+import { createProvidersRouter } from '@/server/presentation/trpc/routers/providers.router';
 
 // Instantiate containers
 const listsContainer = new ListsContainer(db);
@@ -36,9 +39,10 @@ const processingContainer = new ProcessingContainer(db);
 const dashboardContainer = new DashboardContainer(db);
 const logsContainer = new LogsContainer();
 const schedulerContainer = new SchedulerContainer();
-const providerConfigContainer = new ProviderConfigContainer(db);
 const generalSettingsContainer = new GeneralSettingsContainer(db);
 const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
+const traktConfigContainer = new TraktConfigContainer(db);
+const mdbListConfigContainer = new MdbListConfigContainer(db);
 
 // Build routers
 export const listsRouter = createListsRouter(listsContainer);
@@ -46,9 +50,14 @@ export const processingRouter = createProcessingRouter(processingContainer);
 export const dashboardRouter = createDashboardRouter(dashboardContainer);
 export const logsRouter = createLogsRouter(logsContainer);
 export const schedulerRouter = createSchedulerRouter(schedulerContainer);
-export const providerConfigRouter = createProviderConfigRouter(providerConfigContainer);
 export const generalSettingsRouter = createGeneralSettingsRouter(generalSettingsContainer);
 export const jellyseerrConfigRouter = createJellyseerrConfigRouter(jellyseerrConfigContainer);
+export const traktConfigRouter = createTraktConfigRouter(traktConfigContainer);
+export const mdblistConfigRouter = createMdbListConfigRouter(mdbListConfigContainer);
+export const providersRouter = createProvidersRouter({
+  getTraktConfigUseCase: traktConfigContainer.getTraktConfigUseCase,
+  getMdbListConfigUseCase: mdbListConfigContainer.getMdbListConfigUseCase,
+});
 
 // Export processing container for scheduler integration
 export { processingContainer };

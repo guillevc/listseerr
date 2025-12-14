@@ -4,9 +4,9 @@ import type { ISchedulerService } from '@/server/application/services/scheduler.
 import type { ILogger } from '@/server/application/services/logger.interface';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
-import { Provider } from 'shared/domain/value-objects/provider.value-object';
-import { ListName } from 'shared/domain/value-objects/list-name.value-object';
-import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
+import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
+import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
@@ -24,7 +24,7 @@ export class CreateMediaListUseCase implements IUseCase<
 
   async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
     // 1. Validate provider and parse URLs
-    const provider = Provider.create(command.provider);
+    const provider = ProviderVO.create(command.provider);
     const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(
       command.url,
       provider,
@@ -35,8 +35,8 @@ export class CreateMediaListUseCase implements IUseCase<
     const list = new MediaList({
       id: 0,
       userId: command.userId,
-      name: ListName.create(command.name),
-      url: ListUrl.create(apiUrl),
+      name: ListNameVO.create(command.name),
+      url: ListUrlVO.create(apiUrl),
       displayUrl,
       provider,
       enabled: command.enabled,

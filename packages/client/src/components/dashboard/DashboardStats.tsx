@@ -14,9 +14,9 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
   const { data: dashboardStats } = trpc.dashboard.getStats.useQuery();
 
   // Check provider configurations
-  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const { data: traktData } = trpc.traktConfig.get.useQuery();
   const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
   const mdbListConfig = mdbListData?.config;
 
   // Calculate active lists (enabled AND provider is configured)

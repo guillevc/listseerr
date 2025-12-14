@@ -1,6 +1,6 @@
-import { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
-import { MediaType } from 'shared/domain/value-objects/media-type.value-object';
-import type { TraktClientId } from 'shared/domain/value-objects/trakt-client-id.value-object';
+import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
+import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
+import type { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import { fetchTraktList } from '@/server/infrastructure/services/external/trakt/client';
 import { fetchTraktChart } from '@/server/infrastructure/services/external/trakt/chart-client';
@@ -12,9 +12,9 @@ import { fetchTraktChart } from '@/server/infrastructure/services/external/trakt
  * Supports both 'trakt' (lists) and 'traktChart' (charts) provider types.
  */
 export class TraktMediaFetcher implements IMediaFetcher {
-  constructor(private readonly clientId: TraktClientId) {}
+  constructor(private readonly clientId: TraktClientIdVO) {}
 
-  async fetchItems(url: string, maxItems: number): Promise<MediaItem[]> {
+  async fetchItems(url: string, maxItems: number): Promise<MediaItemVO[]> {
     const clientIdValue = this.clientId.getValue();
 
     // Determine which client to use based on URL pattern
@@ -25,11 +25,11 @@ export class TraktMediaFetcher implements IMediaFetcher {
 
     // Transform raw items to domain MediaItem value objects
     return rawItems.map((item) =>
-      MediaItem.create({
+      MediaItemVO.create({
         title: item.title,
         year: item.year,
         tmdbId: item.tmdbId,
-        mediaType: MediaType.create(item.mediaType),
+        mediaType: MediaTypeVO.create(item.mediaType),
       })
     );
   }

@@ -1,4 +1,4 @@
-import type { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
+import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 
 /**
  * Cache Repository Interface (Port)
@@ -16,11 +16,11 @@ export interface ICacheRepository {
    * Filter out items that are already cached
    * Returns only new items that haven't been requested before
    */
-  filterAlreadyCached(items: MediaItem[]): Promise<MediaItem[]>;
+  filterAlreadyCached(items: MediaItemVO[]): Promise<MediaItemVO[]>;
 
   /**
    * Cache successfully requested items
    * Uses listId to track which list first requested each item
    */
-  cacheItems(listId: number, items: MediaItem[]): Promise<void>;
+  cacheItems(listId: number, items: MediaItemVO[]): Promise<void>;
 }

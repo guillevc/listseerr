@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
+import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 import {
   Dialog,
   DialogContent,
@@ -24,9 +25,7 @@ export function AddListDialog() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [maxItems, setMaxItems] = useState('20');
-  const [provider, setProvider] = useState<'trakt' | 'mdblist' | 'traktChart' | 'stevenlu'>(
-    'trakt'
-  );
+  const [provider, setProvider] = useState<ProviderType>('trakt');
   const [urlError, setUrlError] = useState<string | null>(null);
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>('movies');
   const [selectedChartType, setSelectedChartType] = useState<string>('trending');
@@ -38,9 +37,9 @@ export function AddListDialog() {
   const utils = trpc.useUtils();
 
   // Query provider configs for status indicators
-  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const { data: traktData } = trpc.traktConfig.get.useQuery();
   const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
   const mdbListConfig = mdbListData?.config;
 
   const createMutation = trpc.lists.create.useMutation({
@@ -110,7 +109,7 @@ export function AddListDialog() {
     }
   };
 
-  const handleProviderChange = (newProvider: 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu') => {
+  const handleProviderChange = (newProvider: ProviderType) => {
     setProvider(newProvider);
     setUserEditedName(false); // Reset edit flag when provider changes
     // Re-validate URL if one exists (only for trakt and mdblist)
@@ -288,9 +287,7 @@ export function AddListDialog() {
                 <Label>Provider</Label>
                 <RadioGroup
                   value={provider}
-                  onValueChange={(value) =>
-                    handleProviderChange(value as 'trakt' | 'mdblist' | 'traktChart' | 'stevenlu')
-                  }
+                  onValueChange={(value) => handleProviderChange(value as ProviderType)}
                 >
                   <label className="block cursor-pointer">
                     <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />

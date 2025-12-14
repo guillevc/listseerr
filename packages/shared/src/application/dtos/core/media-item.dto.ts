@@ -1,3 +1,5 @@
+import type { MediaType } from '../../../domain/value-objects/media-type.vo';
+
 /**
  * MediaItem Core DTO
  *
@@ -13,5 +15,5 @@ export interface MediaItemDTO {
   title: string;
   year: number | null;
   tmdbId: number;
-  mediaType: 'movie' | 'tv';
+  mediaType: MediaType;
 }

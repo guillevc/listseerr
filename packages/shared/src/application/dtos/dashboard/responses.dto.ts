@@ -1,3 +1,4 @@
+import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
 import type { ExecutionDTO } from '../core/execution.dto';
 
 /**
@@ -15,7 +16,7 @@ export interface DashboardStatsResponse {
 
 export interface ActivityGroup {
   timestamp: Date;
-  triggerType: 'manual' | 'scheduled';
+  triggerType: TriggerType;
   executions: ExecutionDTO[];
 }
 

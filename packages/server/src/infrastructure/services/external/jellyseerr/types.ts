@@ -1,7 +1,8 @@
-import type { MediaItem } from '@/server/infrastructure/services/external/trakt/types';
+import type { MediaType } from 'shared/domain/value-objects/media-type.vo';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 
 export interface JellyseerrRequestPayload {
-  mediaType: 'movie' | 'tv';
+  mediaType: MediaType;
   mediaId: number;
   seasons?: number[];
 }
@@ -17,9 +18,9 @@ export interface JellyseerrRequestResponse {
 }
 
 export interface ProcessingResult {
-  successful: MediaItem[];
+  successful: MediaItemDTO[];
   failed: Array<{
-    item: MediaItem;
+    item: MediaItemDTO;
     error: string;
   }>;
 }

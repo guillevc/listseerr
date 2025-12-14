@@ -1,3 +1,6 @@
+import type { ExecutionStatusType } from '../../../domain/value-objects/execution-status.vo';
+import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
+
 /**
  * ExecutionHistory Core DTO
  *
@@ -14,8 +17,8 @@ export interface ExecutionHistoryDTO {
   id: number;
   listId: number;
   batchId: string;
-  status: 'running' | 'success' | 'error';
-  triggerType: 'manual' | 'scheduled';
+  status: ExecutionStatusType;
+  triggerType: TriggerType;
   startedAt: Date;
   completedAt: Date | null;
   itemsFound: number;

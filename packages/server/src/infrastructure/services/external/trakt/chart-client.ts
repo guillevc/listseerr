@@ -1,27 +1,9 @@
-import type { TraktChartType } from 'shared/domain/types/trakt-chart-type.types';
-import { TraktChartTypeValues } from 'shared/domain/types/trakt-chart-type.types';
-import type { TraktMediaType } from 'shared/domain/types/trakt-media-type.types';
-import { TraktMediaTypeValues } from 'shared/domain/types/trakt-media-type.types';
-import type { MediaItem } from './types';
+import { TraktChartTypeVO } from 'shared/domain/value-objects/trakt-chart-type.vo';
+import { TraktMediaTypeVO } from 'shared/domain/value-objects/trakt-media-type.vo';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('trakt-chart-client');
-
-// Valid chart types - derived from TraktChartTypeValues
-const VALID_CHART_TYPES: TraktChartType[] = Object.values(TraktChartTypeValues);
-
-// Valid media types - derived from TraktMediaTypeValues
-const VALID_MEDIA_TYPES: TraktMediaType[] = Object.values(TraktMediaTypeValues);
-
-// Chart types that return wrapped responses (movie/show nested in object)
-const WRAPPED_CHART_TYPES: TraktChartType[] = [
-  TraktChartTypeValues.TRENDING,
-  TraktChartTypeValues.ANTICIPATED,
-  TraktChartTypeValues.COLLECTED,
-  TraktChartTypeValues.PLAYED,
-  TraktChartTypeValues.WATCHED,
-  TraktChartTypeValues.FAVORITED,
-];
 
 // Simple chart response - movie/show data at root level
 interface TraktSimpleChartItem {
@@ -56,12 +38,12 @@ interface TraktWrappedChartItem {
 /**
  * Parse a Trakt chart URL (display or API) to extract media type and chart type
  * Examples:
- *   - https://trakt.tv/movies/trending -> { mediaType: 'movies', chartType: 'trending' }
- *   - https://api.trakt.tv/movies/trending -> { mediaType: 'movies', chartType: 'trending' }
+ *   - https://trakt.tv/movies/trending -> { mediaType: TraktMediaTypeVO, chartType: TraktChartTypeVO }
+ *   - https://api.trakt.tv/movies/trending -> { mediaType: TraktMediaTypeVO, chartType: TraktChartTypeVO }
  */
 export function parseTraktChartUrl(url: string): {
-  mediaType: TraktMediaType;
-  chartType: TraktChartType;
+  mediaType: TraktMediaTypeVO;
+  chartType: TraktChartTypeVO;
 } {
   // Accept both display URLs (trakt.tv) and API URLs (api.trakt.tv)
   const urlPattern =
@@ -72,16 +54,12 @@ export function parseTraktChartUrl(url: string): {
     throw new Error(`Invalid Trakt chart URL: ${url}`);
   }
 
-  const mediaType = match[3].toLowerCase() as TraktMediaType;
-  const chartType = match[4].toLowerCase() as TraktChartType;
+  const mediaTypeStr = match[3].toLowerCase();
+  const chartTypeStr = match[4].toLowerCase();
 
-  if (!VALID_MEDIA_TYPES.includes(mediaType)) {
-    throw new Error(`Invalid media type: ${mediaType}`);
-  }
-
-  if (!VALID_CHART_TYPES.includes(chartType)) {
-    throw new Error(`Invalid chart type: ${chartType}`);
-  }
+  // Validate using VOs (they will throw if invalid)
+  const mediaType = TraktMediaTypeVO.create(mediaTypeStr);
+  const chartType = TraktChartTypeVO.create(chartTypeStr);
 
   return { mediaType, chartType };
 }
@@ -92,21 +70,21 @@ export function parseTraktChartUrl(url: string): {
  */
 export function convertDisplayUrlToApiUrl(displayUrl: string): string {
   const { mediaType, chartType } = parseTraktChartUrl(displayUrl);
-  return `https://api.trakt.tv/${mediaType}/${chartType}`;
+  return `https://api.trakt.tv/${mediaType.getValue()}/${chartType.getValue()}`;
 }
 
 /**
  * Build Trakt API URL for chart endpoint
- * Example: buildTraktChartApiUrl('movies', 'trending', 1, 20)
+ * Example: buildTraktChartApiUrl(mediaTypeVO, chartTypeVO, 1, 20)
  *   -> https://api.trakt.tv/movies/trending?page=1&limit=20
  */
 export function buildTraktChartApiUrl(
-  mediaType: TraktMediaType,
-  chartType: TraktChartType,
+  mediaType: TraktMediaTypeVO,
+  chartType: TraktChartTypeVO,
   page: number = 1,
   limit?: number
 ): string {
-  let apiUrl = `https://api.trakt.tv/${mediaType}/${chartType}?page=${page}`;
+  let apiUrl = `https://api.trakt.tv/${mediaType.getValue()}/${chartType.getValue()}?page=${page}`;
 
   if (limit) {
     apiUrl += `&limit=${limit}`;
@@ -123,11 +101,14 @@ export async function fetchTraktChart(
   url: string,
   maxItems: number | null,
   clientId: string
-): Promise<MediaItem[]> {
+): Promise<MediaItemDTO[]> {
   try {
     // Parse the Trakt chart URL
     const { mediaType, chartType } = parseTraktChartUrl(url);
-    logger.debug({ url, mediaType, chartType }, 'Parsed Trakt chart URL');
+    logger.debug(
+      { url, mediaType: mediaType.getValue(), chartType: chartType.getValue() },
+      'Parsed Trakt chart URL'
+    );
 
     // Build the API URL with pagination
     const limit = maxItems || 100;
@@ -159,28 +140,28 @@ export async function fetchTraktChart(
     }
 
     // Determine if this is a wrapped or simple chart type
-    const isWrappedChart = WRAPPED_CHART_TYPES.includes(chartType);
+    const isWrappedChart = chartType.isWrappedChartType();
 
     const rawItems = (await response.json()) as (TraktSimpleChartItem | TraktWrappedChartItem)[];
 
     logger.debug(
       {
         totalItems: rawItems.length,
-        mediaType,
-        chartType,
+        mediaType: mediaType.getValue(),
+        chartType: chartType.getValue(),
         isWrappedChart,
       },
       'Received items from Trakt chart API'
     );
 
-    // Transform chart items to MediaItem format
-    const mediaItems: MediaItem[] = rawItems
+    // Transform chart items to MediaItemDTO format
+    const mediaItems: MediaItemDTO[] = rawItems
       .map((item) =>
         isWrappedChart
           ? transformWrappedChartItem(item as TraktWrappedChartItem, mediaType)
           : transformSimpleChartItem(item as TraktSimpleChartItem, mediaType)
       )
-      .filter((item): item is MediaItem => item !== null);
+      .filter((item): item is MediaItemDTO => item !== null);
 
     const skippedCount = rawItems.length - mediaItems.length;
 
@@ -212,18 +193,21 @@ export async function fetchTraktChart(
  */
 function transformSimpleChartItem(
   item: TraktSimpleChartItem,
-  mediaType: TraktMediaType
-): MediaItem | null {
+  mediaType: TraktMediaTypeVO
+): MediaItemDTO | null {
   const tmdbId = item.ids.tmdb;
 
   if (!tmdbId) {
-    logger.debug({ title: item.title, year: item.year, mediaType }, 'Skipping item - no TMDB ID');
+    logger.debug(
+      { title: item.title, year: item.year, mediaType: mediaType.getValue() },
+      'Skipping item - no TMDB ID'
+    );
     return null;
   }
 
   // Map mediaType from URL format to our MediaType format
   // 'movies' -> 'movie', 'shows' -> 'tv'
-  const mappedMediaType: 'movie' | 'tv' = mediaType === 'movies' ? 'movie' : 'tv';
+  const mappedMediaType = mediaType.isMovies() ? 'movie' : ('tv' as const);
 
   return {
     title: item.title,
@@ -239,14 +223,14 @@ function transformSimpleChartItem(
  */
 function transformWrappedChartItem(
   item: TraktWrappedChartItem,
-  mediaType: TraktMediaType
-): MediaItem | null {
+  mediaType: TraktMediaTypeVO
+): MediaItemDTO | null {
   // Extract the movie or show data from the wrapper
-  const content = mediaType === 'movies' ? item.movie : item.show;
+  const content = mediaType.isMovies() ? item.movie : item.show;
 
   if (!content) {
     logger.debug(
-      { mediaType, itemKeys: Object.keys(item) },
+      { mediaType: mediaType.getValue(), itemKeys: Object.keys(item) },
       'Skipping item - no movie/show data found'
     );
     return null;
@@ -256,7 +240,7 @@ function transformWrappedChartItem(
 
   if (!tmdbId) {
     logger.debug(
-      { title: content.title, year: content.year, mediaType },
+      { title: content.title, year: content.year, mediaType: mediaType.getValue() },
       'Skipping item - no TMDB ID'
     );
     return null;
@@ -264,7 +248,7 @@ function transformWrappedChartItem(
 
   // Map mediaType from URL format to our MediaType format
   // 'movies' -> 'movie', 'shows' -> 'tv'
-  const mappedMediaType: 'movie' | 'tv' = mediaType === 'movies' ? 'movie' : 'tv';
+  const mappedMediaType = mediaType.isMovies() ? 'movie' : ('tv' as const);
 
   return {
     title: content.title,

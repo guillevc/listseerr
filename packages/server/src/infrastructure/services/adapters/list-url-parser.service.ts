@@ -1,5 +1,4 @@
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
-import { ProviderValues } from 'shared/domain/types/provider.types';
+import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type {
   IListUrlParserService,
   ParsedUrls,
@@ -8,25 +7,24 @@ import { convertDisplayUrlToApiUrl as convertTraktUrl } from '@/server/infrastru
 import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '@/server/infrastructure/services/external/trakt/chart-client';
 
 export class ListUrlParserService implements IListUrlParserService {
-  parseUrlForProvider(url: string, provider: Provider, providedDisplayUrl?: string): ParsedUrls {
-    const providerValue = provider.getValue();
-
-    switch (providerValue) {
-      case ProviderValues.TRAKT:
-        return this.parseTraktUrl(url, providedDisplayUrl);
-
-      case ProviderValues.TRAKT_CHART:
-        return this.parseTraktChartUrl(url, providedDisplayUrl);
-
-      case ProviderValues.MDBLIST:
-        return this.parseMdbListUrl(url, providedDisplayUrl);
-
-      case ProviderValues.STEVENLU:
-        return this.parseStevenLuUrl(url, providedDisplayUrl);
-
-      default:
-        throw new Error(`Unknown provider: ${providerValue}`);
+  parseUrlForProvider(url: string, provider: ProviderVO, providedDisplayUrl?: string): ParsedUrls {
+    if (provider.isTrakt()) {
+      return this.parseTraktUrl(url, providedDisplayUrl);
     }
+
+    if (provider.isTraktChart()) {
+      return this.parseTraktChartUrl(url, providedDisplayUrl);
+    }
+
+    if (provider.isMdbList()) {
+      return this.parseMdbListUrl(url, providedDisplayUrl);
+    }
+
+    if (provider.isStevenLu()) {
+      return this.parseStevenLuUrl(url, providedDisplayUrl);
+    }
+
+    throw new Error(`Unknown provider: ${provider.getValue()}`);
   }
 
   private parseTraktUrl(url: string, providedDisplayUrl?: string): ParsedUrls {

@@ -3,8 +3,8 @@ import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
-import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
+import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
 import { DomainError } from 'shared/domain/errors/domain.error';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
@@ -19,8 +19,8 @@ export class TestJellyseerrConnectionUseCase implements IUseCase<
   ): Promise<TestJellyseerrConnectionResponse> {
     // Validate input using Value Objects
     try {
-      const urlVO = JellyseerrUrl.create(command.url);
-      const apiKeyVO = JellyseerrApiKey.create(command.apiKey);
+      const urlVO = JellyseerrUrlVO.create(command.url);
+      const apiKeyVO = JellyseerrApiKeyVO.create(command.apiKey);
 
       // Delegate to external service
       return await this.connectionTester.testConnection(urlVO.getValue(), apiKeyVO.getValue());

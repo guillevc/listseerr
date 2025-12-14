@@ -1,4 +1,4 @@
-import type { MediaItem } from 'shared/domain/value-objects/media-item.value-object';
+import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 
 /**
  * Media Fetcher Service Interface (Port)
@@ -14,5 +14,5 @@ export interface IMediaFetcher {
    * @param maxItems - Maximum number of items to fetch
    * @returns Array of media items
    */
-  fetchItems(url: string, maxItems: number): Promise<MediaItem[]>;
+  fetchItems(url: string, maxItems: number): Promise<MediaItemVO[]>;
 }

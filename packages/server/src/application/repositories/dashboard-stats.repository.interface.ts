@@ -1,3 +1,6 @@
+import type { ExecutionStatusType } from 'shared/domain/value-objects/execution-status.vo';
+import type { TriggerType } from 'shared/domain/value-objects/trigger-type.vo';
+
 /**
  * Dashboard Stats Repository Interface
  *
@@ -16,8 +19,8 @@ export interface ExecutionWithListName {
   batchId: string | null;
   startedAt: Date;
   completedAt: Date | null;
-  status: 'running' | 'success' | 'error';
-  triggerType: 'manual' | 'scheduled';
+  status: ExecutionStatusType;
+  triggerType: TriggerType;
   itemsFound: number | null;
   itemsRequested: number | null;
   itemsFailed: number | null;

@@ -50,5 +50,6 @@ data/
 .cache/
 packages/client/stats.html
 
-# docs
+# claude
+.claude
 CLAUDE.draft.md

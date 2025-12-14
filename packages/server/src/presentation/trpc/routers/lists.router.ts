@@ -19,8 +19,6 @@ import type {
   ToggleListEnabledResponse,
   EnableAllListsResponse,
 } from 'shared/application/dtos/media-list/responses.dto';
-import { ProviderValues } from 'shared/domain/types/provider.types';
-
 export interface ListsRouterDeps {
   getAllMediaListsUseCase: IUseCase<GetAllMediaListsCommand, GetAllMediaListsResponse>;
   getMediaListByIdUseCase: IUseCase<GetMediaListByIdCommand, GetMediaListByIdResponse>;
@@ -36,14 +34,7 @@ const listInputSchema = z.object({
   name: z.string().min(1),
   url: z.string().url(),
   displayUrl: z.string().optional(),
-  provider: z
-    .enum([
-      ProviderValues.TRAKT,
-      ProviderValues.MDBLIST,
-      ProviderValues.TRAKT_CHART,
-      ProviderValues.STEVENLU,
-    ] as const)
-    .default(ProviderValues.TRAKT),
+  provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu'] as const).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
   processingSchedule: z.string().optional(),

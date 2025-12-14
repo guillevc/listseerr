@@ -73,9 +73,9 @@ export function ListsTable({
   const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
 
   // Check provider configurations
-  const { data: traktData } = trpc.providerConfig.get.useQuery({ provider: 'trakt' });
+  const { data: traktData } = trpc.traktConfig.get.useQuery();
   const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.providerConfig.get.useQuery({ provider: 'mdblist' });
+  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
   const mdbListConfig = mdbListData?.config;
 
   const isProviderConfigured = useCallback(

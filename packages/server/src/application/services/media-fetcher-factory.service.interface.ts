@@ -1,4 +1,4 @@
-import type { Provider } from 'shared/domain/value-objects/provider.value-object';
+import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from './media-fetcher.service.interface';
 
 /**
@@ -15,5 +15,5 @@ export interface IMediaFetcherFactory {
    * @param userId - User ID to load provider configuration for
    * @returns Media fetcher instance or null if provider not configured
    */
-  createFetcher(provider: Provider, userId: number): Promise<IMediaFetcher | null>;
+  createFetcher(provider: ProviderVO, userId: number): Promise<IMediaFetcher | null>;
 }

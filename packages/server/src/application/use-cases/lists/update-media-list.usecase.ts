@@ -3,7 +3,7 @@ import type { IListUrlParserService } from '@/server/application/services/list-u
 import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
-import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
@@ -37,7 +37,7 @@ export class UpdateMediaListUseCase implements IUseCase<
     // Handle URL and provider changes (with URL parsing)
     if (command.data.url !== undefined || command.data.provider !== undefined) {
       const providerValue = command.data.provider || list.provider.getValue();
-      const provider = Provider.create(providerValue);
+      const provider = ProviderVO.create(providerValue);
       const url = command.data.url || list.url.getValue();
 
       const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(

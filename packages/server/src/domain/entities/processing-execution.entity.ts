@@ -1,6 +1,6 @@
-import { ExecutionStatus } from 'shared/domain/value-objects/execution-status.value-object';
-import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
-import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
+import { ExecutionStatusVO } from 'shared/domain/value-objects/execution-status.vo';
+import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
 import { InvalidExecutionStatusTransitionError } from 'shared/domain/errors/processing.errors';
 /**
  * ProcessingExecution Entity
@@ -16,9 +16,9 @@ import { InvalidExecutionStatusTransitionError } from 'shared/domain/errors/proc
 export class ProcessingExecution {
   private _id: number;
   private readonly _listId: number;
-  private readonly _batchId: BatchId;
-  private _status: ExecutionStatus;
-  private readonly _triggerType: TriggerType;
+  private readonly _batchId: BatchIdVO;
+  private _status: ExecutionStatusVO;
+  private readonly _triggerType: TriggerTypeVO;
   private readonly _startedAt: Date;
   private _completedAt: Date | null;
   private _itemsFound: number;
@@ -29,9 +29,9 @@ export class ProcessingExecution {
   constructor(params: {
     id: number;
     listId: number;
-    batchId: BatchId;
-    status: ExecutionStatus;
-    triggerType: TriggerType;
+    batchId: BatchIdVO;
+    status: ExecutionStatusVO;
+    triggerType: TriggerTypeVO;
     startedAt: Date;
     completedAt: Date | null;
     itemsFound: number;
@@ -57,14 +57,14 @@ export class ProcessingExecution {
    */
   static create(props: {
     listId: number;
-    batchId: BatchId;
-    triggerType: TriggerType;
+    batchId: BatchIdVO;
+    triggerType: TriggerTypeVO;
   }): ProcessingExecution {
     return new ProcessingExecution({
       id: 0, // Will be set by repository on save
       listId: props.listId,
       batchId: props.batchId,
-      status: ExecutionStatus.running(),
+      status: ExecutionStatusVO.running(),
       triggerType: props.triggerType,
       startedAt: new Date(),
       completedAt: null,
@@ -84,15 +84,15 @@ export class ProcessingExecution {
     return this._listId;
   }
 
-  get batchId(): BatchId {
+  get batchId(): BatchIdVO {
     return this._batchId;
   }
 
-  get status(): ExecutionStatus {
+  get status(): ExecutionStatusVO {
     return this._status;
   }
 
-  get triggerType(): TriggerType {
+  get triggerType(): TriggerTypeVO {
     return this._triggerType;
   }
 
@@ -131,7 +131,7 @@ export class ProcessingExecution {
       throw new InvalidExecutionStatusTransitionError(this._status.getValue(), 'success');
     }
 
-    this._status = ExecutionStatus.success();
+    this._status = ExecutionStatusVO.success();
     this._completedAt = new Date();
     this._itemsFound = itemsFound;
     this._itemsRequested = itemsRequested;
@@ -148,7 +148,7 @@ export class ProcessingExecution {
       throw new InvalidExecutionStatusTransitionError(this._status.getValue(), 'error');
     }
 
-    this._status = ExecutionStatus.error();
+    this._status = ExecutionStatusVO.error();
     this._completedAt = new Date();
     this._errorMessage = errorMessage;
     this._itemsFound = 0;

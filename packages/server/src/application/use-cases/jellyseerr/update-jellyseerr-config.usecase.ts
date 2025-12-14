@@ -3,9 +3,9 @@ import { JellyseerrConfigMapper } from '@/server/application/mappers/jellyseerr-
 import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-object';
-import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
-import { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
+import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
@@ -27,9 +27,9 @@ export class UpdateJellyseerrConfigUseCase implements IUseCase<
       config = new JellyseerrConfig({
         id: 0, // Temporary ID, DB will assign real ID
         userId: command.userId,
-        url: JellyseerrUrl.create(command.data.url),
-        apiKey: JellyseerrApiKey.create(command.data.apiKey),
-        userIdJellyseerr: JellyseerrUserId.create(command.data.userIdJellyseerr),
+        url: JellyseerrUrlVO.create(command.data.url),
+        apiKey: JellyseerrApiKeyVO.create(command.data.apiKey),
+        userIdJellyseerr: JellyseerrUserIdVO.create(command.data.userIdJellyseerr),
         createdAt: new Date(),
         updatedAt: new Date(),
       });

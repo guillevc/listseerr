@@ -56,14 +56,15 @@
     "db:reset": "bun run --env-file .env.dev packages/server/scripts/reset.ts"
   },
   "devDependencies": {
-    "typescript": "catalog:",
-    "eslint": "catalog:",
     "@eslint/js": "catalog:",
-    "globals": "catalog:",
-    "typescript-eslint": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-react-hooks": "catalog:",
     "eslint-plugin-react-refresh": "catalog:",
+    "globals": "catalog:",
     "prettier": "catalog:",
-    "eslint-config-prettier": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

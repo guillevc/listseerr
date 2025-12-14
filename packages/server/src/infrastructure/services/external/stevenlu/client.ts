@@ -2,8 +2,8 @@ import { LoggerService } from '@/server/infrastructure/services/core/logger.serv
 import { db } from '@/server/infrastructure/db/client';
 import { providerCache } from '@/server/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
-import type { StevenLuItem, MediaItem } from './types';
-import { ProviderValues } from 'shared/domain/types/provider.types';
+import type { StevenLuItem } from './types';
+import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 
 const logger = new LoggerService('stevenlu-client');
 
@@ -17,7 +17,7 @@ const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
  * @param maxItems - Maximum number of items to return (takes first N items)
  * @returns Array of MediaItem objects
  */
-export async function fetchStevenLuList(maxItems: number | null): Promise<MediaItem[]> {
+export async function fetchStevenLuList(maxItems: number | null): Promise<MediaItemDTO[]> {
   try {
     logger.info({ maxItems }, 'Fetching StevenLu popular movies list');
 
@@ -25,7 +25,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
     const [cachedData] = await db
       .select()
       .from(providerCache)
-      .where(eq(providerCache.provider, ProviderValues.STEVENLU))
+      .where(eq(providerCache.provider, 'stevenlu'))
       .limit(1);
 
     const now = new Date();
@@ -93,13 +93,13 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
             data: dataJson,
             cachedAt: now,
           })
-          .where(eq(providerCache.provider, ProviderValues.STEVENLU));
+          .where(eq(providerCache.provider, 'stevenlu'));
 
         logger.info('Updated StevenLu cache');
       } else {
         // Insert new cache entry
         await db.insert(providerCache).values({
-          provider: ProviderValues.STEVENLU,
+          provider: 'stevenlu',
           data: dataJson,
           cachedAt: now,
         });
@@ -122,10 +122,10 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
       );
     }
 
-    // Transform to MediaItem format
+    // Transform to MediaItemDTO format
     const mediaItems = limitedItems
       .map(transformStevenLuItem)
-      .filter((item): item is MediaItem => item !== null);
+      .filter((item): item is MediaItemDTO => item !== null);
 
     logger.info(
       {
@@ -142,7 +142,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
   }
 }
 
-function transformStevenLuItem(item: StevenLuItem): MediaItem | null {
+function transformStevenLuItem(item: StevenLuItem): MediaItemDTO | null {
   // Skip items without TMDB ID (required for Jellyseerr)
   if (!item.tmdb_id) {
     return null;

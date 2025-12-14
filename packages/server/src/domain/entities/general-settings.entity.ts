@@ -1,5 +1,5 @@
 import type { Nullable } from 'shared/domain/types/utility.types';
-import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
+import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
 
 /**
  * GeneralSettings Entity - Domain Model with Rich Behavior
@@ -16,7 +16,7 @@ export class GeneralSettings {
   // Private state - encapsulated
   private readonly _id: number;
   private readonly _userId: number;
-  private _timezone: Timezone;
+  private _timezone: TimezoneVO;
   private _automaticProcessingEnabled: boolean;
   private _automaticProcessingSchedule: Nullable<string>;
   private readonly _createdAt: Date;
@@ -25,7 +25,7 @@ export class GeneralSettings {
   constructor(params: {
     id: number;
     userId: number;
-    timezone: Timezone;
+    timezone: TimezoneVO;
     automaticProcessingEnabled: boolean;
     automaticProcessingSchedule: Nullable<string>;
     createdAt: Date;
@@ -49,7 +49,7 @@ export class GeneralSettings {
     return this._userId;
   }
 
-  get timezone(): Timezone {
+  get timezone(): TimezoneVO {
     return this._timezone;
   }
 
@@ -75,7 +75,7 @@ export class GeneralSettings {
    * Change the timezone
    * Accepts a validated Timezone Value Object
    */
-  changeTimezone(newTimezone: Timezone): void {
+  changeTimezone(newTimezone: TimezoneVO): void {
     this._timezone = newTimezone;
     this._updatedAt = new Date();
   }
