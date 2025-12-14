@@ -7,7 +7,6 @@ import { httpBatchLink } from '@trpc/client';
 import { trpc } from './lib/trpc';
 import { RouterProvider } from '@tanstack/react-router';
 import { router } from './lib/router';
-import { config } from './config';
 
 export function Root() {
   const [queryClient] = useState(() => new QueryClient());
@@ -15,7 +14,7 @@ export function Root() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `${config.apiUrl}/trpc`,
+          url: '/trpc',
         }),
       ],
     })

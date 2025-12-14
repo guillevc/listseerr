@@ -27,6 +27,10 @@ export default defineConfig({
     strictPort: false,
     open: false,
     host: true,
+    proxy: {
+      '/trpc': 'http://localhost:3000',
+      '/health': 'http://localhost:3000',
+    },
   },
   build: {
     outDir: '../../dist/client',

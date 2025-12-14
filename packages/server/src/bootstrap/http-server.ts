@@ -18,7 +18,7 @@ export function createHttpApp(): Hono {
     app.use(
       '/*',
       cors({
-        origin: 'http://localhost:5173', // Vite dev server
+        origin: true, // Allow any origin in development
         credentials: true,
       })
     );
