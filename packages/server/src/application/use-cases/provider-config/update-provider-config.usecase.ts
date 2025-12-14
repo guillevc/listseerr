@@ -1,4 +1,5 @@
 import type { IProviderConfigRepository } from '@/server/application/repositories/provider-config.repository.interface';
+import { ProviderConfigMapper } from '@/server/application/mappers/provider-config.mapper';
 import type { UpdateProviderConfigCommand } from 'shared/application/dtos/provider-config/commands.dto';
 import type { UpdateProviderConfigResponse } from 'shared/application/dtos/provider-config/responses.dto';
 import { ProviderConfig } from '@/server/domain/entities/provider-config.entity';
@@ -12,7 +13,6 @@ import {
 } from 'shared/domain/errors/provider-config.errors';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateProviderConfigUseCase implements IUseCase<
   UpdateProviderConfigCommand,
@@ -23,7 +23,6 @@ export class UpdateProviderConfigUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('provider:update-config')
   async execute(command: UpdateProviderConfigCommand): Promise<UpdateProviderConfigResponse> {
     // 1. Validate and create provider type VO
     const provider = Provider.create(command.provider);
@@ -65,7 +64,7 @@ export class UpdateProviderConfigUseCase implements IUseCase<
     );
 
     // 6. Return Response DTO
-    return { config: savedConfig.toDTO() };
+    return { config: ProviderConfigMapper.toDTO(savedConfig) };
   }
 
   /**

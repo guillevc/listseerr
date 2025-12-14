@@ -1,4 +1,3 @@
-import type { GeneralSettingsDTO } from 'shared/application/dtos/core/general-settings.dto';
 import type { Nullable } from 'shared/domain/types/utility.types';
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 
@@ -8,7 +7,7 @@ import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
  * This entity follows DDD principles:
  * - Private state (encapsulation)
  * - Mutation methods enforce business rules (behavioral)
- * - toDTO() method for crossing application boundary
+ * - Mappers in Application layer convert to DTOs
  *
  * Entities are mutable through their behavioral methods,
  * not through direct property access.
@@ -140,21 +139,5 @@ export class GeneralSettings {
    */
   canEnableAutomaticProcessing(): boolean {
     return this.hasValidSchedule();
-  }
-
-  /**
-   * Convert entity to DTO for crossing application boundary
-   * This is the ONLY way entities should leave the domain layer
-   */
-  toDTO(): GeneralSettingsDTO {
-    return {
-      id: this._id,
-      userId: this._userId,
-      timezone: this._timezone.getValue(),
-      automaticProcessingEnabled: this._automaticProcessingEnabled,
-      automaticProcessingSchedule: this._automaticProcessingSchedule,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-    };
   }
 }

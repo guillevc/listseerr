@@ -4,6 +4,8 @@ import * as schema from '@/server/infrastructure/db/schema';
 // Infrastructure layer
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { HttpJellyseerrConnectionTester } from '@/server/infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 // Application layer - Use cases
 import { GetJellyseerrConfigUseCase } from '@/server/application/use-cases/jellyseerr/get-jellyseerr-config.usecase';
@@ -25,9 +27,6 @@ import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
-
-// Infrastructure services (existing)
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for Jellyseerr Config Domain
@@ -67,23 +66,29 @@ export class JellyseerrConfigContainer {
     this.connectionTester = new HttpJellyseerrConnectionTester();
     this.logger = new LoggerService('jellyseerr-config');
 
-    // 2. Instantiate application layer (use cases) with injected dependencies
-    this.getJellyseerrConfigUseCase = new GetJellyseerrConfigUseCase(
-      this.jellyseerrConfigRepository
+    // 2. Instantiate use cases wrapped with logging decorator
+    this.getJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
+      new GetJellyseerrConfigUseCase(this.jellyseerrConfigRepository),
+      new LoggerService('jellyseerr'),
+      'GetJellyseerrConfigUseCase'
     );
 
-    this.updateJellyseerrConfigUseCase = new UpdateJellyseerrConfigUseCase(
-      this.jellyseerrConfigRepository,
-      this.logger
+    this.updateJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
+      new UpdateJellyseerrConfigUseCase(this.jellyseerrConfigRepository, this.logger),
+      new LoggerService('jellyseerr'),
+      'UpdateJellyseerrConfigUseCase'
     );
 
-    this.testJellyseerrConnectionUseCase = new TestJellyseerrConnectionUseCase(
-      this.connectionTester
+    this.testJellyseerrConnectionUseCase = new LoggingUseCaseDecorator(
+      new TestJellyseerrConnectionUseCase(this.connectionTester),
+      new LoggerService('jellyseerr'),
+      'TestJellyseerrConnectionUseCase'
     );
 
-    this.deleteJellyseerrConfigUseCase = new DeleteJellyseerrConfigUseCase(
-      this.jellyseerrConfigRepository,
-      this.logger
+    this.deleteJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
+      new DeleteJellyseerrConfigUseCase(this.jellyseerrConfigRepository, this.logger),
+      new LoggerService('jellyseerr'),
+      'DeleteJellyseerrConfigUseCase'
     );
   }
 }

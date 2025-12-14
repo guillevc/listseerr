@@ -2,7 +2,6 @@ import type { IMediaListRepository } from '@/server/application/repositories/med
 import type { GetAllMediaListsCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { GetAllMediaListsResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class GetAllMediaListsUseCase implements IUseCase<
   GetAllMediaListsCommand,
@@ -10,7 +9,6 @@ export class GetAllMediaListsUseCase implements IUseCase<
 > {
   constructor(private readonly mediaListRepository: IMediaListRepository) {}
 
-  @LogExecution('lists:get-all')
   async execute(command: GetAllMediaListsCommand): Promise<GetAllMediaListsResponse> {
     const listsFromRepo = await this.mediaListRepository.findAllWithLastProcessed(command.userId);
 

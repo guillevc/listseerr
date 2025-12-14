@@ -2,11 +2,11 @@ import type { IMediaListRepository } from '@/server/application/repositories/med
 import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
 import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/logger.interface';
+import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateMediaListUseCase implements IUseCase<
   UpdateMediaListCommand,
@@ -19,7 +19,6 @@ export class UpdateMediaListUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('lists:update')
   async execute(command: UpdateMediaListCommand): Promise<UpdateMediaListResponse> {
     // 1. Load entity from repository
     const list = await this.mediaListRepository.findById(command.id, command.userId);
@@ -97,6 +96,6 @@ export class UpdateMediaListUseCase implements IUseCase<
     }
 
     // 6. Convert entity to Response DTO
-    return { list: updatedList.toDTO() };
+    return { list: MediaListMapper.toDTO(updatedList) };
   }
 }

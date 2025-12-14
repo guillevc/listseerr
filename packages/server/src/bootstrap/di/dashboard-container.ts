@@ -6,6 +6,8 @@ import { DrizzleDashboardStatsRepository } from '@/server/infrastructure/reposit
 import { JellyseerrStatsAdapter } from '@/server/infrastructure/services/adapters/jellyseerr-stats.adapter';
 import { SchedulerInfoAdapter } from '@/server/infrastructure/services/adapters/scheduler-info.adapter';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 // Use Cases
 import { GetDashboardStatsUseCase } from '@/server/application/use-cases/dashboard/get-dashboard-stats.usecase';
@@ -63,17 +65,23 @@ export class DashboardContainer {
     this.jellyseerrStatsService = new JellyseerrStatsAdapter();
     this.schedulerInfoService = new SchedulerInfoAdapter();
 
-    // 2. Instantiate use cases with dependencies injected
-    this.getDashboardStatsUseCase = new GetDashboardStatsUseCase(
-      this.dashboardStatsRepository,
-      this.schedulerInfoService
+    // 2. Instantiate use cases wrapped with logging decorator
+    this.getDashboardStatsUseCase = new LoggingUseCaseDecorator(
+      new GetDashboardStatsUseCase(this.dashboardStatsRepository, this.schedulerInfoService),
+      new LoggerService('dashboard'),
+      'GetDashboardStatsUseCase'
     );
 
-    this.getRecentActivityUseCase = new GetRecentActivityUseCase(this.dashboardStatsRepository);
+    this.getRecentActivityUseCase = new LoggingUseCaseDecorator(
+      new GetRecentActivityUseCase(this.dashboardStatsRepository),
+      new LoggerService('dashboard'),
+      'GetRecentActivityUseCase'
+    );
 
-    this.getPendingRequestsUseCase = new GetPendingRequestsUseCase(
-      this.jellyseerrConfigRepository,
-      this.jellyseerrStatsService
+    this.getPendingRequestsUseCase = new LoggingUseCaseDecorator(
+      new GetPendingRequestsUseCase(this.jellyseerrConfigRepository, this.jellyseerrStatsService),
+      new LoggerService('dashboard'),
+      'GetPendingRequestsUseCase'
     );
   }
 }

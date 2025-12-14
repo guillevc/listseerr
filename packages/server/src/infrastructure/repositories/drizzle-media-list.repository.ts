@@ -6,6 +6,9 @@ import { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { Nullable } from 'shared/domain/types/utility.types';
 import type { ProviderType } from 'shared/domain/types/provider.types';
+import { ListName } from 'shared/domain/value-objects/list-name.value-object';
+import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
+import { Provider } from 'shared/domain/value-objects/provider.value-object';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -151,7 +154,20 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
    * Convert Drizzle row to MediaList domain entity
    */
   private toDomain(row: typeof mediaLists.$inferSelect): MediaList {
-    return new MediaList(this.toParams(row));
+    const params = this.toParams(row);
+    return new MediaList({
+      id: params.id,
+      userId: params.userId,
+      name: ListName.create(params.name),
+      url: ListUrl.create(params.url),
+      displayUrl: params.displayUrl,
+      provider: Provider.create(params.provider),
+      enabled: params.enabled,
+      maxItems: params.maxItems,
+      processingSchedule: params.processingSchedule,
+      createdAt: params.createdAt,
+      updatedAt: params.updatedAt,
+    });
   }
 
   /**

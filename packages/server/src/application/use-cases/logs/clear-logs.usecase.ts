@@ -2,7 +2,6 @@ import type { ILogBufferService } from '@/server/application/services/log-buffer
 import type { ClearLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type { ClearLogsResponse } from 'shared/application/dtos/logs/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * ClearLogsUseCase
@@ -16,7 +15,6 @@ import { LogExecution } from '@/server/infrastructure/services/core/decorators/l
 export class ClearLogsUseCase implements IUseCase<ClearLogsCommand, ClearLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
-  @LogExecution('logs:clear')
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _command: ClearLogsCommand

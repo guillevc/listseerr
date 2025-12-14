@@ -1,22 +1,26 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { db } from '@/server/infrastructure/db/client';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { DomainError } from 'shared/domain/errors/domain.error';
 
-// Create context for each request
-export const createContext = async (opts: FetchCreateContextFnOptions) => {
+/**
+ * Create tRPC context for each request.
+ * Database access is handled via DI containers, not context.
+ */
+export async function createContext(opts: FetchCreateContextFnOptions) {
   // TODO: Extract from session when authentication is implemented
   // For now, default to userId: 1
   const userId = 1; // Future: opts.session?.user?.id ?? 1
 
   return {
-    db,
     req: opts.req,
     userId,
   };
-};
+}
 
-export type Context = Awaited<ReturnType<typeof createContext>>;
+export type Context = {
+  req: Request;
+  userId: number;
+};
 
 // Initialize tRPC with error handling
 const t = initTRPC.context<Context>().create({

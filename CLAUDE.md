@@ -17,10 +17,10 @@ The system adheres to the concentric layer model on the server and uses a peer-b
 
 #### B. Outer Layers (Server)
 
-| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                        | **Dependency Rule**                                                                                      |
-| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`. | Depends on **Application** and **Domain** layers.                                                        |
-| **4. Presentation/API** | Defines router factory functions. Pure presentation logic only.        | `routers/*.router.ts` (factory functions), `context.ts` (tRPC context).   | Depends on **Application** layer only. Can import from `shared/application/` and `shared/presentation/`. |
+| **Layer Name**          | **Responsibility**                                                     | **Key Components**                                                        | **Dependency Rule**                                                                |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **3. Infrastructure**   | Implements interfaces (Adapters). Handles concrete technology and I/O. | `sqlite-user.repository.ts` (using **Drizzle ORM**), `drizzle.client.ts`. | Depends on **Application** and **Domain** layers.                                  |
+| **4. Presentation/API** | Defines router factory functions. Pure presentation logic only.        | `routers/*.router.ts` (factory functions), `context.ts` (tRPC context).   | Depends on **Application** layer only. Can import from `shared/application/` only. |
 
 #### C. Composition Root (Bootstrap)
 
@@ -38,17 +38,20 @@ The Composition Root is **not a layer** in the Onion model - it's the one place 
 
 #### D. Layer Dependency Matrix
 
-| **Server Layer** | **Can Import From (Server)** | **Can Import From (Shared)**                  |
-| ---------------- | ---------------------------- | --------------------------------------------- |
-| Domain           | Nothing                      | `shared/domain/`                              |
-| Application      | Domain                       | `shared/domain/`, `shared/application/`       |
-| Infrastructure   | Application, Domain          | `shared/domain/`, `shared/application/`       |
-| Presentation     | Application only             | `shared/application/`, `shared/presentation/` |
-| Bootstrap        | All layers                   | All shared layers                             |
+| **Server Layer** | **Can Import From (Server)** | **Can Import From (Shared)**            |
+| ---------------- | ---------------------------- | --------------------------------------- |
+| Domain           | Nothing                      | `shared/domain/`                        |
+| Application      | Domain                       | `shared/domain/`, `shared/application/` |
+| Infrastructure   | Application, Domain          | `shared/domain/`, `shared/application/` |
+| Presentation     | Application only             | `shared/application/` only              |
+| Bootstrap        | All layers                   | All shared layers                       |
 
 **Key Constraints:**
 
 - Presentation **cannot** import from: `@/server/infrastructure/`, `@/server/bootstrap/`, `@/server/domain/`, `shared/domain/`
+- Infrastructure **cannot** import from: `@/server/presentation/`, `@/server/bootstrap/`
+- Application **cannot** import from: `@/server/infrastructure/`, `@/server/presentation/`, `@/server/bootstrap/`
+- Domain **cannot** import from any `@/server/` layer
 - Each layer defines its own dependency interfaces; concrete implementations are wired in Bootstrap
 
 ---
@@ -340,7 +343,7 @@ This section strictly defines the responsibilities and dependencies of the Appli
 | **Service Interface (Port)**            | **Application**    | A contract required by a Use Case for external I/O (e.g., `INotificationService`) or specialized Domain logic (e.g., `IDuplicationChecker`).                  | **NO Dependencies on any other layer.**                                                                |
 | **Repository Interface (Port)**         | **Application**    | A contract required by a Use Case for fetching and persisting Entities (e.g., `IUserRepository`).                                                             | **NO Dependencies on any other layer.**                                                                |
 | **Service Implementation (Adapter)**    | **Infrastructure** | Implements a **Service Interface**. Handles external I/O (e.g., fetch, API client), cross-cutting tasks (e.g., encryption), or scheduling.                    | Depends on the **Application** interface it implements and necessary external libraries.               |
-| **Repository Implementation (Adapter)** | **Infrastructure** | Implements a **Repository Interface**. Handles **Database/ORM mapping** (e.g., Drizzle/SQL) to convert between the Entity (Domain) and the persistence layer. | Depends on **Drizzle ORM** (Infrastructure) and the **Domain Entity** it persists.                     |
+| **Repository Implementation (Adapter)** | **Infrastructure** | Implements a **Repository Interface**. Handles **Database/ORM mapping** (e.g., Drizzle/SQL) to convert between the Entity (Domain) and the persistence layer. | Depends on **Application** interfaces and **Domain** entities it persists.                             |
 
 #### E. Infrastructure Services Organization (Adapters vs Core)
 

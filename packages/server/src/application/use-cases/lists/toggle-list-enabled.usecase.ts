@@ -1,10 +1,10 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/logger.interface';
+import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import type { ToggleListEnabledCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { ToggleListEnabledResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class ToggleListEnabledUseCase implements IUseCase<
   ToggleListEnabledCommand,
@@ -16,7 +16,6 @@ export class ToggleListEnabledUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('lists:toggle-enabled')
   async execute(command: ToggleListEnabledCommand): Promise<ToggleListEnabledResponse> {
     // 1. Load entity
     const list = await this.mediaListRepository.findById(command.id, command.userId);
@@ -51,6 +50,6 @@ export class ToggleListEnabledUseCase implements IUseCase<
     }
 
     // 6. Convert entity to Response DTO
-    return { list: updatedList.toDTO() };
+    return { list: MediaListMapper.toDTO(updatedList) };
   }
 }

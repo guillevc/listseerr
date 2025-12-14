@@ -4,7 +4,6 @@ import type { ILogger } from '@/server/application/services/logger.interface';
 import type { EnableAllListsCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { EnableAllListsResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class EnableAllListsUseCase implements IUseCase<
   EnableAllListsCommand,
@@ -16,7 +15,6 @@ export class EnableAllListsUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('lists:enable-all')
   async execute(command: EnableAllListsCommand): Promise<EnableAllListsResponse> {
     // 1. Enable all lists
     await this.mediaListRepository.enableAll(command.userId);

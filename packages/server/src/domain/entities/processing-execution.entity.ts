@@ -2,8 +2,6 @@ import { ExecutionStatus } from 'shared/domain/value-objects/execution-status.va
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
 import { InvalidExecutionStatusTransitionError } from 'shared/domain/errors/processing.errors';
-import type { ExecutionHistoryDTO } from 'shared/application/dtos/core/execution-history.dto';
-
 /**
  * ProcessingExecution Entity
  *
@@ -182,24 +180,5 @@ export class ProcessingExecution {
     }
 
     return this._completedAt.getTime() - this._startedAt.getTime();
-  }
-
-  /**
-   * Convert entity to DTO for crossing application boundary
-   */
-  toDTO(): ExecutionHistoryDTO {
-    return {
-      id: this._id,
-      listId: this._listId,
-      batchId: this._batchId.getValue(),
-      status: this._status.getValue(),
-      triggerType: this._triggerType.getValue(),
-      startedAt: this._startedAt,
-      completedAt: this._completedAt,
-      itemsFound: this._itemsFound,
-      itemsRequested: this._itemsRequested,
-      itemsFailed: this._itemsFailed,
-      errorMessage: this._errorMessage,
-    };
   }
 }

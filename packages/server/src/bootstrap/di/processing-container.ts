@@ -10,6 +10,7 @@ import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repos
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 
 // Use Cases
 import { ProcessListUseCase } from '@/server/application/use-cases/processing/process-list.usecase';
@@ -85,29 +86,39 @@ export class ProcessingContainer {
 
     this.logger = new LoggerService('processing');
 
-    // 3. Instantiate use cases with dependencies injected
-    this.processListUseCase = new ProcessListUseCase(
-      this.mediaListRepository,
-      this.jellyseerrConfigRepository,
-      this.executionHistoryRepository,
-      this.cacheRepository,
-      this.mediaFetcherFactory,
-      this.jellyseerrClient,
-      this.logger
+    // 3. Instantiate use cases wrapped with logging decorator
+    this.processListUseCase = new LoggingUseCaseDecorator(
+      new ProcessListUseCase(
+        this.mediaListRepository,
+        this.jellyseerrConfigRepository,
+        this.executionHistoryRepository,
+        this.cacheRepository,
+        this.mediaFetcherFactory,
+        this.jellyseerrClient,
+        this.logger
+      ),
+      new LoggerService('processing'),
+      'ProcessListUseCase'
     );
 
-    this.processBatchUseCase = new ProcessBatchUseCase(
-      this.mediaListRepository,
-      this.jellyseerrConfigRepository,
-      this.executionHistoryRepository,
-      this.cacheRepository,
-      this.mediaFetcherFactory,
-      this.jellyseerrClient,
-      this.logger
+    this.processBatchUseCase = new LoggingUseCaseDecorator(
+      new ProcessBatchUseCase(
+        this.mediaListRepository,
+        this.jellyseerrConfigRepository,
+        this.executionHistoryRepository,
+        this.cacheRepository,
+        this.mediaFetcherFactory,
+        this.jellyseerrClient,
+        this.logger
+      ),
+      new LoggerService('processing'),
+      'ProcessBatchUseCase'
     );
 
-    this.getExecutionHistoryUseCase = new GetExecutionHistoryUseCase(
-      this.executionHistoryRepository
+    this.getExecutionHistoryUseCase = new LoggingUseCaseDecorator(
+      new GetExecutionHistoryUseCase(this.executionHistoryRepository),
+      new LoggerService('processing'),
+      'GetExecutionHistoryUseCase'
     );
   }
 }

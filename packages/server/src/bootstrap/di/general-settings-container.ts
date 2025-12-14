@@ -3,6 +3,9 @@ import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '@/server/infrastructure/repositories/drizzle-general-settings.repository';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
+import { scheduler } from '@/server/infrastructure/services/core/scheduler.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 // Application layer - Use cases
 import { GetGeneralSettingsUseCase } from '@/server/application/use-cases/settings/get-general-settings.usecase';
@@ -16,10 +19,6 @@ import type {
   GetGeneralSettingsResponse,
   UpdateGeneralSettingsResponse,
 } from 'shared/application/dtos/general-settings/responses.dto';
-
-// Infrastructure services (existing)
-import { scheduler } from '@/server/infrastructure/services/core/scheduler.service';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 /**
  * Dependency Injection Container for General Settings Domain
@@ -52,12 +51,16 @@ export class GeneralSettingsContainer {
     this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
     this.logger = new LoggerService('general-settings');
 
-    // 2. Instantiate application layer (use cases) with injected dependencies
-    this.getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(this.generalSettingsRepository);
-    this.updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(
-      this.generalSettingsRepository,
-      scheduler, // Existing scheduler singleton
-      this.logger
+    // 2. Instantiate use cases wrapped with logging decorator
+    this.getGeneralSettingsUseCase = new LoggingUseCaseDecorator(
+      new GetGeneralSettingsUseCase(this.generalSettingsRepository),
+      new LoggerService('settings'),
+      'GetGeneralSettingsUseCase'
+    );
+    this.updateGeneralSettingsUseCase = new LoggingUseCaseDecorator(
+      new UpdateGeneralSettingsUseCase(this.generalSettingsRepository, scheduler, this.logger),
+      new LoggerService('settings'),
+      'UpdateGeneralSettingsUseCase'
     );
   }
 }

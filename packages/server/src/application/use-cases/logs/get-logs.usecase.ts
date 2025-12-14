@@ -2,7 +2,6 @@ import type { ILogBufferService } from '@/server/application/services/log-buffer
 import type { GetLogsCommand } from 'shared/application/dtos/logs/commands.dto';
 import type { GetLogsResponse } from 'shared/application/dtos/logs/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetLogsUseCase
@@ -16,7 +15,6 @@ import { LogExecution } from '@/server/infrastructure/services/core/decorators/l
 export class GetLogsUseCase implements IUseCase<GetLogsCommand, GetLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
-  @LogExecution('logs:get')
   async execute(command: GetLogsCommand): Promise<GetLogsResponse> {
     // Delegate to infrastructure service
     const logs = this.logBufferService.getLogs(

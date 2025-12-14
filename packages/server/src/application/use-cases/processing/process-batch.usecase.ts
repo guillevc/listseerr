@@ -4,11 +4,11 @@ import type { IExecutionHistoryRepository } from '@/server/application/repositor
 import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
+import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessBatchCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessBatchResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
@@ -44,7 +44,6 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('processing:batch')
   async execute(command: ProcessBatchCommand): Promise<ProcessBatchResponse> {
     this.logger.info({ triggerType: command.triggerType }, 'Starting batch processing');
 
@@ -130,7 +129,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       totalItemsFound,
       itemsRequested: results.successful.length,
       itemsFailed: results.failed.length,
-      executions: executions.map((e) => e.toDTO()),
+      executions: executions.map((e) => ProcessingExecutionMapper.toDTO(e)),
     };
   }
 

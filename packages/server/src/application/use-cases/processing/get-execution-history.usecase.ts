@@ -1,8 +1,8 @@
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
+import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { GetExecutionHistoryCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { GetExecutionHistoryResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetExecutionHistoryUseCase
@@ -17,7 +17,6 @@ export class GetExecutionHistoryUseCase implements IUseCase<
 > {
   constructor(private readonly executionHistoryRepository: IExecutionHistoryRepository) {}
 
-  @LogExecution('processing:history')
   async execute(command: GetExecutionHistoryCommand): Promise<GetExecutionHistoryResponse> {
     // Fetch execution history (repository validates userId ownership via JOIN)
     const executions = await this.executionHistoryRepository.findByListId(
@@ -28,7 +27,7 @@ export class GetExecutionHistoryUseCase implements IUseCase<
 
     // Convert to DTOs
     return {
-      executions: executions.map((e) => e.toDTO()),
+      executions: executions.map((e) => ProcessingExecutionMapper.toDTO(e)),
     };
   }
 }

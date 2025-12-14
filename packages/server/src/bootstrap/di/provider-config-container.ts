@@ -2,6 +2,8 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
 import { DrizzleProviderConfigRepository } from '@/server/infrastructure/repositories/drizzle-provider-config.repository';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 import { GetProviderConfigUseCase } from '@/server/application/use-cases/provider-config/get-provider-config.usecase';
 import { UpdateProviderConfigUseCase } from '@/server/application/use-cases/provider-config/update-provider-config.usecase';
 import { DeleteProviderConfigUseCase } from '@/server/application/use-cases/provider-config/delete-provider-config.usecase';
@@ -16,7 +18,6 @@ import type {
   UpdateProviderConfigResponse,
   DeleteProviderConfigResponse,
 } from 'shared/application/dtos/provider-config/responses.dto';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 import { env } from '@/server/env';
 
 /**
@@ -61,15 +62,21 @@ export class ProviderConfigContainer {
     this.providerConfigRepository = new DrizzleProviderConfigRepository(db, encryptionService);
     this.logger = new LoggerService('provider-config');
 
-    // 3. Instantiate use cases with dependencies injected
-    this.getProviderConfigUseCase = new GetProviderConfigUseCase(this.providerConfigRepository);
-    this.updateProviderConfigUseCase = new UpdateProviderConfigUseCase(
-      this.providerConfigRepository,
-      this.logger
+    // 3. Instantiate use cases wrapped with logging decorator
+    this.getProviderConfigUseCase = new LoggingUseCaseDecorator(
+      new GetProviderConfigUseCase(this.providerConfigRepository),
+      new LoggerService('provider-config'),
+      'GetProviderConfigUseCase'
     );
-    this.deleteProviderConfigUseCase = new DeleteProviderConfigUseCase(
-      this.providerConfigRepository,
-      this.logger
+    this.updateProviderConfigUseCase = new LoggingUseCaseDecorator(
+      new UpdateProviderConfigUseCase(this.providerConfigRepository, this.logger),
+      new LoggerService('provider-config'),
+      'UpdateProviderConfigUseCase'
+    );
+    this.deleteProviderConfigUseCase = new LoggingUseCaseDecorator(
+      new DeleteProviderConfigUseCase(this.providerConfigRepository, this.logger),
+      new LoggerService('provider-config'),
+      'DeleteProviderConfigUseCase'
     );
   }
 }

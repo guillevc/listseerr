@@ -3,11 +3,13 @@ import type { IListUrlParserService } from '@/server/application/services/list-u
 import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
+import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { ListName } from 'shared/domain/value-objects/list-name.value-object';
+import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class CreateMediaListUseCase implements IUseCase<
   CreateMediaListCommand,
@@ -20,7 +22,6 @@ export class CreateMediaListUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('lists:create')
   async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
     // 1. Validate provider and parse URLs
     const provider = Provider.create(command.provider);
@@ -34,10 +35,10 @@ export class CreateMediaListUseCase implements IUseCase<
     const list = new MediaList({
       id: 0,
       userId: command.userId,
-      name: command.name,
-      url: apiUrl,
+      name: ListName.create(command.name),
+      url: ListUrl.create(apiUrl),
       displayUrl,
-      provider: command.provider,
+      provider,
       enabled: command.enabled,
       maxItems: command.maxItems,
       processingSchedule: command.processingSchedule,
@@ -69,6 +70,6 @@ export class CreateMediaListUseCase implements IUseCase<
     }
 
     // 6. Convert entity to Response DTO
-    return { list: savedList.toDTO() };
+    return { list: MediaListMapper.toDTO(savedList) };
   }
 }

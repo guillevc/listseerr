@@ -4,15 +4,13 @@ import type { JellyseerrUserId } from 'shared/domain/value-objects/jellyseerr-us
 import { JellyseerrUrl as JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.value-object';
 import { JellyseerrApiKey as JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { JellyseerrUserId as JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.value-object';
-import type { JellyseerrConfigDTO } from 'shared/application/dtos/core/jellyseerr-config.dto';
-
 /**
  * JellyseerrConfig Entity - Domain Model with Rich Behavior
  *
  * This entity follows DDD principles:
  * - Private state (encapsulation)
  * - Mutation methods enforce business rules (behavioral)
- * - toDTO() method for crossing application boundary
+ * - Mappers in Application layer convert to DTOs
  */
 export class JellyseerrConfig {
   // Private state - encapsulated
@@ -120,21 +118,5 @@ export class JellyseerrConfig {
    */
   getStatusEndpoint(): string {
     return `${this._url.getValue()}/api/v1/status`;
-  }
-
-  /**
-   * Convert entity to DTO for crossing application boundary
-   * This is the ONLY way entities should leave the domain layer
-   */
-  toDTO(): JellyseerrConfigDTO {
-    return {
-      id: this._id,
-      userId: this._userId,
-      url: this._url.getValue(),
-      apiKey: this._apiKey.getValue(),
-      userIdJellyseerr: this._userIdJellyseerr.getValue(),
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-    };
   }
 }

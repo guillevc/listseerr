@@ -1,8 +1,10 @@
-import { ListName } from 'shared/domain/value-objects/list-name.value-object';
-import { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
-import { Provider } from 'shared/domain/value-objects/provider.value-object';
+import type { ListName } from 'shared/domain/value-objects/list-name.value-object';
+import type { ListUrl } from 'shared/domain/value-objects/list-url.value-object';
+import type { Provider } from 'shared/domain/value-objects/provider.value-object';
+import { ListName as ListNameVO } from 'shared/domain/value-objects/list-name.value-object';
+import { ListUrl as ListUrlVO } from 'shared/domain/value-objects/list-url.value-object';
+import { Provider as ProviderVO } from 'shared/domain/value-objects/provider.value-object';
 import type { ProviderType } from 'shared/domain/types/provider.types';
-import type { MediaListDTO } from 'shared/application/dtos/core/media-list.dto';
 import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
@@ -12,7 +14,7 @@ import type { Nullable } from 'shared/domain/types/utility.types';
  * - Private state (encapsulation)
  * - Mutation methods enforce business rules (behavioral)
  * - Value Objects for domain concepts (ListName, ListUrl, Provider)
- * - toDTO() method for crossing application boundary
+ * - Mappers in Application layer convert to DTOs
  *
  * Entities are mutable through their behavioral methods,
  * not through direct property access.
@@ -34,10 +36,10 @@ export class MediaList {
   constructor(params: {
     id: number;
     userId: number;
-    name: string;
-    url: string;
+    name: ListName;
+    url: ListUrl;
     displayUrl: string;
-    provider: ProviderType;
+    provider: Provider;
     enabled: boolean;
     maxItems: number;
     processingSchedule: Nullable<string>;
@@ -46,10 +48,10 @@ export class MediaList {
   }) {
     this._id = params.id;
     this._userId = params.userId;
-    this._name = ListName.create(params.name);
-    this._url = ListUrl.create(params.url);
+    this._name = params.name;
+    this._url = params.url;
     this._displayUrl = params.displayUrl;
-    this._provider = Provider.create(params.provider);
+    this._provider = params.provider;
     this._enabled = params.enabled;
     this._maxItems = params.maxItems;
     this._processingSchedule = params.processingSchedule;
@@ -109,7 +111,7 @@ export class MediaList {
    * Validates the new name via ListName VO
    */
   changeName(newName: string): void {
-    this._name = ListName.create(newName);
+    this._name = ListNameVO.create(newName);
     this._updatedAt = new Date();
   }
 
@@ -118,7 +120,7 @@ export class MediaList {
    * Validates the new URL via ListUrl VO
    */
   changeUrl(newUrl: string): void {
-    this._url = ListUrl.create(newUrl);
+    this._url = ListUrlVO.create(newUrl);
     this._updatedAt = new Date();
   }
 
@@ -135,7 +137,7 @@ export class MediaList {
    * Validates the new provider via Provider VO
    */
   changeProvider(newProvider: ProviderType): void {
-    this._provider = Provider.create(newProvider);
+    this._provider = ProviderVO.create(newProvider);
     this._updatedAt = new Date();
   }
 
@@ -213,26 +215,5 @@ export class MediaList {
    */
   requiresSchedulerReload(changes: { processingSchedule?: unknown; enabled?: unknown }): boolean {
     return changes.processingSchedule !== undefined || changes.enabled !== undefined;
-  }
-
-  /**
-   * Convert entity to DTO for crossing application boundary
-   * Unwraps all Value Objects to primitives
-   * This is the ONLY way entities should leave the domain layer
-   */
-  toDTO(): MediaListDTO {
-    return {
-      id: this._id,
-      userId: this._userId,
-      name: this._name.getValue(), // Unwrap VO
-      url: this._url.getValue(), // Unwrap VO
-      displayUrl: this._displayUrl,
-      provider: this._provider.getValue(), // Unwrap VO
-      enabled: this._enabled,
-      maxItems: this._maxItems,
-      processingSchedule: this._processingSchedule, // Already string | null
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-    };
   }
 }

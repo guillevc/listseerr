@@ -5,8 +5,6 @@ import type {
 } from '@/server/domain/types/provider-config.types';
 import type { Provider } from 'shared/domain/value-objects/provider.value-object';
 import { InvalidProviderConfigError } from 'shared/domain/errors/provider-config.errors';
-import type { ProviderConfigDTO } from 'shared/application/dtos/core/provider-config.dto';
-
 /**
  * ProviderConfig Entity - Domain Model with Polymorphic Behavior
  *
@@ -14,7 +12,7 @@ import type { ProviderConfigDTO } from 'shared/application/dtos/core/provider-co
  * - Private state (encapsulation)
  * - Polymorphic behavior based on provider type (type guards)
  * - Mutation methods enforce business rules
- * - toDTO() method for crossing application boundary
+ * - Mappers in Application layer convert to DTOs
  */
 export class ProviderConfig {
   // Private state - encapsulated
@@ -92,38 +90,5 @@ export class ProviderConfig {
 
     this._config = newConfig;
     this._updatedAt = new Date();
-  }
-
-  /**
-   * Convert entity to DTO for crossing application boundary
-   * This is the ONLY way entities should leave the domain layer
-   */
-  toDTO(): ProviderConfigDTO {
-    if (this.isTraktConfig()) {
-      const traktConfig = this.config as TraktConfigData;
-      return {
-        id: this._id,
-        userId: this._userId,
-        provider: this._provider.getValue(),
-        clientId: traktConfig.clientId.getValue(),
-        apiKey: null,
-        createdAt: this._createdAt,
-        updatedAt: this._updatedAt,
-      };
-    } else if (this.isMdbListConfig()) {
-      const mdbListConfig = this.config as MdbListConfigData;
-      return {
-        id: this._id,
-        userId: this._userId,
-        provider: this._provider.getValue(),
-        clientId: null,
-        apiKey: mdbListConfig.apiKey.getValue(),
-        createdAt: this._createdAt,
-        updatedAt: this._updatedAt,
-      };
-    }
-
-    // Should never reach here due to type guards
-    throw new Error(`Unknown provider type: ${this._provider.getValue()}`);
   }
 }

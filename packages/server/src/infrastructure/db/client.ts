@@ -1,7 +1,9 @@
 import { Database } from 'bun:sqlite';
-import { drizzle } from 'drizzle-orm/bun-sqlite';
+import { drizzle, type BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from './schema';
 import { env } from '@/server/env';
+
+export type DbClient = BunSQLiteDatabase<typeof schema>;
 import { resolve, join } from 'path';
 
 // Use absolute path based on project root (3 levels up from this file)

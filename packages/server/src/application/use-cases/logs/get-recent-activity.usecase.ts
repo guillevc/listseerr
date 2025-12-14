@@ -9,7 +9,6 @@ import type {
 } from 'shared/application/dtos/dashboard/responses.dto';
 import type { ExecutionDTO } from 'shared/application/dtos/core/execution.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetRecentActivityUseCase
@@ -29,7 +28,6 @@ export class GetRecentActivityUseCase implements IUseCase<
 > {
   constructor(private readonly dashboardStatsRepository: IDashboardStatsRepository) {}
 
-  @LogExecution('dashboard:activity')
   async execute(command: GetRecentActivityCommand): Promise<GetRecentActivityResponse> {
     // Get recent executions from repository (already filtered to last 24h)
     const recentExecutions = await this.dashboardStatsRepository.getRecentExecutionsWithListNames(

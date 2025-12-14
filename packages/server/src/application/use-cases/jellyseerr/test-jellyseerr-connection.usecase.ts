@@ -7,7 +7,6 @@ import { JellyseerrUrl } from 'shared/domain/value-objects/jellyseerr-url.value-
 import { JellyseerrApiKey } from 'shared/domain/value-objects/jellyseerr-api-key.value-object';
 import { DomainError } from 'shared/domain/errors/domain.error';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class TestJellyseerrConnectionUseCase implements IUseCase<
   TestJellyseerrConnectionCommand,
@@ -15,7 +14,6 @@ export class TestJellyseerrConnectionUseCase implements IUseCase<
 > {
   constructor(private readonly connectionTester: IJellyseerrConnectionTester) {}
 
-  @LogExecution('jellyseerr:test-connection')
   async execute(
     command: TestJellyseerrConnectionCommand
   ): Promise<TestJellyseerrConnectionResponse> {

@@ -1,5 +1,7 @@
 // Infrastructure
 import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.service';
+import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 // Use Cases
 import { GetScheduledJobsUseCase } from '@/server/application/use-cases/scheduler/get-scheduled-jobs.usecase';
@@ -36,8 +38,16 @@ export class SchedulerContainer {
     // 1. Instantiate infrastructure layer
     this.schedulerService = new SchedulerService();
 
-    // 2. Instantiate use cases with dependencies injected
-    this.getScheduledJobsUseCase = new GetScheduledJobsUseCase(this.schedulerService);
-    this.reloadSchedulerUseCase = new ReloadSchedulerUseCase(this.schedulerService);
+    // 2. Instantiate use cases wrapped with logging decorator
+    this.getScheduledJobsUseCase = new LoggingUseCaseDecorator(
+      new GetScheduledJobsUseCase(this.schedulerService),
+      new LoggerService('scheduler'),
+      'GetScheduledJobsUseCase'
+    );
+    this.reloadSchedulerUseCase = new LoggingUseCaseDecorator(
+      new ReloadSchedulerUseCase(this.schedulerService),
+      new LoggerService('scheduler'),
+      'ReloadSchedulerUseCase'
+    );
   }
 }

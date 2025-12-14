@@ -2,7 +2,6 @@ import type { ISchedulerService } from '@/server/application/services/scheduler.
 import type { GetScheduledJobsCommand } from 'shared/application/dtos/scheduler/commands.dto';
 import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetScheduledJobsUseCase
@@ -19,7 +18,6 @@ export class GetScheduledJobsUseCase implements IUseCase<
 > {
   constructor(private readonly schedulerService: ISchedulerService) {}
 
-  @LogExecution('scheduler:get-jobs')
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _command: GetScheduledJobsCommand

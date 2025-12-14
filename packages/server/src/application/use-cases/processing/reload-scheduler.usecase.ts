@@ -2,7 +2,6 @@ import type { ISchedulerService } from '@/server/application/services/scheduler.
 import type { ReloadSchedulerCommand } from 'shared/application/dtos/scheduler/commands.dto';
 import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * ReloadSchedulerUseCase
@@ -21,7 +20,6 @@ export class ReloadSchedulerUseCase implements IUseCase<
 > {
   constructor(private readonly schedulerService: ISchedulerService) {}
 
-  @LogExecution('scheduler:reload')
   async execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _command: ReloadSchedulerCommand

@@ -4,11 +4,11 @@ import type { IExecutionHistoryRepository } from '@/server/application/repositor
 import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
+import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { TriggerType } from 'shared/domain/value-objects/trigger-type.value-object';
 import { BatchId } from 'shared/domain/value-objects/batch-id.value-object';
@@ -43,7 +43,6 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('processing:list')
   async execute(command: ProcessListCommand): Promise<ProcessListResponse> {
     this.logger.info(
       { listId: command.listId, triggerType: command.triggerType },
@@ -112,7 +111,7 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
       );
 
       // 9. Return response
-      return { execution: savedExecution.toDTO() };
+      return { execution: ProcessingExecutionMapper.toDTO(savedExecution) };
     } catch (error) {
       // Error handling: mark execution as failed
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

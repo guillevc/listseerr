@@ -3,7 +3,6 @@ import type { ISchedulerInfoService } from '@/server/application/services/schedu
 import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
 import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 /**
  * GetDashboardStatsUseCase
@@ -27,7 +26,6 @@ export class GetDashboardStatsUseCase implements IUseCase<
     private readonly schedulerInfoService: ISchedulerInfoService
   ) {}
 
-  @LogExecution('dashboard:stats')
   async execute(command: GetDashboardStatsCommand): Promise<DashboardStatsResponse> {
     // Get total requested items count
     const totalRequestedItems = await this.dashboardStatsRepository.getTotalRequestedItemsCount(

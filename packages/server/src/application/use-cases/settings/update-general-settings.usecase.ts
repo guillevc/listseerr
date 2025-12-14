@@ -1,11 +1,11 @@
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
+import { GeneralSettingsMapper } from '@/server/application/mappers/general-settings.mapper';
 import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
 import { Timezone } from 'shared/domain/value-objects/timezone.value-object';
 import type { ILogger } from '@/server/application/services/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { LogExecution } from '@/server/infrastructure/services/core/decorators/log-execution.decorator';
 
 export class UpdateGeneralSettingsUseCase implements IUseCase<
   UpdateGeneralSettingsCommand,
@@ -17,7 +17,6 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
     private readonly logger: ILogger
   ) {}
 
-  @LogExecution('settings:update')
   async execute(command: UpdateGeneralSettingsCommand): Promise<UpdateGeneralSettingsResponse> {
     // 1. Load existing entity or create new one
     let settings = await this.generalSettingsRepository.findByUserId(command.userId);
@@ -107,6 +106,6 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
     }
 
     // 7. Return Response DTO
-    return { settings: savedSettings.toDTO() };
+    return { settings: GeneralSettingsMapper.toDTO(savedSettings) };
   }
 }
