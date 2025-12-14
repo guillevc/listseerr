@@ -1,16 +1,14 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
-
+---
 services:
   listseerr:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: git.lan.guillevc.xyz/guille/listseerr:dev
     container_name: listseerr
     user: "${PUID:-1000}:${PGID:-1000}"
     ports:
       - "${PORT:-3000}:3000"
     env_file:
-      - .env.docker
+      - .env
     volumes:
       - ./data:/app/data
     restart: unless-stopped
