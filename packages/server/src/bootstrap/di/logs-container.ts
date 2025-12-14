@@ -33,15 +33,9 @@ export class LogsContainer {
   public readonly clearLogsUseCase: IUseCase<ClearLogsCommand, ClearLogsResponse>;
 
   constructor() {
-    // 1. Instantiate infrastructure layer
     this.logBufferService = new LogBufferAdapter();
 
-    // 2. Instantiate use cases wrapped with logging decorator
-    this.getLogsUseCase = new LoggingUseCaseDecorator(
-      new GetLogsUseCase(this.logBufferService),
-      new LoggerService('logs'),
-      'GetLogsUseCase'
-    );
+    this.getLogsUseCase = new GetLogsUseCase(this.logBufferService);
     this.clearLogsUseCase = new LoggingUseCaseDecorator(
       new ClearLogsUseCase(this.logBufferService),
       new LoggerService('logs'),
