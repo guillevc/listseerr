@@ -27,13 +27,13 @@ export function ListsPage() {
     <div className="flex flex-col gap-6">
       {/* Configuration Alert */}
       {!isLoadingConfig && !jellyseerrConfig && (
-        <Card className="border bg-orange-50 dark:bg-orange-950">
+        <Card variant="warning">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-flexoki-orange">
+            <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5" />
-              Configuration Required
+              Jellyseerr Configuration Required
             </CardTitle>
-            <CardDescription className="text-muted">
+            <CardDescription>
               Please configure your Jellyseerr instance in Settings to start processing lists.
             </CardDescription>
           </CardHeader>
