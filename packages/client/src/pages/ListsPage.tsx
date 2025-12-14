@@ -27,7 +27,7 @@ export function ListsPage() {
     <div className="flex flex-col gap-6">
       {/* Configuration Alert */}
       {!isLoadingConfig && !jellyseerrConfig && (
-        <Card className="border-flexoki-orange bg-orange-50 dark:bg-orange-950">
+        <Card className="border bg-orange-50 dark:bg-orange-950">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-flexoki-orange">
               <AlertCircle className="h-5 w-5" />

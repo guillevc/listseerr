@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* All flexoki colors */
 @theme {
   /* Disable default colors to prevent their use */
   --color-amber-*: initial;
@@ -175,6 +176,7 @@
   }
 }
 
+/* Flexoki main colors.  */
 @theme inline {
   --color-light-bg: var(--color-paper);
   --color-light-bg-2: var(--color-base-50);
@@ -226,6 +228,7 @@
   --color-dark-ma-2: var(--color-magenta-600);
 }
 
+/* Flexoki semantic color variables. Light and dark theme adaptable. */
 @theme {
   --color-background: var(--color-light-bg);
   --color-foreground: var(--color-light-tx);
@@ -244,39 +247,36 @@
   --color-destructive-hover: var(--color-light-re);
   --color-border-hover: var(--color-light-ui-2);
   --color-card-hover: var(--color-base-100);
-}
 
-@layer theme {
-  * {
-    @variant dark {
-      --color-background: var(--color-dark-bg);
-      --color-foreground: var(--color-dark-tx);
-      --color-card: var(--color-dark-bg-2);
-      --color-card-foreground: var(--color-dark-tx);
-      --color-muted: var(--color-dark-tx-2);
-      --color-primary: var(--color-dark-cy-2);
-      --color-primary-foreground: var(--color-dark-tx);
-      --color-input: var(--color-dark-ui);
-      --color-ring: var(--color-dark-cy-2);
-      --color-destructive: var(--color-dark-re-2);
-      --color-destructive-foreground: var(--color-dark-tx);
-      --color-border: var(--color-dark-ui);
+  @variant dark {
+    --color-background: var(--color-dark-bg);
+    --color-foreground: var(--color-dark-tx);
+    --color-muted: var(--color-dark-tx-2);
 
-      --color-primary-hover: var(--color-dark-cy);
-      --color-destructive-hover: var(--color-dark-re);
-      --color-border-hover: var(--color-dark-ui-2);
-      --color-card-hover: var(--color-base-900);
-    }
+    --color-border: var(--color-dark-ui);
+    --color-border-hover: var(--color-dark-ui-2);
+
+    --color-card: var(--color-dark-bg-2);
+    --color-card-hover: var(--color-base-900);
+    --color-card-foreground: var(--color-dark-tx);
+
+    --color-primary: var(--color-dark-cy-2);
+    --color-primary-foreground: var(--color-dark-tx);
+    --color-primary-hover: var(--color-dark-cy);
+
+    --color-input: var(--color-dark-ui);
+    --color-ring: var(--color-dark-cy-2);
+
+    --color-destructive: var(--color-dark-re-2);
+    --color-destructive-foreground: var(--color-dark-tx);
+    --color-destructive-hover: var(--color-dark-re);
   }
 }
 
+/* Global default styles */
 @layer base {
   * {
-    border-color: var(--color-light-ui);
-
-    @variant dark {
-      border-color: var(--color-dark-ui);
-    }
+    border-color: var(--color-border);
   }
 
   *:focus-visible {
@@ -285,13 +285,8 @@
   }
 
   body {
-    background-color: var(--color-light-bg);
-    color: var(--color-light-tx);
-
-    @variant dark {
-      background-color: var(--color-dark-bg);
-      color: var(--color-dark-tx);
-    }
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 
   html {
