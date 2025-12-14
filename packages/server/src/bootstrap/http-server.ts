@@ -18,7 +18,7 @@ export function createHttpApp(): Hono {
     app.use(
       '/*',
       cors({
-        origin: true, // Allow any origin in development
+        origin: (origin) => origin, // Allow any origin in development
         credentials: true,
       })
     );
