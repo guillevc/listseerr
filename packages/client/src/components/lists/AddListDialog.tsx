@@ -491,11 +491,11 @@ export function AddListDialog() {
                       placeholder="https://..."
                       value={url}
                       onChange={(e) => handleUrlChange(e.target.value)}
-                      className={urlError ? 'border-red-500' : ''}
+                      variant={urlError ? 'error' : url ? 'success' : 'default'}
                     />
-                    {urlError && <p className="text-sm text-red-500">{urlError}</p>}
+                    {urlError && <p className="text-sm text-destructive">{urlError}</p>}
                     {!urlError && url && (
-                      <p className="text-sm text-green-500">
+                      <p className="text-sm text-success">
                         Valid {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL detected
                       </p>
                     )}

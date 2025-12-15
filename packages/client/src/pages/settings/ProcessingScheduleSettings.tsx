@@ -329,12 +329,8 @@ export function ProcessingScheduleSettings() {
                       placeholder="0 4 * * *"
                       value={cronExpression}
                       onChange={(e) => setCronExpression(e.target.value)}
-                      className={
-                        cronExpression
-                          ? validation.isValid
-                            ? 'border-light-gr dark:border-dark-gr focus-visible:ring-green-500'
-                            : 'border-light-re dark:border-dark-re focus-visible:ring-red-500'
-                          : ''
+                      variant={
+                        cronExpression ? (validation.isValid ? 'success' : 'error') : 'default'
                       }
                     />
                   </div>

@@ -268,7 +268,11 @@
   --color-primary-hover: var(--color-light-cy);
 
   --color-input: var(--color-light-ui);
+  --color-input-success: var(--color-green-200);
+  --color-input-error: var(--color-red-200);
   --color-ring: var(--color-light-cy-2);
+  --color-ring-success: var(--color-light-gr-2);
+  --color-ring-error: var(--color-light-re-2);
 
   --color-destructive: var(--color-red-150);
   --color-destructive-foreground: var(--color-light-tx);
@@ -316,6 +320,8 @@
       --color-input-success: var(--color-green-800);
       --color-input-error: var(--color-red-800);
       --color-ring: var(--color-dark-cy-2);
+      --color-ring-success: var(--color-dark-gr);
+      --color-ring-error: var(--color-dark-re);
 
       --color-destructive: var(--color-red-900);
       --color-destructive-foreground: var(--color-dark-tx);

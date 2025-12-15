@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Plus, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -226,7 +226,8 @@ export function ApiKeysSettings() {
         <CardContent className="space-y-4">
           {!traktEnabled && (
             <Card variant="warning">
-              <CardContent className="py-3">
+              <CardContent className="py-3 flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
                 <p className="text-sm">
                   Provider disabled - Trakt lists and charts cannot be processed.
                 </p>
@@ -315,7 +316,8 @@ export function ApiKeysSettings() {
         <CardContent className="space-y-4">
           {!mdbListEnabled && (
             <Card variant="warning">
-              <CardContent className="py-3">
+              <CardContent className="py-3 flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
                 <p className="text-sm">Provider disabled - MDBList lists cannot be processed.</p>
               </CardContent>
             </Card>
