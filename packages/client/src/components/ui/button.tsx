@@ -49,36 +49,6 @@ const buttonVariants = tv({
         'dark:hover:border-dark-pu-2 dark:hover:ring-dark-pu-2',
       ],
     },
-    {
-      variant: 'outline',
-      accent: 'cyan',
-      class:
-        'border-light-cy-2 text-light-cy-2 hover:border-light-cy dark:border-dark-cy-2 dark:text-dark-cy-2 dark:hover:border-dark-cy',
-    },
-    {
-      variant: 'outline',
-      accent: 'blue',
-      class:
-        'border-light-bl-2 text-light-bl-2 hover:border-light-bl dark:border-dark-bl-2 dark:text-dark-bl-2 dark:hover:border-dark-bl',
-    },
-    {
-      variant: 'outline',
-      accent: 'green',
-      class:
-        'border-light-gr-2 text-light-gr-2 hover:border-light-gr dark:border-dark-gr-2 dark:text-dark-gr-2 dark:hover:border-dark-gr',
-    },
-    {
-      variant: 'outline',
-      accent: 'orange',
-      class:
-        'border-light-or-2 text-light-or-2 hover:border-light-or dark:border-dark-or-2 dark:text-dark-or-2 dark:hover:border-dark-or',
-    },
-    {
-      variant: 'outline',
-      accent: 'red',
-      class:
-        'border-light-re-2 text-light-re-2 hover:border-light-re dark:border-dark-re-2 dark:text-dark-re-2 dark:hover:border-dark-re',
-    },
   ],
   defaultVariants: {
     variant: 'default',
