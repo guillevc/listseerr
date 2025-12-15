@@ -139,18 +139,13 @@ function ExternalLinkButton({
         : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper';
 
   return (
-    <Button variant="outline" size="sm" asChild>
+    <Button variant="outline" accent="purple" size="sm" asChild>
       <a
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
         onClick={onClick}
-        className={cn(
-          'flex items-center gap-2',
-          mobile
-            ? 'w-full border-light-pu dark:border-dark-pu'
-            : 'border-light-pu-2 text-light-pu-2 hover:border-light-pu dark:border-dark-pu-2 dark:text-dark-pu-2 dark:hover:border-dark-pu'
-        )}
+        className={cn('flex items-center gap-2', mobile && 'w-full')}
       >
         {item.badge && (
           <Badge variant="simple" className={cn('px-1.5 py-0 text-xs', badgeClass)}>

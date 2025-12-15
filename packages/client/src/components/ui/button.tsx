@@ -11,7 +11,7 @@ const buttonVariants = tv({
     variant: {
       default: 'bg-primary hover:bg-primary-hover text-primary-foreground',
       destructive: 'bg-destructive hover:bg-destructive-hover text-destructive-foreground',
-      outline: 'border-2 border-border bg-transparent text-foreground hover:border-border-hover',
+      outline: 'border-2 border-border bg-transparent text-foreground',
       ghost: 'hover:bg-card',
     },
     size: {
@@ -19,6 +19,15 @@ const buttonVariants = tv({
       sm: 'h-9 rounded-md px-3',
       lg: 'h-11 rounded-md px-8',
       icon: 'h-10 w-10',
+    },
+    accent: {
+      default: '',
+      purple: '',
+      cyan: '',
+      blue: '',
+      green: '',
+      orange: '',
+      red: '',
     },
     active: {
       true: '',
@@ -30,10 +39,51 @@ const buttonVariants = tv({
       active: true,
       class: 'bg-card text-foreground',
     },
+    {
+      variant: 'outline',
+      accent: 'purple',
+      class: [
+        'text-light-pu border-light-pu-2',
+        'hover:border-light-pu-2 hover:ring hover:ring-light-pu-2',
+        'dark:text-dark-pu dark:border-dark-pu-2',
+        'dark:hover:border-dark-pu-2 dark:hover:ring-dark-pu-2',
+      ],
+    },
+    {
+      variant: 'outline',
+      accent: 'cyan',
+      class:
+        'border-light-cy-2 text-light-cy-2 hover:border-light-cy dark:border-dark-cy-2 dark:text-dark-cy-2 dark:hover:border-dark-cy',
+    },
+    {
+      variant: 'outline',
+      accent: 'blue',
+      class:
+        'border-light-bl-2 text-light-bl-2 hover:border-light-bl dark:border-dark-bl-2 dark:text-dark-bl-2 dark:hover:border-dark-bl',
+    },
+    {
+      variant: 'outline',
+      accent: 'green',
+      class:
+        'border-light-gr-2 text-light-gr-2 hover:border-light-gr dark:border-dark-gr-2 dark:text-dark-gr-2 dark:hover:border-dark-gr',
+    },
+    {
+      variant: 'outline',
+      accent: 'orange',
+      class:
+        'border-light-or-2 text-light-or-2 hover:border-light-or dark:border-dark-or-2 dark:text-dark-or-2 dark:hover:border-dark-or',
+    },
+    {
+      variant: 'outline',
+      accent: 'red',
+      class:
+        'border-light-re-2 text-light-re-2 hover:border-light-re dark:border-dark-re-2 dark:text-dark-re-2 dark:hover:border-dark-re',
+    },
   ],
   defaultVariants: {
     variant: 'default',
     size: 'default',
+    accent: 'default',
     active: false,
   },
 });
@@ -47,6 +97,7 @@ function Button({
   className,
   variant,
   size,
+  accent,
   active,
   asChild = false,
   loading = false,
@@ -60,7 +111,7 @@ function Button({
 
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size, active, className }))}
+      className={cn(buttonVariants({ variant, size, accent, active, className }))}
       ref={ref}
       disabled={isDisabled}
       {...props}
