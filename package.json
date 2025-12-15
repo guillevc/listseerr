@@ -32,7 +32,6 @@
       "eslint-plugin-react-refresh": "^0.4.24",
       "prettier": "^3.4.2",
       "eslint-config-prettier": "^9.1.0",
-      "@types/node": "^22.10.2",
       "@types/bun": "^1.3.4",
       "croner": "^9.1.0"
     }
@@ -67,6 +66,7 @@
     "globals": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:"
+    "typescript-eslint": "catalog:",
+    "@types/node": "^22.10.2"
   }
 }
