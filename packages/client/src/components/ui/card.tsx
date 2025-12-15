@@ -22,10 +22,10 @@ const cardVariants = tv({
   variants: {
     variant: {
       default: '',
-      success: 'border-success bg-success/10',
-      destructive: 'border-destructive bg-destructive/10',
+      success: 'border-success-border bg-success',
+      destructive: 'border-destructive-border bg-destructive',
       warning: 'border-warning-border bg-warning',
-      info: 'border-info bg-info/10',
+      info: 'border-info-border bg-info',
     },
   },
   defaultVariants: {
@@ -38,10 +38,10 @@ const cardTitleVariants = tv({
   variants: {
     variant: {
       default: '',
-      success: 'text-success-hover',
-      destructive: 'text-destructive-hover',
+      success: 'text-success-foreground',
+      destructive: 'text-destructive-foreground',
       warning: 'text-warning-foreground',
-      info: 'text-info-hover',
+      info: 'text-info-foreground',
     },
   },
   defaultVariants: {
@@ -54,10 +54,10 @@ const cardDescriptionVariants = tv({
   variants: {
     variant: {
       default: 'text-muted',
-      success: 'text-success',
-      destructive: 'text-destructive',
+      success: 'text-success-muted',
+      destructive: 'text-destructive-muted',
       warning: 'text-warning-muted',
-      info: 'text-info',
+      info: 'text-info-muted',
     },
   },
   defaultVariants: {

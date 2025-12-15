@@ -353,25 +353,25 @@ export function ProcessingScheduleSettings() {
 
                 {/* Validation feedback */}
                 {cronExpression && (
-                  <div
-                    className={`flex items-start gap-3 p-3 rounded-md mt-3 text-foreground ${
-                      validation.isValid
-                        ? 'bg-green-150 dark:bg-green-800'
-                        : 'bg-red-150 dark:bg-red-800'
-                    }`}
-                  >
-                    {validation.isValid ? (
-                      <CheckCircle2 className="h-5 w-5 shrink-0 mt-[0.1rem]" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 shrink-0 mt-[0.1rem]" />
-                    )}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium leading-5">{validation.description}</p>
-                      {validation.nextRun && (
-                        <p className="text-xs mt-1">Next run: {validation.nextRun}</p>
-                      )}
-                    </div>
-                  </div>
+                  <Card variant={validation.isValid ? 'success' : 'destructive'} className="mt-3">
+                    <CardContent className="py-3">
+                      <div className="flex items-start gap-3">
+                        {validation.isValid ? (
+                          <CheckCircle2 className="h-5 w-5 shrink-0 mt-[0.1rem]" />
+                        ) : (
+                          <AlertCircle className="h-5 w-5 shrink-0 mt-[0.1rem]" />
+                        )}
+                        <div className="flex-1">
+                          <p className="text-sm font-medium leading-5">{validation.description}</p>
+                          {validation.nextRun && (
+                            <p className="text-xs mt-1 opacity-80">
+                              Next run: {validation.nextRun}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 )}
               </div>
             </CardContent>
