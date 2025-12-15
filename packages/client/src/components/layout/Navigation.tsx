@@ -8,128 +8,254 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
 
-export function Navigation() {
+// Types
+interface BaseNavItem {
+  name: string;
+  path: string;
+}
+
+interface InternalNavItem extends BaseNavItem {
+  type: 'internal';
+}
+
+interface ExternalNavItem extends BaseNavItem {
+  type: 'external';
+  badge?: string | number;
+  disabled?: boolean;
+}
+
+type NavItem = InternalNavItem | ExternalNavItem;
+
+// Hooks
+function useNavigation() {
   const router = useRouterState();
   const currentPath = router.location.pathname;
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Query Jellyseerr config for requests link
   const { data: configData } = trpc.config.get.useQuery();
   const jellyseerrConfig = configData?.config;
   const jellyseerrRequestsUrl = jellyseerrConfig?.url
     ? `${jellyseerrConfig.url}/requests`
     : undefined;
 
-  // Query pending requests count with 60-second polling
   const { data: pendingRequests } = trpc.dashboard.getPendingRequests.useQuery(undefined, {
-    refetchInterval: 60000, // Poll every 60 seconds
+    refetchInterval: 60000,
   });
 
-  // Dynamic nav items including external links
-  const navItems = [
+  const navItems: NavItem[] = [
     { name: 'Dashboard', path: '/', type: 'internal' },
     { name: 'Lists', path: '/lists', type: 'internal' },
     { name: 'Settings', path: '/settings', type: 'internal' },
     { name: 'Logs', path: '/logs', type: 'internal' },
-    {
-      name: 'Requests',
-      path: jellyseerrRequestsUrl,
-      type: 'external',
-      badge: pendingRequests?.error ? '!' : pendingRequests?.count || '0',
-      disabled: !pendingRequests?.configured,
-    },
+    ...(jellyseerrRequestsUrl
+      ? [
+          {
+            name: 'Requests',
+            path: jellyseerrRequestsUrl,
+            type: 'external' as const,
+            badge: pendingRequests?.error ? '!' : pendingRequests?.count || '0',
+            disabled: !pendingRequests?.configured,
+          },
+        ]
+      : []),
   ];
+
+  const isActive = (item: NavItem) =>
+    item.type === 'internal' &&
+    (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
+
+  return { navItems, isActive };
+}
+
+// Components
+function Logo() {
+  return (
+    <Link to="/" className="flex items-center gap-2">
+      <svg
+        viewBox="0 0 24 24"
+        className="h-8 w-8 text-light-primary dark:text-dark-primary"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M3 3h18v18H3z" />
+        <path d="M7 7h10v10H7z" />
+        <path d="M12 7v10" />
+        <path d="M7 12h10" />
+      </svg>
+      <span className="text-xl font-bold">Listseerr</span>
+    </Link>
+  );
+}
+
+function InternalLink({
+  item,
+  isActive,
+  onClick,
+  mobile = false,
+}: {
+  item: InternalNavItem;
+  isActive: boolean;
+  onClick?: () => void;
+  mobile?: boolean;
+}) {
+  return (
+    <Link
+      to={item.path}
+      onClick={onClick}
+      className={cn(
+        'text-sm font-medium rounded-md transition-colors',
+        mobile ? 'px-4 py-3' : 'px-4 py-2',
+        isActive ? 'bg-card text-foreground' : 'text-muted hover:text-foreground hover:bg-card/50'
+      )}
+    >
+      {item.name}
+    </Link>
+  );
+}
+
+function ExternalLinkButton({
+  item,
+  onClick,
+  mobile = false,
+}: {
+  item: ExternalNavItem;
+  onClick?: () => void;
+  mobile?: boolean;
+}) {
+  if (item.disabled) {
+    return (
+      <div
+        className={cn(
+          'text-sm text-muted cursor-not-allowed',
+          mobile ? 'px-4 py-3 rounded-md' : 'px-4 py-2'
+        )}
+      >
+        {item.name}
+      </div>
+    );
+  }
+
+  const badgeClass =
+    item.badge === '!'
+      ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2'
+      : mobile
+        ? 'bg-light-pu dark:bg-dark-pu text-foreground hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'
+        : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper';
+
+  return (
+    <Button variant="outline" size="sm" asChild>
+      <a
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        className={cn(
+          'flex items-center gap-2',
+          mobile
+            ? 'w-full border-light-pu dark:border-dark-pu'
+            : 'text-light-pu-2 border-light-pu-2 hover:border-light-pu dark:text-dark-pu-2 dark:border-dark-pu-2 dark:hover:border-dark-pu'
+        )}
+      >
+        {item.badge && (
+          <Badge variant="simple" className={cn('px-1.5 py-0 text-xs', badgeClass)}>
+            {item.badge}
+          </Badge>
+        )}
+        {item.name}
+        <ExternalLink className="h-3 w-3" />
+      </a>
+    </Button>
+  );
+}
+
+function NavItemRenderer({
+  item,
+  isActive,
+  onClick,
+  mobile = false,
+}: {
+  item: NavItem;
+  isActive: boolean;
+  onClick?: () => void;
+  mobile?: boolean;
+}) {
+  if (item.type === 'external') {
+    return <ExternalLinkButton item={item} onClick={onClick} mobile={mobile} />;
+  }
+  return <InternalLink item={item} isActive={isActive} onClick={onClick} mobile={mobile} />;
+}
+
+function DesktopNav({
+  navItems,
+  isActive,
+}: {
+  navItems: NavItem[];
+  isActive: (item: NavItem) => boolean;
+}) {
+  return (
+    <div className="hidden md:flex gap-1">
+      {navItems.map((item) => (
+        <NavItemRenderer key={item.path} item={item} isActive={isActive(item)} />
+      ))}
+    </div>
+  );
+}
+
+function MobileNav({
+  navItems,
+  isActive,
+  open,
+  onOpenChange,
+}: {
+  navItems: NavItem[];
+  isActive: (item: NavItem) => boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const closeMenu = () => onOpenChange(false);
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
+      <SheetContent side="left" className="w-64">
+        <SheetHeader>
+          <SheetTitle className="text-left">Menu</SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col gap-2 mt-6">
+          {navItems.map((item) => (
+            <NavItemRenderer
+              key={item.path}
+              item={item}
+              isActive={isActive(item)}
+              onClick={closeMenu}
+              mobile
+            />
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+// Main Component
+export function Navigation() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { navItems, isActive } = useNavigation();
 
   return (
     <nav className="border-b">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Left: Logo + Desktop Nav */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-light-primary dark:text-dark-primary"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 3h18v18H3z" />
-                <path d="M7 7h10v10H7z" />
-                <path d="M12 7v10" />
-                <path d="M7 12h10" />
-              </svg>
-              <span className="text-xl font-bold">Listseerr</span>
-            </Link>
-
-            {/* Nav Tabs */}
-            <div className="hidden md:flex gap-1">
-              {navItems.map((item) => {
-                const isActive =
-                  item.type === 'internal' &&
-                  item.path &&
-                  (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
-
-                if (item.disabled) {
-                  return (
-                    <div
-                      key={item.path || item.name}
-                      className="px-4 py-2 text-sm text-muted cursor-not-allowed"
-                    >
-                      {item.name}
-                    </div>
-                  );
-                }
-
-                if (item.type === 'external' && item.path) {
-                  return (
-                    <Button key={item.path} variant="outline" size="sm" asChild>
-                      <a
-                        href={item.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-light-pu-2 border-light-pu-2 hover:border-light-pu dark:text-dark-pu-2 dark:border-dark-pu-2 dark:hover:border-dark-pu"
-                      >
-                        {item.badge && (
-                          <Badge
-                            variant="simple"
-                            className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu-2 dark:bg-dark-pu-2 text-paper'}`}
-                          >
-                            {item.badge}
-                          </Badge>
-                        )}
-                        {item.name}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </Button>
-                  );
-                }
-
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      'px-4 py-2 text-sm font-medium rounded-md transition-colors',
-                      isActive
-                        ? 'bg-card text-foreground'
-                        : 'text-muted hover:text-foreground hover:bg-card/50'
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
+            <Logo />
+            <DesktopNav navItems={navItems} isActive={isActive} />
           </div>
 
-          {/* Right Actions */}
+          {/* Right: Actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
-
-            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="icon"
@@ -143,73 +269,13 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Navigation Sheet */}
-      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} modal={false}>
-        <SheetContent side="left" className="w-64">
-          <SheetHeader>
-            <SheetTitle className="text-left">Menu</SheetTitle>
-          </SheetHeader>
-          <div className="flex flex-col gap-2 mt-6">
-            {navItems.map((item) => {
-              const isActive =
-                item.type === 'internal' &&
-                item.path &&
-                (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
-
-              if (item.disabled) {
-                return (
-                  <div
-                    key={item.path || item.name}
-                    className="px-4 py-3 text-sm text-muted cursor-not-allowed rounded-md"
-                  >
-                    {item.name}
-                  </div>
-                );
-              }
-
-              if (item.type === 'external' && item.path) {
-                return (
-                  <Button key={item.path} variant="outline" size="sm" asChild>
-                    <a
-                      href={item.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 w-full border-light-pu dark:border-dark-pu"
-                    >
-                      {item.badge && (
-                        <Badge
-                          className={`px-1.5 py-0 text-xs ${item.badge === '!' ? 'bg-light-re dark:bg-dark-re text-foreground hover:bg-light-re-2 hover:dark:bg-dark-re-2' : 'bg-light-pu dark:bg-dark-pu text-foreground hover:bg-light-pu-2 hover:dark:bg-dark-pu-2'}`}
-                        >
-                          {item.badge}
-                        </Badge>
-                      )}
-                      {item.name}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </Button>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    'px-4 py-3 text-sm font-medium rounded-md transition-colors',
-                    isActive
-                      ? 'bg-card text-foreground'
-                      : 'text-muted hover:text-foreground hover:bg-card/50'
-                  )}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Mobile Nav */}
+      <MobileNav
+        navItems={navItems}
+        isActive={isActive}
+        open={mobileMenuOpen}
+        onOpenChange={setMobileMenuOpen}
+      />
     </nav>
   );
 }
