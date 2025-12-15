@@ -196,7 +196,13 @@ export function ApiKeysSettings() {
       {/* Trakt.tv API Keys */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start gap-4">
+            <Switch
+              className="mt-1"
+              checked={traktEnabled}
+              onCheckedChange={handleTraktToggle}
+              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
+            />
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 Trakt
@@ -205,7 +211,7 @@ export function ApiKeysSettings() {
                 )}
               </CardTitle>
               <CardDescription>
-                Required for syncing Trakt lists and curated charts. Get your Client ID from{' '}
+                Required for fetching Trakt lists and curated charts. Get your Client ID from{' '}
                 <a
                   href="https://trakt.tv/oauth/applications"
                   target="_blank"
@@ -216,11 +222,6 @@ export function ApiKeysSettings() {
                 </a>
               </CardDescription>
             </div>
-            <Switch
-              checked={traktEnabled}
-              onCheckedChange={handleTraktToggle}
-              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
-            />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -286,7 +287,13 @@ export function ApiKeysSettings() {
       {/* MDBList API Key */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start gap-4">
+            <Switch
+              className="mt-1"
+              checked={mdbListEnabled}
+              onCheckedChange={handleMdbListToggle}
+              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+            />
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 MDBList
@@ -295,7 +302,7 @@ export function ApiKeysSettings() {
                 )}
               </CardTitle>
               <CardDescription>
-                Required for syncing MDBList lists. Get your API key from{' '}
+                Required for fetching MDBList lists. Get your API key from{' '}
                 <a
                   href="https://mdblist.com/preferences/"
                   target="_blank"
@@ -306,11 +313,6 @@ export function ApiKeysSettings() {
                 </a>
               </CardDescription>
             </div>
-            <Switch
-              checked={mdbListEnabled}
-              onCheckedChange={handleMdbListToggle}
-              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
-            />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">

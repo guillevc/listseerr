@@ -278,7 +278,13 @@ export function ProcessingScheduleSettings() {
       {/* Enable/Disable Card */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start gap-4">
+            <Switch
+              id="schedule-enabled"
+              className="mt-1"
+              checked={isEnabled}
+              onCheckedChange={setIsEnabled}
+            />
             <div className="space-y-0.5">
               <Label htmlFor="schedule-enabled" className="text-base">
                 Enable Automatic Processing
@@ -288,7 +294,6 @@ export function ProcessingScheduleSettings() {
                 from oldest to newest.
               </p>
             </div>
-            <Switch id="schedule-enabled" checked={isEnabled} onCheckedChange={setIsEnabled} />
           </div>
         </CardContent>
       </Card>

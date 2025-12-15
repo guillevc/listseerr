@@ -23,7 +23,7 @@ export function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted mt-1">Overview of your media lists and sync activity</p>
+        <p className="text-muted mt-1">Overview of your media lists and request activity</p>
       </div>
 
       {lists.length === 0 ? (
