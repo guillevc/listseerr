@@ -1,13 +1,21 @@
-import * as React from 'react';
+import { createContext, use, type ComponentProps } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 import { cn } from '@/client/lib/utils';
 
 type CardVariant = 'default' | 'success' | 'destructive' | 'warning' | 'info';
 
-const CardContext = React.createContext<{ variant: CardVariant }>({ variant: 'default' });
+type CardContextValue = { variant: CardVariant };
 
-const useCardContext = () => React.useContext(CardContext);
+const CardContext = createContext<CardContextValue | null>(null);
+
+function useCardContext(): CardContextValue {
+  const context = use(CardContext);
+  if (!context) {
+    return { variant: 'default' };
+  }
+  return context;
+}
 
 const cardVariants = tv({
   base: 'rounded-lg border bg-card text-foreground shadow-sm',
@@ -57,58 +65,38 @@ const cardDescriptionVariants = tv({
   },
 });
 
-export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {}
+interface CardProps extends ComponentProps<'div'>, VariantProps<typeof cardVariants> {}
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', children, ...props }, ref) => (
-    <CardContext.Provider value={{ variant: variant ?? 'default' }}>
-      <div ref={ref} className={cn(cardVariants({ variant }), className)} {...props}>
-        {children}
-      </div>
-    </CardContext.Provider>
-  )
-);
-Card.displayName = 'Card';
+function Card({ className, variant = 'default', ...props }: CardProps) {
+  return (
+    <CardContext value={{ variant: variant ?? 'default' }}>
+      <div className={cn(cardVariants({ variant }), className)} {...props} />
+    </CardContext>
+  );
+}
 
-const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
-  )
-);
-CardHeader.displayName = 'CardHeader';
+function CardHeader({ className, ...props }: ComponentProps<'header'>) {
+  return <header className={cn('flex flex-col gap-1.5 p-6', className)} {...props} />;
+}
 
-const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
-    const { variant } = useCardContext();
-    return <div ref={ref} className={cn(cardTitleVariants({ variant }), className)} {...props} />;
-  }
-);
-CardTitle.displayName = 'CardTitle';
+function CardTitle({ className, ...props }: ComponentProps<'h3'>) {
+  const { variant } = useCardContext();
+  return <h3 className={cn(cardTitleVariants({ variant }), className)} {...props} />;
+}
 
-const CardDescription = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
-    const { variant } = useCardContext();
-    return (
-      <div ref={ref} className={cn(cardDescriptionVariants({ variant }), className)} {...props} />
-    );
-  }
-);
-CardDescription.displayName = 'CardDescription';
+function CardDescription({ className, ...props }: ComponentProps<'p'>) {
+  const { variant } = useCardContext();
+  return <p className={cn(cardDescriptionVariants({ variant }), className)} {...props} />;
+}
 
-const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
-  )
-);
-CardContent.displayName = 'CardContent';
+function CardContent({ className, ...props }: ComponentProps<'div'>) {
+  return <div className={cn('p-6 pt-0', className)} {...props} />;
+}
 
-const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />
-  )
-);
-CardFooter.displayName = 'CardFooter';
+function CardFooter({ className, ...props }: ComponentProps<'footer'>) {
+  return <footer className={cn('flex items-center p-6 pt-0', className)} {...props} />;
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
-export { Card, cardVariants, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants };
+export type { CardProps, CardVariant };
