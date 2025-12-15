@@ -2,7 +2,7 @@ import {
   forwardRef,
   type ComponentProps,
   type ComponentPropsWithoutRef,
-  type ElementRef,
+  type ComponentRef,
 } from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
@@ -39,7 +39,7 @@ interface DropdownMenuSubTriggerProps extends ComponentPropsWithoutRef<
 }
 
 const DropdownMenuSubTrigger = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
   DropdownMenuSubTriggerProps
 >(({ className, inset, children, ...props }, ref) => (
   <DropdownMenuPrimitive.SubTrigger
@@ -58,7 +58,7 @@ const DropdownMenuSubTrigger = forwardRef<
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';
 
 const DropdownMenuSubContent = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  ComponentRef<typeof DropdownMenuPrimitive.SubContent>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.SubContent
@@ -73,7 +73,7 @@ const DropdownMenuSubContent = forwardRef<
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';
 
 const DropdownMenuContent = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Content>,
+  ComponentRef<typeof DropdownMenuPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
@@ -97,7 +97,7 @@ interface DropdownMenuItemProps extends ComponentPropsWithoutRef<
 }
 
 const DropdownMenuItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Item>,
+  ComponentRef<typeof DropdownMenuPrimitive.Item>,
   DropdownMenuItemProps
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
@@ -113,7 +113,7 @@ const DropdownMenuItem = forwardRef<
 DropdownMenuItem.displayName = 'DropdownMenuItem';
 
 const DropdownMenuCheckboxItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
 >(({ className, children, checked, ...props }, ref) => (
   <DropdownMenuPrimitive.CheckboxItem
@@ -136,7 +136,7 @@ const DropdownMenuCheckboxItem = forwardRef<
 DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem';
 
 const DropdownMenuRadioItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
 >(({ className, children, ...props }, ref) => (
   <DropdownMenuPrimitive.RadioItem
@@ -164,7 +164,7 @@ interface DropdownMenuLabelProps extends ComponentPropsWithoutRef<
 }
 
 const DropdownMenuLabel = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Label>,
+  ComponentRef<typeof DropdownMenuPrimitive.Label>,
   DropdownMenuLabelProps
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
@@ -176,7 +176,7 @@ const DropdownMenuLabel = forwardRef<
 DropdownMenuLabel.displayName = 'DropdownMenuLabel';
 
 const DropdownMenuSeparator = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  ComponentRef<typeof DropdownMenuPrimitive.Separator>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator

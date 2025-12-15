@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 import { db, sqlite } from './src/infrastructure/db/client';
 

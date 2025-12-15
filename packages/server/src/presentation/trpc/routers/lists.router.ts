@@ -32,7 +32,7 @@ export interface ListsRouterDeps {
 // Zod schemas for input validation
 const listInputSchema = z.object({
   name: z.string().min(1),
-  url: z.string().url(),
+  url: z.url(),
   displayUrl: z.string().optional(),
   provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu'] as const).default('trakt'),
   enabled: z.boolean().default(true),

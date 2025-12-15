@@ -5,6 +5,7 @@ import { JellyseerrSettings } from '../pages/settings/JellyseerrSettings';
 // @ts-expect-error - TanStack Router circular type inference limitation
 export const settingsJellyseerrRoute = createRoute({
   // @ts-expect-error - TanStack Router circular type inference limitation
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   getParentRoute: () => settingsRoute,
   path: '/jellyseerr',
   component: JellyseerrSettings,

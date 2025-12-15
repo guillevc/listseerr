@@ -6,7 +6,7 @@ import { env } from '@/server/env';
 
 const logger = new LoggerService('bootstrap');
 
-export async function runMigrations(): Promise<void> {
+export function runMigrations(): void {
   try {
     logger.info('Running database migrations...');
 

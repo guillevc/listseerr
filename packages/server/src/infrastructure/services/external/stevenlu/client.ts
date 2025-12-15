@@ -43,7 +43,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
           },
           'Using cached StevenLu data'
         );
-        items = JSON.parse(cachedData.data);
+        items = JSON.parse(cachedData.data) as StevenLuItem[];
       } else {
         logger.info(
           { cacheAge: Math.floor(cacheAge / 1000 / 60) },

@@ -6,7 +6,7 @@ import { DomainError } from 'shared/domain/errors/domain.error';
  * Create tRPC context for each request.
  * Database access is handled via DI containers, not context.
  */
-export async function createContext(opts: FetchCreateContextFnOptions) {
+export function createContext(opts: FetchCreateContextFnOptions) {
   // TODO: Extract from session when authentication is implemented
   // For now, default to userId: 1
   const userId = 1; // Future: opts.session?.user?.id ?? 1

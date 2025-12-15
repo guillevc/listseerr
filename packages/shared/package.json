@@ -7,14 +7,12 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
-    "eslint": "catalog:",
     "typescript": "catalog:",
     "@types/bun": "catalog:"
   }

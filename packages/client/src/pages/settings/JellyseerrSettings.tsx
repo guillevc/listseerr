@@ -44,7 +44,7 @@ export function JellyseerrSettings() {
 
   const saveMutation = trpc.config.set.useMutation({
     onSuccess: () => {
-      utils.config.get.invalidate();
+      void utils.config.get.invalidate();
       toast({
         title: 'Saved',
         description: 'Jellyseerr configuration saved successfully',
@@ -61,7 +61,7 @@ export function JellyseerrSettings() {
 
   const deleteMutation = trpc.config.delete.useMutation({
     onSuccess: () => {
-      utils.config.get.invalidate();
+      void utils.config.get.invalidate();
       toast({
         title: 'Configuration Removed',
         description: 'Jellyseerr configuration has been removed',
@@ -85,7 +85,7 @@ export function JellyseerrSettings() {
     }
   }, [config]);
 
-  const handleTest = async () => {
+  const handleTest = () => {
     if (!url || !apiKey || !userId) {
       toast({
         title: 'Error',

@@ -188,9 +188,9 @@ export function ProcessingScheduleSettings() {
         await enableAllListsMutation.mutateAsync();
       }
 
-      utils.generalSettings.get.invalidate();
-      utils.scheduler.getScheduledJobs.invalidate();
-      utils.lists.getAll.invalidate();
+      void utils.generalSettings.get.invalidate();
+      void utils.scheduler.getScheduledJobs.invalidate();
+      void utils.lists.getAll.invalidate();
 
       setCronExpression(data.automaticProcessingSchedule || '');
       setIsEnabled(data.automaticProcessingEnabled);

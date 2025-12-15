@@ -1,7 +1,7 @@
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
-  type ElementRef,
+  type ComponentRef,
   type ReactElement,
 } from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
@@ -13,7 +13,7 @@ import { cn } from '@/client/lib/utils';
 const ToastProvider = ToastPrimitives.Provider;
 
 const ToastViewport = forwardRef<
-  ElementRef<typeof ToastPrimitives.Viewport>,
+  ComponentRef<typeof ToastPrimitives.Viewport>,
   ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Viewport
@@ -45,7 +45,7 @@ interface ToastProps
     ComponentPropsWithoutRef<typeof ToastPrimitives.Root>,
     VariantProps<typeof toastVariants> {}
 
-const Toast = forwardRef<ElementRef<typeof ToastPrimitives.Root>, ToastProps>(
+const Toast = forwardRef<ComponentRef<typeof ToastPrimitives.Root>, ToastProps>(
   ({ className, variant, ...props }, ref) => (
     <ToastPrimitives.Root
       ref={ref}
@@ -57,7 +57,7 @@ const Toast = forwardRef<ElementRef<typeof ToastPrimitives.Root>, ToastProps>(
 Toast.displayName = 'Toast';
 
 const ToastAction = forwardRef<
-  ElementRef<typeof ToastPrimitives.Action>,
+  ComponentRef<typeof ToastPrimitives.Action>,
   ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Action
@@ -72,7 +72,7 @@ const ToastAction = forwardRef<
 ToastAction.displayName = 'ToastAction';
 
 const ToastClose = forwardRef<
-  ElementRef<typeof ToastPrimitives.Close>,
+  ComponentRef<typeof ToastPrimitives.Close>,
   ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Close
@@ -90,7 +90,7 @@ const ToastClose = forwardRef<
 ToastClose.displayName = 'ToastClose';
 
 const ToastTitle = forwardRef<
-  ElementRef<typeof ToastPrimitives.Title>,
+  ComponentRef<typeof ToastPrimitives.Title>,
   ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title ref={ref} className={cn('text-sm font-semibold', className)} {...props} />
@@ -98,7 +98,7 @@ const ToastTitle = forwardRef<
 ToastTitle.displayName = 'ToastTitle';
 
 const ToastDescription = forwardRef<
-  ElementRef<typeof ToastPrimitives.Description>,
+  ComponentRef<typeof ToastPrimitives.Description>,
   ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Description

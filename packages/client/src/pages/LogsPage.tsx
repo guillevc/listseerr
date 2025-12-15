@@ -38,7 +38,7 @@ export function LogsPage() {
         title: 'Logs Cleared',
         description: 'All logs have been removed',
       });
-      refetch();
+      void refetch();
     },
     onError: (error) => {
       toast({

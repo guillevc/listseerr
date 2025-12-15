@@ -7,7 +7,7 @@ import { initializeScheduler } from './bootstrap/scheduler';
 
 const logger = new LoggerService('server');
 
-await runMigrations();
+runMigrations();
 
 const app = createHttpApp();
 

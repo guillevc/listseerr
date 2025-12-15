@@ -19,8 +19,8 @@ export function GeneralSettings() {
       const data = result.settings;
 
       // Invalidate queries to refresh UI immediately
-      utils.generalSettings.get.invalidate();
-      utils.scheduler.getScheduledJobs.invalidate();
+      void utils.generalSettings.get.invalidate();
+      void utils.scheduler.getScheduledJobs.invalidate();
 
       // Update local state immediately
       setTimezone(data.timezone);

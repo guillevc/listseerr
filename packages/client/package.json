@@ -8,7 +8,6 @@
     "dev": "bun vite",
     "build": "bun vite build --outDir ../../dist/client",
     "build:analyze": "ANALYZE=true bun vite build --outDir ../../dist/client",
-    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -41,9 +40,6 @@
   },
   "devDependencies": {
     "@types/bun": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-react-hooks": "catalog:",
-    "eslint-plugin-react-refresh": "catalog:",
     "tailwindcss": "^4.1.17",
     "@tailwindcss/cli": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",

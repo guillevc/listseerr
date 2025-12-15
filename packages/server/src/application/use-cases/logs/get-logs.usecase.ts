@@ -15,13 +15,13 @@ import type { IUseCase } from '@/server/application/use-cases/use-case.interface
 export class GetLogsUseCase implements IUseCase<GetLogsCommand, GetLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
-  async execute(command: GetLogsCommand): Promise<GetLogsResponse> {
+  execute(command: GetLogsCommand): Promise<GetLogsResponse> {
     // Delegate to infrastructure service
     const logs = this.logBufferService.getLogs(
       command.limit,
       command.level === 'all' ? undefined : command.level
     );
 
-    return { logs };
+    return Promise.resolve({ logs });
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 import type { Config } from 'drizzle-kit';
 import { env } from './src/env';
 

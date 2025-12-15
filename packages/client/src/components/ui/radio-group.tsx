@@ -1,11 +1,11 @@
-import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
+import { forwardRef, type ComponentPropsWithoutRef, type ComponentRef } from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { Circle } from 'lucide-react';
 
 import { cn } from '@/client/lib/utils';
 
 const RadioGroup = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Root>,
+  ComponentRef<typeof RadioGroupPrimitive.Root>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => (
   <RadioGroupPrimitive.Root className={cn('grid gap-2', className)} {...props} ref={ref} />
@@ -13,7 +13,7 @@ const RadioGroup = forwardRef<
 RadioGroup.displayName = 'RadioGroup';
 
 const RadioGroupItem = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Item>,
+  ComponentRef<typeof RadioGroupPrimitive.Item>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
 >(({ className, ...props }, ref) => (
   <RadioGroupPrimitive.Item

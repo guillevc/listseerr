@@ -20,7 +20,7 @@ const logStream = pino.multistream([
             ignore: 'pid,hostname',
             singleLine: false,
           },
-        }),
+        }) as NodeJS.WritableStream,
       }
     : { level: 'info', stream: process.stdout },
   // Capture for in-memory buffer (timestamps stored in UTC)
@@ -29,7 +29,7 @@ const logStream = pino.multistream([
     stream: {
       write: (msg: string) => {
         try {
-          const logObject = JSON.parse(msg);
+          const logObject = JSON.parse(msg) as Record<string, unknown>;
           logBuffer.addLog(logObject);
         } catch {
           // Ignore parsing errors
@@ -64,7 +64,7 @@ export class LoggerService implements ILogger {
     if (typeof objOrMessage === 'string') {
       this.logger.info(objOrMessage);
     } else {
-      this.logger.info(objOrMessage, message!);
+      this.logger.info(objOrMessage, message);
     }
   }
 
@@ -74,7 +74,7 @@ export class LoggerService implements ILogger {
     if (typeof objOrMessage === 'string') {
       this.logger.error(objOrMessage);
     } else {
-      this.logger.error(objOrMessage, message!);
+      this.logger.error(objOrMessage, message);
     }
   }
 
@@ -84,7 +84,7 @@ export class LoggerService implements ILogger {
     if (typeof objOrMessage === 'string') {
       this.logger.debug(objOrMessage);
     } else {
-      this.logger.debug(objOrMessage, message!);
+      this.logger.debug(objOrMessage, message);
     }
   }
 
@@ -94,7 +94,7 @@ export class LoggerService implements ILogger {
     if (typeof objOrMessage === 'string') {
       this.logger.warn(objOrMessage);
     } else {
-      this.logger.warn(objOrMessage, message!);
+      this.logger.warn(objOrMessage, message);
     }
   }
 }

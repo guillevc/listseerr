@@ -66,8 +66,8 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   const updateMutation = trpc.lists.update.useMutation({
     onSuccess: () => {
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
       toast({
         title: 'List Updated',
         description: 'Changes saved successfully',

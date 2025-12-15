@@ -34,13 +34,13 @@ export interface JellyseerrConfigRouterDeps {
 
 // Zod schemas for input validation
 const configInputSchema = z.object({
-  url: z.string().url('Invalid URL format'),
+  url: z.url({ message: 'Invalid URL format' }),
   apiKey: z.string().min(1, 'API key is required'),
   userIdJellyseerr: z.number().positive('User ID must be positive'),
 });
 
 const testConnectionInputSchema = z.object({
-  url: z.string().url('Invalid URL format'),
+  url: z.url({ message: 'Invalid URL format' }),
   apiKey: z.string().min(1, 'API key is required'),
 });
 

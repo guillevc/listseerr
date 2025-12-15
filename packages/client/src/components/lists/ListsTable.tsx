@@ -92,9 +92,9 @@ export function ListsTable({
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
       // Invalidate all related queries
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
-      utils.dashboard.getRecentActivity.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
+      void utils.dashboard.getRecentActivity.invalidate();
 
       toast({
         title: 'List Removed',
@@ -116,8 +116,8 @@ export function ListsTable({
     },
     onSuccess: () => {
       // Invalidate all related queries
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
       setMutatingListId(null);
     },
     onError: (error) => {

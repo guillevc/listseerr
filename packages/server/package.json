@@ -7,7 +7,6 @@
     "./trpc": "./src/bootstrap/app.router.ts"
   },
   "scripts": {
-    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -23,7 +22,6 @@
   "devDependencies": {
     "@types/bun": "catalog:",
     "typescript": "catalog:",
-    "eslint": "catalog:",
     "drizzle-kit": "^0.31.8",
     "pino-pretty": "^13.1.3"
   }

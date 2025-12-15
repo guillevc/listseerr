@@ -58,7 +58,7 @@ export function ApiKeysSettings() {
   // Mutations
   const saveTraktMutation = trpc.traktConfig.save.useMutation({
     onSuccess: () => {
-      utils.traktConfig.get.invalidate();
+      void utils.traktConfig.get.invalidate();
       toast({
         title: 'Success',
         description: 'Trakt Client ID saved successfully',
@@ -75,7 +75,7 @@ export function ApiKeysSettings() {
 
   const deleteTraktMutation = trpc.traktConfig.delete.useMutation({
     onSuccess: () => {
-      utils.traktConfig.get.invalidate();
+      void utils.traktConfig.get.invalidate();
       setTraktClientId('');
       toast({
         title: 'Success',
@@ -93,7 +93,7 @@ export function ApiKeysSettings() {
 
   const saveMdbListMutation = trpc.mdblistConfig.save.useMutation({
     onSuccess: () => {
-      utils.mdblistConfig.get.invalidate();
+      void utils.mdblistConfig.get.invalidate();
       toast({
         title: 'Success',
         description: 'MDBList API Key saved successfully',
@@ -110,7 +110,7 @@ export function ApiKeysSettings() {
 
   const deleteMdbListMutation = trpc.mdblistConfig.delete.useMutation({
     onSuccess: () => {
-      utils.mdblistConfig.get.invalidate();
+      void utils.mdblistConfig.get.invalidate();
       setTmdbApiKey('');
       toast({
         title: 'Success',

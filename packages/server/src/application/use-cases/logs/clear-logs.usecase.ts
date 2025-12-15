@@ -15,7 +15,7 @@ import type { IUseCase } from '@/server/application/use-cases/use-case.interface
 export class ClearLogsUseCase implements IUseCase<ClearLogsCommand, ClearLogsResponse> {
   constructor(private readonly logBufferService: ILogBufferService) {}
 
-  async execute(
+  execute(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _command: ClearLogsCommand
   ): Promise<ClearLogsResponse> {
@@ -23,6 +23,6 @@ export class ClearLogsUseCase implements IUseCase<ClearLogsCommand, ClearLogsRes
     // Note: _command.userId reserved for future multitenancy validation
     this.logBufferService.clear();
 
-    return { success: true };
+    return Promise.resolve({ success: true });
   }
 }

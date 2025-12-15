@@ -27,10 +27,10 @@ export function useListProcessor() {
       });
 
       // Invalidate queries to refresh UI
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
-      utils.dashboard.getRecentActivity.invalidate();
-      utils.dashboard.getPendingRequests.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
+      void utils.dashboard.getRecentActivity.invalidate();
+      void utils.dashboard.getPendingRequests.invalidate();
 
       // Destructure wrapped response
       const { execution } = result;
@@ -76,10 +76,10 @@ export function useListProcessor() {
       setProcessingLists(new Set()); // Clear all processing lists
 
       // Invalidate queries to refresh UI
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
-      utils.dashboard.getRecentActivity.invalidate();
-      utils.dashboard.getPendingRequests.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
+      void utils.dashboard.getRecentActivity.invalidate();
+      void utils.dashboard.getPendingRequests.invalidate();
 
       if (result.success) {
         const skipped = result.totalItemsFound - result.itemsRequested - result.itemsFailed;
@@ -114,7 +114,7 @@ export function useListProcessor() {
     },
   });
 
-  const handleProcess = async (id: number, lists: MediaList[]) => {
+  const handleProcess = (id: number, lists: MediaList[]) => {
     if (!jellyseerrConfig) {
       toast({
         title: 'Configuration Required',
@@ -135,7 +135,7 @@ export function useListProcessor() {
     processMutation.mutate({ listId: id, triggerType: 'manual' });
   };
 
-  const handleProcessAll = async (lists: MediaList[]) => {
+  const handleProcessAll = (lists: MediaList[]) => {
     if (!jellyseerrConfig) {
       toast({
         title: 'Configuration Required',

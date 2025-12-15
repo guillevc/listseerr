@@ -47,8 +47,8 @@ export function AddListDialog() {
       const newList = result.list;
 
       // Invalidate all related queries
-      utils.lists.getAll.invalidate();
-      utils.dashboard.getStats.invalidate();
+      void utils.lists.getAll.invalidate();
+      void utils.dashboard.getStats.invalidate();
 
       // Only show success toast if the list is enabled
       // If disabled, the manual toast below will handle it
