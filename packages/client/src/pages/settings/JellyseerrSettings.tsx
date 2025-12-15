@@ -126,7 +126,7 @@ export function JellyseerrSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Jellyseerr Configuration</h3>
-        <p className="text-sm text-muted mt-1">
+        <p className="mt-1 text-sm text-muted">
           Configure your Jellyseerr instance to enable automatic media requests.
         </p>
       </div>
@@ -158,7 +158,7 @@ export function JellyseerrSettings() {
             <button
               type="button"
               onClick={() => setShowApiKey(!showApiKey)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted hover:text-foreground"
             >
               {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -194,7 +194,7 @@ export function JellyseerrSettings() {
                 onClick={handleRemove}
                 disabled={deleteMutation.isPending}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <Trash2 className="mr-2 h-4 w-4" />
                 {deleteMutation.isPending ? 'Removing...' : 'Remove Configuration'}
               </Button>
             </div>

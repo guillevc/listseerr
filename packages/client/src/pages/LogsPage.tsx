@@ -171,16 +171,16 @@ export function LogsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Server Logs</h1>
-        <p className="text-muted mt-1">Real-time server logs (auto-refreshes every 2 seconds)</p>
+        <p className="mt-1 text-muted">Real-time server logs (auto-refreshes every 2 seconds)</p>
       </div>
 
-      <Card className="bg-background border-light-ui dark:border-dark-ui">
+      <Card className="border-light-ui bg-background dark:border-dark-ui">
         <CardContent className="p-0">
           {/* Controls Bar */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-light-ui dark:border-dark-ui">
+          <div className="flex items-center justify-between border-b border-light-ui px-4 py-3 dark:border-dark-ui">
             <div className="flex items-center gap-2">
               <Switch id="auto-scroll" checked={autoScroll} onCheckedChange={setAutoScroll} />
-              <Label htmlFor="auto-scroll" className="cursor-pointer text-muted text-sm">
+              <Label htmlFor="auto-scroll" className="cursor-pointer text-sm text-muted">
                 Auto-scroll
               </Label>
             </div>
@@ -190,7 +190,7 @@ export function LogsPage() {
               onClick={handleClearLogs}
               disabled={clearLogsMutation.isPending}
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="mr-2 h-4 w-4" />
               Clear Logs
             </Button>
           </div>
@@ -198,7 +198,7 @@ export function LogsPage() {
           {/* Logs Display */}
           <div
             ref={logsContainerRef}
-            className="p-4 h-[calc(100vh-280px)] overflow-y-auto font-mono text-xs whitespace-pre"
+            className="h-[calc(100vh-280px)] overflow-y-auto p-4 font-mono text-xs whitespace-pre"
             style={{
               fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
             }}

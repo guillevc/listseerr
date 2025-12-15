@@ -72,7 +72,7 @@ function Logo() {
     <Link to="/" className="flex items-center gap-2">
       <svg
         viewBox="0 0 24 24"
-        className="h-8 w-8 text-light-primary dark:text-dark-primary"
+        className="text-light-primary dark:text-dark-primary h-8 w-8"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
@@ -122,8 +122,8 @@ function ExternalLinkButton({
     return (
       <div
         className={cn(
-          'text-sm text-muted cursor-not-allowed',
-          mobile ? 'px-4 py-3 rounded-md' : 'px-4 py-2'
+          'cursor-not-allowed text-sm text-muted',
+          mobile ? 'rounded-md px-4 py-3' : 'px-4 py-2'
         )}
       >
         {item.name}
@@ -149,7 +149,7 @@ function ExternalLinkButton({
           'flex items-center gap-2',
           mobile
             ? 'w-full border-light-pu dark:border-dark-pu'
-            : 'text-light-pu-2 border-light-pu-2 hover:border-light-pu dark:text-dark-pu-2 dark:border-dark-pu-2 dark:hover:border-dark-pu'
+            : 'border-light-pu-2 text-light-pu-2 hover:border-light-pu dark:border-dark-pu-2 dark:text-dark-pu-2 dark:hover:border-dark-pu'
         )}
       >
         {item.badge && (
@@ -189,7 +189,7 @@ function DesktopNav({
   isActive: (item: NavItem) => boolean;
 }) {
   return (
-    <div className="hidden md:flex gap-1">
+    <div className="hidden gap-1 md:flex">
       {navItems.map((item) => (
         <NavItemRenderer key={item.path} item={item} isActive={isActive(item)} />
       ))}
@@ -216,7 +216,7 @@ function MobileNav({
         <SheetHeader>
           <SheetTitle className="text-left">Menu</SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-2 mt-6">
+        <div className="mt-6 flex flex-col gap-2">
           {navItems.map((item) => (
             <NavItemRenderer
               key={item.path}
@@ -239,7 +239,7 @@ export function Navigation() {
 
   return (
     <nav className="border-b">
-      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+      <div className="container mx-auto max-w-6xl px-4 md:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Left: Logo + Desktop Nav */}
           <div className="flex items-center gap-8">

@@ -14,13 +14,13 @@ export function SettingsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted mt-1">Manage your application configuration</p>
+        <p className="mt-1 text-muted">Manage your application configuration</p>
       </div>
 
       <Card className="overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Sidebar */}
-          <div className="border-b md:border-b-0 md:border-r">
+          <div className="border-b md:border-r md:border-b-0">
             <SettingsSidebar activeCategory={activeCategory} />
           </div>
 

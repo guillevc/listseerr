@@ -62,7 +62,7 @@ export function GeneralSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">General Settings</h3>
-        <p className="text-sm text-muted mt-1">Configure general application settings</p>
+        <p className="mt-1 text-sm text-muted">Configure general application settings</p>
       </div>
 
       <Separator />

@@ -152,7 +152,7 @@ export function ListsTable({
             <div className="flex items-center gap-2 whitespace-nowrap">
               <Badge
                 variant="outline"
-                className={`whitespace-nowrap border-0 ${getProviderColor(info.getValue())}`}
+                className={`border-0 whitespace-nowrap ${getProviderColor(info.getValue())}`}
               >
                 {getProviderName(info.getValue())}
               </Badge>
@@ -160,7 +160,7 @@ export function ListsTable({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 text-orange-500 shrink-0" />
+                      <AlertCircle className="h-4 w-4 shrink-0 text-orange-500" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
@@ -196,7 +196,7 @@ export function ListsTable({
                     href={displayUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-muted hover:text-foreground transition-colors inline-flex items-center gap-1 max-w-[150px] sm:max-w-[180px]"
+                    className="inline-flex max-w-[150px] items-center gap-1 text-sm text-muted transition-colors hover:text-foreground sm:max-w-[180px]"
                   >
                     <span className="truncate">{truncateTail(displayUrl, 30)}</span>
                     <ExternalLink className="h-3 w-3 shrink-0" />
@@ -226,7 +226,7 @@ export function ListsTable({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5 cursor-help text-sm whitespace-nowrap">
+                <div className="flex cursor-help items-center gap-1.5 text-sm whitespace-nowrap">
                   <Clock className="h-3.5 w-3.5 shrink-0" />
                   <span>{getRelativeTime(info.getValue())}</span>
                 </div>
@@ -319,19 +319,19 @@ export function ListsTable({
                     onClick={() => onProcess(list.id)}
                     disabled={isProcessing || !providerConfigured || !jellyseerrConfigured}
                   >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${isProcessing ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isProcessing ? 'animate-spin' : ''}`} />
                     Process
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setEditingList(list)}>
-                    <Pencil className="h-4 w-4 mr-2" />
+                    <Pencil className="mr-2 h-4 w-4" />
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => deleteMutation.mutate({ id: list.id })}
                     disabled={deleteMutation.isPending}
-                    className="text-light-re dark:text-dark-re focus:text-light-re focus:dark:text-dark-re"
+                    className="text-light-re focus:text-light-re dark:text-dark-re focus:dark:text-dark-re"
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="mr-2 h-4 w-4" />
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -378,7 +378,7 @@ export function ListsTable({
                         <div
                           className={
                             header.column.getCanSort()
-                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
+                              ? 'flex cursor-pointer items-center gap-2 select-none hover:text-foreground'
                               : ''
                           }
                           onClick={header.column.getToggleSortingHandler()}

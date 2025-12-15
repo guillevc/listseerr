@@ -10,9 +10,9 @@ export function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <RefreshCw className="mx-auto mb-4 h-8 w-8 animate-spin" />
           <p className="text-muted">Loading dashboard...</p>
         </div>
       </div>
@@ -23,14 +23,14 @@ export function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted mt-1">Overview of your media lists and request activity</p>
+        <p className="mt-1 text-muted">Overview of your media lists and request activity</p>
       </div>
 
       {lists.length === 0 ? (
         <Card>
           <CardContent className="py-12">
             <div className="text-center text-muted">
-              <p className="text-lg mb-2">Welcome to Listseerr!</p>
+              <p className="mb-2 text-lg">Welcome to Listseerr!</p>
               <p className="text-sm">
                 Get started by adding your first media list from the Lists page.
               </p>

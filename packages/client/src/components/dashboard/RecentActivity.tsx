@@ -16,7 +16,7 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
 
   if (total === 0) {
     return (
-      <div className="h-8 w-full bg-card rounded-md flex items-center justify-center">
+      <div className="flex h-8 w-full items-center justify-center rounded-md bg-card">
         <span className="text-xs text-muted">No items</span>
       </div>
     );
@@ -35,10 +35,10 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="h-8 w-full bg-card rounded-md overflow-hidden flex cursor-help">
+          <div className="flex h-8 w-full cursor-help overflow-hidden rounded-md bg-card">
             {requested > 0 && (
               <div
-                className="bg-green-600 h-full flex items-center justify-center text-white text-xs font-medium"
+                className="flex h-full items-center justify-center bg-green-600 text-xs font-medium text-white"
                 style={{ width: `${requestedPercent}%` }}
               >
                 {showRequestedNumber && <span>{requested}</span>}
@@ -46,7 +46,7 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
             )}
             {skipped > 0 && (
               <div
-                className="bg-blue-500 h-full flex items-center justify-center text-white text-xs font-medium"
+                className="flex h-full items-center justify-center bg-blue-500 text-xs font-medium text-white"
                 style={{ width: `${skippedPercent}%` }}
               >
                 {showSkippedNumber && <span>{skipped}</span>}
@@ -54,7 +54,7 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
             )}
             {failed > 0 && (
               <div
-                className="bg-red-600 h-full flex items-center justify-center text-white text-xs font-medium"
+                className="flex h-full items-center justify-center bg-red-600 text-xs font-medium text-white"
                 style={{ width: `${failedPercent}%` }}
               >
                 {showFailedNumber && <span>{failed}</span>}
@@ -120,8 +120,8 @@ export function RecentActivity() {
           <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted">
-            <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
+          <div className="py-8 text-center text-muted">
+            <Clock className="mx-auto mb-2 h-8 w-8 animate-spin" />
             <p>Loading activity...</p>
           </div>
         </CardContent>
@@ -140,9 +140,9 @@ export function RecentActivity() {
           <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted">
+          <div className="py-8 text-center text-muted">
             <p>No recent activity</p>
-            <p className="text-sm mt-1">Processing activity will appear here</p>
+            <p className="mt-1 text-sm">Processing activity will appear here</p>
           </div>
         </CardContent>
       </Card>
@@ -169,7 +169,7 @@ export function RecentActivity() {
                 className="rounded-lg border border-border hover:border-border-hover"
               >
                 {/* Group header */}
-                <div className="flex items-center justify-between p-4 border-b border-border">
+                <div className="flex items-center justify-between border-b border-border p-4">
                   <div className="flex items-center gap-2">
                     <Badge
                       variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'}
@@ -177,7 +177,7 @@ export function RecentActivity() {
                     >
                       {group.triggerType === 'scheduled' ? (
                         <>
-                          <Calendar className="h-3 w-3 mr-1" />
+                          <Calendar className="mr-1 h-3 w-3" />
                           Scheduled
                         </>
                       ) : (
@@ -192,7 +192,7 @@ export function RecentActivity() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-sm text-muted cursor-help">
+                        <span className="cursor-help text-sm text-muted">
                           {formatRelativeTime(timestamp)}
                         </span>
                       </TooltipTrigger>
@@ -258,7 +258,7 @@ export function RecentActivity() {
                           const totalSkipped = totalFound - totalRequested - totalFailed;
 
                           return (
-                            <TableRow className="bg-card/50 font-semibold border-t-2 border-border">
+                            <TableRow className="border-t-2 border-border bg-card/50 font-semibold">
                               <TableCell>Batch Total</TableCell>
                               <TableCell className="text-right">{totalFound}</TableCell>
                               <TableCell className="w-[500px]">
@@ -277,7 +277,7 @@ export function RecentActivity() {
 
                 {/* Show error messages if any */}
                 {group.executions.some((e) => e.errorMessage) && (
-                  <div className="p-4 border-t space-y-2">
+                  <div className="space-y-2 border-t p-4">
                     {group.executions
                       .filter((e) => e.errorMessage)
                       .map((e) => (

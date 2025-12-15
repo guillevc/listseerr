@@ -270,7 +270,7 @@ export function AddListDialog() {
         </DialogHeader>
 
         {/* Animated Progress Bar */}
-        <div className="w-full h-1 bg-card mt-4">
+        <div className="mt-4 h-1 w-full bg-card">
           <div
             className="h-full bg-primary transition-all duration-500 ease-out"
             style={{
@@ -291,7 +291,7 @@ export function AddListDialog() {
                 >
                   <label className="block cursor-pointer">
                     <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
-                    <div className="flex items-center gap-4 rounded-lg border-2 border-input p-5 hover:border-primary-hover/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:hover:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <div>
@@ -300,15 +300,15 @@ export function AddListDialog() {
                           </div>
                           {traktConfig?.clientId ? (
                             <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              <CheckCircle2 className="mr-1 h-3 w-3" />
                               Configured
                             </Badge>
                           ) : (
                             <Badge
                               variant="secondary"
-                              className="bg-orange-500 text-white whitespace-nowrap"
+                              className="bg-orange-500 whitespace-nowrap text-white"
                             >
-                              <AlertCircle className="h-3 w-3 mr-1" />
+                              <AlertCircle className="mr-1 h-3 w-3" />
                               Not Configured
                             </Badge>
                           )}
@@ -323,7 +323,7 @@ export function AddListDialog() {
                       id="provider-traktChart"
                       className="peer sr-only"
                     />
-                    <div className="flex items-center gap-4 rounded-lg border-2 border-input p-5 hover:border-primary-hover/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:hover:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <div>
@@ -334,15 +334,15 @@ export function AddListDialog() {
                           </div>
                           {traktConfig?.clientId ? (
                             <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              <CheckCircle2 className="mr-1 h-3 w-3" />
                               Configured
                             </Badge>
                           ) : (
                             <Badge
                               variant="secondary"
-                              className="bg-orange-500 text-white whitespace-nowrap"
+                              className="bg-orange-500 whitespace-nowrap text-white"
                             >
-                              <AlertCircle className="h-3 w-3 mr-1" />
+                              <AlertCircle className="mr-1 h-3 w-3" />
                               Not Configured
                             </Badge>
                           )}
@@ -357,7 +357,7 @@ export function AddListDialog() {
                       id="provider-mdblist"
                       className="peer sr-only"
                     />
-                    <div className="flex items-center gap-4 rounded-lg border-2 border-input p-5 hover:border-primary-hover/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:hover:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <div>
@@ -366,15 +366,15 @@ export function AddListDialog() {
                           </div>
                           {mdbListConfig?.apiKey ? (
                             <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              <CheckCircle2 className="mr-1 h-3 w-3" />
                               Configured
                             </Badge>
                           ) : (
                             <Badge
                               variant="secondary"
-                              className="bg-orange-500 text-white whitespace-nowrap"
+                              className="bg-orange-500 whitespace-nowrap text-white"
                             >
-                              <AlertCircle className="h-3 w-3 mr-1" />
+                              <AlertCircle className="mr-1 h-3 w-3" />
                               Not Configured
                             </Badge>
                           )}
@@ -389,7 +389,7 @@ export function AddListDialog() {
                       id="provider-stevenlu"
                       className="peer sr-only"
                     />
-                    <div className="flex items-center gap-4 rounded-lg border-2 border-input p-5 hover:border-primary-hover/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:hover:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 transition-colors min-h-[80px]">
+                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
                       <div className="flex-1">
                         <div>
                           <p className="font-medium">StevenLu</p>
@@ -412,7 +412,7 @@ export function AddListDialog() {
         {currentStep === 2 && (
           <>
             <div className="py-4">
-              <div className="space-y-4 min-h-[350px]">
+              <div className="min-h-[350px] space-y-4">
                 {/* List Name - ALWAYS FIRST */}
                 <div className="grid gap-2">
                   <Label htmlFor="name">List Name</Label>
@@ -522,20 +522,20 @@ export function AddListDialog() {
 
                 {/* URL format info for Trakt List and MDBList */}
                 {provider !== 'traktChart' && provider !== 'stevenlu' && (
-                  <div className="rounded-md border bg-card/50 p-3 space-y-2">
+                  <div className="space-y-2 rounded-md border bg-card/50 p-3">
                     <p className="text-sm font-medium">
                       {provider === 'trakt' ? 'Trakt List' : 'MDBList'} URL format:
                     </p>
                     <div className="space-y-1.5 text-sm">
                       {provider === 'trakt' ? (
                         <>
-                          <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                          <code className="block rounded bg-background px-1.5 py-0.5 text-xs">
                             https://trakt.tv/users/USERNAME/lists/LIST-SLUG?sort=rank
                           </code>
                         </>
                       ) : (
                         <>
-                          <code className="text-xs bg-background px-1.5 py-0.5 rounded block">
+                          <code className="block rounded bg-background px-1.5 py-0.5 text-xs">
                             https://mdblist.com/lists/USERNAME/LIST-SLUG
                           </code>
                         </>

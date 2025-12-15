@@ -55,10 +55,10 @@ export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarP
               key={category.id}
               to={category.path}
               className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors text-left rounded-md border border-transparent',
+                'flex w-full items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-left text-sm font-medium transition-colors',
                 isActive
-                  ? 'bg-background/70 dark:bg-background/50 text-foreground border-input'
-                  : 'text-muted hover:text-foreground hover:bg-card/50'
+                  ? 'border-input bg-background/70 text-foreground dark:bg-background/50'
+                  : 'text-muted hover:bg-card/50 hover:text-foreground'
               )}
             >
               {category.icon}

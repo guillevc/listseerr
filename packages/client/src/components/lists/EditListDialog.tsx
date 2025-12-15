@@ -121,7 +121,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
         </DialogHeader>
 
         <div className="py-4">
-          <div className="space-y-4 min-h-[350px]">
+          <div className="min-h-[350px] space-y-4">
             {/* List Name - ALWAYS FIRST */}
             <div className="grid gap-2">
               <Label htmlFor="edit-name">List Name</Label>
@@ -190,7 +190,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             {list.provider !== 'traktChart' && list.provider !== 'stevenlu' && (
               <div className="grid gap-2">
                 <Label htmlFor="edit-url">List URL (Read-only)</Label>
-                <div className="text-sm text-muted bg-light-ui dark:bg-dark-ui p-2 rounded-md break-all">
+                <div className="rounded-md bg-light-ui p-2 text-sm break-all text-muted dark:bg-dark-ui">
                   {list.displayUrl || list.url}
                 </div>
                 <p className="text-xs text-muted">

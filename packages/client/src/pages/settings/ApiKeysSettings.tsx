@@ -189,7 +189,7 @@ export function ApiKeysSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">API Keys</h3>
-        <p className="text-sm text-muted mt-1">Manage API keys for third-party services</p>
+        <p className="mt-1 text-sm text-muted">Manage API keys for third-party services</p>
       </div>
 
       <Separator />
@@ -205,7 +205,7 @@ export function ApiKeysSettings() {
               disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
             />
             <div>
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 Trakt
                 {traktEnabled && traktConfig?.clientId && (
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -223,7 +223,7 @@ export function ApiKeysSettings() {
         <CardContent className="space-y-4">
           {!traktEnabled && (
             <Card variant="warning">
-              <CardContent className="py-3 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2 py-3">
                 <AlertCircle className="h-5 w-5" />
                 <p className="text-sm">
                   Provider disabled - Trakt lists and charts cannot be processed.
@@ -247,7 +247,7 @@ export function ApiKeysSettings() {
                 className="pr-10"
               />
               {traktEnabled && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="absolute top-1/2 right-3 -translate-y-1/2">
                   <button
                     type="button"
                     onClick={() => setShowTraktKey(!showTraktKey)}
@@ -291,7 +291,7 @@ export function ApiKeysSettings() {
               disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
             />
             <div>
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 MDBList
                 {mdbListEnabled && mdbListConfig?.apiKey && (
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -309,7 +309,7 @@ export function ApiKeysSettings() {
         <CardContent className="space-y-4">
           {!mdbListEnabled && (
             <Card variant="warning">
-              <CardContent className="py-3 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2 py-3">
                 <AlertCircle className="h-5 w-5" />
                 <p className="text-sm">Provider disabled - MDBList lists cannot be processed.</p>
               </CardContent>
@@ -333,7 +333,7 @@ export function ApiKeysSettings() {
                 className="pr-10"
               />
               {mdbListEnabled && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="absolute top-1/2 right-3 -translate-y-1/2">
                   <button
                     type="button"
                     onClick={() => setShowTmdbKey(!showMdbListKey)}
@@ -367,7 +367,7 @@ export function ApiKeysSettings() {
       <Card className="border-dashed">
         <CardContent className="py-8">
           <div className="text-center text-muted">
-            <Plus className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <Plus className="mx-auto mb-2 h-8 w-8 opacity-50" />
             <p className="text-sm">More API integrations coming soon</p>
           </div>
         </CardContent>

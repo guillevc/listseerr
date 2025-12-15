@@ -145,9 +145,9 @@ export function JellyseerrConfigDialog() {
         <Button variant="outline" size="sm" className={config ? 'relative pl-8' : ''}>
           {config ? (
             <>
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              <span className="absolute top-1/2 left-3 flex h-2 w-2 -translate-y-1/2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
               Jellyseerr
             </>
@@ -205,13 +205,13 @@ export function JellyseerrConfigDialog() {
               variant="destructive"
               onClick={handleRemove}
               disabled={deleteMutation.isPending}
-              className="w-full sm:w-auto sm:mr-auto"
+              className="w-full sm:mr-auto sm:w-auto"
             >
               <Trash2 className="h-4 w-4" />
               {deleteMutation.isPending ? 'Removing...' : 'Remove'}
             </Button>
           )}
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button
               variant="outline"
               onClick={handleTest}

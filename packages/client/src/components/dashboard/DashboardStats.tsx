@@ -52,25 +52,25 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Lists */}
-      <Card className="lg:col-span-1 hover:border-border-hover">
+      <Card className="hover:border-border-hover lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Lists</CardTitle>
           <List className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted mb-1">Total active</p>
+          <p className="mb-1 text-xs text-muted">Total active</p>
           <div className="text-2xl font-bold">{activeListsCount}</div>
         </CardContent>
       </Card>
 
       {/* Requests */}
-      <Card className="lg:col-span-1 hover:border-border-hover">
+      <Card className="hover:border-border-hover lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Requests</CardTitle>
           <PackageSearch className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted mb-1">All time</p>
+          <p className="mb-1 text-xs text-muted">All time</p>
           <div className="text-2xl font-bold text-green-600">
             {dashboardStats?.totalRequestedItems ?? '-'}
           </div>
@@ -78,19 +78,19 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
       </Card>
 
       {/* Automatic Processing - Merged Card */}
-      <Card className="md:col-span-2 lg:col-span-2 hover:border-border-hover">
+      <Card className="hover:border-border-hover md:col-span-2 lg:col-span-2">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Automatic Processing</CardTitle>
           <Clock className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
           <div className="flex items-start gap-6">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted mb-1">Last execution</p>
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 text-xs text-muted">Last execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="text-2xl font-bold cursor-help truncate">
+                    <div className="cursor-help truncate text-2xl font-bold">
                       {lastScheduledText}
                     </div>
                   </TooltipTrigger>
@@ -103,12 +103,12 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
 
             <Separator orientation="vertical" className="h-12" />
 
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted mb-1">Next execution</p>
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 text-xs text-muted">Next execution</p>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="text-2xl font-bold cursor-help truncate">
+                    <div className="cursor-help truncate text-2xl font-bold">
                       {nextScheduledText}
                     </div>
                   </TooltipTrigger>

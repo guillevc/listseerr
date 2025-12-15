@@ -6,9 +6,9 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <Navigation />
-      <main className="flex-1 container mx-auto p-4 md:p-8 max-w-6xl">{children}</main>
+      <main className="container mx-auto max-w-6xl flex-1 p-4 md:p-8">{children}</main>
     </div>
   );
 }

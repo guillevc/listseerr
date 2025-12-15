@@ -22,7 +22,7 @@ function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
   return (
     <tfoot
       className={cn(
-        'border-t bg-card dark:bg-card/50 font-medium [&>tr]:last:border-b-0',
+        'border-t bg-card font-medium dark:bg-card/50 [&>tr]:last:border-b-0',
         className
       )}
       {...props}

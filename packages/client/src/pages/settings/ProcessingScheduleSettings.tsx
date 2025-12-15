@@ -268,7 +268,7 @@ export function ProcessingScheduleSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Automatic Processing</h3>
-        <p className="text-sm text-muted mt-1">
+        <p className="mt-1 text-sm text-muted">
           Schedule automatic processing for all enabled lists. Lists are processed sequentially
           (oldest to newest) to avoid rate limits.
         </p>
@@ -303,19 +303,19 @@ export function ProcessingScheduleSettings() {
         <>
           {/* Schedule Configuration Card */}
           <Card>
-            <CardContent className="pt-6 space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div>
-                <h4 className="text-base font-semibold mb-4">Schedule Configuration</h4>
+                <h4 className="mb-4 text-base font-semibold">Schedule Configuration</h4>
 
                 {/* Common patterns */}
                 <div className="mb-4">
-                  <Label className="text-sm mb-2 block">Quick Patterns</Label>
+                  <Label className="mb-2 block text-sm">Quick Patterns</Label>
                   <div className="flex flex-wrap gap-2">
                     {commonPatterns.map((pattern) => (
                       <Badge
                         key={pattern.value}
                         variant="outline"
-                        className="cursor-pointer hover:bg-card-hover transition-colors"
+                        className="cursor-pointer transition-colors hover:bg-card-hover"
                         onClick={() => setCronExpression(pattern.value)}
                       >
                         {pattern.label}
@@ -327,7 +327,7 @@ export function ProcessingScheduleSettings() {
                 <Separator />
 
                 {/* Cron Expression Input */}
-                <div className="space-y-2 mt-4">
+                <div className="mt-4 space-y-2">
                   <div className="grid gap-2">
                     <Label htmlFor="cron-expression">Cron Expression</Label>
                     <Input
@@ -354,14 +354,14 @@ export function ProcessingScheduleSettings() {
                     <CardContent className="py-3">
                       <div className="flex items-start gap-3">
                         {validation.isValid ? (
-                          <CheckCircle2 className="h-5 w-5 shrink-0 mt-[0.1rem]" />
+                          <CheckCircle2 className="mt-[0.1rem] h-5 w-5 shrink-0" />
                         ) : (
-                          <AlertCircle className="h-5 w-5 shrink-0 mt-[0.1rem]" />
+                          <AlertCircle className="mt-[0.1rem] h-5 w-5 shrink-0" />
                         )}
                         <div className="flex-1">
-                          <p className="text-sm font-medium leading-5">{validation.description}</p>
+                          <p className="text-sm leading-5 font-medium">{validation.description}</p>
                           {validation.nextRun && (
-                            <p className="text-xs mt-1 opacity-80">
+                            <p className="mt-1 text-xs opacity-80">
                               Next run: {validation.nextRun}
                             </p>
                           )}
