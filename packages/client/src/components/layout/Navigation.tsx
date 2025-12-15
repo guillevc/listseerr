@@ -101,17 +101,11 @@ function InternalLink({
   mobile?: boolean;
 }) {
   return (
-    <Link
-      to={item.path}
-      onClick={onClick}
-      className={cn(
-        'text-sm font-medium rounded-md transition-colors',
-        mobile ? 'px-4 py-3' : 'px-4 py-2',
-        isActive ? 'bg-card text-foreground' : 'text-muted hover:text-foreground hover:bg-card/50'
-      )}
-    >
-      {item.name}
-    </Link>
+    <Button variant="ghost" size={mobile ? 'default' : 'sm'} active={isActive} asChild>
+      <Link to={item.path} onClick={onClick}>
+        {item.name}
+      </Link>
+    </Button>
   );
 }
 

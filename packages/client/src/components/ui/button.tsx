@@ -21,10 +21,21 @@ const buttonVariants = tv({
       lg: 'h-11 rounded-md px-8',
       icon: 'h-10 w-10',
     },
+    active: {
+      true: '',
+    },
   },
+  compoundVariants: [
+    {
+      variant: 'ghost',
+      active: true,
+      class: 'bg-card text-foreground',
+    },
+  ],
   defaultVariants: {
     variant: 'default',
     size: 'default',
+    active: false,
   },
 });
 
@@ -32,9 +43,15 @@ interface ButtonProps extends ComponentProps<'button'>, VariantProps<typeof butt
   asChild?: boolean;
 }
 
-function Button({ className, variant, size, asChild = false, ref, ...props }: ButtonProps) {
+function Button({ className, variant, size, active, asChild = false, ref, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : 'button';
-  return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, active, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
 }
 
 export { Button, buttonVariants };
