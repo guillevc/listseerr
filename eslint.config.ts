@@ -45,7 +45,6 @@ export default [
         },
       ],
       'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/incompatible-library': 'off',
       '@typescript-eslint/no-deprecated': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -55,7 +54,6 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/only-throw-error': ['error', { allowThrowingUnknown: true }],
     },
   },
   // TanStack Router routes have circular type inference that requires @ts-expect-error,
@@ -66,11 +64,11 @@ export default [
       '@typescript-eslint/no-unsafe-return': 'off',
     },
   },
-  // TanStack Router's redirect() is designed to be thrown but returns a non-Error object
+  // @tanstack/react-table false positive with react-hooks plugin
   {
-    files: ['packages/client/src/routes/settings.index.tsx'],
+    files: ['packages/client/src/components/lists/ListsTable.tsx'],
     rules: {
-      '@typescript-eslint/only-throw-error': 'off',
+      'react-hooks/incompatible-library': 'off',
     },
   },
 ];

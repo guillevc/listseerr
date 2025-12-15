@@ -7,8 +7,9 @@ export const settingsIndexRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/',
   beforeLoad: () => {
-    throw redirect({
+    redirect({
       to: '/settings/general',
+      throw: true,
     });
   },
 });
