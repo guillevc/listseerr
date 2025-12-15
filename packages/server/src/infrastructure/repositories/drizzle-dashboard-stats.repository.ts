@@ -21,10 +21,7 @@ import * as schema from '@/server/infrastructure/db/schema';
 export class DrizzleDashboardStatsRepository implements IDashboardStatsRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
-  async getTotalRequestedItemsCount(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _userId: number
-  ): Promise<number> {
+  async getTotalRequestedItemsCount(_userId: number): Promise<number> {
     // Count distinct TMDB IDs across all cached list items
     // Note: _userId reserved for future multitenancy
     const [result] = await this.db
@@ -34,10 +31,7 @@ export class DrizzleDashboardStatsRepository implements IDashboardStatsRepositor
     return result?.count || 0;
   }
 
-  async getLastScheduledExecution(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _userId: number
-  ): Promise<Date | null> {
+  async getLastScheduledExecution(_userId: number): Promise<Date | null> {
     // Get most recent successful scheduled execution
     // Note: _userId reserved for future multitenancy
     const [result] = await this.db

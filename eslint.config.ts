@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -7,21 +6,21 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
 export default [
-  { ignores: ['dist'] },
+  {
+    ignores: [
+      'dist',
+      'eslint.config.ts',
+      'packages/server/drizzle.config.ts',
+      'packages/server/scripts/*.ts',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   prettier,
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: [
-            'eslint.config.ts',
-            'packages/server/drizzle.config.ts',
-            'packages/server/scripts/migrate.ts',
-            'packages/server/scripts/reset.ts',
-          ],
-        },
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -38,9 +37,40 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': [
+        'warn',
+        {
+          allowConstantExport: true,
+          allowExportNames: ['buttonVariants', 'badgeVariants', 'cardVariants'],
+        },
+      ],
       'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/incompatible-library': 'off',
       '@typescript-eslint/no-deprecated': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/only-throw-error': ['error', { allowThrowingUnknown: true }],
+    },
+  },
+  // TanStack Router routes have circular type inference that requires @ts-expect-error,
+  // which causes ESLint to see the return as `any`
+  {
+    files: ['packages/client/src/routes/settings.*.tsx'],
+    rules: {
+      '@typescript-eslint/no-unsafe-return': 'off',
+    },
+  },
+  // TanStack Router's redirect() is designed to be thrown but returns a non-Error object
+  {
+    files: ['packages/client/src/routes/settings.index.tsx'],
+    rules: {
+      '@typescript-eslint/only-throw-error': 'off',
     },
   },
 ];

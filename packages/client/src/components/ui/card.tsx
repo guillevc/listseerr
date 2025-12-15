@@ -97,6 +97,5 @@ function CardFooter({ className, ...props }: ComponentProps<'footer'>) {
   return <footer className={cn('flex items-center p-6 pt-0', className)} {...props} />;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants };
 export type { CardProps, CardVariant };

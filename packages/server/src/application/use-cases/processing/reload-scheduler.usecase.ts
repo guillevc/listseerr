@@ -20,10 +20,7 @@ export class ReloadSchedulerUseCase implements IUseCase<
 > {
   constructor(private readonly schedulerService: ISchedulerService) {}
 
-  async execute(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _command: ReloadSchedulerCommand
-  ): Promise<ReloadSchedulerResponse> {
+  async execute(_command: ReloadSchedulerCommand): Promise<ReloadSchedulerResponse> {
     // Note: _command.userId reserved for future multitenancy validation
     await this.schedulerService.loadScheduledLists();
 

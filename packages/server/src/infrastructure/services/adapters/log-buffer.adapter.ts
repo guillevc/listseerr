@@ -65,8 +65,15 @@ class LogBuffer {
   }
 
   private extractData(logObject: Record<string, unknown>): Record<string, unknown> | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { level, time, pid, hostname, module, msg, ...rest } = logObject;
+    const {
+      level: _level,
+      time: _time,
+      pid: _pid,
+      hostname: _hostname,
+      module: _module,
+      msg: _msg,
+      ...rest
+    } = logObject;
 
     if (Object.keys(rest).length === 0) {
       return undefined;

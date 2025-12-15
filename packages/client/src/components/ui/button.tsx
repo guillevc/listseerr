@@ -37,6 +37,5 @@ function Button({ className, variant, size, asChild = false, ref, ...props }: Bu
   return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants };
 export type { ButtonProps };

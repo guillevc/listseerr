@@ -57,10 +57,7 @@ async function processListCallback(
  *
  * @param db - Database instance
  */
-async function processAllListsCallback(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _db: BunSQLiteDatabase<typeof schema>
-): Promise<void> {
+async function processAllListsCallback(_db: BunSQLiteDatabase<typeof schema>): Promise<void> {
   logger.info(
     'Global automatic processing triggered - using batch processing with global deduplication'
   );

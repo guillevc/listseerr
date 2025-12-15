@@ -18,10 +18,7 @@ export class GetScheduledJobsUseCase implements IUseCase<
 > {
   constructor(private readonly schedulerService: ISchedulerService) {}
 
-  execute(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _command: GetScheduledJobsCommand
-  ): Promise<GetScheduledJobsResponse> {
+  execute(_command: GetScheduledJobsCommand): Promise<GetScheduledJobsResponse> {
     // Note: _command.userId reserved for future multitenancy validation
     const jobs = this.schedulerService.getScheduledJobs();
 
