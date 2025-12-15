@@ -11,6 +11,7 @@ import { Separator } from '../../components/ui/separator';
 import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 
 interface CronValidation {
   isValid: boolean;
@@ -216,6 +217,7 @@ export function ProcessingScheduleSettings() {
       });
     },
   });
+  const isSaving = useMinLoading(saveMutation.isPending);
 
   // Load settings when they arrive - syncing with external API data
   useEffect(() => {
@@ -378,11 +380,8 @@ export function ProcessingScheduleSettings() {
 
       {/* Save Button - always visible */}
       <div className="flex gap-2">
-        <Button
-          onClick={handleSave}
-          disabled={(isEnabled && !validation.isValid) || saveMutation.isPending}
-        >
-          {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+        <Button onClick={handleSave} loading={isSaving} disabled={isEnabled && !validation.isValid}>
+          Save Settings
         </Button>
       </div>
     </div>

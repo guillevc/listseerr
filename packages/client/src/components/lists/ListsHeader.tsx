@@ -1,7 +1,7 @@
-import { RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
 import { AddListDialog } from './AddListDialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { useMinLoading } from '../../hooks/use-min-loading';
 
 interface ListsHeaderProps {
   onProcessAll: () => void;
@@ -16,6 +16,8 @@ export function ListsHeader({
   hasLists,
   jellyseerrConfigured,
 }: ListsHeaderProps) {
+  const isProcessing = useMinLoading(processingLists.size > 0);
+
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <h1 className="text-3xl font-bold">Lists</h1>
@@ -28,11 +30,9 @@ export function ListsHeader({
                 <Button
                   variant="outline"
                   onClick={onProcessAll}
-                  disabled={!jellyseerrConfigured || processingLists.size > 0}
+                  loading={isProcessing}
+                  disabled={!jellyseerrConfigured}
                 >
-                  <RefreshCw
-                    className={`h-4 w-4 ${processingLists.size > 0 ? 'animate-spin' : ''}`}
-                  />
                   Process All
                 </Button>
               </TooltipTrigger>

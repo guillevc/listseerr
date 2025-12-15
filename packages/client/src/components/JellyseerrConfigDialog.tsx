@@ -13,6 +13,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/use-toast';
+import { useMinLoading } from '../hooks/use-min-loading';
 import { trpc } from '../lib/trpc';
 
 export function JellyseerrConfigDialog() {
@@ -68,6 +69,7 @@ export function JellyseerrConfigDialog() {
       });
     },
   });
+  const isSaving = useMinLoading(saveMutation.isPending);
 
   const deleteMutation = trpc.config.delete.useMutation({
     onSuccess: () => {
@@ -204,28 +206,24 @@ export function JellyseerrConfigDialog() {
             <Button
               variant="destructive"
               onClick={handleRemove}
-              disabled={deleteMutation.isPending}
+              loading={deleteMutation.isPending}
               className="w-full sm:mr-auto sm:w-auto"
             >
               <Trash2 className="h-4 w-4" />
-              {deleteMutation.isPending ? 'Removing...' : 'Remove'}
+              Remove
             </Button>
           )}
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button
               variant="outline"
               onClick={handleTest}
-              disabled={testMutation.isPending}
+              loading={testMutation.isPending}
               className="w-full sm:w-auto"
             >
-              {testMutation.isPending ? 'Testing...' : 'Test Connection'}
+              Test Connection
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={saveMutation.isPending}
-              className="w-full sm:w-auto"
-            >
-              {saveMutation.isPending ? 'Saving...' : 'Save Configuration'}
+            <Button onClick={handleSave} loading={isSaving} className="w-full sm:w-auto">
+              Save Configuration
             </Button>
           </div>
         </DialogFooter>

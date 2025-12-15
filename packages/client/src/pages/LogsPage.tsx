@@ -188,7 +188,7 @@ export function LogsPage() {
               variant="destructive"
               size="sm"
               onClick={handleClearLogs}
-              disabled={clearLogsMutation.isPending}
+              loading={clearLogsMutation.isPending}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Clear Logs

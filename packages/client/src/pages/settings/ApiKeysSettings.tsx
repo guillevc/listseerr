@@ -15,6 +15,7 @@ import { Separator } from '../../components/ui/separator';
 import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 
 export function ApiKeysSettings() {
   // Trakt.tv state
@@ -126,6 +127,11 @@ export function ApiKeysSettings() {
       });
     },
   });
+
+  const isSavingTrakt = useMinLoading(saveTraktMutation.isPending || deleteTraktMutation.isPending);
+  const isSavingMdbList = useMinLoading(
+    saveMdbListMutation.isPending || deleteMdbListMutation.isPending
+  );
 
   // Trakt handlers
   const handleTraktToggle = (checked: boolean) => {
@@ -266,15 +272,10 @@ export function ApiKeysSettings() {
           <div className="flex gap-2">
             <Button
               onClick={handleTraktSave}
-              disabled={
-                saveTraktMutation.isPending ||
-                deleteTraktMutation.isPending ||
-                (traktEnabled && !traktClientId.trim())
-              }
+              loading={isSavingTrakt}
+              disabled={traktEnabled && !traktClientId.trim()}
             >
-              {saveTraktMutation.isPending || deleteTraktMutation.isPending
-                ? 'Saving...'
-                : 'Save Changes'}
+              Save Changes
             </Button>
           </div>
         </CardContent>
@@ -349,15 +350,10 @@ export function ApiKeysSettings() {
           <div className="flex gap-2">
             <Button
               onClick={handleMdbListSave}
-              disabled={
-                saveMdbListMutation.isPending ||
-                deleteMdbListMutation.isPending ||
-                (mdbListEnabled && !mdbListApiKey.trim())
-              }
+              loading={isSavingMdbList}
+              disabled={mdbListEnabled && !mdbListApiKey.trim()}
             >
-              {saveMdbListMutation.isPending || deleteMdbListMutation.isPending
-                ? 'Saving...'
-                : 'Save Changes'}
+              Save Changes
             </Button>
           </div>
         </CardContent>

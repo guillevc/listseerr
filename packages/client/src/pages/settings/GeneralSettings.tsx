@@ -6,6 +6,7 @@ import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 
 export function GeneralSettings() {
   const [timezone, setTimezone] = useState('UTC');
@@ -39,6 +40,7 @@ export function GeneralSettings() {
       });
     },
   });
+  const isSaving = useMinLoading(saveMutation.isPending);
 
   useEffect(() => {
     if (settings?.timezone) {
@@ -84,8 +86,8 @@ export function GeneralSettings() {
         </div>
 
         <div className="flex gap-2 pt-4">
-          <Button onClick={handleSave} disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+          <Button onClick={handleSave} loading={isSaving}>
+            Save Settings
           </Button>
         </div>
       </div>

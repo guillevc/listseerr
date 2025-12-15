@@ -5,6 +5,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 
 export function JellyseerrSettings() {
@@ -58,6 +59,7 @@ export function JellyseerrSettings() {
       });
     },
   });
+  const isSaving = useMinLoading(saveMutation.isPending);
 
   const deleteMutation = trpc.config.delete.useMutation({
     onSuccess: () => {
@@ -177,11 +179,11 @@ export function JellyseerrSettings() {
         </div>
 
         <div className="flex gap-2 pt-4">
-          <Button variant="outline" onClick={handleTest} disabled={testMutation.isPending}>
-            {testMutation.isPending ? 'Testing...' : 'Test Connection'}
+          <Button variant="outline" onClick={handleTest} loading={testMutation.isPending}>
+            Test Connection
           </Button>
-          <Button onClick={handleSave} disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving...' : 'Save Configuration'}
+          <Button onClick={handleSave} loading={isSaving}>
+            Save Configuration
           </Button>
         </div>
 
@@ -192,10 +194,10 @@ export function JellyseerrSettings() {
               <Button
                 variant="destructive"
                 onClick={handleRemove}
-                disabled={deleteMutation.isPending}
+                loading={deleteMutation.isPending}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                {deleteMutation.isPending ? 'Removing...' : 'Remove Configuration'}
+                Remove Configuration
               </Button>
             </div>
           </>

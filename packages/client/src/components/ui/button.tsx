@@ -1,6 +1,7 @@
 import { type ComponentProps } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { tv, type VariantProps } from 'tailwind-variants';
+import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/client/lib/utils';
 
@@ -39,16 +40,40 @@ const buttonVariants = tv({
 
 interface ButtonProps extends ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
 }
 
-function Button({ className, variant, size, active, asChild = false, ref, ...props }: ButtonProps) {
+function Button({
+  className,
+  variant,
+  size,
+  active,
+  asChild = false,
+  loading = false,
+  disabled,
+  children,
+  ref,
+  ...props
+}: ButtonProps) {
   const Comp = asChild ? Slot : 'button';
+  const isDisabled = disabled || loading;
+
   return (
     <Comp
       className={cn(buttonVariants({ variant, size, active, className }))}
       ref={ref}
+      disabled={isDisabled}
       {...props}
-    />
+    >
+      {loading && !asChild ? (
+        <span className="relative">
+          <span className="opacity-0">{children}</span>
+          <Loader2 className="absolute inset-0 m-auto animate-spin" />
+        </span>
+      ) : (
+        children
+      )}
+    </Comp>
   );
 }
 

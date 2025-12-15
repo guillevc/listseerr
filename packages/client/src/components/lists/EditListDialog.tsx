@@ -12,6 +12,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 
@@ -82,6 +83,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       });
     },
   });
+  const isSaving = useMinLoading(updateMutation.isPending);
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -223,8 +225,8 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={updateMutation.isPending}>
-            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+          <Button onClick={handleSave} loading={isSaving}>
+            Save Changes
           </Button>
         </DialogFooter>
       </DialogContent>

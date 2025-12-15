@@ -18,6 +18,7 @@ import { Badge } from '../ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { validateAndDetectProvider, getProviderName } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 
 export function AddListDialog() {
@@ -75,6 +76,7 @@ export function AddListDialog() {
       });
     },
   });
+  const isCreating = useMinLoading(createMutation.isPending);
 
   // Auto-generate name for traktChart and stevenlu
   // For traktChart, always regenerate when media/chart type changes
@@ -550,8 +552,8 @@ export function AddListDialog() {
               <Button variant="outline" onClick={goToStep1}>
                 Back
               </Button>
-              <Button onClick={handleAdd} disabled={createMutation.isPending}>
-                {createMutation.isPending ? 'Adding...' : 'Add List'}
+              <Button onClick={handleAdd} loading={isCreating}>
+                Add List
               </Button>
             </DialogFooter>
           </>
