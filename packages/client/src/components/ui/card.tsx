@@ -18,14 +18,14 @@ function useCardContext(): CardContextValue {
 }
 
 const cardVariants = tv({
-  base: 'rounded-lg border bg-card text-foreground shadow-sm',
+  base: 'rounded-lg border text-foreground',
   variants: {
     variant: {
-      default: '',
-      success: 'border-success-border bg-success',
-      destructive: 'border-destructive-border bg-destructive',
-      warning: 'border-warning-border bg-warning',
-      info: 'border-info-border bg-info',
+      default: 'border-border bg-card',
+      success: 'border-success-border bg-success-background',
+      destructive: 'border-destructive-border bg-destructive-background',
+      warning: 'border-warning-border bg-warning-background',
+      info: 'border-info-border bg-info-background',
     },
   },
   defaultVariants: {

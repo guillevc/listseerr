@@ -9,7 +9,8 @@ const badgeVariants = tv({
     variant: {
       default: 'border-transparent bg-primary text-white hover:bg-primary-hover',
       secondary: 'border-transparent bg-card text-foreground hover:bg-border',
-      destructive: 'border-transparent bg-destructive text-white hover:bg-destructive-hover',
+      destructive:
+        'border-transparent bg-destructive-background text-white hover:bg-destructive-hover',
       outline: 'text-foreground',
       trakt: 'border-transparent bg-magenta-600 text-white',
       letterboxd: 'border-transparent bg-orange-600 text-white',
