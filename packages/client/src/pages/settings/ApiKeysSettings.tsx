@@ -225,12 +225,13 @@ export function ApiKeysSettings() {
         </CardHeader>
         <CardContent className="space-y-4">
           {!traktEnabled && (
-            <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
-              <p className="text-sm text-orange-800 dark:text-orange-200">
-                Provider disabled - Trakt lists and charts cannot be processed. Enable to configure
-                API key.
-              </p>
-            </div>
+            <Card variant="warning">
+              <CardContent className="py-3">
+                <p className="text-sm">
+                  Provider disabled - Trakt lists and charts cannot be processed.
+                </p>
+              </CardContent>
+            </Card>
           )}
 
           <div className="grid gap-2">
@@ -313,11 +314,11 @@ export function ApiKeysSettings() {
         </CardHeader>
         <CardContent className="space-y-4">
           {!mdbListEnabled && (
-            <div className="bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md p-3">
-              <p className="text-sm text-orange-800 dark:text-orange-200">
-                Provider disabled - MDBList lists cannot be processed. Enable to configure API key.
-              </p>
-            </div>
+            <Card variant="warning">
+              <CardContent className="py-3">
+                <p className="text-sm">Provider disabled - MDBList lists cannot be processed.</p>
+              </CardContent>
+            </Card>
           )}
 
           <div className="grid gap-2">
