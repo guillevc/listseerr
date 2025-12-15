@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "shared": "workspace:*",
-    "@t3-oss/env-core": "catalog:",
+    "@t3-oss/env-core": "^0.13.8",
     "@trpc/server": "catalog:",
     "croner": "catalog:",
-    "zod": "catalog:",
     "drizzle-orm": "^0.45.0",
     "hono": "^4.10.7",
-    "pino": "^10.1.0"
+    "pino": "^10.1.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:",
