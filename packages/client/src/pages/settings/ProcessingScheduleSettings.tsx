@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Cron } from 'croner';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
+import { Card, CardContent } from '../../components/ui/card';
+import { ExternalLink } from '../../components/ui/external-link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
-import { Badge } from '../../components/ui/badge';
 import { Switch } from '../../components/ui/switch';
-import { Card, CardContent } from '../../components/ui/card';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 
@@ -341,14 +342,9 @@ export function ProcessingScheduleSettings() {
                   </div>
                   <p className="text-xs text-muted">
                     Format: minute hour day month day-of-week •{' '}
-                    <a
-                      href="https://crontab.guru"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                    >
+                    <ExternalLink href="https://crontab.guru" className="font-medium">
                       crontab.guru helper
-                    </a>
+                    </ExternalLink>
                   </p>
                 </div>
 

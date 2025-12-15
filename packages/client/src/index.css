@@ -294,7 +294,7 @@
   --color-info-muted: var(--color-light-tx-2);
   --color-info-border: var(--color-green-00);
 
-  --color-link: var(--color-light-bl-2);
+  --color-link: var(--color-light-bl);
 }
 
 @layer theme {
@@ -343,7 +343,7 @@
       --color-info-muted: var(--color-dark-tx-2);
       --color-info-border: var(--color-blue-800);
 
-      --color-link: var(--color-dark-bl-2);
+      --color-link: var(--color-dark-bl);
     }
   }
 }

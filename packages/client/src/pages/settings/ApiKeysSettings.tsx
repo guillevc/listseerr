@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
 import {
   Card,
   CardContent,
@@ -12,6 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '../../components/ui/card';
+import { ExternalLink } from '../../components/ui/external-link';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Separator } from '../../components/ui/separator';
+import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 
@@ -212,14 +213,9 @@ export function ApiKeysSettings() {
               </CardTitle>
               <CardDescription>
                 Required for fetching Trakt lists and curated charts. Get your Client ID from{' '}
-                <a
-                  href="https://trakt.tv/oauth/applications"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
-                >
+                <ExternalLink href="https://trakt.tv/oauth/applications">
                   Trakt.tv API Applications
-                </a>
+                </ExternalLink>
               </CardDescription>
             </div>
           </div>
@@ -303,14 +299,9 @@ export function ApiKeysSettings() {
               </CardTitle>
               <CardDescription>
                 Required for fetching MDBList lists. Get your API key from{' '}
-                <a
-                  href="https://mdblist.com/preferences/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
-                >
+                <ExternalLink href="https://mdblist.com/preferences/">
                   MDBList Preferences
-                </a>
+                </ExternalLink>
               </CardDescription>
             </div>
           </div>

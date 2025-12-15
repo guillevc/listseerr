@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/button';
+import { ExternalLink } from '../../components/ui/external-link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
@@ -76,14 +77,9 @@ export function GeneralSettings() {
             onChange={(e) => setTimezone(e.target.value)}
           />
           <p className="text-xs text-muted">
-            <a
-              href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <ExternalLink href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">
               IANA timezone identifier
-            </a>
+            </ExternalLink>
           </p>
         </div>
 
