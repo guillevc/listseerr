@@ -37,13 +37,7 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        {
-          allowConstantExport: true,
-          allowExportNames: ['buttonVariants', 'badgeVariants', 'cardVariants'],
-        },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'react-hooks/set-state-in-effect': 'off',
       '@typescript-eslint/no-deprecated': 'warn',
       '@typescript-eslint/no-unused-vars': [
@@ -54,6 +48,13 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+    },
+  },
+  // UI primitives export variants alongside components - no benefit from fast refresh rule
+  {
+    files: ['packages/client/src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   // TanStack Router routes have circular type inference that requires @ts-expect-error,
