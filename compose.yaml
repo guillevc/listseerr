@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: listseerr
-    user: "${PUID:-1000}:${PGID:-1000}"
+    user: ${PUID:-1000}:${PGID:-1000}
     ports:
-      - "${PORT:-3000}:3000"
+      - ${PORT:-3000}:3000
     env_file:
       - .env.docker
     volumes:

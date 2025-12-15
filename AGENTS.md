@@ -1,13 +1,23 @@
-# CLAUDE.md
+# AGENTS.md
+
+## Development instructions
+
+- Run after code changes:
+  - `bun run lint --fix`
+  - `bun run format`
+  - `bun run typecheck`
+- Do not modify `AGENTS.md` file without explicit user approval.
+
+## Architecture guide
 
 Architectural guide for the Server API using **Onion/Clean Architecture** and **DDD** principles.  
 Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 ---
 
-## 1. Layer Architecture
+### 1. Layer Architecture
 
-### Layer Responsibilities
+#### Layer Responsibilities
 
 | Layer              | Responsibility                                      | Depends On          |
 | ------------------ | --------------------------------------------------- | ------------------- |
@@ -17,7 +27,7 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 | **Presentation**   | tRPC routers, request/response handling             | Application only    |
 | **Bootstrap**      | DI wiring, startup, migrations                      | All layers          |
 
-### Import Rules
+#### Import Rules
 
 | Layer          | Can Import From (Server) | Can Import From (Shared)                                               |
 | -------------- | ------------------------ | ---------------------------------------------------------------------- |
@@ -33,7 +43,7 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 - ✅ `shared/domain/errors/` — Error classes
 - ❌ `shared/domain/value-objects/` — VO classes
 
-### Layer Diagram
+#### Layer Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -55,9 +65,9 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 ---
 
-## 2. Core Patterns
+### 2. Core Patterns
 
-### Naming Conventions
+#### Naming Conventions
 
 | Artifact          | Pattern                    | Location                        | Example                   |
 | ----------------- | -------------------------- | ------------------------------- | ------------------------- |
@@ -71,7 +81,7 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 **Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
 
-### Type-Safe Enum Pattern
+#### Type-Safe Enum Pattern
 
 **In types file (exported for external access):**
 
@@ -109,7 +119,7 @@ export class ProviderVO {
 - Export `<Name>Values` in types file when primitives need external access (switch statements, UI)
 - Use private `const Values` in VO when only needed for internal validation
 
-### Value Object Pattern
+#### Value Object Pattern
 
 ```typescript
 // shared/domain/value-objects/provider.vo.ts
@@ -140,7 +150,7 @@ export class ProviderVO {
 - Domain, Application, Infrastructure: ✅ Can use VOs
 - Presentation: ❌ Uses primitive types only (`ProviderType`)
 
-### Entity Pattern
+#### Entity Pattern
 
 ```typescript
 // server/domain/trakt-config.entity.ts
@@ -188,7 +198,7 @@ export class TraktConfig {
 - Repository `exists()` returns `false` for `id === 0` (shortcut, no DB query)
 - Repository `save()` checks `exists()` → INSERT if false, UPDATE if true
 
-### Data Flow
+#### Data Flow
 
 ```
 Client (Primitive) → DTO (ProviderType) → Application (ProviderVO.create()) → Entity (ProviderVO)
@@ -202,9 +212,9 @@ Both Application and Infrastructure create VOs via `VO.create()`. Entity constru
 
 ---
 
-## 3. Repository Pattern
+### 3. Repository Pattern
 
-### Interface (Application Layer)
+#### Interface (Application Layer)
 
 ```typescript
 export interface IMediaListRepository {
@@ -215,7 +225,7 @@ export interface IMediaListRepository {
 }
 ```
 
-### Implementation (Infrastructure Layer)
+#### Implementation (Infrastructure Layer)
 
 ```typescript
 private async exists(id: number, userId: number): Promise<boolean> {
@@ -270,7 +280,7 @@ private toDomain(row: typeof table.$inferSelect): MediaList {
 **Infrastructure can:** Import Entities/VOs, call `VO.create()`, call Entity constructors, read via getters.
 **Infrastructure cannot:** Call mutation methods (`entity.update()`), trigger business logic.
 
-### Singleton-per-User Repository Variant
+#### Singleton-per-User Repository Variant
 
 For entities where each user has exactly one record (e.g., `JellyseerrConfig`, `GeneralSettings`):
 
@@ -294,7 +304,7 @@ async save(entity: JellyseerrConfig): Promise<JellyseerrConfig> {
 
 ---
 
-## 4. Use Case Pattern
+### 4. Use Case Pattern
 
 ```typescript
 export class SaveTraktConfigUseCase {
@@ -322,7 +332,7 @@ export class SaveTraktConfigUseCase {
 
 ---
 
-## 5. Component Responsibilities
+### 5. Component Responsibilities
 
 | Component                     | Layer          | Responsibility                | Dependencies                   |
 | ----------------------------- | -------------- | ----------------------------- | ------------------------------ |
@@ -332,7 +342,7 @@ export class SaveTraktConfigUseCase {
 | **Repository Implementation** | Infrastructure | ORM/database mapping          | Application interfaces, Domain |
 | **Service Implementation**    | Infrastructure | External APIs, I/O            | Application interfaces, Domain |
 
-### Infrastructure Services Organization
+#### Infrastructure Services Organization
 
 ```
 infrastructure/services/
@@ -345,22 +355,8 @@ infrastructure/services/
 
 ---
 
-## 6. Error Handling
+### 6. Error Handling
 
 - Define `DomainError` base class for Entities and Use Cases
 - tRPC middleware translates `DomainError` → appropriate HTTP status
 - Never expose raw database errors or stack traces
-
----
-
-## 7. AI Agent Instructions
-
-### CLAUDE.md Modification Policy
-
-**Never modify CLAUDE.md without explicit user approval.**
-
-When proposing changes:
-
-1. Create `CLAUDE.draft.md` with proposed changes
-2. Explain rationale
-3. Wait for approval before integrating
