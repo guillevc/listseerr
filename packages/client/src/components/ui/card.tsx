@@ -34,7 +34,7 @@ const cardVariants = tv({
 });
 
 const cardTitleVariants = tv({
-  base: 'text-xl font-semibold leading-none tracking-tight',
+  base: 'text-lg font-semibold leading-none tracking-tight',
   variants: {
     variant: {
       default: '',
