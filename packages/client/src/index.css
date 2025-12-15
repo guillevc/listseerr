@@ -263,8 +263,8 @@
   --color-card-hover: var(--color-base-100);
   --color-card-foreground: var(--color-light-tx);
 
-  --color-primary: var(--color-cyan-400);
-  --color-primary-hover: var(--color-cyan-500);
+  --color-primary: var(--color-cyan-300);
+  --color-primary-hover: var(--color-cyan-400);
   --color-primary-foreground: var(--color-light-tx);
 
   --color-input: var(--color-light-ui);
