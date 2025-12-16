@@ -70,27 +70,25 @@ export class MediaAvailabilityVO {
   static fromJellyseerrStatus(status: number | null | undefined): MediaAvailabilityVO {
     // No mediaInfo → TO_BE_REQUESTED (media not in Jellyseerr at all)
     if (status === null || status === undefined) {
-      return new MediaAvailabilityVO(Values.TO_BE_REQUESTED);
+      return this.toBeRequested();
     }
 
-    // UNKNOWN, PENDING, PROCESSING, or DELETED → PREVIOUSLY_REQUESTED
-    // UNKNOWN is included because rejected requests stay in UNKNOWN state
-    if (
-      status === JellyseerrStatus.UNKNOWN ||
-      status === JellyseerrStatus.PENDING ||
-      status === JellyseerrStatus.PROCESSING ||
-      status === JellyseerrStatus.DELETED
-    ) {
-      return new MediaAvailabilityVO(Values.PREVIOUSLY_REQUESTED);
-    }
+    switch (status) {
+      // UNKNOWN is included because rejected requests stay in UNKNOWN state
+      case JellyseerrStatus.UNKNOWN:
+      case JellyseerrStatus.PENDING:
+      case JellyseerrStatus.PROCESSING:
+      case JellyseerrStatus.DELETED:
+        return this.previouslyRequested();
 
-    // PARTIALLY_AVAILABLE or AVAILABLE → AVAILABLE
-    if (status === JellyseerrStatus.PARTIALLY_AVAILABLE || status === JellyseerrStatus.AVAILABLE) {
-      return new MediaAvailabilityVO(Values.AVAILABLE);
-    }
+      case JellyseerrStatus.PARTIALLY_AVAILABLE:
+      case JellyseerrStatus.AVAILABLE:
+        return this.available();
 
-    // Unknown status code - default to TO_BE_REQUESTED (safer to try than skip)
-    return new MediaAvailabilityVO(Values.TO_BE_REQUESTED);
+      // Unknown status code - default to TO_BE_REQUESTED (safer to try than skip)
+      default:
+        return this.toBeRequested();
+    }
   }
 
   // Static factory methods
