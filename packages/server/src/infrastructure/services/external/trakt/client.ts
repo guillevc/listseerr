@@ -1,4 +1,3 @@
-import { parseTraktUrl, buildTraktApiUrl } from './url-parser';
 import type { TraktListItem } from './types';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
@@ -11,13 +10,12 @@ export async function fetchTraktList(
   clientId: string
 ): Promise<MediaItemDTO[]> {
   try {
-    // Parse the Trakt URL
-    const urlParts = parseTraktUrl(url);
-    logger.debug({ url, urlParts }, 'Parsed Trakt URL');
-
-    // Build the API URL with pagination
+    // URL is already fully formed with sort/display in path
+    // Just add pagination params
     const limit = maxItems || 100;
-    const apiUrl = buildTraktApiUrl(urlParts, 1, limit);
+    const apiUrl = url.includes('?')
+      ? `${url}&page=1&limit=${limit}`
+      : `${url}?page=1&limit=${limit}`;
 
     logger.debug({ apiUrl, limit }, 'Fetching items from Trakt API');
 

@@ -39,7 +39,7 @@
     "lint:shared": "eslint packages/shared",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "bun run lint && bun run format:check && bun run typecheck && bun run build",
+    "ci": "bun run lint && bun run format:check && bun run typecheck && bun test && bun run build",
     "start": "bun run --env-file .env dist/index.js",
     "db:generate": "bun run --env-file .env.dev -- bunx --bun --no-install drizzle-kit generate --config packages/server/drizzle.config.ts",
     "db:migrate": "bun run --env-file .env.dev packages/server/scripts/migrate.ts",

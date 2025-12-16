@@ -33,14 +33,14 @@ export class ListUrlParserService implements IListUrlParserService {
     const isDisplayUrl = url.includes('trakt.tv') && !url.includes('api.trakt.tv');
 
     if (isDisplayUrl) {
-      const apiUrl = convertTraktUrl(url);
+      const { apiUrl, displayUrl } = convertTraktUrl(url);
       return {
         apiUrl,
-        displayUrl: providedDisplayUrl || url,
+        displayUrl: providedDisplayUrl || displayUrl,
       };
     }
 
-    // Already an API URL
+    // Already an API URL - keep as-is
     return {
       apiUrl: url,
       displayUrl: providedDisplayUrl || url,
