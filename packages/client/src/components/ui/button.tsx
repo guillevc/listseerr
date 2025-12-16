@@ -11,7 +11,7 @@ const buttonVariants = tv({
     variant: {
       default: 'bg-primary hover:bg-primary-hover text-primary-foreground',
       destructive: 'bg-destructive hover:bg-destructive-hover text-destructive-foreground',
-      outline: 'border-2 border-border bg-transparent text-foreground',
+      outline: 'border-2 bg-transparent hover:ring',
       ghost: 'hover:bg-card',
     },
     size: {
@@ -41,10 +41,15 @@ const buttonVariants = tv({
     },
     {
       variant: 'outline',
+      accent: 'default',
+      class: 'text-foreground border-border hover:ring-muted hover:border-muted',
+    },
+    {
+      variant: 'outline',
       accent: 'purple',
       class: [
         'text-light-pu border-light-pu-2',
-        'hover:border-light-pu-2 hover:ring hover:ring-light-pu-2',
+        'hover:border-light-pu-2 hover:ring-light-pu-2',
         'dark:text-dark-pu dark:border-dark-pu-2',
         'dark:hover:border-dark-pu-2 dark:hover:ring-dark-pu-2',
       ],

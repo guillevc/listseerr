@@ -4,6 +4,17 @@ import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';
 import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
@@ -54,12 +65,6 @@ export function LogsPage() {
       logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
     }
   }, [logs, autoScroll]);
-
-  const handleClearLogs = () => {
-    if (confirm('Are you sure you want to clear all logs?')) {
-      clearLogsMutation.mutate();
-    }
-  };
 
   // Format timestamp to match console: [2025-12-03 10:22:09]
   const formatTimestamp = (timestamp: string) => {
@@ -184,15 +189,28 @@ export function LogsPage() {
                 Auto-scroll
               </Label>
             </div>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleClearLogs}
-              loading={clearLogsMutation.isPending}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Clear Logs
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" loading={clearLogsMutation.isPending}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Clear Logs
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Clear all logs?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all server logs. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => clearLogsMutation.mutate()}>
+                    Clear Logs
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
 
           {/* Logs Display */}
