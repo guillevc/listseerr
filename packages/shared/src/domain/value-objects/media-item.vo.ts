@@ -1,5 +1,4 @@
 import { MediaTypeVO } from './media-type.vo';
-import type { MediaItemDTO } from '../../application/dtos/core/media-item.dto';
 
 export interface MediaItemVOProps {
   title: string;
@@ -69,17 +68,5 @@ export class MediaItemVO {
    */
   equals(other: MediaItemVO): boolean {
     return this._tmdbId === other._tmdbId;
-  }
-
-  /**
-   * Convert to DTO for crossing application boundary
-   */
-  toDTO(): MediaItemDTO {
-    return {
-      title: this._title,
-      year: this._year,
-      tmdbId: this._tmdbId,
-      mediaType: this._mediaType.getValue(),
-    };
   }
 }

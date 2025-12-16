@@ -1,5 +1,6 @@
 import type { JellyseerrConfig } from '@/server/infrastructure/db/schema';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
+import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
 import type {
   JellyseerrRequestPayload,
   JellyseerrRequestResponse,
@@ -10,6 +11,14 @@ import type {
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
 const logger = new LoggerService('jellyseerr-client');
+
+function buildHeaders(config: JellyseerrConfig) {
+  return {
+    'Content-Type': 'application/json',
+    'X-Api-Key': config.apiKey,
+    'X-Api-User': config.userIdJellyseerr.toString(),
+  };
+}
 
 export async function requestToJellyseerr(
   item: MediaItemDTO,
@@ -25,23 +34,20 @@ export async function requestToJellyseerr(
     'Starting Jellyseerr request'
   );
   try {
+    const mediaType = MediaTypeVO.create(item.mediaType);
     const payload: JellyseerrRequestPayload = {
-      mediaType: item.mediaType === 'tv' ? 'tv' : 'movie',
+      mediaType: mediaType.isTv() ? 'tv' : 'movie',
       mediaId: item.tmdbId,
     };
 
     // Add seasons array for TV shows
-    if (item.mediaType === 'tv') {
+    if (mediaType.isTv()) {
       payload.seasons = [1];
     }
 
     const response = await fetch(`${config.url}/api/v1/request`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': config.apiKey,
-        'X-Api-User': config.userIdJellyseerr.toString(),
-      },
+      headers: buildHeaders(config),
       body: JSON.stringify(payload),
     });
 
@@ -241,11 +247,7 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
 
   try {
     const response = await fetch(`${config.url}/api/v1/request?filter=pending&take=1000`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': config.apiKey,
-        'X-Api-User': config.userIdJellyseerr.toString(),
-      },
+      headers: buildHeaders(config),
     });
 
     if (!response.ok) {
@@ -278,36 +280,38 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
 }
 
 /**
- * Get movie availability status from Jellyseerr
+ * Get media availability status from Jellyseerr
  *
- * @param tmdbId - TMDB ID of the movie
+ * @param tmdbId - TMDB ID of the media
+ * @param mediaType - Media type (movie or tv)
  * @param config - Jellyseerr configuration
  * @returns Media info response with status, or null if not found
  */
-export async function getMovieAvailability(
+export async function getMediaAvailability(
   tmdbId: number,
+  mediaType: MediaTypeVO,
   config: JellyseerrConfig
 ): Promise<JellyseerrMediaInfoResponse | null> {
-  logger.debug({ tmdbId }, 'Checking movie availability in Jellyseerr');
+  const endpoint = mediaType.isMovie() ? 'movie' : 'tv';
+  logger.debug(
+    { tmdbId, mediaType: mediaType.getValue() },
+    'Checking media availability in Jellyseerr'
+  );
 
   try {
-    const response = await fetch(`${config.url}/api/v1/movie/${tmdbId}?language=en`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': config.apiKey,
-        'X-Api-User': config.userIdJellyseerr.toString(),
-      },
+    const response = await fetch(`${config.url}/api/v1/${endpoint}/${tmdbId}?language=en`, {
+      headers: buildHeaders(config),
     });
 
     if (response.status === 404) {
-      logger.debug({ tmdbId }, 'Movie not found in Jellyseerr (404)');
+      logger.debug({ tmdbId }, 'Media not found in Jellyseerr (404)');
       return null;
     }
 
     if (!response.ok) {
       logger.warn(
         { tmdbId, status: response.status },
-        'Failed to fetch movie availability from Jellyseerr'
+        'Failed to fetch media availability from Jellyseerr'
       );
       return null;
     }
@@ -315,63 +319,13 @@ export async function getMovieAvailability(
     const data = (await response.json()) as JellyseerrMediaInfoResponse;
     logger.debug(
       { tmdbId, status: data.mediaInfo?.status },
-      'Movie availability fetched from Jellyseerr'
+      'Media availability fetched from Jellyseerr'
     );
     return data;
   } catch (error) {
     logger.warn(
       { tmdbId, error: error instanceof Error ? error.message : 'Unknown error' },
-      'Error fetching movie availability from Jellyseerr'
-    );
-    return null;
-  }
-}
-
-/**
- * Get TV show availability status from Jellyseerr
- *
- * @param tmdbId - TMDB ID of the TV show
- * @param config - Jellyseerr configuration
- * @returns Media info response with status, or null if not found
- */
-export async function getTvAvailability(
-  tmdbId: number,
-  config: JellyseerrConfig
-): Promise<JellyseerrMediaInfoResponse | null> {
-  logger.debug({ tmdbId }, 'Checking TV show availability in Jellyseerr');
-
-  try {
-    const response = await fetch(`${config.url}/api/v1/tv/${tmdbId}?language=en`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': config.apiKey,
-        'X-Api-User': config.userIdJellyseerr.toString(),
-      },
-    });
-
-    if (response.status === 404) {
-      logger.debug({ tmdbId }, 'TV show not found in Jellyseerr (404)');
-      return null;
-    }
-
-    if (!response.ok) {
-      logger.warn(
-        { tmdbId, status: response.status },
-        'Failed to fetch TV show availability from Jellyseerr'
-      );
-      return null;
-    }
-
-    const data = (await response.json()) as JellyseerrMediaInfoResponse;
-    logger.debug(
-      { tmdbId, status: data.mediaInfo?.status },
-      'TV show availability fetched from Jellyseerr'
-    );
-    return data;
-  } catch (error) {
-    logger.warn(
-      { tmdbId, error: error instanceof Error ? error.message : 'Unknown error' },
-      'Error fetching TV show availability from Jellyseerr'
+      'Error fetching media availability from Jellyseerr'
     );
     return null;
   }

@@ -5,10 +5,7 @@ import type {
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 import { MediaAvailabilityVO } from 'shared/domain/value-objects/media-availability.vo';
-import {
-  getMovieAvailability,
-  getTvAvailability,
-} from '@/server/infrastructure/services/external/jellyseerr/client';
+import { getMediaAvailability } from '@/server/infrastructure/services/external/jellyseerr/client';
 import type { ILogger } from '@/server/application/services/logger.interface';
 
 /**
@@ -125,9 +122,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       updatedAt: Date;
     }
   ): Promise<MediaAvailabilityVO> {
-    const response = item.mediaType.isMovie()
-      ? await getMovieAvailability(item.tmdbId, configDTO)
-      : await getTvAvailability(item.tmdbId, configDTO);
+    const response = await getMediaAvailability(item.tmdbId, item.mediaType, configDTO);
 
     // Extract status from response (null if not found or no mediaInfo)
     const status = response?.mediaInfo?.status ?? null;

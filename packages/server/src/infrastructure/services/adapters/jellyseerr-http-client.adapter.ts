@@ -1,11 +1,12 @@
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
+import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 import type {
   IJellyseerrClient,
   ProcessingResult,
 } from '@/server/application/services/jellyseerr-client.service.interface';
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import { requestItemsToJellyseerr } from '@/server/infrastructure/services/external/jellyseerr/client';
+import { JellyseerrConfigMapper } from '@/server/application/mappers/jellyseerr-config.mapper';
+import { MediaItemMapper } from '@/server/application/mappers/media-item.mapper';
 
 /**
  * Jellyseerr HTTP Client Adapter
@@ -15,41 +16,15 @@ import { requestItemsToJellyseerr } from '@/server/infrastructure/services/exter
  */
 export class JellyseerrHttpClient implements IJellyseerrClient {
   async requestItems(items: MediaItemVO[], config: JellyseerrConfig): Promise<ProcessingResult> {
-    // Transform domain MediaItem VOs to DTOs for infrastructure layer
-    const itemDTOs = items.map((item) => item.toDTO());
+    const itemDTOs = items.map((item) => MediaItemMapper.toDTO(item));
+    const configDTO = JellyseerrConfigMapper.toDTO(config);
 
-    // Transform JellyseerrConfig entity to database schema format
-    // The existing infrastructure function expects the full database row type
-    const configDTO = {
-      id: config.id,
-      userId: config.userId,
-      url: config.url.getValue(),
-      apiKey: config.apiKey.getValue(),
-      userIdJellyseerr: config.userIdJellyseerr.getValue(),
-      createdAt: config.createdAt,
-      updatedAt: config.updatedAt,
-    };
-
-    // Delegate to existing infrastructure service
     const result = await requestItemsToJellyseerr(itemDTOs, configDTO);
 
-    // Transform result DTOs back to domain MediaItem VOs
     return {
-      successful: result.successful.map((dto) =>
-        MediaItemVO.create({
-          title: dto.title,
-          year: dto.year,
-          tmdbId: dto.tmdbId,
-          mediaType: dto.mediaType === 'movie' ? MediaTypeVO.movie() : MediaTypeVO.tv(),
-        })
-      ),
+      successful: result.successful.map((dto) => MediaItemMapper.toVO(dto)),
       failed: result.failed.map((failure) => ({
-        item: MediaItemVO.create({
-          title: failure.item.title,
-          year: failure.item.year,
-          tmdbId: failure.item.tmdbId,
-          mediaType: failure.item.mediaType === 'movie' ? MediaTypeVO.movie() : MediaTypeVO.tv(),
-        }),
+        item: MediaItemMapper.toVO(failure.item),
         error: failure.error,
       })),
     };

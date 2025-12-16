@@ -7,7 +7,7 @@ import type { MediaType } from '../../../domain/value-objects/media-type.vo';
  * Contains only primitives - no Value Objects or Entities.
  *
  * Used by:
- * - MediaItem Value Object toDTO() method
+ * - MediaItemMapper for VO <-> DTO conversion
  * - Processing use cases
  * - tRPC router outputs
  */
