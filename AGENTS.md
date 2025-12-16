@@ -7,6 +7,13 @@
   - `bun run format`
   - `bun run typecheck`
 - Do not modify `AGENTS.md` file without explicit user approval.
+- Use latest language, framework and tool features:
+  - Typescript 5.9
+  - Bun 1.3
+  - Hono 4.10
+  - React 19.2
+  - TailwindCSS 4.1
+  - Look up dependency versions in every `package.json` file.
 
 ## Architecture guide
 
