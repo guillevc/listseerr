@@ -8,7 +8,7 @@ import type {
   JellyseerrPendingRequestsResponse,
   JellyseerrMediaInfoResponse,
 } from './types';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 const logger = new LoggerService('jellyseerr-client');
 

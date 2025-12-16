@@ -1,7 +1,7 @@
 // Infrastructure
 import { LogBufferAdapter } from '@/server/infrastructure/services/adapters/log-buffer.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Use Cases
 import { GetLogsUseCase } from '@/server/application/use-cases/logs/get-logs.usecase';

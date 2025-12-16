@@ -4,7 +4,7 @@ import type {
   DeleteTraktConfigResponse,
 } from 'shared/application/dtos/trakt-config.commands.dto';
 import { TraktConfigNotFoundError } from 'shared/domain/errors/trakt-config.errors';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class DeleteTraktConfigUseCase implements IUseCase<

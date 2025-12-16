@@ -6,7 +6,7 @@ import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.ent
 import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
 import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
 import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class UpdateJellyseerrConfigUseCase implements IUseCase<

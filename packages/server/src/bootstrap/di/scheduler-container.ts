@@ -1,7 +1,7 @@
 // Infrastructure
-import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.service';
+import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Use Cases
 import { GetScheduledJobsUseCase } from '@/server/application/use-cases/scheduler/get-scheduled-jobs.usecase';

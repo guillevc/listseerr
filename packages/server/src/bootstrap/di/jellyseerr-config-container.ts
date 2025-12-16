@@ -3,9 +3,9 @@ import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
-import { HttpJellyseerrConnectionTester } from '@/server/infrastructure/services/adapters/http-jellyseerr-connection-tester.service';
+import { HttpJellyseerrConnectionTester } from '@/server/infrastructure/services/adapters/http-jellyseerr-connection-tester.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Application layer - Use cases
 import { GetJellyseerrConfigUseCase } from '@/server/application/use-cases/jellyseerr/get-jellyseerr-config.usecase';

@@ -6,7 +6,7 @@ import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-confi
 import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
 import { MediaAvailabilityVO } from 'shared/domain/value-objects/media-availability.vo';
 import { getMediaAvailability } from '@/server/infrastructure/services/external/jellyseerr/client';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 
 /**
  * Concurrency limit for parallel availability checks

@@ -4,8 +4,8 @@ import * as schema from '@/server/infrastructure/db/schema';
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '@/server/infrastructure/repositories/drizzle-general-settings.repository';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { scheduler } from '@/server/infrastructure/services/core/scheduler.service';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Application layer - Use cases
 import { GetGeneralSettingsUseCase } from '@/server/application/use-cases/settings/get-general-settings.usecase';

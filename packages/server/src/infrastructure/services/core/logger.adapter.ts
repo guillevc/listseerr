@@ -1,4 +1,4 @@
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { Logger } from 'pino';
 import pino from 'pino';
 import { logBuffer } from '@/server/infrastructure/services/adapters/log-buffer.adapter';

@@ -10,7 +10,7 @@ import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repos
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { HttpMediaAvailabilityChecker } from '@/server/infrastructure/services/adapters/http-media-availability-checker.adapter';
-import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
+import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 
 // Use Cases
@@ -32,7 +32,7 @@ import type {
 } from 'shared/application/dtos/processing/responses.dto';
 
 // Logger
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 import { env } from '@/server/env';
 
 /**

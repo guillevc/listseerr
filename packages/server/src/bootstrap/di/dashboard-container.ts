@@ -7,7 +7,7 @@ import { JellyseerrStatsAdapter } from '@/server/infrastructure/services/adapter
 import { SchedulerInfoAdapter } from '@/server/infrastructure/services/adapters/scheduler-info.adapter';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Use Cases
 import { GetDashboardStatsUseCase } from '@/server/application/use-cases/dashboard/get-dashboard-stats.usecase';

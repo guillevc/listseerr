@@ -5,7 +5,7 @@ import { providerConfigs } from '@/server/infrastructure/db/schema';
 import { TraktConfig } from '@/server/domain/entities/trakt-config.entity';
 import { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
-import type { IEncryptionService } from '@/server/application/services/encryption.service.interface';
+import type { IEncryptionService } from '@/server/application/services/core/encryption.service.interface';
 
 export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
   private readonly PROVIDER = 'trakt' as const;

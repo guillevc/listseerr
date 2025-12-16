@@ -1,7 +1,7 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
-import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import { ProviderVO } from 'shared/domain/value-objects/provider.vo';

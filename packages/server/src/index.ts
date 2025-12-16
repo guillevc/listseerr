@@ -1,4 +1,4 @@
-import { LoggerService } from './infrastructure/services/core/logger.service';
+import { LoggerService } from './infrastructure/services/core/logger.adapter';
 import { env } from './env';
 import { db } from './infrastructure/db/client';
 import { runMigrations } from './bootstrap/database';

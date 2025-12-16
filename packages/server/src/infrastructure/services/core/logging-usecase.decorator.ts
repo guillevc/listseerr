@@ -1,5 +1,5 @@
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 
 /**
  * Gang of Four Decorator Pattern for Use Case Logging

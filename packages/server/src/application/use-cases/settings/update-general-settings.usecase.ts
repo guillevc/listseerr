@@ -4,7 +4,7 @@ import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/gener
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
 import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class UpdateGeneralSettingsUseCase implements IUseCase<

@@ -1,9 +1,9 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
 import { DrizzleTraktConfigRepository } from '@/server/infrastructure/repositories/drizzle-trakt-config.repository';
-import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
+import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 import { GetTraktConfigUseCase } from '@/server/application/use-cases/trakt-config/get-trakt-config.usecase';
 import { SaveTraktConfigUseCase } from '@/server/application/use-cases/trakt-config/save-trakt-config.usecase';
 import { DeleteTraktConfigUseCase } from '@/server/application/use-cases/trakt-config/delete-trakt-config.usecase';

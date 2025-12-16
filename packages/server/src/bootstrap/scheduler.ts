@@ -1,7 +1,7 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
-import { scheduler } from '@/server/infrastructure/services/core/scheduler.service';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 const logger = new LoggerService('scheduler');
 

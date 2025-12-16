@@ -1,8 +1,8 @@
 import type {
   ISchedulerInfoService,
   ScheduledJobInfo,
-} from '@/server/application/services/scheduler-info.service.interface';
-import { scheduler } from '@/server/infrastructure/services/core/scheduler.service';
+} from '@/server/application/services/core/scheduler-info.service.interface';
+import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
 
 /**
  * SchedulerInfoAdapter

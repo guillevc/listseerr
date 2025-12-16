@@ -4,7 +4,7 @@ import type {
   DeleteMdbListConfigResponse,
 } from 'shared/application/dtos/mdblist-config.commands.dto';
 import { MdbListConfigNotFoundError } from 'shared/domain/errors/mdblist-config.errors';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class DeleteMdbListConfigUseCase implements IUseCase<

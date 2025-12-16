@@ -1,9 +1,9 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
 import { DrizzleMdbListConfigRepository } from '@/server/infrastructure/repositories/drizzle-mdblist-config.repository';
-import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
+import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 import { GetMdbListConfigUseCase } from '@/server/application/use-cases/mdblist-config/get-mdblist-config.usecase';
 import { SaveMdbListConfigUseCase } from '@/server/application/use-cases/mdblist-config/save-mdblist-config.usecase';
 import { DeleteMdbListConfigUseCase } from '@/server/application/use-cases/mdblist-config/delete-mdblist-config.usecase';

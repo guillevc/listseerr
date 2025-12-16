@@ -7,7 +7,7 @@ import type { IMediaAvailabilityChecker } from '@/server/application/services/me
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';

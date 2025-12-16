@@ -3,10 +3,10 @@ import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure layer
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
-import { ListUrlParserService } from '@/server/infrastructure/services/adapters/list-url-parser.service';
-import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.service';
+import { ListUrlParserService } from '@/server/infrastructure/services/adapters/list-url-parser.adapter';
+import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
+import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Application layer - Use cases
 import { GetAllMediaListsUseCase } from '@/server/application/use-cases/lists/get-all-media-lists.usecase';

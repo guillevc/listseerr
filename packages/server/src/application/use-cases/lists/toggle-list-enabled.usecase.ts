@@ -1,6 +1,6 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { ISchedulerService } from '@/server/application/services/scheduler.service.interface';
-import type { ILogger } from '@/server/application/services/logger.interface';
+import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import type { ToggleListEnabledCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { ToggleListEnabledResponse } from 'shared/application/dtos/media-list/responses.dto';
