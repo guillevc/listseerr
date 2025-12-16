@@ -1,7 +1,6 @@
 import { RefreshCw } from 'lucide-react';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
-import { Card, CardContent } from '../components/ui/card';
 import { trpc } from '../lib/trpc';
 
 export function DashboardPage() {
@@ -26,23 +25,8 @@ export function DashboardPage() {
         <p className="mt-1 text-muted">Overview of your media lists and request activity</p>
       </div>
 
-      {lists.length === 0 ? (
-        <Card>
-          <CardContent className="py-12">
-            <div className="text-center text-muted">
-              <p className="mb-2 text-lg">Welcome to Listseerr!</p>
-              <p className="text-sm">
-                Get started by adding your first media list from the Lists page.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          <DashboardStats lists={lists} />
-          <RecentActivity />
-        </>
-      )}
+      <DashboardStats lists={lists} />
+      <RecentActivity />
     </div>
   );
 }

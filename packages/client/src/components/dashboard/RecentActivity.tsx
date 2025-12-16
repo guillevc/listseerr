@@ -3,7 +3,13 @@ import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar } from 'lu
 import { trpc } from '../../lib/trpc';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 interface ProcessingBarProps {
   requested: number;
@@ -33,49 +39,35 @@ function ProcessingBar({
   const skippedAvailablePercent = (skippedAvailable / total) * 100;
   const failedPercent = (failed / total) * 100;
 
-  // Only show number if segment is wide enough (at least 8% of total width)
-  const showRequestedNumber = requestedPercent >= 8;
-  const showSkippedPreviouslyRequestedNumber = skippedPreviouslyRequestedPercent >= 8;
-  const showSkippedAvailableNumber = skippedAvailablePercent >= 8;
-  const showFailedNumber = failedPercent >= 8;
-
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex h-8 w-full cursor-help overflow-hidden rounded-md bg-card">
-            {requested > 0 && (
-              <div
-                className="flex h-full items-center justify-center bg-green-600 text-xs font-medium text-white"
-                style={{ width: `${requestedPercent}%` }}
-              >
-                {showRequestedNumber && <span>{requested}</span>}
-              </div>
-            )}
-            {skippedPreviouslyRequested > 0 && (
-              <div
-                className="flex h-full items-center justify-center bg-blue-500 text-xs font-medium text-white"
-                style={{ width: `${skippedPreviouslyRequestedPercent}%` }}
-              >
-                {showSkippedPreviouslyRequestedNumber && <span>{skippedPreviouslyRequested}</span>}
-              </div>
-            )}
-            {skippedAvailable > 0 && (
-              <div
-                className="flex h-full items-center justify-center bg-purple-500 text-xs font-medium text-white"
-                style={{ width: `${skippedAvailablePercent}%` }}
-              >
-                {showSkippedAvailableNumber && <span>{skippedAvailable}</span>}
-              </div>
-            )}
-            {failed > 0 && (
-              <div
-                className="flex h-full items-center justify-center bg-red-600 text-xs font-medium text-white"
-                style={{ width: `${failedPercent}%` }}
-              >
-                {showFailedNumber && <span>{failed}</span>}
-              </div>
-            )}
+            <div
+              className="flex h-full min-w-6 items-center justify-center bg-green-600 text-xs font-medium text-white"
+              style={{ width: `${requestedPercent}%` }}
+            >
+              <span>{requested}</span>
+            </div>
+            <div
+              className="flex h-full min-w-6 items-center justify-center bg-blue-500 text-xs font-medium text-white"
+              style={{ width: `${skippedPreviouslyRequestedPercent}%` }}
+            >
+              <span>{skippedPreviouslyRequested}</span>
+            </div>
+            <div
+              className="flex h-full min-w-6 items-center justify-center bg-purple-500 text-xs font-medium text-white"
+              style={{ width: `${skippedAvailablePercent}%` }}
+            >
+              <span>{skippedAvailable}</span>
+            </div>
+            <div
+              className="flex h-full min-w-6 items-center justify-center bg-red-600 text-xs font-medium text-white"
+              style={{ width: `${failedPercent}%` }}
+            >
+              <span>{failed}</span>
+            </div>
           </div>
         </TooltipTrigger>
         <TooltipContent>
@@ -106,6 +98,7 @@ function ProcessingBar({
               </span>
             </div>
           </div>
+          <TooltipArrow />
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

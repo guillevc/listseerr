@@ -26,7 +26,8 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
     const isProviderConfigured =
       (list.provider === 'trakt' && !!traktConfig?.clientId) ||
       (list.provider === 'traktChart' && !!traktConfig?.clientId) ||
-      (list.provider === 'mdblist' && !!mdbListConfig?.apiKey);
+      (list.provider === 'mdblist' && !!mdbListConfig?.apiKey) ||
+      list.provider === 'stevenlu'; // Always configured (no API key needed)
 
     return isProviderConfigured;
   }).length;
