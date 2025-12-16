@@ -13,14 +13,13 @@
   - Hono 4.10
   - React 19.2
   - TailwindCSS 4.1
-  - Look up dependency versions in every `package.json` file.
+  - Look up used versions of more dependencies in every `package.json` file.
+- In case of database migrations needed, use [MIGRATIONS.md](./docs/MIGRATIONS.md) as a reference: @/docs/MIGRATIONS.md
 
 ## Architecture guide
 
 Architectural guide for the Server API using **Onion/Clean Architecture** and **DDD** principles.  
 Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
-
----
 
 ### 1. Layer Architecture
 

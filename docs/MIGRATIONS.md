@@ -35,8 +35,6 @@ packages/server/
 5. **Records each migration** as applied in `__drizzle_migrations`
 6. **Server continues** startup after migrations complete
 
----
-
 ## Can We Consolidate Migrations?
 
 ### Short Answer
@@ -84,8 +82,6 @@ bun run db:generate
 bun run db:reset
 ```
 
----
-
 ## Safe vs Breaking Database Changes
 
 ### Safe Changes (Backward Compatible)
@@ -120,8 +116,6 @@ SQLite has limited `ALTER TABLE` support:
 2. Copy data from old table
 3. Drop old table
 4. Rename new table to old name
-
----
 
 ## How to Create Migrations
 
@@ -178,8 +172,6 @@ ALTER TABLE `execution_history` ADD `items_skipped_available` integer;
 | `bun run db:migrate`  | Run pending migrations (also creates default user) |
 | `bun run db:reset`    | Delete database + WAL files, re-run migrations     |
 
----
-
 ## Production Migration Patterns
 
 ### 1. Additive-Only Pattern (Recommended)
@@ -199,8 +191,6 @@ ALTER TABLE `execution_history` ADD `items_skipped_available` integer;
 - Enable flag after migration is proven stable
 - Roll back by disabling flag, not reverting migration
 
----
-
 ## Common Issues & Solutions
 
 ### "Table already exists"
@@ -217,8 +207,6 @@ ALTER TABLE `execution_history` ADD `items_skipped_available` integer;
 
 **Cause:** Manual database edits outside of migrations
 **Fix:** Generate migration from current schema, or reset database
-
----
 
 ## Best Practices
 
