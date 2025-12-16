@@ -24,7 +24,6 @@ export class MediaList {
   private _provider: ProviderVO;
   private _enabled: boolean;
   private _maxItems: number;
-  private _processingSchedule: string | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -37,7 +36,6 @@ export class MediaList {
     provider: ProviderVO;
     enabled: boolean;
     maxItems: number;
-    processingSchedule: string | null;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -49,7 +47,6 @@ export class MediaList {
     this._provider = params.provider;
     this._enabled = params.enabled;
     this._maxItems = params.maxItems;
-    this._processingSchedule = params.processingSchedule;
     this._createdAt = params.createdAt;
     this._updatedAt = params.updatedAt;
   }
@@ -85,10 +82,6 @@ export class MediaList {
 
   get maxItems(): number {
     return this._maxItems;
-  }
-
-  get processingSchedule(): string | null {
-    return this._processingSchedule;
   }
 
   get createdAt(): Date {
@@ -172,14 +165,6 @@ export class MediaList {
     this._updatedAt = new Date();
   }
 
-  /**
-   * Change processing schedule
-   */
-  changeSchedule(newSchedule: string | null): void {
-    this._processingSchedule = newSchedule;
-    this._updatedAt = new Date();
-  }
-
   // Business logic methods - domain rules
 
   /**
@@ -191,24 +176,9 @@ export class MediaList {
   }
 
   /**
-   * Check if the list has a processing schedule configured
-   */
-  hasSchedule(): boolean {
-    return !!this._processingSchedule;
-  }
-
-  /**
    * Validate max items is within acceptable range
    */
   isMaxItemsValid(): boolean {
     return this._maxItems > 0 && this._maxItems <= 50;
-  }
-
-  /**
-   * Determine if scheduler needs to be reloaded based on changes
-   * Scheduler reload is required when schedule or enabled state changes
-   */
-  requiresSchedulerReload(changes: { processingSchedule?: unknown; enabled?: unknown }): boolean {
-    return changes.processingSchedule !== undefined || changes.enabled !== undefined;
   }
 }

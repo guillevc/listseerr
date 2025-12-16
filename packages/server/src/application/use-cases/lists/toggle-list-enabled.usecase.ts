@@ -1,5 +1,4 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import type { ToggleListEnabledCommand } from 'shared/application/dtos/media-list/commands.dto';
@@ -12,7 +11,6 @@ export class ToggleListEnabledUseCase implements IUseCase<
 > {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly schedulerService: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -43,13 +41,7 @@ export class ToggleListEnabledUseCase implements IUseCase<
       updatedList.enabled ? 'List enabled' : 'List disabled'
     );
 
-    // 5. Reload scheduler if list has a schedule
-    if (updatedList.hasSchedule()) {
-      await this.schedulerService.loadScheduledLists();
-      this.logger.info({ listId: updatedList.id }, 'Scheduler reloaded for enabled state change');
-    }
-
-    // 6. Convert entity to Response DTO
+    // 5. Convert entity to Response DTO
     return { list: MediaListMapper.toDTO(updatedList) };
   }
 }

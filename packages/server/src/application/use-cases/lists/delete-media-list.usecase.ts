@@ -1,5 +1,4 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
@@ -11,7 +10,6 @@ export class DeleteMediaListUseCase implements IUseCase<
 > {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly schedulerService: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -33,10 +31,7 @@ export class DeleteMediaListUseCase implements IUseCase<
       'List deleted'
     );
 
-    // 3. Unschedule the list first
-    this.schedulerService.unscheduleList(list.id);
-
-    // 4. Delete entity from repository
+    // 3. Delete entity from repository
     await this.mediaListRepository.delete(list);
 
     return { success: true };

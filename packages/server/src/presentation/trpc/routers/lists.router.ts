@@ -37,7 +37,6 @@ const listInputSchema = z.object({
   provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu'] as const).default('trakt'),
   enabled: z.boolean().default(true),
   maxItems: z.number().positive().max(50).default(20),
-  processingSchedule: z.string().optional(),
 });
 
 /**
@@ -68,7 +67,6 @@ export function createListsRouter(deps: ListsRouterDeps) {
       return await deps.createMediaListUseCase.execute({
         ...input,
         userId: ctx.userId,
-        processingSchedule: input.processingSchedule ?? null,
       });
     }),
 

@@ -63,7 +63,6 @@ export const mediaLists = sqliteTable('media_lists', {
   provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   maxItems: integer('max_items'),
-  processingSchedule: text('processing_schedule'), // DEPRECATED: Per-list schedules not used, use global automatic processing instead
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

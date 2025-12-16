@@ -4,7 +4,6 @@ import * as schema from '@/server/infrastructure/db/schema';
 // Infrastructure layer
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
 import { ListUrlParserService } from '@/server/infrastructure/services/adapters/list-url-parser.adapter';
-import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
@@ -53,7 +52,6 @@ export class ListsContainer {
 
   // Infrastructure - Services
   private readonly urlParserService: ListUrlParserService;
-  private readonly schedulerService: SchedulerService;
   private readonly logger: LoggerService;
 
   // Application - Use Cases (public for consumption by routers)
@@ -78,7 +76,6 @@ export class ListsContainer {
     // 1. Instantiate infrastructure layer (adapters)
     this.mediaListRepository = new DrizzleMediaListRepository(db);
     this.urlParserService = new ListUrlParserService();
-    this.schedulerService = new SchedulerService();
     this.logger = new LoggerService('lists');
 
     // 2. Instantiate use cases wrapped with logging decorator
@@ -95,41 +92,31 @@ export class ListsContainer {
     );
 
     this.createMediaListUseCase = new LoggingUseCaseDecorator(
-      new CreateMediaListUseCase(
-        this.mediaListRepository,
-        this.urlParserService,
-        this.schedulerService,
-        this.logger
-      ),
+      new CreateMediaListUseCase(this.mediaListRepository, this.urlParserService, this.logger),
       new LoggerService('lists'),
       'CreateMediaListUseCase'
     );
 
     this.updateMediaListUseCase = new LoggingUseCaseDecorator(
-      new UpdateMediaListUseCase(
-        this.mediaListRepository,
-        this.urlParserService,
-        this.schedulerService,
-        this.logger
-      ),
+      new UpdateMediaListUseCase(this.mediaListRepository, this.urlParserService, this.logger),
       new LoggerService('lists'),
       'UpdateMediaListUseCase'
     );
 
     this.deleteMediaListUseCase = new LoggingUseCaseDecorator(
-      new DeleteMediaListUseCase(this.mediaListRepository, this.schedulerService, this.logger),
+      new DeleteMediaListUseCase(this.mediaListRepository, this.logger),
       new LoggerService('lists'),
       'DeleteMediaListUseCase'
     );
 
     this.toggleListEnabledUseCase = new LoggingUseCaseDecorator(
-      new ToggleListEnabledUseCase(this.mediaListRepository, this.schedulerService, this.logger),
+      new ToggleListEnabledUseCase(this.mediaListRepository, this.logger),
       new LoggerService('lists'),
       'ToggleListEnabledUseCase'
     );
 
     this.enableAllListsUseCase = new LoggingUseCaseDecorator(
-      new EnableAllListsUseCase(this.mediaListRepository, this.schedulerService, this.logger),
+      new EnableAllListsUseCase(this.mediaListRepository, this.logger),
       new LoggerService('lists'),
       'EnableAllListsUseCase'
     );

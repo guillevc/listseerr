@@ -12,7 +12,6 @@ export class MediaListMapper {
       provider: entity.provider.getValue(),
       enabled: entity.enabled,
       maxItems: entity.maxItems,
-      processingSchedule: entity.processingSchedule,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

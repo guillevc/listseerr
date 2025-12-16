@@ -20,7 +20,6 @@ export interface MediaListDTO {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
-  processingSchedule: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,7 +56,6 @@ export interface SerializedMediaList {
   provider: string;
   enabled: boolean;
   maxItems: number | null;
-  processingSchedule: string | null;
   lastProcessed: string | null;
   [key: string]: unknown;
 }

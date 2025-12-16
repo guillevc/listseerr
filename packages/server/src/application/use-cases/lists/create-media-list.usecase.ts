@@ -1,6 +1,5 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
-import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
@@ -18,7 +17,6 @@ export class CreateMediaListUseCase implements IUseCase<
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly urlParserService: IListUrlParserService,
-    private readonly schedulerService: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -41,7 +39,6 @@ export class CreateMediaListUseCase implements IUseCase<
       provider,
       enabled: command.enabled,
       maxItems: command.maxItems,
-      processingSchedule: command.processingSchedule,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -58,18 +55,11 @@ export class CreateMediaListUseCase implements IUseCase<
         url: savedList.url.getValue(),
         maxItems: savedList.maxItems,
         enabled: savedList.enabled,
-        schedule: savedList.processingSchedule || 'none',
       },
       'List created'
     );
 
-    // 5. Reload scheduler if needed
-    if (savedList.hasSchedule() && savedList.isProcessable()) {
-      await this.schedulerService.loadScheduledLists();
-      this.logger.info({ listId: savedList.id }, 'Scheduler reloaded for new list');
-    }
-
-    // 6. Convert entity to Response DTO
+    // 5. Convert entity to Response DTO
     return { list: MediaListMapper.toDTO(savedList) };
   }
 }

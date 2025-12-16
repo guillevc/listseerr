@@ -1,5 +1,4 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { EnableAllListsCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { EnableAllListsResponse } from 'shared/application/dtos/media-list/responses.dto';
@@ -11,7 +10,6 @@ export class EnableAllListsUseCase implements IUseCase<
 > {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly schedulerService: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -21,9 +19,6 @@ export class EnableAllListsUseCase implements IUseCase<
 
     // 2. Log action
     this.logger.info('All lists enabled');
-
-    // 3. Reload scheduler to pick up all enabled lists
-    await this.schedulerService.loadScheduledLists();
 
     return { success: true };
   }

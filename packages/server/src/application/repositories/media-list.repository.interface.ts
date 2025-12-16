@@ -26,7 +26,6 @@ export interface IMediaListRepository {
       provider: ProviderType;
       enabled: boolean;
       maxItems: number;
-      processingSchedule: string | null;
       createdAt: Date;
       updatedAt: Date;
       lastProcessed: Date | null;

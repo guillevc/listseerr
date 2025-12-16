@@ -1,6 +1,5 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
-import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
@@ -15,7 +14,6 @@ export class UpdateMediaListUseCase implements IUseCase<
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly urlParserService: IListUrlParserService,
-    private readonly schedulerService: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -71,11 +69,6 @@ export class UpdateMediaListUseCase implements IUseCase<
       list.changeMaxItems(command.data.maxItems);
     }
 
-    // Handle schedule change
-    if (command.data.processingSchedule !== undefined) {
-      list.changeSchedule(command.data.processingSchedule);
-    }
-
     // 3. Save entity
     const updatedList = await this.mediaListRepository.save(list);
 
@@ -89,13 +82,7 @@ export class UpdateMediaListUseCase implements IUseCase<
       'List updated'
     );
 
-    // 5. Reload scheduler if schedule-related fields were updated
-    if (updatedList.requiresSchedulerReload(command.data)) {
-      await this.schedulerService.loadScheduledLists();
-      this.logger.info({ listId: updatedList.id }, 'Scheduler reloaded for list update');
-    }
-
-    // 6. Convert entity to Response DTO
+    // 5. Convert entity to Response DTO
     return { list: MediaListMapper.toDTO(updatedList) };
   }
 }

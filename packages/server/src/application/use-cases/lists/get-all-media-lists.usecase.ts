@@ -10,16 +10,7 @@ export class GetAllMediaListsUseCase implements IUseCase<
   constructor(private readonly mediaListRepository: IMediaListRepository) {}
 
   async execute(command: GetAllMediaListsCommand): Promise<GetAllMediaListsResponse> {
-    const listsFromRepo = await this.mediaListRepository.findAllWithLastProcessed(command.userId);
-
-    // Convert repository response to DTO format (undefined → null for processingSchedule)
-    const lists = listsFromRepo.map((list) => ({
-      ...list,
-      processingSchedule: list.processingSchedule ?? null,
-    }));
-
-    return {
-      lists,
-    };
+    const lists = await this.mediaListRepository.findAllWithLastProcessed(command.userId);
+    return { lists };
   }
 }

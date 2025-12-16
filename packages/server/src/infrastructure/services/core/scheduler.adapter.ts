@@ -19,19 +19,13 @@ interface SchedulerJob {
 class Scheduler {
   private jobs: Map<number, SchedulerJob> = new Map();
   private db: BunSQLiteDatabase<typeof schema> | null = null;
-  private processListCallback: ((listId: number) => Promise<void>) | null = null;
   private processAllListsCallback: (() => Promise<void>) | null = null;
 
-  // Special list ID for global automatic processing job
+  // Job ID for global automatic processing
   private readonly GLOBAL_PROCESSING_JOB_ID = 0;
 
-  initialize(
-    db: BunSQLiteDatabase<typeof schema>,
-    processListCallback: (listId: number) => Promise<void>,
-    processAllListsCallback: () => Promise<void>
-  ) {
+  initialize(db: BunSQLiteDatabase<typeof schema>, processAllListsCallback: () => Promise<void>) {
     this.db = db;
-    this.processListCallback = processListCallback;
     this.processAllListsCallback = processAllListsCallback;
     logger.info('Scheduler initialized');
   }
@@ -82,75 +76,6 @@ class Scheduler {
       logger.error(
         { error: error instanceof Error ? error.message : 'Unknown error' },
         'Failed to load scheduled lists'
-      );
-    }
-  }
-
-  scheduleList(listId: number, cronExpression: string, timezone: string = 'UTC') {
-    // Remove existing job if any
-    this.unscheduleList(listId);
-
-    if (!this.processListCallback) {
-      logger.error('Process callback not set');
-      return;
-    }
-
-    try {
-      // For interval-based crons (e.g., */6 * * * *), we want to start from server restart
-      // Check if this is an interval-based cron by looking for */
-      const isIntervalBased = cronExpression.includes('*/');
-
-      const cronOptions: { timezone: string; name: string } = {
-        timezone,
-        name: `list-${listId}`,
-      };
-
-      // If interval-based, trigger immediately on schedule, then follow interval
-      if (isIntervalBased) {
-        logger.info(
-          { listId, cronExpression },
-          'Scheduling interval-based job (will run from server start)'
-        );
-      }
-
-      const job = new Cron(cronExpression, cronOptions, async () => {
-        logger.info({ listId, cronExpression }, 'Cron job triggered - processing list');
-
-        try {
-          if (this.processListCallback) {
-            await this.processListCallback(listId);
-          }
-        } catch (error) {
-          logger.error(
-            {
-              listId,
-              error: error instanceof Error ? error.message : 'Unknown error',
-            },
-            'Error processing scheduled list'
-          );
-        }
-      });
-
-      this.jobs.set(listId, { listId, cronJob: job });
-
-      const nextRun = job.nextRun();
-      logger.info(
-        {
-          listId,
-          cronExpression,
-          timezone,
-          nextRun: nextRun ? nextRun.toISOString() : 'N/A',
-        },
-        'List scheduled successfully'
-      );
-    } catch (error) {
-      logger.error(
-        {
-          listId,
-          cronExpression,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-        'Failed to schedule list'
       );
     }
   }
