@@ -272,9 +272,9 @@ export function AddListDialog() {
         </DialogHeader>
 
         {/* Animated Progress Bar */}
-        <div className="mt-4 h-1 w-full bg-card">
+        <div className="mt-4 h-1 w-full rounded-full bg-card">
           <div
-            className="h-full bg-primary transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
             style={{
               width: currentStep === 1 ? (progressAnimated ? '50%' : '0%') : '100%',
             }}

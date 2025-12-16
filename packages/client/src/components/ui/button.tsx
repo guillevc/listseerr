@@ -6,12 +6,12 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/client/lib/utils';
 
 const buttonVariants = tv({
-  base: 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  base: 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border-2 border-transparent text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   variants: {
     variant: {
       default: 'bg-primary hover:bg-primary-hover text-primary-foreground',
       destructive: 'bg-destructive hover:bg-destructive-hover text-destructive-foreground',
-      outline: 'border-2 bg-transparent hover:ring',
+      outline: 'border-border bg-transparent hover:ring',
       ghost: 'hover:bg-card',
     },
     size: {
