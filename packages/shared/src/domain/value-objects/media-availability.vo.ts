@@ -12,7 +12,7 @@ const Values = {
 /**
  * Jellyseerr mediaInfo.status codes (private - for mapping)
  *
- * 1 = UNKNOWN - Media not in Jellyseerr
+ * 1 = UNKNOWN - Media exists in Jellyseerr but status unclear (may have been requested & rejected)
  * 2 = PENDING - Request is pending approval
  * 3 = PROCESSING - Request is being processed
  * 4 = PARTIALLY_AVAILABLE - Some content available (e.g., some seasons)
@@ -68,13 +68,15 @@ export class MediaAvailabilityVO {
    * @returns MediaAvailabilityVO with appropriate categorization
    */
   static fromJellyseerrStatus(status: number | null | undefined): MediaAvailabilityVO {
-    // No mediaInfo or UNKNOWN status → TO_BE_REQUESTED
-    if (status === null || status === undefined || status === JellyseerrStatus.UNKNOWN) {
+    // No mediaInfo → TO_BE_REQUESTED (media not in Jellyseerr at all)
+    if (status === null || status === undefined) {
       return new MediaAvailabilityVO(Values.TO_BE_REQUESTED);
     }
 
-    // PENDING, PROCESSING, or DELETED → PREVIOUSLY_REQUESTED
+    // UNKNOWN, PENDING, PROCESSING, or DELETED → PREVIOUSLY_REQUESTED
+    // UNKNOWN is included because rejected requests stay in UNKNOWN state
     if (
+      status === JellyseerrStatus.UNKNOWN ||
       status === JellyseerrStatus.PENDING ||
       status === JellyseerrStatus.PROCESSING ||
       status === JellyseerrStatus.DELETED
