@@ -7,12 +7,11 @@ import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
 import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
 import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
-  async findByUserId(userId: number): Promise<Nullable<JellyseerrConfig>> {
+  async findByUserId(userId: number): Promise<JellyseerrConfig | null> {
     const [row] = await this.db
       .select()
       .from(jellyseerrConfigs)

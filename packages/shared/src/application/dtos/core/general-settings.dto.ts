@@ -1,5 +1,3 @@
-import type { Nullable } from '@/shared/domain/types/utility.types';
-
 /**
  * General Settings Core DTO
  *
@@ -16,7 +14,7 @@ export interface GeneralSettingsDTO {
   userId: number;
   timezone: string;
   automaticProcessingEnabled: boolean;
-  automaticProcessingSchedule: Nullable<string>;
+  automaticProcessingSchedule: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

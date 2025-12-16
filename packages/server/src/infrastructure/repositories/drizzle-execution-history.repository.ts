@@ -7,12 +7,11 @@ import { ExecutionStatusVO } from 'shared/domain/value-objects/execution-status.
 import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
 import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
-  async findById(id: number): Promise<Nullable<ProcessingExecution>> {
+  async findById(id: number): Promise<ProcessingExecution | null> {
     const [row] = await this.db
       .select()
       .from(executionHistory)

@@ -1,5 +1,4 @@
 import type { MediaListDTO, MediaListWithLastProcessedDTO } from '../core/media-list.dto';
-import type { Nullable } from '../../../domain/types/utility.types';
 
 /**
  * Response DTOs (Output)
@@ -14,7 +13,7 @@ export interface CreateMediaListResponse {
 }
 
 export interface GetMediaListByIdResponse {
-  list: Nullable<MediaListDTO>;
+  list: MediaListDTO | null;
 }
 
 export interface GetAllMediaListsResponse {

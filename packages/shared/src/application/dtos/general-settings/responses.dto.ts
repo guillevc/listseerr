@@ -1,4 +1,3 @@
-import type { Nullable } from '../../../domain/types/utility.types';
 import type { GeneralSettingsDTO } from '../core/general-settings.dto';
 
 /**
@@ -9,7 +8,7 @@ import type { GeneralSettingsDTO } from '../core/general-settings.dto';
  */
 
 export interface GetGeneralSettingsResponse {
-  settings: Nullable<GeneralSettingsDTO>;
+  settings: GeneralSettingsDTO | null;
 }
 
 export interface UpdateGeneralSettingsResponse {

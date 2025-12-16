@@ -4,7 +4,6 @@ import * as schema from '@/server/infrastructure/db/schema';
 import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { Nullable } from 'shared/domain/types/utility.types';
 import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
 import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
 import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
@@ -22,7 +21,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return rows.map((row) => this.toDomain(row));
   }
 
-  async findById(id: number, userId: number): Promise<Nullable<MediaList>> {
+  async findById(id: number, userId: number): Promise<MediaList | null> {
     const [row] = await this.db
       .select()
       .from(mediaLists)
@@ -42,10 +41,10 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       provider: ProviderType;
       enabled: boolean;
       maxItems: number;
-      processingSchedule: Nullable<string>;
+      processingSchedule: string | null;
       createdAt: Date;
       updatedAt: Date;
-      lastProcessed: Nullable<Date>;
+      lastProcessed: Date | null;
     }[]
   > {
     // Subquery to get the most recent successful execution for each list
@@ -183,7 +182,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     provider: ProviderType;
     enabled: boolean;
     maxItems: number;
-    processingSchedule: Nullable<string>;
+    processingSchedule: string | null;
     createdAt: Date;
     updatedAt: Date;
   } {

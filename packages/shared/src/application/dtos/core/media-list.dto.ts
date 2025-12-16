@@ -1,8 +1,4 @@
-import type { Nullable } from '../../../domain/types/utility.types';
 import type { ProviderType } from '../../../domain/value-objects/provider.vo';
-
-// Re-export for convenience
-export type { Nullable };
 
 /**
  * MediaList Core DTO
@@ -24,7 +20,7 @@ export interface MediaListDTO {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
-  processingSchedule: Nullable<string>;
+  processingSchedule: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,7 +32,7 @@ export interface MediaListDTO {
  * Used for list views that show processing history.
  */
 export interface MediaListWithLastProcessedDTO extends MediaListDTO {
-  lastProcessed: Nullable<Date>;
+  lastProcessed: Date | null;
 }
 
 /**
@@ -53,15 +49,15 @@ export interface MediaListWithLastProcessedDTO extends MediaListDTO {
 export interface SerializedMediaList {
   id: number;
   name: string;
-  createdAt: Nullable<string>;
+  createdAt: string | null;
   userId: number;
   url: string;
-  displayUrl: Nullable<string>;
-  updatedAt: Nullable<string>;
+  displayUrl: string | null;
+  updatedAt: string | null;
   provider: string;
   enabled: boolean;
-  maxItems: Nullable<number>;
-  processingSchedule: Nullable<string>;
-  lastProcessed: Nullable<string>;
+  maxItems: number | null;
+  processingSchedule: string | null;
+  lastProcessed: string | null;
   [key: string]: unknown;
 }

@@ -1,7 +1,6 @@
 import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
 import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
 import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior
@@ -25,7 +24,7 @@ export class MediaList {
   private _provider: ProviderVO;
   private _enabled: boolean;
   private _maxItems: number;
-  private _processingSchedule: Nullable<string>;
+  private _processingSchedule: string | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -38,7 +37,7 @@ export class MediaList {
     provider: ProviderVO;
     enabled: boolean;
     maxItems: number;
-    processingSchedule: Nullable<string>;
+    processingSchedule: string | null;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -88,7 +87,7 @@ export class MediaList {
     return this._maxItems;
   }
 
-  get processingSchedule(): Nullable<string> {
+  get processingSchedule(): string | null {
     return this._processingSchedule;
   }
 
@@ -176,7 +175,7 @@ export class MediaList {
   /**
    * Change processing schedule
    */
-  changeSchedule(newSchedule: Nullable<string>): void {
+  changeSchedule(newSchedule: string | null): void {
     this._processingSchedule = newSchedule;
     this._updatedAt = new Date();
   }

@@ -1,5 +1,4 @@
 import type { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * GeneralSettings Repository Interface (Port)
@@ -16,7 +15,7 @@ export interface IGeneralSettingsRepository {
    * Find settings by user ID
    * Returns null if no settings exist for user
    */
-  findByUserId(userId: number): Promise<Nullable<GeneralSettings>>;
+  findByUserId(userId: number): Promise<GeneralSettings | null>;
 
   /**
    * Save (create or update) a GeneralSettings entity

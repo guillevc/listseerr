@@ -1,5 +1,4 @@
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * Repository interface for Jellyseerr Config (Port)
@@ -12,7 +11,7 @@ export interface IJellyseerrConfigRepository {
    * Find config by user ID
    * Returns null if no config exists for user
    */
-  findByUserId(userId: number): Promise<Nullable<JellyseerrConfig>>;
+  findByUserId(userId: number): Promise<JellyseerrConfig | null>;
 
   /**
    * Save (create or update) a JellyseerrConfig entity

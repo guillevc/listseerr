@@ -1,5 +1,3 @@
-import type { Nullable } from '../../../domain/types/utility.types';
-
 /**
  * General Settings Command DTOs
  *
@@ -16,6 +14,6 @@ export interface UpdateGeneralSettingsCommand {
   data: {
     timezone?: string;
     automaticProcessingEnabled?: boolean;
-    automaticProcessingSchedule?: Nullable<string>;
+    automaticProcessingSchedule?: string | null;
   };
 }

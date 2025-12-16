@@ -1,5 +1,4 @@
 import type { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 /**
  * Execution History Repository Interface (Port)
@@ -14,7 +13,7 @@ export interface IExecutionHistoryRepository {
   /**
    * Find execution by ID
    */
-  findById(id: number): Promise<Nullable<ProcessingExecution>>;
+  findById(id: number): Promise<ProcessingExecution | null>;
 
   /**
    * Find all executions for a specific list, ordered by start time (newest first)

@@ -1,5 +1,3 @@
-import type { Nullable } from '../../../domain/types/utility.types';
-
 /**
  * Command DTOs (Input)
  *
@@ -14,7 +12,7 @@ export interface CreateMediaListCommand {
   provider: string;
   enabled: boolean;
   maxItems: number;
-  processingSchedule: Nullable<string>;
+  processingSchedule: string | null;
   userId: number;
 }
 
@@ -28,7 +26,7 @@ export interface UpdateMediaListCommand {
     provider?: string;
     enabled?: boolean;
     maxItems?: number;
-    processingSchedule?: Nullable<string>;
+    processingSchedule?: string | null;
   };
 }
 

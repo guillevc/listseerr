@@ -1,5 +1,4 @@
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
-import type { Nullable } from 'shared/domain/types/utility.types';
 import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 
 /**
@@ -16,7 +15,7 @@ import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 export interface IMediaListRepository {
   // Query operations - return entities or DTOs
   findAll(userId: number): Promise<MediaList[]>;
-  findById(id: number, userId: number): Promise<Nullable<MediaList>>;
+  findById(id: number, userId: number): Promise<MediaList | null>;
   findAllWithLastProcessed(userId: number): Promise<
     {
       id: number;
@@ -27,10 +26,10 @@ export interface IMediaListRepository {
       provider: ProviderType;
       enabled: boolean;
       maxItems: number;
-      processingSchedule: Nullable<string>;
+      processingSchedule: string | null;
       createdAt: Date;
       updatedAt: Date;
-      lastProcessed: Nullable<Date>;
+      lastProcessed: Date | null;
     }[]
   >;
 

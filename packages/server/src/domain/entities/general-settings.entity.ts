@@ -1,4 +1,3 @@
-import type { Nullable } from 'shared/domain/types/utility.types';
 import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
 
 /**
@@ -18,7 +17,7 @@ export class GeneralSettings {
   private readonly _userId: number;
   private _timezone: TimezoneVO;
   private _automaticProcessingEnabled: boolean;
-  private _automaticProcessingSchedule: Nullable<string>;
+  private _automaticProcessingSchedule: string | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -27,7 +26,7 @@ export class GeneralSettings {
     userId: number;
     timezone: TimezoneVO;
     automaticProcessingEnabled: boolean;
-    automaticProcessingSchedule: Nullable<string>;
+    automaticProcessingSchedule: string | null;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -57,7 +56,7 @@ export class GeneralSettings {
     return this._automaticProcessingEnabled;
   }
 
-  get automaticProcessingSchedule(): Nullable<string> {
+  get automaticProcessingSchedule(): string | null {
     return this._automaticProcessingSchedule;
   }
 
@@ -100,7 +99,7 @@ export class GeneralSettings {
    * Change the automatic processing schedule
    * Accepts null to clear the schedule
    */
-  changeSchedule(newSchedule: Nullable<string>): void {
+  changeSchedule(newSchedule: string | null): void {
     this._automaticProcessingSchedule = newSchedule;
     this._updatedAt = new Date();
   }

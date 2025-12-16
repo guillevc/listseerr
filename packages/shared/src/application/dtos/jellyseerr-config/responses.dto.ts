@@ -1,4 +1,3 @@
-import type { Nullable } from '../../../domain/types/utility.types';
 import type { JellyseerrConfigDTO } from '../core/jellyseerr-config.dto';
 
 /**
@@ -9,7 +8,7 @@ import type { JellyseerrConfigDTO } from '../core/jellyseerr-config.dto';
  */
 
 export interface GetJellyseerrConfigResponse {
-  config: Nullable<JellyseerrConfigDTO>;
+  config: JellyseerrConfigDTO | null;
 }
 
 export interface UpdateJellyseerrConfigResponse {

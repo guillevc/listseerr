@@ -5,12 +5,11 @@ import { generalSettings } from '@/server/infrastructure/db/schema';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
 import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
-import type { Nullable } from 'shared/domain/types/utility.types';
 
 export class DrizzleGeneralSettingsRepository implements IGeneralSettingsRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
-  async findByUserId(userId: number): Promise<Nullable<GeneralSettings>> {
+  async findByUserId(userId: number): Promise<GeneralSettings | null> {
     const [row] = await this.db
       .select()
       .from(generalSettings)
