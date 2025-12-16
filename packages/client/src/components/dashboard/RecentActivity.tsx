@@ -81,7 +81,7 @@ function ProcessingBar({
             <div className="flex items-center gap-2">
               <AlertCircle className="h-3 w-3 text-blue-500" />
               <span>
-                Already Requested: {skippedPreviouslyRequested} (
+                Previously requested: {skippedPreviouslyRequested} (
                 {skippedPreviouslyRequestedPercent.toFixed(1)}%)
               </span>
             </div>

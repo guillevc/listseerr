@@ -94,7 +94,7 @@ export async function requestToJellyseerr(
             tmdbId: item.tmdbId,
             mediaType: item.mediaType,
           },
-          'Media already requested in Jellyseerr - treating as success'
+          'Media previously requested in Jellyseerr - treating as success'
         );
         return true;
       }
