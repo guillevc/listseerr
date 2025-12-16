@@ -54,7 +54,11 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
       throw new MediaListNotFoundError(command.listId);
     }
 
-    // 2. Create execution entity (status: running)
+    // 2. Validate provider is configured BEFORE creating execution record
+    // This ensures unconfigured lists don't create error records
+    const fetcher = await this.createFetcherFor(list.provider, command.userId);
+
+    // 3. Create execution entity (status: running) - only after validation passes
     const execution = ProcessingExecution.create({
       listId: command.listId,
       batchId: BatchIdVO.generate(TriggerTypeVO.create(command.triggerType)),
@@ -63,11 +67,8 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     const savedExecution = await this.executionHistoryRepository.save(execution);
 
     try {
-      // 3. Load configs
+      // 4. Load configs
       const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
-
-      // 4. Fetch items using factory pattern
-      const fetcher = await this.createFetcherFor(list.provider, command.userId);
       this.logger.debug(
         { provider: list.provider.getValue(), url: list.url.getValue() },
         'Fetching items from provider'

@@ -1,6 +1,8 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
+import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
+import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
 import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
@@ -37,6 +39,8 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     private readonly mediaListRepository: IMediaListRepository,
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
+    private readonly traktConfigRepository: ITraktConfigRepository,
+    private readonly mdbListConfigRepository: IMdbListConfigRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
     private readonly jellyseerrClient: IJellyseerrClient,
     private readonly availabilityChecker: IMediaAvailabilityChecker,
@@ -46,12 +50,32 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
   async execute(command: ProcessBatchCommand): Promise<ProcessBatchResponse> {
     this.logger.info({ triggerType: command.triggerType }, 'Starting batch processing');
 
-    // 1. Load enabled lists only (disabled lists are skipped entirely)
+    // 1. Load lists (filter disabled only for scheduled processing)
     const allLists = await this.mediaListRepository.findAll(command.userId);
-    const listsToProcess = allLists.filter((list) => list.enabled);
+    const candidateLists =
+      command.triggerType === 'scheduled' ? allLists.filter((list) => list.enabled) : allLists;
+
+    // 2. Pre-check provider configurations (query once, not per-list)
+    const [traktConfig, mdbListConfig] = await Promise.all([
+      this.traktConfigRepository.findByUserId(command.userId),
+      this.mdbListConfigRepository.findByUserId(command.userId),
+    ]);
+
+    // 3. Filter out unconfigured providers (silently skip, no error records)
+    const listsToProcess = candidateLists.filter((list) => {
+      const provider = list.provider;
+      if (provider.isStevenLu()) return true; // No config needed
+      if (provider.isTrakt() || provider.isTraktChart()) return !!traktConfig;
+      if (provider.isMdbList()) return !!mdbListConfig;
+      return false;
+    });
 
     this.logger.info(
-      { totalLists: allLists.length, listsToProcess: listsToProcess.length },
+      {
+        totalLists: allLists.length,
+        candidateLists: candidateLists.length,
+        listsToProcess: listsToProcess.length,
+      },
       'Loaded media lists'
     );
 

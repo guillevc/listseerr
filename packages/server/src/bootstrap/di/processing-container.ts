@@ -115,6 +115,8 @@ export class ProcessingContainer {
         this.mediaListRepository,
         this.jellyseerrConfigRepository,
         this.executionHistoryRepository,
+        this.traktConfigRepository,
+        this.mdbListConfigRepository,
         this.mediaFetcherFactory,
         this.jellyseerrClient,
         this.availabilityChecker,
