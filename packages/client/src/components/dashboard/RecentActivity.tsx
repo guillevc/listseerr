@@ -208,7 +208,8 @@ export function RecentActivity() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help text-sm text-muted">
+                        <span className="flex cursor-help items-center gap-1 text-sm text-muted">
+                          <Clock className="h-3.5 w-3.5" />
                           {formatRelativeTime(timestamp)}
                         </span>
                       </TooltipTrigger>
@@ -225,8 +226,8 @@ export function RecentActivity() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>List</TableHead>
-                        <TableHead className="text-right">Items Found</TableHead>
-                        <TableHead className="w-[300px]">Processing Results</TableHead>
+                        <TableHead className="text-right">Items</TableHead>
+                        <TableHead className="w-[300px]">Results</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
