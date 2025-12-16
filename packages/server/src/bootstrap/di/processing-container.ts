@@ -3,13 +3,13 @@ import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure
 import { DrizzleExecutionHistoryRepository } from '@/server/infrastructure/repositories/drizzle-execution-history.repository';
-import { DrizzleCacheRepository } from '@/server/infrastructure/repositories/drizzle-cache.repository';
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
 import { DrizzleTraktConfigRepository } from '@/server/infrastructure/repositories/drizzle-trakt-config.repository';
 import { DrizzleMdbListConfigRepository } from '@/server/infrastructure/repositories/drizzle-mdblist-config.repository';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
+import { HttpMediaAvailabilityChecker } from '@/server/infrastructure/services/adapters/http-media-availability-checker.adapter';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.service';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 
@@ -45,13 +45,13 @@ import { env } from '@/server/env';
 export class ProcessingContainer {
   // Infrastructure (private)
   private readonly executionHistoryRepository: DrizzleExecutionHistoryRepository;
-  private readonly cacheRepository: DrizzleCacheRepository;
   private readonly mediaListRepository: DrizzleMediaListRepository;
   private readonly traktConfigRepository: DrizzleTraktConfigRepository;
   private readonly mdbListConfigRepository: DrizzleMdbListConfigRepository;
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly mediaFetcherFactory: MediaFetcherFactory;
   private readonly jellyseerrClient: JellyseerrHttpClient;
+  private readonly availabilityChecker: HttpMediaAvailabilityChecker;
   private readonly logger: LoggerService;
 
   // Application (public)
@@ -76,7 +76,6 @@ export class ProcessingContainer {
 
     // 2. Instantiate infrastructure layer
     this.executionHistoryRepository = new DrizzleExecutionHistoryRepository(db);
-    this.cacheRepository = new DrizzleCacheRepository(db);
     this.mediaListRepository = new DrizzleMediaListRepository(db);
     this.traktConfigRepository = new DrizzleTraktConfigRepository(db, encryptionService);
     this.mdbListConfigRepository = new DrizzleMdbListConfigRepository(db, encryptionService);
@@ -90,6 +89,10 @@ export class ProcessingContainer {
 
     this.jellyseerrClient = new JellyseerrHttpClient();
 
+    this.availabilityChecker = new HttpMediaAvailabilityChecker(
+      new LoggerService('availability-checker')
+    );
+
     this.logger = new LoggerService('processing');
 
     // 3. Instantiate use cases wrapped with logging decorator
@@ -98,9 +101,9 @@ export class ProcessingContainer {
         this.mediaListRepository,
         this.jellyseerrConfigRepository,
         this.executionHistoryRepository,
-        this.cacheRepository,
         this.mediaFetcherFactory,
         this.jellyseerrClient,
+        this.availabilityChecker,
         this.logger
       ),
       new LoggerService('processing'),
@@ -112,9 +115,9 @@ export class ProcessingContainer {
         this.mediaListRepository,
         this.jellyseerrConfigRepository,
         this.executionHistoryRepository,
-        this.cacheRepository,
         this.mediaFetcherFactory,
         this.jellyseerrClient,
+        this.availabilityChecker,
         this.logger
       ),
       new LoggerService('processing'),

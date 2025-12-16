@@ -24,12 +24,14 @@ export interface ExecutionWithListName {
   itemsFound: number | null;
   itemsRequested: number | null;
   itemsFailed: number | null;
+  itemsSkippedAvailable: number | null;
+  itemsSkippedPreviouslyRequested: number | null;
   errorMessage: string | null;
 }
 
 export interface IDashboardStatsRepository {
   /**
-   * Get count of distinct TMDB IDs across all cached list items
+   * Get total count of items requested across all executions
    */
   getTotalRequestedItemsCount(userId: number): Promise<number>;
 

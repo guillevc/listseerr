@@ -34,3 +34,26 @@ export interface JellyseerrPendingRequestsResponse {
   };
   results: unknown[]; // We don't need the actual request data
 }
+
+/**
+ * Response from GET /api/v1/movie/{id} or GET /api/v1/tv/{id}
+ *
+ * Contains mediaInfo with status indicating availability:
+ * - 1 = UNKNOWN (not in Jellyseerr)
+ * - 2 = PENDING (request pending approval)
+ * - 3 = PROCESSING (request being processed)
+ * - 4 = PARTIALLY_AVAILABLE (some content available)
+ * - 5 = AVAILABLE (fully available)
+ * - 6 = DELETED (was requested but deleted)
+ *
+ * If mediaInfo is missing, the media is not in Jellyseerr.
+ */
+export interface JellyseerrMediaInfoResponse {
+  id: number;
+  tmdbId: number;
+  title?: string;
+  mediaInfo?: {
+    id: number;
+    status: number;
+  };
+}

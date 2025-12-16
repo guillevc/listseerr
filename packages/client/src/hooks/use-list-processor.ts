@@ -33,17 +33,19 @@ export function useListProcessor() {
       void utils.dashboard.getPendingRequests.invalidate();
 
       // Destructure wrapped response
-      const { execution } = result;
+      const { execution, itemsSkippedPreviouslyRequested, itemsSkippedAvailable } = result;
 
       if (execution.status === 'success') {
-        const skipped = execution.itemsFound - execution.itemsRequested - execution.itemsFailed;
         const parts = [`Found ${execution.itemsFound} items`];
 
         if (execution.itemsRequested > 0) {
           parts.push(`${execution.itemsRequested} requested`);
         }
-        if (skipped > 0) {
-          parts.push(`${skipped} skipped`);
+        if (itemsSkippedPreviouslyRequested > 0) {
+          parts.push(`${itemsSkippedPreviouslyRequested} already requested`);
+        }
+        if (itemsSkippedAvailable > 0) {
+          parts.push(`${itemsSkippedAvailable} already available`);
         }
         if (execution.itemsFailed > 0) {
           parts.push(`${execution.itemsFailed} failed`);
@@ -82,7 +84,6 @@ export function useListProcessor() {
       void utils.dashboard.getPendingRequests.invalidate();
 
       if (result.success) {
-        const skipped = result.totalItemsFound - result.itemsRequested - result.itemsFailed;
         const parts = [
           `Processed ${result.processedLists} list(s): ${result.totalItemsFound} items found`,
         ];
@@ -90,8 +91,11 @@ export function useListProcessor() {
         if (result.itemsRequested > 0) {
           parts.push(`${result.itemsRequested} requested`);
         }
-        if (skipped > 0) {
-          parts.push(`${skipped} skipped`);
+        if (result.itemsSkippedPreviouslyRequested > 0) {
+          parts.push(`${result.itemsSkippedPreviouslyRequested} already requested`);
+        }
+        if (result.itemsSkippedAvailable > 0) {
+          parts.push(`${result.itemsSkippedAvailable} already available`);
         }
         if (result.itemsFailed > 0) {
           parts.push(`${result.itemsFailed} failed`);
@@ -145,17 +149,16 @@ export function useListProcessor() {
       return;
     }
 
-    const enabledLists = lists.filter((list) => list.enabled);
-    if (enabledLists.length === 0) {
+    if (lists.length === 0) {
       toast({
         title: 'No Lists',
-        description: 'No enabled lists to process',
+        description: 'No lists to process',
       });
       return;
     }
 
-    // Mark all enabled lists as processing
-    setProcessingLists(new Set(enabledLists.map((l) => l.id)));
+    // Mark all lists as processing (Process All processes all lists regardless of enabled status)
+    setProcessingLists(new Set(lists.map((l) => l.id)));
 
     // Use batch processing mutation
     processAllMutation.mutate();

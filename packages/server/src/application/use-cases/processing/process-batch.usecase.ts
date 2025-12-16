@@ -1,9 +1,9 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
-import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
+import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessBatchCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessBatchResponse } from 'shared/application/dtos/processing/responses.dto';
@@ -28,42 +28,46 @@ import {
  * 1. Load all enabled lists
  * 2. Fetch items from all lists (with executions created)
  * 3. Global deduplication by TMDB ID
- * 4. Filter cached items
- * 5. Batch request to Jellyseerr
- * 6. Cache successful requests
- * 7. Update all execution records
+ * 4. Check availability in Jellyseerr and categorize items
+ * 5. Request only TO_BE_REQUESTED items to Jellyseerr
+ * 6. Update all execution records
  */
 export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, ProcessBatchResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
-    private readonly cacheRepository: ICacheRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
     private readonly jellyseerrClient: IJellyseerrClient,
+    private readonly availabilityChecker: IMediaAvailabilityChecker,
     private readonly logger: ILogger
   ) {}
 
   async execute(command: ProcessBatchCommand): Promise<ProcessBatchResponse> {
     this.logger.info({ triggerType: command.triggerType }, 'Starting batch processing');
 
-    // 1. Load all enabled lists
+    // 1. Load lists - filter by enabled only for scheduled processing
     const allLists = await this.mediaListRepository.findAll(command.userId);
-    const enabledLists = allLists.filter((list) => list.enabled);
+    // For scheduled processing, only process enabled lists
+    // For manual processing (Process All), process all lists
+    const listsToProcess =
+      command.triggerType === 'scheduled' ? allLists.filter((list) => list.enabled) : allLists;
 
     this.logger.info(
-      { totalLists: allLists.length, enabledLists: enabledLists.length },
+      { totalLists: allLists.length, listsToProcess: listsToProcess.length },
       'Loaded media lists'
     );
 
-    if (enabledLists.length === 0) {
-      this.logger.info('No enabled lists found, skipping batch processing');
+    if (listsToProcess.length === 0) {
+      this.logger.info('No lists to process, skipping batch processing');
       return {
         success: true,
         processedLists: 0,
         totalItemsFound: 0,
         itemsRequested: 0,
         itemsFailed: 0,
+        itemsSkippedPreviouslyRequested: 0,
+        itemsSkippedAvailable: 0,
         executions: [],
       };
     }
@@ -72,7 +76,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     const triggerType = TriggerTypeVO.create(command.triggerType);
     const batchId = BatchIdVO.generate(triggerType);
     const listsWithItems = await this.fetchFromAllLists(
-      enabledLists,
+      listsToProcess,
       command.userId,
       batchId,
       triggerType
@@ -88,47 +92,50 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       'Global deduplication completed'
     );
 
-    // 4. Filter already cached items
-    const newItems = await this.cacheRepository.filterAlreadyCached(uniqueItems);
+    // 4. Load Jellyseerr config and check availability
+    const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
+    const categorized = await this.availabilityChecker.checkAndCategorize(
+      uniqueItems,
+      jellyseerrConfig
+    );
+
     this.logger.info(
       {
         uniqueItems: uniqueItems.length,
-        newItems: newItems.length,
-        cached: uniqueItems.length - newItems.length,
+        toBeRequested: categorized.toBeRequested.length,
+        previouslyRequested: categorized.previouslyRequested.length,
+        available: categorized.available.length,
       },
-      'Filtered cached items'
+      'Media availability check completed'
     );
 
-    // 5. Load Jellyseerr config and batch request
-    const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
-    this.logger.debug({ itemCount: newItems.length }, 'Requesting items to Jellyseerr');
-    const results = await this.jellyseerrClient.requestItems(newItems, jellyseerrConfig);
+    // 5. Request only TO_BE_REQUESTED items to Jellyseerr
+    const results = await this.jellyseerrClient.requestItems(
+      categorized.toBeRequested,
+      jellyseerrConfig
+    );
     this.logger.info(
       { successful: results.successful.length, failed: results.failed.length },
       'Jellyseerr batch requests completed'
     );
 
-    // 6. Cache successful requests (using first list as reference)
-    if (results.successful.length > 0 && enabledLists.length > 0) {
-      await this.cacheRepository.cacheItems(enabledLists[0].id, results.successful);
-      this.logger.debug({ count: results.successful.length }, 'Cached successful requests');
-    }
-
-    // 7. Update all execution histories
-    const executions = await this.updateAllExecutions(listsWithItems, results);
+    // 6. Update all execution histories
+    const executions = await this.updateAllExecutions(listsWithItems, results, categorized);
 
     this.logger.info(
-      { processedLists: enabledLists.length },
+      { processedLists: listsToProcess.length },
       'Batch processing completed successfully'
     );
 
-    // 8. Return aggregate response
+    // 7. Return aggregate response
     return {
       success: true,
-      processedLists: enabledLists.length,
+      processedLists: listsToProcess.length,
       totalItemsFound,
       itemsRequested: results.successful.length,
       itemsFailed: results.failed.length,
+      itemsSkippedPreviouslyRequested: categorized.previouslyRequested.length,
+      itemsSkippedAvailable: categorized.available.length,
       executions: executions.map((e) => ProcessingExecutionMapper.toDTO(e)),
     };
   }
@@ -221,9 +228,20 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       items: MediaItemVO[];
       execution: ProcessingExecution;
     }>,
-    results: { successful: MediaItemVO[]; failed: Array<{ item: MediaItemVO; error: string }> }
+    results: { successful: MediaItemVO[]; failed: Array<{ item: MediaItemVO; error: string }> },
+    categorized: {
+      toBeRequested: MediaItemVO[];
+      previouslyRequested: MediaItemVO[];
+      available: MediaItemVO[];
+    }
   ): Promise<ProcessingExecution[]> {
     const updatedExecutions: ProcessingExecution[] = [];
+
+    // Build sets for quick lookup
+    const previouslyRequestedTmdbIds = new Set(
+      categorized.previouslyRequested.map((i) => i.tmdbId)
+    );
+    const availableTmdbIds = new Set(categorized.available.map((i) => i.tmdbId));
 
     for (const { items, execution } of listsWithItems) {
       // Skip already-failed executions
@@ -232,13 +250,23 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
         continue;
       }
 
-      // Calculate successful/failed counts for this list's items
+      // Calculate counts for this list's items
       const listTmdbIds = new Set(items.map((i) => i.tmdbId));
       const successfulCount = results.successful.filter((i) => listTmdbIds.has(i.tmdbId)).length;
       const failedCount = results.failed.filter((f) => listTmdbIds.has(f.item.tmdbId)).length;
+      const skippedAvailableCount = items.filter((i) => availableTmdbIds.has(i.tmdbId)).length;
+      const skippedPreviouslyRequestedCount = items.filter((i) =>
+        previouslyRequestedTmdbIds.has(i.tmdbId)
+      ).length;
 
       // Mark execution as success
-      execution.markAsSuccess(items.length, successfulCount, failedCount);
+      execution.markAsSuccess(
+        items.length,
+        successfulCount,
+        failedCount,
+        skippedAvailableCount,
+        skippedPreviouslyRequestedCount
+      );
       const updated = await this.executionHistoryRepository.save(execution);
       updatedExecutions.push(updated);
     }

@@ -112,6 +112,8 @@ export class GetRecentActivityUseCase implements IUseCase<
       itemsFound: execution.itemsFound,
       itemsRequested: execution.itemsRequested,
       itemsFailed: execution.itemsFailed,
+      itemsSkippedAvailable: execution.itemsSkippedAvailable,
+      itemsSkippedPreviouslyRequested: execution.itemsSkippedPreviouslyRequested,
       errorMessage: execution.errorMessage,
     };
   }

@@ -4,7 +4,7 @@ import type {
   IDashboardStatsRepository,
   ExecutionWithListName,
 } from '@/server/application/repositories/dashboard-stats.repository.interface';
-import { executionHistory, listItemsCache, mediaLists } from '@/server/infrastructure/db/schema';
+import { executionHistory, mediaLists } from '@/server/infrastructure/db/schema';
 import * as schema from '@/server/infrastructure/db/schema';
 
 /**
@@ -22,13 +22,13 @@ export class DrizzleDashboardStatsRepository implements IDashboardStatsRepositor
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
 
   async getTotalRequestedItemsCount(_userId: number): Promise<number> {
-    // Count distinct TMDB IDs across all cached list items
+    // Sum all requested items across all executions
     // Note: _userId reserved for future multitenancy
     const [result] = await this.db
-      .select({ count: sql<number>`count(distinct ${listItemsCache.tmdbId})` })
-      .from(listItemsCache);
+      .select({ total: sql<number>`coalesce(sum(${executionHistory.itemsRequested}), 0)` })
+      .from(executionHistory);
 
-    return result?.count || 0;
+    return result?.total ?? 0;
   }
 
   async getLastScheduledExecution(_userId: number): Promise<Date | null> {
@@ -68,6 +68,8 @@ export class DrizzleDashboardStatsRepository implements IDashboardStatsRepositor
         itemsFound: executionHistory.itemsFound,
         itemsRequested: executionHistory.itemsRequested,
         itemsFailed: executionHistory.itemsFailed,
+        itemsSkippedAvailable: executionHistory.itemsSkippedAvailable,
+        itemsSkippedPreviouslyRequested: executionHistory.itemsSkippedPreviouslyRequested,
         errorMessage: executionHistory.errorMessage,
       })
       .from(executionHistory)

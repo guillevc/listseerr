@@ -14,6 +14,8 @@ export class ProcessingExecutionMapper {
       itemsFound: entity.itemsFound,
       itemsRequested: entity.itemsRequested,
       itemsFailed: entity.itemsFailed,
+      itemsSkippedAvailable: entity.itemsSkippedAvailable,
+      itemsSkippedPreviouslyRequested: entity.itemsSkippedPreviouslyRequested,
       errorMessage: entity.errorMessage,
     };
   }

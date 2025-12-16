@@ -24,6 +24,8 @@ export class ProcessingExecution {
   private _itemsFound: number;
   private _itemsRequested: number;
   private _itemsFailed: number;
+  private _itemsSkippedAvailable: number;
+  private _itemsSkippedPreviouslyRequested: number;
   private _errorMessage: string | null;
 
   constructor(params: {
@@ -37,6 +39,8 @@ export class ProcessingExecution {
     itemsFound: number;
     itemsRequested: number;
     itemsFailed: number;
+    itemsSkippedAvailable: number;
+    itemsSkippedPreviouslyRequested: number;
     errorMessage: string | null;
   }) {
     this._id = params.id;
@@ -49,6 +53,8 @@ export class ProcessingExecution {
     this._itemsFound = params.itemsFound;
     this._itemsRequested = params.itemsRequested;
     this._itemsFailed = params.itemsFailed;
+    this._itemsSkippedAvailable = params.itemsSkippedAvailable;
+    this._itemsSkippedPreviouslyRequested = params.itemsSkippedPreviouslyRequested;
     this._errorMessage = params.errorMessage;
   }
 
@@ -71,6 +77,8 @@ export class ProcessingExecution {
       itemsFound: 0,
       itemsRequested: 0,
       itemsFailed: 0,
+      itemsSkippedAvailable: 0,
+      itemsSkippedPreviouslyRequested: 0,
       errorMessage: null,
     });
   }
@@ -116,6 +124,14 @@ export class ProcessingExecution {
     return this._itemsFailed;
   }
 
+  get itemsSkippedAvailable(): number {
+    return this._itemsSkippedAvailable;
+  }
+
+  get itemsSkippedPreviouslyRequested(): number {
+    return this._itemsSkippedPreviouslyRequested;
+  }
+
   get errorMessage(): string | null {
     return this._errorMessage;
   }
@@ -126,7 +142,13 @@ export class ProcessingExecution {
    * Mark execution as successfully completed
    * @throws InvalidExecutionStatusTransitionError if already completed
    */
-  markAsSuccess(itemsFound: number, itemsRequested: number, itemsFailed: number): void {
+  markAsSuccess(
+    itemsFound: number,
+    itemsRequested: number,
+    itemsFailed: number,
+    itemsSkippedAvailable: number,
+    itemsSkippedPreviouslyRequested: number
+  ): void {
     if (this._status.isCompleted()) {
       throw new InvalidExecutionStatusTransitionError(this._status.getValue(), 'success');
     }
@@ -136,6 +158,8 @@ export class ProcessingExecution {
     this._itemsFound = itemsFound;
     this._itemsRequested = itemsRequested;
     this._itemsFailed = itemsFailed;
+    this._itemsSkippedAvailable = itemsSkippedAvailable;
+    this._itemsSkippedPreviouslyRequested = itemsSkippedPreviouslyRequested;
     this._errorMessage = null;
   }
 
@@ -154,6 +178,8 @@ export class ProcessingExecution {
     this._itemsFound = 0;
     this._itemsRequested = 0;
     this._itemsFailed = 0;
+    this._itemsSkippedAvailable = 0;
+    this._itemsSkippedPreviouslyRequested = 0;
   }
 
   /**

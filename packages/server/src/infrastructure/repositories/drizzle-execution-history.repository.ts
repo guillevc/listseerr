@@ -64,6 +64,8 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
           itemsFound: execution.itemsFound,
           itemsRequested: execution.itemsRequested,
           itemsFailed: execution.itemsFailed,
+          itemsSkippedAvailable: execution.itemsSkippedAvailable,
+          itemsSkippedPreviouslyRequested: execution.itemsSkippedPreviouslyRequested,
           errorMessage: execution.errorMessage,
         })
         .where(eq(executionHistory.id, execution.id))
@@ -121,6 +123,8 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
       itemsFound: row.itemsFound || 0,
       itemsRequested: row.itemsRequested || 0,
       itemsFailed: row.itemsFailed || 0,
+      itemsSkippedAvailable: row.itemsSkippedAvailable || 0,
+      itemsSkippedPreviouslyRequested: row.itemsSkippedPreviouslyRequested || 0,
       errorMessage: row.errorMessage,
     });
   }

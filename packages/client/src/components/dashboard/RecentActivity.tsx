@@ -7,12 +7,18 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 
 interface ProcessingBarProps {
   requested: number;
-  skipped: number;
+  skippedPreviouslyRequested: number;
+  skippedAvailable: number;
   failed: number;
 }
 
-function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
-  const total = requested + skipped + failed;
+function ProcessingBar({
+  requested,
+  skippedPreviouslyRequested,
+  skippedAvailable,
+  failed,
+}: ProcessingBarProps) {
+  const total = requested + skippedPreviouslyRequested + skippedAvailable + failed;
 
   if (total === 0) {
     return (
@@ -23,12 +29,14 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
   }
 
   const requestedPercent = (requested / total) * 100;
-  const skippedPercent = (skipped / total) * 100;
+  const skippedPreviouslyRequestedPercent = (skippedPreviouslyRequested / total) * 100;
+  const skippedAvailablePercent = (skippedAvailable / total) * 100;
   const failedPercent = (failed / total) * 100;
 
   // Only show number if segment is wide enough (at least 8% of total width)
   const showRequestedNumber = requestedPercent >= 8;
-  const showSkippedNumber = skippedPercent >= 8;
+  const showSkippedPreviouslyRequestedNumber = skippedPreviouslyRequestedPercent >= 8;
+  const showSkippedAvailableNumber = skippedAvailablePercent >= 8;
   const showFailedNumber = failedPercent >= 8;
 
   return (
@@ -44,12 +52,20 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
                 {showRequestedNumber && <span>{requested}</span>}
               </div>
             )}
-            {skipped > 0 && (
+            {skippedPreviouslyRequested > 0 && (
               <div
                 className="flex h-full items-center justify-center bg-blue-500 text-xs font-medium text-white"
-                style={{ width: `${skippedPercent}%` }}
+                style={{ width: `${skippedPreviouslyRequestedPercent}%` }}
               >
-                {showSkippedNumber && <span>{skipped}</span>}
+                {showSkippedPreviouslyRequestedNumber && <span>{skippedPreviouslyRequested}</span>}
+              </div>
+            )}
+            {skippedAvailable > 0 && (
+              <div
+                className="flex h-full items-center justify-center bg-purple-500 text-xs font-medium text-white"
+                style={{ width: `${skippedAvailablePercent}%` }}
+              >
+                {showSkippedAvailableNumber && <span>{skippedAvailable}</span>}
               </div>
             )}
             {failed > 0 && (
@@ -73,7 +89,14 @@ function ProcessingBar({ requested, skipped, failed }: ProcessingBarProps) {
             <div className="flex items-center gap-2">
               <AlertCircle className="h-3 w-3 text-blue-500" />
               <span>
-                Skipped: {skipped} ({skippedPercent.toFixed(1)}%)
+                Already Requested: {skippedPreviouslyRequested} (
+                {skippedPreviouslyRequestedPercent.toFixed(1)}%)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-3 w-3 text-purple-500" />
+              <span>
+                Available: {skippedAvailable} ({skippedAvailablePercent.toFixed(1)}%)
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -214,32 +237,26 @@ export function RecentActivity() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {group.executions.map((execution) => {
-                        const itemsSkipped =
-                          (execution.itemsFound ?? 0) -
-                          (execution.itemsRequested ?? 0) -
-                          (execution.itemsFailed ?? 0);
-
-                        return (
-                          <TableRow key={execution.id}>
-                            <TableCell className="font-medium">
-                              <div className="line-clamp-3 wrap-break-word">
-                                {execution.listName || `List #${execution.listId}`}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {execution.itemsFound ?? 0}
-                            </TableCell>
-                            <TableCell className="w-[500px]">
-                              <ProcessingBar
-                                requested={execution.itemsRequested ?? 0}
-                                skipped={itemsSkipped}
-                                failed={execution.itemsFailed ?? 0}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      {group.executions.map((execution) => (
+                        <TableRow key={execution.id}>
+                          <TableCell className="font-medium">
+                            <div className="line-clamp-3 wrap-break-word">
+                              {execution.listName || `List #${execution.listId}`}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">{execution.itemsFound ?? 0}</TableCell>
+                          <TableCell className="w-[500px]">
+                            <ProcessingBar
+                              requested={execution.itemsRequested ?? 0}
+                              skippedPreviouslyRequested={
+                                execution.itemsSkippedPreviouslyRequested ?? 0
+                              }
+                              skippedAvailable={execution.itemsSkippedAvailable ?? 0}
+                              failed={execution.itemsFailed ?? 0}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
                       {/* Batch Summary Row (only show if multiple lists in batch) */}
                       {group.executions.length > 1 &&
                         (() => {
@@ -255,7 +272,14 @@ export function RecentActivity() {
                             (sum, e) => sum + (e.itemsFailed ?? 0),
                             0
                           );
-                          const totalSkipped = totalFound - totalRequested - totalFailed;
+                          const totalSkippedPreviouslyRequested = group.executions.reduce(
+                            (sum, e) => sum + (e.itemsSkippedPreviouslyRequested ?? 0),
+                            0
+                          );
+                          const totalSkippedAvailable = group.executions.reduce(
+                            (sum, e) => sum + (e.itemsSkippedAvailable ?? 0),
+                            0
+                          );
 
                           return (
                             <TableRow className="border-t-2 border-border bg-card/50 font-semibold">
@@ -264,7 +288,8 @@ export function RecentActivity() {
                               <TableCell className="w-[500px]">
                                 <ProcessingBar
                                   requested={totalRequested}
-                                  skipped={totalSkipped}
+                                  skippedPreviouslyRequested={totalSkippedPreviouslyRequested}
+                                  skippedAvailable={totalSkippedAvailable}
                                   failed={totalFailed}
                                 />
                               </TableCell>

@@ -1,9 +1,9 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
-import type { ICacheRepository } from '@/server/application/repositories/cache.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
+import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
 import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
@@ -27,19 +27,18 @@ import type { IMediaFetcher } from '@/server/application/services/media-fetcher.
  * 1. Load list and validate configs
  * 2. Create execution record (status: running)
  * 3. Fetch items from provider
- * 4. Filter cached items
- * 5. Request to Jellyseerr
- * 6. Cache successful requests
- * 7. Update execution record (status: success/error)
+ * 4. Check availability in Jellyseerr and categorize items
+ * 5. Request only TO_BE_REQUESTED items to Jellyseerr
+ * 6. Update execution record (status: success/error)
  */
 export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessListResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
-    private readonly cacheRepository: ICacheRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
     private readonly jellyseerrClient: IJellyseerrClient,
+    private readonly availabilityChecker: IMediaAvailabilityChecker,
     private readonly logger: ILogger
   ) {}
 
@@ -76,33 +75,39 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
       const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems);
       this.logger.info({ itemCount: items.length }, 'Items fetched from provider');
 
-      // 5. Filter cached items
-      const newItems = await this.cacheRepository.filterAlreadyCached(items);
+      // 5. Check availability in Jellyseerr and categorize items
+      const categorized = await this.availabilityChecker.checkAndCategorize(
+        items,
+        jellyseerrConfig
+      );
       this.logger.info(
         {
           totalItems: items.length,
-          newItems: newItems.length,
-          cached: items.length - newItems.length,
+          toBeRequested: categorized.toBeRequested.length,
+          previouslyRequested: categorized.previouslyRequested.length,
+          available: categorized.available.length,
         },
-        'Filtered cached items'
+        'Media availability check completed'
       );
 
-      // 6. Request to Jellyseerr
-      this.logger.debug({ itemCount: newItems.length }, 'Requesting items to Jellyseerr');
-      const results = await this.jellyseerrClient.requestItems(newItems, jellyseerrConfig);
+      // 6. Request only TO_BE_REQUESTED items to Jellyseerr
+      const results = await this.jellyseerrClient.requestItems(
+        categorized.toBeRequested,
+        jellyseerrConfig
+      );
       this.logger.info(
         { successful: results.successful.length, failed: results.failed.length },
         'Jellyseerr requests completed'
       );
 
-      // 7. Cache successful requests
-      if (results.successful.length > 0) {
-        await this.cacheRepository.cacheItems(list.id, results.successful);
-        this.logger.debug({ count: results.successful.length }, 'Cached successful requests');
-      }
-
-      // 8. Mark execution as success
-      savedExecution.markAsSuccess(items.length, results.successful.length, results.failed.length);
+      // 7. Mark execution as success
+      savedExecution.markAsSuccess(
+        items.length,
+        results.successful.length,
+        results.failed.length,
+        categorized.available.length,
+        categorized.previouslyRequested.length
+      );
       await this.executionHistoryRepository.save(savedExecution);
 
       this.logger.info(
@@ -110,8 +115,12 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
         'List processing completed successfully'
       );
 
-      // 9. Return response
-      return { execution: ProcessingExecutionMapper.toDTO(savedExecution) };
+      // 8. Return response with skipped counts
+      return {
+        execution: ProcessingExecutionMapper.toDTO(savedExecution),
+        itemsSkippedPreviouslyRequested: categorized.previouslyRequested.length,
+        itemsSkippedAvailable: categorized.available.length,
+      };
     } catch (error) {
       // Error handling: mark execution as failed
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

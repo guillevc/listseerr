@@ -84,22 +84,9 @@ export const executionHistory = sqliteTable('execution_history', {
   itemsFound: integer('items_found'),
   itemsRequested: integer('items_requested'),
   itemsFailed: integer('items_failed'),
+  itemsSkippedAvailable: integer('items_skipped_available'),
+  itemsSkippedPreviouslyRequested: integer('items_skipped_previously_requested'),
   errorMessage: text('error_message'),
-});
-
-// Global cache for requested items across all lists
-// Once an item is requested by ANY list, it won't be requested again by other lists
-// listId tracks which list first requested the item (for reference only)
-export const listItemsCache = sqliteTable('list_items_cache', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  listId: integer('list_id')
-    .notNull()
-    .references(() => mediaLists.id, { onDelete: 'cascade' }),
-  title: text('title').notNull(),
-  year: integer('year'),
-  tmdbId: integer('tmdb_id').unique(), // Unique constraint enforces global cache
-  mediaType: text('media_type', { enum: ['movie', 'tv'] }).notNull(),
-  fetchedAt: integer('fetched_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Provider cache for external data (e.g., StevenLu JSON)
@@ -148,19 +135,11 @@ export const mediaListsRelations = relations(mediaLists, ({ one, many }) => ({
     references: [users.id],
   }),
   executionHistory: many(executionHistory),
-  listItems: many(listItemsCache),
 }));
 
 export const executionHistoryRelations = relations(executionHistory, ({ one }) => ({
   list: one(mediaLists, {
     fields: [executionHistory.listId],
-    references: [mediaLists.id],
-  }),
-}));
-
-export const listItemsCacheRelations = relations(listItemsCache, ({ one }) => ({
-  list: one(mediaLists, {
-    fields: [listItemsCache.listId],
     references: [mediaLists.id],
   }),
 }));
@@ -183,9 +162,6 @@ export type NewMediaList = typeof mediaLists.$inferInsert;
 
 export type ExecutionHistory = typeof executionHistory.$inferSelect;
 export type NewExecutionHistory = typeof executionHistory.$inferInsert;
-
-export type ListItemCache = typeof listItemsCache.$inferSelect;
-export type NewListItemCache = typeof listItemsCache.$inferInsert;
 
 export type ProviderCache = typeof providerCache.$inferSelect;
 export type NewProviderCache = typeof providerCache.$inferInsert;

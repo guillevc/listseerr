@@ -24,5 +24,7 @@ export interface ExecutionHistoryDTO {
   itemsFound: number;
   itemsRequested: number;
   itemsFailed: number;
+  itemsSkippedAvailable: number;
+  itemsSkippedPreviouslyRequested: number;
   errorMessage: string | null;
 }

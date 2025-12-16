@@ -5,6 +5,7 @@ import type {
   JellyseerrRequestResponse,
   ProcessingResult,
   JellyseerrPendingRequestsResponse,
+  JellyseerrMediaInfoResponse,
 } from './types';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.service';
 
@@ -273,5 +274,105 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
       'Failed to get pending requests count from Jellyseerr'
     );
     throw error;
+  }
+}
+
+/**
+ * Get movie availability status from Jellyseerr
+ *
+ * @param tmdbId - TMDB ID of the movie
+ * @param config - Jellyseerr configuration
+ * @returns Media info response with status, or null if not found
+ */
+export async function getMovieAvailability(
+  tmdbId: number,
+  config: JellyseerrConfig
+): Promise<JellyseerrMediaInfoResponse | null> {
+  logger.debug({ tmdbId }, 'Checking movie availability in Jellyseerr');
+
+  try {
+    const response = await fetch(`${config.url}/api/v1/movie/${tmdbId}?language=en`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': config.apiKey,
+        'X-Api-User': config.userIdJellyseerr.toString(),
+      },
+    });
+
+    if (response.status === 404) {
+      logger.debug({ tmdbId }, 'Movie not found in Jellyseerr (404)');
+      return null;
+    }
+
+    if (!response.ok) {
+      logger.warn(
+        { tmdbId, status: response.status },
+        'Failed to fetch movie availability from Jellyseerr'
+      );
+      return null;
+    }
+
+    const data = (await response.json()) as JellyseerrMediaInfoResponse;
+    logger.debug(
+      { tmdbId, status: data.mediaInfo?.status },
+      'Movie availability fetched from Jellyseerr'
+    );
+    return data;
+  } catch (error) {
+    logger.warn(
+      { tmdbId, error: error instanceof Error ? error.message : 'Unknown error' },
+      'Error fetching movie availability from Jellyseerr'
+    );
+    return null;
+  }
+}
+
+/**
+ * Get TV show availability status from Jellyseerr
+ *
+ * @param tmdbId - TMDB ID of the TV show
+ * @param config - Jellyseerr configuration
+ * @returns Media info response with status, or null if not found
+ */
+export async function getTvAvailability(
+  tmdbId: number,
+  config: JellyseerrConfig
+): Promise<JellyseerrMediaInfoResponse | null> {
+  logger.debug({ tmdbId }, 'Checking TV show availability in Jellyseerr');
+
+  try {
+    const response = await fetch(`${config.url}/api/v1/tv/${tmdbId}?language=en`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': config.apiKey,
+        'X-Api-User': config.userIdJellyseerr.toString(),
+      },
+    });
+
+    if (response.status === 404) {
+      logger.debug({ tmdbId }, 'TV show not found in Jellyseerr (404)');
+      return null;
+    }
+
+    if (!response.ok) {
+      logger.warn(
+        { tmdbId, status: response.status },
+        'Failed to fetch TV show availability from Jellyseerr'
+      );
+      return null;
+    }
+
+    const data = (await response.json()) as JellyseerrMediaInfoResponse;
+    logger.debug(
+      { tmdbId, status: data.mediaInfo?.status },
+      'TV show availability fetched from Jellyseerr'
+    );
+    return data;
+  } catch (error) {
+    logger.warn(
+      { tmdbId, error: error instanceof Error ? error.message : 'Unknown error' },
+      'Error fetching TV show availability from Jellyseerr'
+    );
+    return null;
   }
 }

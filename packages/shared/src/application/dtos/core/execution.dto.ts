@@ -25,6 +25,8 @@ export interface ExecutionDTO {
   itemsFound: number | null;
   itemsRequested: number | null;
   itemsFailed: number | null;
+  itemsSkippedAvailable: number | null;
+  itemsSkippedPreviouslyRequested: number | null;
   errorMessage: string | null;
 }
 

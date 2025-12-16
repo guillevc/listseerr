@@ -1,5 +1,5 @@
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, max } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
@@ -49,14 +49,15 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     }[]
   > {
     // Subquery to get the most recent successful execution for each list
+    // Uses GROUP BY with MAX() to ensure only one row per list
     const latestExecutions = this.db
       .select({
         listId: executionHistory.listId,
-        completedAt: executionHistory.completedAt,
+        completedAt: max(executionHistory.completedAt).as('completed_at'),
       })
       .from(executionHistory)
       .where(eq(executionHistory.status, 'success'))
-      .orderBy(desc(executionHistory.completedAt))
+      .groupBy(executionHistory.listId)
       .as('latest_executions');
 
     // Main query with left join to get lists with their last processed date

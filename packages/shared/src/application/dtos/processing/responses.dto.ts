@@ -9,6 +9,10 @@ import type { ExecutionHistoryDTO } from '../core/execution-history.dto';
 
 export interface ProcessListResponse {
   execution: ExecutionHistoryDTO;
+  /** Items skipped because they were already requested (pending/processing) */
+  itemsSkippedPreviouslyRequested: number;
+  /** Items skipped because they are already available in library */
+  itemsSkippedAvailable: number;
 }
 
 export interface ProcessBatchResponse {
@@ -17,6 +21,10 @@ export interface ProcessBatchResponse {
   totalItemsFound: number;
   itemsRequested: number;
   itemsFailed: number;
+  /** Items skipped because they were already requested (pending/processing) */
+  itemsSkippedPreviouslyRequested: number;
+  /** Items skipped because they are already available in library */
+  itemsSkippedAvailable: number;
   executions: ExecutionHistoryDTO[];
 }
 
