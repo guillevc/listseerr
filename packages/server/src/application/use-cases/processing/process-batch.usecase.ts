@@ -46,12 +46,9 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
   async execute(command: ProcessBatchCommand): Promise<ProcessBatchResponse> {
     this.logger.info({ triggerType: command.triggerType }, 'Starting batch processing');
 
-    // 1. Load lists - filter by enabled only for scheduled processing
+    // 1. Load enabled lists only (disabled lists are skipped entirely)
     const allLists = await this.mediaListRepository.findAll(command.userId);
-    // For scheduled processing, only process enabled lists
-    // For manual processing (Process All), process all lists
-    const listsToProcess =
-      command.triggerType === 'scheduled' ? allLists.filter((list) => list.enabled) : allLists;
+    const listsToProcess = allLists.filter((list) => list.enabled);
 
     this.logger.info(
       { totalLists: allLists.length, listsToProcess: listsToProcess.length },
