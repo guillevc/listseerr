@@ -6,18 +6,6 @@ interface ValidationResult {
   error?: string;
 }
 
-const providerPatterns: Record<ProviderType, RegExp[]> = {
-  trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?$/i],
-  traktChart: [
-    /^https?:\/\/(www\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i,
-  ],
-  mdblist: [/^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?$/i],
-  stevenlu: [
-    // StevenLu doesn't use user-provided URLs, but we include a pattern for internal use
-    /^https?:\/\/movies\.stevenlu\.com\/?$/i,
-  ],
-};
-
 export function validateAndDetectProvider(url: string): ValidationResult {
   if (!url || typeof url !== 'string') {
     return {
@@ -35,15 +23,12 @@ export function validateAndDetectProvider(url: string): ValidationResult {
     };
   }
 
-  for (const [provider, patterns] of Object.entries(providerPatterns)) {
-    for (const pattern of patterns) {
-      if (pattern.test(trimmedUrl)) {
-        return {
-          isValid: true,
-          provider: provider as ProviderType,
-        };
-      }
-    }
+  const detectedProvider = ProviderVO.detectFromUrl(trimmedUrl);
+  if (detectedProvider) {
+    return {
+      isValid: true,
+      provider: detectedProvider.getValue(),
+    };
   }
 
   return {
