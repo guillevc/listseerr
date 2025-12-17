@@ -4,15 +4,15 @@ import { tv, type VariantProps } from 'tailwind-variants';
 import { cn } from '@/client/lib/utils';
 
 const badgeVariants = tv({
-  base: 'inline-flex whitespace-nowrap items-center rounded-full font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  base: 'inline-flex whitespace-nowrap items-center rounded-full font-semibold',
   variants: {
     variant: {
       // legacy
       default: 'bg-primary text-white hover:bg-primary-hover',
       secondary: 'bg-card text-foreground',
-      outline: 'text-foreground',
       simple: '',
       // new
+      outline: 'cursor-pointer transition-colors hover:bg-card-hover border-2 border-border',
       success: 'text-success-foreground border-success-border bg-success',
       destructive: 'text-destructive-foreground border-destructive-border bg-destructive',
       warning: 'text-warning-foreground border-warning-border bg-warning',

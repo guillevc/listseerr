@@ -317,7 +317,6 @@ export function ProcessingScheduleSettings() {
                       <Badge
                         key={pattern.value}
                         variant="outline"
-                        className="cursor-pointer transition-colors hover:bg-card-hover"
                         onClick={() => setCronExpression(pattern.value)}
                       >
                         {pattern.label}
