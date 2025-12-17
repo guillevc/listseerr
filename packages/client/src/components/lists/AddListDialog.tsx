@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Plus, AlertCircle } from 'lucide-react';
 import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 import {
   Dialog,
@@ -20,6 +20,66 @@ import { validateAndDetectProvider, getProviderName } from '../../lib/url-valida
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
+
+const PROVIDER_OPTIONS = [
+  { value: 'trakt', label: 'Trakt List', description: 'Public lists', requiresConfig: true },
+  {
+    value: 'traktChart',
+    label: 'Trakt Chart',
+    description: 'Curated charts like Trending, Popular, etc.',
+    requiresConfig: true,
+  },
+  {
+    value: 'mdblist',
+    label: 'MDBList',
+    description: 'Public and custom lists',
+    requiresConfig: true,
+  },
+  {
+    value: 'stevenlu',
+    label: 'StevenLu',
+    description: 'Popular movies list (updated daily)',
+    requiresConfig: false,
+  },
+] as const;
+
+interface ProviderOptionCardProps {
+  value: ProviderType;
+  label: string;
+  description: string;
+  isConfigured?: boolean;
+  showConfigBadge?: boolean;
+}
+
+function ProviderOptionCard({
+  value,
+  label,
+  description,
+  isConfigured,
+  showConfigBadge,
+}: ProviderOptionCardProps) {
+  return (
+    <label className="block cursor-pointer">
+      <RadioGroupItem value={value} className="peer sr-only" />
+      <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">{label}</p>
+              <p className="text-xs text-muted">{description}</p>
+            </div>
+            {showConfigBadge && !isConfigured && (
+              <Badge variant="warning" className="whitespace-nowrap">
+                <AlertCircle className="mr-1 h-3 w-3" />
+                Configuration missing
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+    </label>
+  );
+}
 
 export function AddListDialog() {
   const [open, setOpen] = useState(false);
@@ -42,6 +102,13 @@ export function AddListDialog() {
   const traktConfig = traktData?.config;
   const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
   const mdbListConfig = mdbListData?.config;
+
+  const isProviderConfigured = (providerValue: ProviderType): boolean => {
+    if (providerValue === 'stevenlu') return true;
+    if (providerValue === 'trakt' || providerValue === 'traktChart') return !!traktConfig?.clientId;
+    if (providerValue === 'mdblist') return !!mdbListConfig?.apiKey;
+    return false;
+  };
 
   const createMutation = trpc.lists.create.useMutation({
     onSuccess: (result) => {
@@ -213,13 +280,7 @@ export function AddListDialog() {
     }
 
     // Check if provider is configured
-    // StevenLu doesn't require configuration
-    const isConfigured =
-      provider === 'stevenlu'
-        ? true
-        : provider === 'trakt' || provider === 'traktChart'
-          ? !!traktConfig?.clientId
-          : !!mdbListConfig?.apiKey;
+    const isConfigured = isProviderConfigured(provider);
 
     // Validate maxItems
     const maxItemsNum = parseInt(maxItems);
@@ -272,7 +333,7 @@ export function AddListDialog() {
         </DialogHeader>
 
         {/* Animated Progress Bar */}
-        <div className="mt-4 h-1 w-full rounded-full bg-card">
+        <div className="mt-4 h-2 w-full rounded-full bg-card">
           <div
             className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
             style={{
@@ -291,115 +352,16 @@ export function AddListDialog() {
                   value={provider}
                   onValueChange={(value) => handleProviderChange(value as ProviderType)}
                 >
-                  <label className="block cursor-pointer">
-                    <RadioGroupItem value="trakt" id="provider-trakt" className="peer sr-only" />
-                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Trakt List</p>
-                            <p className="text-xs text-muted">Public lists</p>
-                          </div>
-                          {traktConfig?.clientId ? (
-                            <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="mr-1 h-3 w-3" />
-                              Configured
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="secondary"
-                              className="bg-orange-500 whitespace-nowrap text-white"
-                            >
-                              <AlertCircle className="mr-1 h-3 w-3" />
-                              Not Configured
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label className="block cursor-pointer">
-                    <RadioGroupItem
-                      value="traktChart"
-                      id="provider-traktChart"
-                      className="peer sr-only"
+                  {PROVIDER_OPTIONS.map((option) => (
+                    <ProviderOptionCard
+                      key={option.value}
+                      value={option.value}
+                      label={option.label}
+                      description={option.description}
+                      isConfigured={isProviderConfigured(option.value)}
+                      showConfigBadge={option.requiresConfig}
                     />
-                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Trakt Chart</p>
-                            <p className="text-xs text-muted">
-                              Curated charts like Trending, Popular, etc.
-                            </p>
-                          </div>
-                          {traktConfig?.clientId ? (
-                            <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="mr-1 h-3 w-3" />
-                              Configured
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="secondary"
-                              className="bg-orange-500 whitespace-nowrap text-white"
-                            >
-                              <AlertCircle className="mr-1 h-3 w-3" />
-                              Not Configured
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label className="block cursor-pointer">
-                    <RadioGroupItem
-                      value="mdblist"
-                      id="provider-mdblist"
-                      className="peer sr-only"
-                    />
-                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">MDBList</p>
-                            <p className="text-xs text-muted">Public and custom lists</p>
-                          </div>
-                          {mdbListConfig?.apiKey ? (
-                            <Badge variant="default" className="bg-green-500 whitespace-nowrap">
-                              <CheckCircle2 className="mr-1 h-3 w-3" />
-                              Configured
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="secondary"
-                              className="bg-orange-500 whitespace-nowrap text-white"
-                            >
-                              <AlertCircle className="mr-1 h-3 w-3" />
-                              Not Configured
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label className="block cursor-pointer">
-                    <RadioGroupItem
-                      value="stevenlu"
-                      id="provider-stevenlu"
-                      className="peer sr-only"
-                    />
-                    <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
-                      <div className="flex-1">
-                        <div>
-                          <p className="font-medium">StevenLu</p>
-                          <p className="text-xs text-muted">Popular movies list (updated daily)</p>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
+                  ))}
                 </RadioGroup>
               </div>
             </div>
