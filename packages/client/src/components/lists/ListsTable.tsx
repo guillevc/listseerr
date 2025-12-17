@@ -37,7 +37,7 @@ import { useToast } from '../../hooks/use-toast';
 import { EditListDialog } from './EditListDialog';
 
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
-import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
+import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
 
 // Transform DTO type for table use - provider is validated by server
 type MediaList = Omit<SerializedMediaList, 'provider'> & {
@@ -163,15 +163,8 @@ export function ListsTable({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        {info.getValue() === 'trakt'
-                          ? 'Trakt'
-                          : info.getValue() === 'traktChart'
-                            ? 'Trakt Chart'
-                            : info.getValue() === 'mdblist'
-                              ? 'MDBList'
-                              : info.getValue()}{' '}
-                        provider is not configured. Configure API key in Settings → API Keys to
-                        enable processing.
+                        {ProviderVO.getDisplayName(info.getValue())} provider is not configured.
+                        Configure API key in Settings → API Keys to enable processing.
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -275,13 +268,9 @@ export function ListsTable({
                 <TooltipContent>
                   {!providerConfigured ? (
                     <p>
-                      {list.provider === 'trakt'
-                        ? 'Trakt'
-                        : list.provider === 'traktChart'
-                          ? 'Trakt Chart'
-                          : 'MDBList'}{' '}
-                      provider is not configured. Configure API key in{' '}
-                      <span className="font-medium">Settings → API Keys</span> to enable processing.
+                      {ProviderVO.getDisplayName(list.provider)} provider is not configured.
+                      Configure API key in <span className="font-medium">Settings → API Keys</span>{' '}
+                      to enable processing.
                     </p>
                   ) : !isAutomaticProcessingEnabled ? (
                     <p>

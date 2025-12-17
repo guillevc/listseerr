@@ -1,4 +1,4 @@
-import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
+import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
 
 interface ValidationResult {
   isValid: boolean;
@@ -52,12 +52,6 @@ export function validateAndDetectProvider(url: string): ValidationResult {
   };
 }
 
-export function getProviderName(provider: string): string {
-  const names: Record<string, string> = {
-    trakt: 'Trakt List',
-    traktChart: 'Trakt Chart',
-    mdblist: 'MDBList',
-    stevenlu: 'StevenLu',
-  };
-  return names[provider] ?? provider;
+export function getProviderName(provider: ProviderType): string {
+  return ProviderVO.getDisplayName(provider);
 }
