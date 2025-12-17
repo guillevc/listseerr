@@ -48,7 +48,7 @@ export function validateAndDetectProvider(url: string): ValidationResult {
 
   return {
     isValid: false,
-    error: 'URL format not recognized. Supported providers: Trakt, MDBList',
+    error: 'URL format not recognized',
   };
 }
 

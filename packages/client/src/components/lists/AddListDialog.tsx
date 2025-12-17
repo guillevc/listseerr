@@ -22,30 +22,26 @@ import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 
 const PROVIDER_OPTIONS = [
-  { value: 'trakt', label: 'Trakt List', description: 'Public lists', requiresConfig: true },
+  { value: 'trakt' as const, description: 'Public lists', requiresConfig: true },
   {
-    value: 'traktChart',
-    label: 'Trakt Chart',
+    value: 'traktChart' as const,
     description: 'Curated charts like Trending, Popular, etc.',
     requiresConfig: true,
   },
   {
-    value: 'mdblist',
-    label: 'MDBList',
+    value: 'mdblist' as const,
     description: 'Public and custom lists',
     requiresConfig: true,
   },
   {
-    value: 'stevenlu',
-    label: 'StevenLu',
+    value: 'stevenlu' as const,
     description: 'Popular movies list (updated daily)',
     requiresConfig: false,
   },
-] as const;
+];
 
 interface ProviderOptionCardProps {
   value: ProviderType;
-  label: string;
   description: string;
   isConfigured?: boolean;
   showConfigBadge?: boolean;
@@ -53,11 +49,12 @@ interface ProviderOptionCardProps {
 
 function ProviderOptionCard({
   value,
-  label,
   description,
   isConfigured,
   showConfigBadge,
 }: ProviderOptionCardProps) {
+  const label = ProviderVO.create(value).getDisplayName();
+
   return (
     <label className="block cursor-pointer">
       <RadioGroupItem value={value} className="peer sr-only" />
@@ -156,9 +153,9 @@ export function AddListDialog() {
     if (providerVO.isTraktChart()) {
       const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
       const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
-      return `${chartLabel} ${mediaLabel} Trakt Chart`;
+      return `${chartLabel} ${mediaLabel} ${providerVO.getDisplayName()}`;
     } else if (providerVO.isStevenLu()) {
-      return 'StevenLu Popular Movies';
+      return `${providerVO.getDisplayName()} Popular Movies`;
     }
     return '';
   }, [providerVO, selectedChartType, selectedMediaType]);
@@ -227,9 +224,9 @@ export function AddListDialog() {
     if (providerVO.isTraktChart()) {
       const chartLabel = selectedChartType.charAt(0).toUpperCase() + selectedChartType.slice(1);
       const mediaLabel = selectedMediaType === 'movies' ? 'Movies' : 'Shows';
-      setName(`${chartLabel} ${mediaLabel} Trakt Chart`);
+      setName(`${chartLabel} ${mediaLabel} ${providerVO.getDisplayName()}`);
     } else if (providerVO.isStevenLu() && !userEditedName) {
-      setName('StevenLu Popular Movies');
+      setName(`${providerVO.getDisplayName()} Popular Movies`);
     } else if ((providerVO.isTrakt() || providerVO.isMdbList()) && !userEditedName) {
       setName('');
     }
@@ -357,7 +354,6 @@ export function AddListDialog() {
                     <ProviderOptionCard
                       key={option.value}
                       value={option.value}
-                      label={option.label}
                       description={option.description}
                       isConfigured={isProviderConfigured(option.value)}
                       showConfigBadge={option.requiresConfig}
