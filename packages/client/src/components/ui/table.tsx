@@ -15,7 +15,7 @@ function TableHeader({ className, ...props }: ComponentProps<'thead'>) {
 }
 
 function TableBody({ className, ...props }: ComponentProps<'tbody'>) {
-  return <tbody className={cn('[&_tr:last-child]:border-0', className)} {...props} />;
+  return <tbody className={cn('[&_tr:last-child]:border-b-0', className)} {...props} />;
 }
 
 function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
