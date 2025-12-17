@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
 
 interface ProcessingBarProps {
   requested: number;
@@ -178,6 +179,7 @@ export function RecentActivity() {
         <div className="space-y-3">
           {activityGroups.map((group, groupIdx) => {
             const timestamp = new Date(group.timestamp);
+            const triggerTypeVO = TriggerTypeVO.create(group.triggerType);
 
             return (
               <div
@@ -188,10 +190,10 @@ export function RecentActivity() {
                 <div className="flex items-center justify-between border-b border-border p-4">
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant={group.triggerType === 'scheduled' ? 'default' : 'secondary'}
+                      variant={triggerTypeVO.isScheduled() ? 'default' : 'secondary'}
                       className="text-xs"
                     >
-                      {group.triggerType === 'scheduled' ? (
+                      {triggerTypeVO.isScheduled() ? (
                         <>
                           <Calendar className="mr-1 h-3 w-3" />
                           Scheduled

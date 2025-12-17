@@ -15,6 +15,7 @@ import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 
 interface EditListDialogProps {
   list: SerializedMediaList;
@@ -29,9 +30,12 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   const utils = trpc.useUtils();
 
+  // Create VO instance for provider
+  const providerVO = useMemo(() => ProviderVO.create(list.provider), [list.provider]);
+
   // Parse traktChart URL to extract media type and chart type
   const parsedChartInfo = useMemo(() => {
-    if (list.provider === 'traktChart') {
+    if (providerVO.isTraktChart()) {
       const url = list.displayUrl || list.url;
       // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
       const urlPattern =
@@ -46,7 +50,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       }
     }
     return { mediaType: 'movies' as const, chartType: 'trending' };
-  }, [list]);
+  }, [providerVO, list.displayUrl, list.url]);
 
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(
     parsedChartInfo.mediaType
@@ -136,7 +140,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             </div>
 
             {/* Media Type and Chart Type fields for Trakt Chart (READ-ONLY) */}
-            {list.provider === 'traktChart' && (
+            {providerVO.isTraktChart() && (
               <>
                 {/* Media Type Selection (Read-only) */}
                 <div className="grid gap-2">
@@ -189,7 +193,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             )}
 
             {/* URL field for Trakt List and MDBList only (Read-only) */}
-            {list.provider !== 'traktChart' && list.provider !== 'stevenlu' && (
+            {!providerVO.isTraktChart() && !providerVO.isStevenLu() && (
               <div className="grid gap-2">
                 <Label htmlFor="edit-url">List URL (Read-only)</Label>
                 <div className="rounded-md bg-light-ui p-2 text-sm break-all text-muted dark:bg-dark-ui">

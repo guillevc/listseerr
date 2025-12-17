@@ -5,6 +5,7 @@ import { Separator } from '../ui/separator';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 
 interface DashboardStatsProps {
   lists: SerializedMediaList[];
@@ -23,11 +24,11 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
   const activeListsCount = lists.filter((list) => {
     if (!list.enabled) return false;
 
+    const providerVO = ProviderVO.create(list.provider);
     const isProviderConfigured =
-      (list.provider === 'trakt' && !!traktConfig?.clientId) ||
-      (list.provider === 'traktChart' && !!traktConfig?.clientId) ||
-      (list.provider === 'mdblist' && !!mdbListConfig?.apiKey) ||
-      list.provider === 'stevenlu'; // Always configured (no API key needed)
+      ((providerVO.isTrakt() || providerVO.isTraktChart()) && !!traktConfig?.clientId) ||
+      (providerVO.isMdbList() && !!mdbListConfig?.apiKey) ||
+      providerVO.isStevenLu(); // Always configured (no API key needed)
 
     return isProviderConfigured;
   }).length;

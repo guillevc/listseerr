@@ -23,19 +23,6 @@ export class ProviderVO {
     return Object.values(Values).includes(value as ProviderType);
   }
 
-  static getDisplayName(value: ProviderType): string {
-    switch (value) {
-      case 'trakt':
-        return 'Trakt List';
-      case 'traktChart':
-        return 'Trakt Chart';
-      case 'mdblist':
-        return 'MDBList';
-      case 'stevenlu':
-        return 'StevenLu';
-    }
-  }
-
   getValue(): ProviderType {
     return this.value;
   }
@@ -58,6 +45,19 @@ export class ProviderVO {
 
   equals(other: ProviderVO): boolean {
     return this.value === other.value;
+  }
+
+  getDisplayName(): string {
+    switch (this.value) {
+      case 'trakt':
+        return 'Trakt List';
+      case 'traktChart':
+        return 'Trakt Chart';
+      case 'mdblist':
+        return 'MDBList';
+      case 'stevenlu':
+        return 'StevenLu';
+    }
   }
 
   requiresUrlConversion(): boolean {

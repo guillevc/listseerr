@@ -83,12 +83,12 @@ export function ListsTable({
   const mdbListConfig = mdbListData?.config;
 
   const isProviderConfigured = useCallback(
-    (provider: string) => {
-      if (provider === 'trakt') return !!traktConfig?.clientId;
-      if (provider === 'traktChart') return !!traktConfig?.clientId;
-      if (provider === 'mdblist') return !!mdbListConfig?.apiKey;
-      if (provider === 'stevenlu') return true; // StevenLu doesn't require configuration
-      return false; // Other providers not yet implemented
+    (provider: ProviderType) => {
+      const providerVO = ProviderVO.create(provider);
+      if (providerVO.isStevenLu()) return true;
+      if (providerVO.isTrakt() || providerVO.isTraktChart()) return !!traktConfig?.clientId;
+      if (providerVO.isMdbList()) return !!mdbListConfig?.apiKey;
+      return false;
     },
     [traktConfig, mdbListConfig]
   );
@@ -163,8 +163,8 @@ export function ListsTable({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        {ProviderVO.getDisplayName(info.getValue())} provider is not configured.
-                        Configure API key in Settings → API Keys to enable processing.
+                        {ProviderVO.create(info.getValue()).getDisplayName()} provider is not
+                        configured. Configure API key in Settings → API Keys to enable processing.
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -268,9 +268,9 @@ export function ListsTable({
                 <TooltipContent>
                   {!providerConfigured ? (
                     <p>
-                      {ProviderVO.getDisplayName(list.provider)} provider is not configured.
-                      Configure API key in <span className="font-medium">Settings → API Keys</span>{' '}
-                      to enable processing.
+                      {ProviderVO.create(list.provider).getDisplayName()} provider is not
+                      configured. Configure API key in{' '}
+                      <span className="font-medium">Settings → API Keys</span> to enable processing.
                     </p>
                   ) : !isAutomaticProcessingEnabled ? (
                     <p>

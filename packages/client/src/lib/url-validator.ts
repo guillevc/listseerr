@@ -53,5 +53,5 @@ export function validateAndDetectProvider(url: string): ValidationResult {
 }
 
 export function getProviderName(provider: ProviderType): string {
-  return ProviderVO.getDisplayName(provider);
+  return ProviderVO.create(provider).getDisplayName();
 }
