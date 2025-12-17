@@ -30,15 +30,19 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { getProviderName, getProviderColor } from '../../lib/url-validator';
+import { getProviderName } from '../../lib/url-validator';
 import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { EditListDialog } from './EditListDialog';
 
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
 
-type MediaList = SerializedMediaList;
+// Transform DTO type for table use - provider is validated by server
+type MediaList = Omit<SerializedMediaList, 'provider'> & {
+  provider: ProviderType;
+};
 
 interface Props {
   lists: MediaList[];
@@ -150,17 +154,12 @@ export function ListsTable({
 
           return (
             <div className="flex items-center gap-2 whitespace-nowrap">
-              <Badge
-                variant="outline"
-                className={`border-0 whitespace-nowrap ${getProviderColor(info.getValue())}`}
-              >
-                {getProviderName(info.getValue())}
-              </Badge>
+              <Badge variant={info.getValue()}>{getProviderName(info.getValue())}</Badge>
               {!providerConfigured && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 shrink-0 text-orange-500" />
+                      <AlertCircle className="h-4 w-4 shrink-0 text-warning" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>

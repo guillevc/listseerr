@@ -61,13 +61,3 @@ export function getProviderName(provider: string): string {
   };
   return names[provider] ?? provider;
 }
-
-export function getProviderColor(provider: string): string {
-  const colors: Record<string, string> = {
-    trakt: 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-100',
-    traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
-    mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
-    stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
-  };
-  return colors[provider] ?? '';
-}

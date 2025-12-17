@@ -4,24 +4,31 @@ import { tv, type VariantProps } from 'tailwind-variants';
 import { cn } from '@/client/lib/utils';
 
 const badgeVariants = tv({
-  base: 'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  base: 'inline-flex whitespace-nowrap items-center rounded-full font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   variants: {
     variant: {
-      default: 'border-transparent bg-primary text-white hover:bg-primary-hover',
-      secondary: 'border-transparent bg-card text-foreground hover:bg-border',
-      destructive:
-        'border-transparent bg-destructive-background text-white hover:bg-destructive-hover',
+      // legacy
+      default: 'bg-primary text-white hover:bg-primary-hover',
+      secondary: 'bg-card text-foreground',
       outline: 'text-foreground',
-      trakt: 'border-transparent bg-magenta-600 text-white',
-      letterboxd: 'border-transparent bg-orange-600 text-white',
-      mdblist: 'border-transparent bg-blue-600 text-white',
-      imdb: 'border-transparent bg-yellow-600 text-white',
-      tmdb: 'border-transparent bg-cyan-600 text-white',
-      simple: 'border-transparent',
+      simple: '',
+      // new
+      success: 'text-success-foreground border-success-border bg-success',
+      destructive: 'text-destructive-foreground border-destructive-border bg-destructive',
+      warning: 'text-warning-foreground border-warning-border bg-warning',
+      info: 'text-info-foreground border-info-border bg-info',
+      trakt: 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-100',
+      traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
+      mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
+      stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
+    },
+    size: {
+      default: 'px-2.5 py-0.5 text-xs',
     },
   },
   defaultVariants: {
     variant: 'default',
+    size: 'default',
   },
 });
 

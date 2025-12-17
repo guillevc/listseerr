@@ -23,11 +23,6 @@ const buttonVariants = tv({
     accent: {
       default: '',
       purple: '',
-      cyan: '',
-      blue: '',
-      green: '',
-      orange: '',
-      red: '',
     },
     active: {
       true: '',

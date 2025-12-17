@@ -57,5 +57,4 @@ export interface SerializedMediaList {
   enabled: boolean;
   maxItems: number | null;
   lastProcessed: string | null;
-  [key: string]: unknown;
 }
