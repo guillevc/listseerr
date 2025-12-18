@@ -29,7 +29,7 @@ export function ListsPage() {
       {/* Configuration Alert */}
       {!isLoadingConfig && !jellyseerrConfig && (
         <Link to="/settings/jellyseerr">
-          <Card variant="warning" className="transition-colors hover:border-warning/50">
+          <Card variant="warning">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span className="flex items-center gap-2">

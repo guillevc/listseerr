@@ -4,7 +4,7 @@ import { cn } from '@/client/lib/utils';
 
 function Table({ className, ...props }: ComponentProps<'table'>) {
   return (
-    <div className="relative w-full overflow-clip">
+    <div className="relative w-full">
       <table className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   );
