@@ -69,7 +69,15 @@ export const createListSchema = z.object({
 }) satisfies z.ZodType<CreateListPrimitive>;
 
 /**
- * Update list schema (partial).
+ * Update list schema (partial, no defaults).
  * Output type matches UpdateListPrimitive.
+ * Note: Defined separately to avoid inheriting .default() values from createListSchema.
  */
-export const updateListSchema = createListSchema.partial() satisfies z.ZodType<UpdateListPrimitive>;
+export const updateListSchema = z.object({
+  name: listNameSchema.optional(),
+  url: listUrlSchema.optional(),
+  displayUrl: z.string().optional(),
+  provider: providerSchema.optional(),
+  enabled: z.boolean().optional(),
+  maxItems: z.number().int().min(1).max(50).optional(),
+}) satisfies z.ZodType<UpdateListPrimitive>;
