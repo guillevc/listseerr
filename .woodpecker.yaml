@@ -21,6 +21,8 @@ steps:
       password:
         from_secret: registry_password
       tags: dev
+      build_args:
+        - COMMIT_SHA=${CI_COMMIT_SHA}
       labels:
         - org.opencontainers.image.revision=${CI_COMMIT_SHA}
         - org.opencontainers.image.created=${CI_PIPELINE_CREATED}

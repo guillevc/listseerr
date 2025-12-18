@@ -2,6 +2,10 @@
 FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
+# Build args for version info
+ARG COMMIT_SHA=dev
+ENV COMMIT_SHA=$COMMIT_SHA
+
 # Copy and build
 COPY package.json bun.lock ./
 COPY packages ./packages
