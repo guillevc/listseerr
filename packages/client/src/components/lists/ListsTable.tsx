@@ -165,7 +165,7 @@ export function ListsTable({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 shrink-0 text-warning" />
+                      <AlertCircle className="h-4 w-4 shrink-0 text-destructive" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
