@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trash2, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -65,23 +65,6 @@ export function JellyseerrSettings() {
   });
   const isSaving = useMinLoading(saveMutation.isPending);
 
-  const deleteMutation = trpc.config.delete.useMutation({
-    onSuccess: () => {
-      void utils.config.get.invalidate();
-      toast({
-        title: 'Configuration Removed',
-        description: 'Jellyseerr configuration has been removed',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
   // Load config when it changes - syncing with external API data
   useEffect(() => {
     if (config) {
@@ -132,10 +115,6 @@ export function JellyseerrSettings() {
       apiKey: result.data.apiKey,
       userIdJellyseerr: result.data.userIdJellyseerr,
     });
-  };
-
-  const handleRemove = () => {
-    deleteMutation.mutate();
   };
 
   return (
@@ -200,22 +179,6 @@ export function JellyseerrSettings() {
             Save Configuration
           </Button>
         </div>
-
-        {config && (
-          <>
-            <Separator />
-            <div>
-              <Button
-                variant="destructive"
-                onClick={handleRemove}
-                loading={deleteMutation.isPending}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Remove Configuration
-              </Button>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );
