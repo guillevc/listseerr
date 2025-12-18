@@ -43,6 +43,21 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 | Presentation   | Application only         | `shared/application/`, `shared/domain/types/`, `shared/domain/errors/` |
 | Bootstrap      | All layers               | All shared                                                             |
 
+**Dependency rules:**
+
+- Outer layers can depend on **any** inner layer directly (no layer-by-layer chain required)
+- **Dependency inversion applies only at the Application↔Infrastructure boundary** via interfaces (Ports/Adapters)
+- Application defines interfaces (`IUserRepository`), Infrastructure implements them
+- No need for interfaces between other layers—the one-way dependency flow is sufficient
+
+**What these rules prevent:**
+
+- ❌ Domain importing from Infrastructure
+- ❌ Domain importing from Application
+- ❌ Application importing from Infrastructure
+
+**The test:** Inner layers must be compilable/testable without outer layers existing.
+
 **Presentation access to shared/domain:**
 
 - ✅ `shared/domain/types/` — Primitive constants, type aliases
@@ -77,10 +92,10 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 | Artifact          | Pattern                    | Location                        | Example                   |
 | ----------------- | -------------------------- | ------------------------------- | ------------------------- |
-| Runtime Constants | `<n>Values`                | `shared/domain/types/`          | `ProviderValues`          |
-| Primitive Type    | `<n>Type`                  | `shared/domain/types/`          | `ProviderType`            |
-| Value Object      | `<n>VO`                    | `shared/domain/value-objects/`  | `ProviderVO`              |
-| Entity            | `<n>`                      | `server/domain/`                | `MediaList`               |
+| Runtime Constants | `<Name>Values`             | `shared/domain/types/`          | `ProviderValues`          |
+| Primitive Type    | `<Name>Type`               | `shared/domain/types/`          | `ProviderType`            |
+| Value Object      | `<Name>VO`                 | `shared/domain/value-objects/`  | `ProviderVO`              |
+| Entity            | `<Name>`                   | `server/domain/`                | `MediaList`               |
 | Command DTO       | `<Action><Entity>Command`  | `shared/application/dtos/`      | `SaveTraktConfigCommand`  |
 | Response DTO      | `<Action><Entity>Response` | `shared/application/dtos/`      | `SaveTraktConfigResponse` |
 | Core DTO          | `<Entity>DTO`              | `shared/application/dtos/core/` | `MediaListDTO`            |
@@ -88,8 +103,6 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 **Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
 
 #### Type-Safe Enum Pattern
-
-**In types file (exported for external access):**
 
 ```typescript
 // shared/domain/types/provider.types.ts
@@ -101,34 +114,14 @@ export const ProviderValues = {
 export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 ```
 
-**In VO file (private, validation only):**
-
-```typescript
-// shared/domain/value-objects/provider.vo.ts
-const Values = {
-  TRAKT: 'trakt',
-  MDBLIST: 'mdblist',
-} as const;
-
-export class ProviderVO {
-  static create(value: string): ProviderVO {
-    if (!Object.values(Values).includes(value as ProviderType)) {
-      throw new InvalidProviderError(value);
-    }
-    // ...
-  }
-}
-```
-
-**When to use each:**
-
-- Export `<Name>Values` in types file when primitives need external access (switch statements, UI)
-- Use private `const Values` in VO when only needed for internal validation
+**Usage:** Export `<Name>Values` and `<Name>Type` from types file. VOs import and use these for validation—no need to duplicate the values.
 
 #### Value Object Pattern
 
 ```typescript
 // shared/domain/value-objects/provider.vo.ts
+import { ProviderValues, type ProviderType } from '../types/provider.types';
+
 export class ProviderVO {
   private constructor(private readonly value: ProviderType) {}
 
@@ -223,6 +216,7 @@ Both Application and Infrastructure create VOs via `VO.create()`. Entity constru
 #### Interface (Application Layer)
 
 ```typescript
+// server/application/repositories/media-list.repository.interface.ts
 export interface IMediaListRepository {
   findById(id: number, userId: number): Promise<MediaList | null>;
   findAll(userId: number): Promise<MediaList[]>;
@@ -234,6 +228,7 @@ export interface IMediaListRepository {
 #### Implementation (Infrastructure Layer)
 
 ```typescript
+// server/infrastructure/repositories/media-list.repository.ts
 private async exists(id: number, userId: number): Promise<boolean> {
   if (id === 0) return false;  // New entity shortcut
   const [row] = await this.db
@@ -283,8 +278,8 @@ private toDomain(row: typeof table.$inferSelect): MediaList {
 }
 ```
 
-**Infrastructure can:** Import Entities/VOs, call `VO.create()`, call Entity constructors, read via getters.
-**Infrastructure cannot:** Call mutation methods (`entity.update()`), trigger business logic.
+**Infrastructure can:** Import Entities/VOs, call `VO.create()`, call Entity constructors, read via getters.  
+**Infrastructure cannot:** Call Entity mutation methods—only Application (Use Cases) orchestrates business logic.
 
 #### Singleton-per-User Repository Variant
 
@@ -313,6 +308,7 @@ async save(entity: JellyseerrConfig): Promise<JellyseerrConfig> {
 ### 4. Use Case Pattern
 
 ```typescript
+// server/application/use-cases/save-trakt-config.use-case.ts
 export class SaveTraktConfigUseCase {
   constructor(private readonly repo: ITraktConfigRepository) {}
 
@@ -321,7 +317,7 @@ export class SaveTraktConfigUseCase {
     const existing = await this.repo.findByUserId(command.userId);
 
     if (existing) {
-      existing.updateClientId(clientId); // Entity mutation
+      existing.updateClientId(clientId); // Entity mutation (only Use Cases do this)
       const saved = await this.repo.save(existing);
       return TraktConfigMapper.toResponse(saved);
     }
