@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { RefreshCw, AlertCircle, ListPlus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { ListsHeader } from '../components/lists/ListsHeader';
@@ -34,7 +35,11 @@ export function ListsPage() {
               Jellyseerr Configuration Required
             </CardTitle>
             <CardDescription>
-              Please configure your Jellyseerr instance in Settings to start processing lists.
+              Please configure your Jellyseerr instance in{' '}
+              <Link to="/settings/jellyseerr" className="underline hover:text-foreground">
+                Settings
+              </Link>{' '}
+              to start processing lists.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -49,7 +54,7 @@ export function ListsPage() {
       />
 
       {/* Stats */}
-      {lists.length > 0 && <ListStats lists={lists} />}
+      {lists.length > 0 && <ListStats lists={lists} jellyseerrConfigured={!!jellyseerrConfig} />}
 
       {/* Lists Table or Empty State */}
       {lists.length === 0 ? (

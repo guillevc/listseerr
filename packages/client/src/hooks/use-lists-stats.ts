@@ -5,10 +5,17 @@ interface MediaList {
   [key: string]: unknown;
 }
 
-export function useListsStats(lists: MediaList[]) {
+interface UseListsStatsOptions {
+  jellyseerrConfigured?: boolean;
+}
+
+export function useListsStats(lists: MediaList[], options: UseListsStatsOptions = {}) {
+  const { jellyseerrConfigured = true } = options;
+
   return useMemo(() => {
     const total = lists.length;
-    const enabled = lists.filter((list) => list.enabled).length;
+    // If Jellyseerr is not configured, all lists count as disabled
+    const enabled = jellyseerrConfigured ? lists.filter((list) => list.enabled).length : 0;
     const disabled = total - enabled;
 
     return {
@@ -16,5 +23,5 @@ export function useListsStats(lists: MediaList[]) {
       enabled,
       disabled,
     };
-  }, [lists]);
+  }, [lists, jellyseerrConfigured]);
 }

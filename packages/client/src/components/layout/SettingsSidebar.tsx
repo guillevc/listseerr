@@ -1,6 +1,8 @@
-import { Settings, Key, Clock, SlidersHorizontal } from 'lucide-react';
+import { Settings, Key, Clock, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/client/lib/utils';
+import { trpc } from '../../lib/trpc';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface SettingsCategory {
   id: string;
@@ -44,11 +46,15 @@ interface SettingsSidebarProps {
 }
 
 export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarProps) {
+  const { data: configData, isLoading } = trpc.config.get.useQuery();
+  const jellyseerrConfigured = isLoading || !!configData?.config;
+
   return (
     <aside className="w-full md:w-64">
       <nav className="space-y-1 p-2">
         {settingsCategories.map((category) => {
           const isActive = category.id === activeCategory;
+          const needsAttention = category.id === 'jellyseerr' && !jellyseerrConfigured;
 
           return (
             <Link
@@ -62,7 +68,19 @@ export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarP
               )}
             >
               {category.icon}
-              {category.name}
+              <span className="flex-1">{category.name}</span>
+              {needsAttention && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <AlertCircle className="h-4 w-4 text-warning" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <p>Configuration required</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </Link>
           );
         })}
