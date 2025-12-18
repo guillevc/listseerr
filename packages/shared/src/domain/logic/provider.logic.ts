@@ -5,12 +5,18 @@
  * These are shared between the frontend and server VOs (DRY principle).
  */
 
-import {
-  ProviderValues,
-  ProviderUrlPatterns,
-  ProviderDisplayNames,
-  type ProviderType,
-} from '../types/provider.types';
+import { ProviderValues, ProviderUrlPatterns, type ProviderType } from '../types/provider.types';
+
+/**
+ * Display names for provider types.
+ * Used in UI labels and messages.
+ */
+export const ProviderDisplayNames: Record<ProviderType, string> = {
+  trakt: 'Trakt List',
+  traktChart: 'Trakt Chart',
+  mdblist: 'MDBList',
+  stevenlu: 'StevenLu',
+};
 
 /**
  * Checks if a value is a valid provider type.

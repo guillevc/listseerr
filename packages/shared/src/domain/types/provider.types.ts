@@ -22,10 +22,3 @@ export const ProviderUrlPatterns: Record<ProviderType, RegExp[]> = {
   mdblist: [/^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?/i],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],
 };
-
-export const ProviderDisplayNames: Record<ProviderType, string> = {
-  trakt: 'Trakt List',
-  traktChart: 'Trakt Chart',
-  mdblist: 'MDBList',
-  stevenlu: 'StevenLu',
-};
