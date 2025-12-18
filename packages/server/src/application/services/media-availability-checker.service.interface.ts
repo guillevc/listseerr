@@ -1,4 +1,4 @@
-import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
+import type { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 
 /**

@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
@@ -15,6 +14,10 @@ import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
+import {
+  jellyseerrConfigSchema,
+  jellyseerrTestConnectionSchema,
+} from 'shared/presentation/schemas/jellyseerr.schema';
 
 export interface JellyseerrConfigRouterDeps {
   getJellyseerrConfigUseCase: IUseCase<GetJellyseerrConfigCommand, GetJellyseerrConfigResponse>;
@@ -32,18 +35,6 @@ export interface JellyseerrConfigRouterDeps {
   >;
 }
 
-// Zod schemas for input validation
-const configInputSchema = z.object({
-  url: z.url({ message: 'Invalid URL format' }),
-  apiKey: z.string().min(1, 'API key is required'),
-  userIdJellyseerr: z.number().positive('User ID must be positive'),
-});
-
-const testConnectionInputSchema = z.object({
-  url: z.url({ message: 'Invalid URL format' }),
-  apiKey: z.string().min(1, 'API key is required'),
-});
-
 /**
  * Jellyseerr Config Router - Thin presentation layer
  *
@@ -59,14 +50,14 @@ export function createJellyseerrConfigRouter(deps: JellyseerrConfigRouterDeps) {
       return await deps.getJellyseerrConfigUseCase.execute({ userId: ctx.userId });
     }),
 
-    set: publicProcedure.input(configInputSchema).mutation(async ({ input, ctx }) => {
+    set: publicProcedure.input(jellyseerrConfigSchema).mutation(async ({ input, ctx }) => {
       return await deps.updateJellyseerrConfigUseCase.execute({
         userId: ctx.userId,
         data: input,
       });
     }),
 
-    test: publicProcedure.input(testConnectionInputSchema).mutation(async ({ input }) => {
+    test: publicProcedure.input(jellyseerrTestConnectionSchema).mutation(async ({ input }) => {
       return await deps.testJellyseerrConnectionUseCase.execute(input);
     }),
 

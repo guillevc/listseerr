@@ -1,6 +1,6 @@
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
+import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
+import { MediaTypeVO } from '@/server/domain/value-objects/media-type.vo';
 
 export class MediaItemMapper {
   static toDTO(vo: MediaItemVO): MediaItemDTO {

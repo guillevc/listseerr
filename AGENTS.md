@@ -35,13 +35,14 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 #### Import Rules
 
-| Layer          | Can Import From (Server) | Can Import From (Shared)                                               |
-| -------------- | ------------------------ | ---------------------------------------------------------------------- |
-| Domain         | Nothing                  | `shared/domain/`                                                       |
-| Application    | Domain                   | `shared/domain/`, `shared/application/`                                |
-| Infrastructure | Application, Domain      | `shared/domain/`, `shared/application/`                                |
-| Presentation   | Application only         | `shared/application/`, `shared/domain/types/`, `shared/domain/errors/` |
-| Bootstrap      | All layers               | All shared                                                             |
+| Layer          | Can Import From (Server)       | Can Import From (Shared)                                                                              |
+| -------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Domain         | `server/domain/value-objects/` | `shared/domain/types/`, `shared/domain/errors/`, `shared/domain/logic/`                               |
+| Application    | Domain                         | `shared/domain/`, `shared/application/`                                                               |
+| Infrastructure | Application, Domain            | `shared/domain/`, `shared/application/`                                                               |
+| Presentation   | Application only               | `shared/application/`, `shared/domain/types/`, `shared/domain/errors/`, `shared/presentation/`        |
+| Bootstrap      | All layers                     | All shared                                                                                            |
+| Client         | N/A                            | `shared/domain/types/`, `shared/domain/logic/`, `shared/presentation/schemas/`, `shared/application/` |
 
 **Dependency rules:**
 
@@ -58,11 +59,13 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 **The test:** Inner layers must be compilable/testable without outer layers existing.
 
-**Presentation access to shared/domain:**
+**Presentation/Client access to shared:**
 
 - ✅ `shared/domain/types/` — Primitive constants, type aliases
 - ✅ `shared/domain/errors/` — Error classes
-- ❌ `shared/domain/value-objects/` — VO classes
+- ✅ `shared/domain/logic/` — Pure display/detection functions
+- ✅ `shared/presentation/schemas/` — Zod schemas for validation
+- ❌ VOs live in `server/domain/value-objects/` (server-only)
 
 #### Layer Diagram
 
@@ -90,15 +93,17 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 #### Naming Conventions
 
-| Artifact          | Pattern                    | Location                        | Example                   |
-| ----------------- | -------------------------- | ------------------------------- | ------------------------- |
-| Runtime Constants | `<Name>Values`             | `shared/domain/types/`          | `ProviderValues`          |
-| Primitive Type    | `<Name>Type`               | `shared/domain/types/`          | `ProviderType`            |
-| Value Object      | `<Name>VO`                 | `shared/domain/value-objects/`  | `ProviderVO`              |
-| Entity            | `<Name>`                   | `server/domain/`                | `MediaList`               |
-| Command DTO       | `<Action><Entity>Command`  | `shared/application/dtos/`      | `SaveTraktConfigCommand`  |
-| Response DTO      | `<Action><Entity>Response` | `shared/application/dtos/`      | `SaveTraktConfigResponse` |
-| Core DTO          | `<Entity>DTO`              | `shared/application/dtos/core/` | `MediaListDTO`            |
+| Artifact          | Pattern                     | Location                        | Example                                 |
+| ----------------- | --------------------------- | ------------------------------- | --------------------------------------- |
+| Runtime Constants | `<Name>Values`              | `shared/domain/types/`          | `ProviderValues`                        |
+| Primitive Type    | `<Name>Type`                | `shared/domain/types/`          | `ProviderType`                          |
+| Value Object      | `<Name>VO`                  | `server/domain/value-objects/`  | `ProviderVO`                            |
+| Logic Functions   | `is<Name>()`, `get<Name>()` | `shared/domain/logic/`          | `isTrakt()`, `getProviderDisplayName()` |
+| Zod Schema        | `<name>Schema`              | `shared/presentation/schemas/`  | `providerSchema`                        |
+| Entity            | `<Name>`                    | `server/domain/entities/`       | `MediaList`                             |
+| Command DTO       | `<Action><Entity>Command`   | `shared/application/dtos/`      | `SaveTraktConfigCommand`                |
+| Response DTO      | `<Action><Entity>Response`  | `shared/application/dtos/`      | `SaveTraktConfigResponse`               |
+| Core DTO          | `<Entity>DTO`               | `shared/application/dtos/core/` | `MediaListDTO`                          |
 
 **Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
 
@@ -116,38 +121,90 @@ export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 
 **Usage:** Export `<Name>Values` and `<Name>Type` from types file. VOs import and use these for validation—no need to duplicate the values.
 
+#### Contract-Driven Validation Pattern
+
+The codebase uses a **Contract-Driven** validation architecture where:
+
+- **Domain types** are pure TypeScript (no Zod dependency in domain)
+- **Zod schemas** live at Presentation edge, typed against Domain types
+- **VOs** focus on business invariants, not structural validation
+- **Logic functions** are shared for display/detection behavior (DRY)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  CLIENT (Form) / PRESENTATION (tRPC Router)                     │
+│    Uses Zod Schema for structural validation                    │
+│    Schema typed as: z.ZodType<DomainType>                       │
+└───────────────────────────────┬─────────────────────────────────┘
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  APPLICATION (Use Case)                                         │
+│    Receives type-safe primitives, creates VOs                   │
+└───────────────────────────────┬─────────────────────────────────┘
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  DOMAIN (Value Object)                                          │
+│    Business invariants only (reserved words, thresholds, etc.)  │
+│    Pure TypeScript - NO Zod dependency                          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+| Validation Type               | Where                          | Example                                                   |
+| ----------------------------- | ------------------------------ | --------------------------------------------------------- |
+| **Structural** (Zod Schema)   | `shared/presentation/schemas/` | Is URL? Is 64 hex chars? Is positive number?              |
+| **Business Invariant** (VO)   | `server/domain/value-objects/` | Is reserved username? Is below min threshold?             |
+| **Display/Detection** (Logic) | `shared/domain/logic/`         | What's the display name? Which provider matches this URL? |
+
 #### Value Object Pattern
 
+VOs now have two creation methods:
+
 ```typescript
-// shared/domain/value-objects/provider.vo.ts
-import { ProviderValues, type ProviderType } from '../types/provider.types';
+// server/domain/value-objects/provider.vo.ts
+import { InvalidProviderError } from 'shared/domain/errors/provider.errors';
+import type { ProviderType } from 'shared/domain/types/provider.types';
+import * as providerLogic from 'shared/domain/logic/provider.logic';
 
 export class ProviderVO {
   private constructor(private readonly value: ProviderType) {}
 
-  static create(value: string): ProviderVO {
-    if (!Object.values(ProviderValues).includes(value as ProviderType)) {
+  // Receives already-validated ProviderType from schema
+  static create(value: ProviderType): ProviderVO {
+    return new ProviderVO(value);
+  }
+
+  // For database hydration (validates untrusted string)
+  static fromPersistence(value: string): ProviderVO {
+    if (!providerLogic.isValidProvider(value)) {
       throw new InvalidProviderError(value);
     }
-    return new ProviderVO(value as ProviderType);
+    return new ProviderVO(value);
   }
 
   getValue(): ProviderType {
     return this.value;
   }
+
+  // Delegate display/detection to shared logic
   isTrakt(): boolean {
-    return this.value === ProviderValues.TRAKT;
+    return providerLogic.isTrakt(this.value);
   }
-  equals(other: ProviderVO): boolean {
-    return this.value === other.value;
+  getDisplayName(): string {
+    return providerLogic.getProviderDisplayName(this.value);
   }
 }
 ```
 
+| Method                           | Purpose                     | When Used                   |
+| -------------------------------- | --------------------------- | --------------------------- |
+| `static create(primitive)`       | Wrap already-validated data | Use Case receives from tRPC |
+| `static fromPersistence(string)` | Validate + wrap DB data     | Repository hydration        |
+| `getValue()`                     | Extract primitive           | Serialization, comparison   |
+
 **Cross-Layer VO Usage:**
 
 - Domain, Application, Infrastructure: ✅ Can use VOs
-- Presentation: ❌ Uses primitive types only (`ProviderType`)
+- Presentation/Client: ❌ Uses primitive types and logic functions only
 
 #### Entity Pattern
 
@@ -200,14 +257,17 @@ export class TraktConfig {
 #### Data Flow
 
 ```
-Client (Primitive) → DTO (ProviderType) → Application (ProviderVO.create()) → Entity (ProviderVO)
-                                                                                      ↓
-Database (string) ← Repository (entity.provider.getValue()) ← Entity (ProviderVO) ←──┘
+Client (Primitive) → Schema (validates) → DTO (ProviderType) → UseCase (VO.create()) → Entity (ProviderVO)
+                                                                                              ↓
+Database (string) ← Repository (entity.provider.getValue()) ← Entity (ProviderVO) ←──────────┘
 
-Database (string) → Repository (ProviderVO.create()) → Entity (ProviderVO) → Mapper.toDTO() → DTO → Client
+Database (string) → Repository (VO.fromPersistence()) → Entity (ProviderVO) → Mapper.toDTO() → DTO → Client
 ```
 
-Both Application and Infrastructure create VOs via `VO.create()`. Entity constructor always receives VOs, never primitives.
+- **Schema validates** structural correctness and produces typed primitives
+- **Application** creates VOs via `VO.create(typedPrimitive)` - no validation needed
+- **Infrastructure** creates VOs via `VO.fromPersistence(string)` - validates untrusted DB data
+- Entity constructor always receives VOs, never primitives
 
 ---
 
@@ -270,8 +330,8 @@ private toDomain(row: typeof table.$inferSelect): MediaList {
   return new MediaList({
     id: row.id,
     userId: row.userId,
-    name: ListName.create(row.name),        // Validates on hydration
-    provider: ProviderVO.create(row.provider),
+    name: ListNameVO.fromPersistence(row.name),        // Validates untrusted DB data
+    provider: ProviderVO.fromPersistence(row.provider),
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   });

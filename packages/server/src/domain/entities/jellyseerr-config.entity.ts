@@ -1,6 +1,6 @@
-import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
-import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
-import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
+import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from '@/server/domain/value-objects/jellyseerr-user-id.vo';
 /**
  * JellyseerrConfig Entity - Domain Model with Rich Behavior
  *

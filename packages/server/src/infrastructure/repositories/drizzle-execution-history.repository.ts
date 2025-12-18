@@ -3,9 +3,9 @@ import { eq, desc, and } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { executionHistory, mediaLists } from '@/server/infrastructure/db/schema';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { ExecutionStatusVO } from 'shared/domain/value-objects/execution-status.vo';
-import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
-import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
+import { ExecutionStatusVO } from '@/server/domain/value-objects/execution-status.vo';
+import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 
 export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepository {

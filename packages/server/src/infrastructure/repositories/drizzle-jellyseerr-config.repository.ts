@@ -3,9 +3,9 @@ import { eq } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { jellyseerrConfigs } from '@/server/infrastructure/db/schema';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
-import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
-import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
+import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from '@/server/domain/value-objects/jellyseerr-user-id.vo';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 
 export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepository {

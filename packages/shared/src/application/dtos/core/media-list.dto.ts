@@ -1,4 +1,4 @@
-import type { ProviderType } from '../../../domain/value-objects/provider.vo';
+import type { ProviderType } from '../../../domain/types/provider.types';
 
 /**
  * MediaList Core DTO

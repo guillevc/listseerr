@@ -5,7 +5,7 @@ import type {
   MdbListConfigResponse,
 } from 'shared/application/dtos/mdblist-config.commands.dto';
 import { MdbListConfig } from '@/server/domain/entities/mdblist-config.entity';
-import { MdbListApiKeyVO } from 'shared/domain/value-objects/mdblist-api-key.vo';
+import { MdbListApiKeyVO } from '@/server/domain/value-objects/mdblist-api-key.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

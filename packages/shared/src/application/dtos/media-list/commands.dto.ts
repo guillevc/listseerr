@@ -3,13 +3,16 @@
  *
  * These represent the input data for each use case.
  * They contain only primitives - no Value Objects or Entities.
+ * Primitive types are used (e.g., ProviderType) which schemas validate.
  */
+
+import type { ProviderType } from 'shared/domain/types/provider.types';
 
 export interface CreateMediaListCommand {
   name: string;
   url: string;
   displayUrl?: string;
-  provider: string;
+  provider: ProviderType;
   enabled: boolean;
   maxItems: number;
   userId: number;
@@ -22,7 +25,7 @@ export interface UpdateMediaListCommand {
     name?: string;
     url?: string;
     displayUrl?: string;
-    provider?: string;
+    provider?: ProviderType;
     enabled?: boolean;
     maxItems?: number;
   };

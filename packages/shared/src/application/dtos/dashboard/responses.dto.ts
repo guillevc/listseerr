@@ -1,4 +1,4 @@
-import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
+import type { TriggerType } from '../../../domain/types/trigger-type.types';
 import type { ExecutionDTO } from '../core/execution.dto';
 
 /**

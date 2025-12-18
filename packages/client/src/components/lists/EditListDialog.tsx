@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
-import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { isTraktChart, isStevenLu } from 'shared/domain/logic/provider.logic';
 
 interface EditListDialogProps {
   list: SerializedMediaList;
@@ -30,12 +30,9 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   const utils = trpc.useUtils();
 
-  // Create VO instance for provider
-  const providerVO = useMemo(() => ProviderVO.create(list.provider), [list.provider]);
-
   // Parse traktChart URL to extract media type and chart type
-  const parsedChartInfo = useMemo(() => {
-    if (providerVO.isTraktChart()) {
+  const parsedChartInfo = (() => {
+    if (isTraktChart(list.provider)) {
       const url = list.displayUrl || list.url;
       // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
       const urlPattern =
@@ -50,7 +47,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       }
     }
     return { mediaType: 'movies' as const, chartType: 'trending' };
-  }, [providerVO, list.displayUrl, list.url]);
+  })();
 
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(
     parsedChartInfo.mediaType
@@ -140,7 +137,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             </div>
 
             {/* Media Type and Chart Type fields for Trakt Chart (READ-ONLY) */}
-            {providerVO.isTraktChart() && (
+            {isTraktChart(list.provider) && (
               <>
                 {/* Media Type Selection (Read-only) */}
                 <div className="grid gap-2">
@@ -193,7 +190,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
             )}
 
             {/* URL field for Trakt List and MDBList only (Read-only) */}
-            {!providerVO.isTraktChart() && !providerVO.isStevenLu() && (
+            {!isTraktChart(list.provider) && !isStevenLu(list.provider) && (
               <div className="grid gap-2">
                 <Label htmlFor="edit-url">List URL (Read-only)</Label>
                 <div className="rounded-md bg-light-ui p-2 text-sm break-all text-muted dark:bg-dark-ui">

@@ -2,7 +2,7 @@ import type { IMediaFetcherFactory } from '@/server/application/services/media-f
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
-import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import { TraktMediaFetcher } from './trakt-media-fetcher.adapter';
 import { MdbListMediaFetcher } from './mdblist-media-fetcher.adapter';
 import { StevenLuMediaFetcher } from './stevenlu-media-fetcher.adapter';

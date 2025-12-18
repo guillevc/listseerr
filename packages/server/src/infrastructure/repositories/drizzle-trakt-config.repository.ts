@@ -3,7 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { providerConfigs } from '@/server/infrastructure/db/schema';
 import { TraktConfig } from '@/server/domain/entities/trakt-config.entity';
-import { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
+import { TraktClientIdVO } from '@/server/domain/value-objects/trakt-client-id.vo';
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import type { IEncryptionService } from '@/server/application/services/core/encryption.service.interface';
 

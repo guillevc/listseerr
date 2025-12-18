@@ -1,3 +1,10 @@
+/**
+ * Media Item Value Object
+ *
+ * Server-only VO representing a media item (movie or TV show).
+ * Identified by TMDB ID.
+ */
+
 import { MediaTypeVO } from './media-type.vo';
 
 export interface MediaItemVOProps {
@@ -7,17 +14,6 @@ export interface MediaItemVOProps {
   mediaType: MediaTypeVO;
 }
 
-/**
- * MediaItemVO Value Object
- *
- * Represents a media item (movie or TV show) to be requested.
- * Immutable and identified by TMDB ID.
- *
- * Value Object (not Entity) because:
- * - Items are identified by tmdbId (external identifier)
- * - No lifecycle or mutable state
- * - Equality is based on tmdbId, not identity
- */
 export class MediaItemVO {
   private constructor(
     private readonly _title: string,
@@ -26,8 +22,10 @@ export class MediaItemVO {
     private readonly _mediaType: MediaTypeVO
   ) {}
 
+  /**
+   * Creates a VO with validation.
+   */
   static create(props: MediaItemVOProps): MediaItemVO {
-    // Validation
     if (!props.title || props.title.trim() === '') {
       throw new Error('Media item title cannot be empty');
     }
@@ -62,10 +60,6 @@ export class MediaItemVO {
     return this._mediaType;
   }
 
-  /**
-   * Value objects are equal if their tmdbId matches
-   * (since TMDB ID uniquely identifies a media item)
-   */
   equals(other: MediaItemVO): boolean {
     return this._tmdbId === other._tmdbId;
   }

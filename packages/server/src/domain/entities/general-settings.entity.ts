@@ -1,4 +1,4 @@
-import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
+import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 
 /**
  * GeneralSettings Entity - Domain Model with Rich Behavior

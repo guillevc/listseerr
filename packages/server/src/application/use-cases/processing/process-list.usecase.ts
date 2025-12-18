@@ -10,9 +10,9 @@ import type { ProcessListResponse } from 'shared/application/dtos/processing/res
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
-import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
-import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
+import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
 import {
   JellyseerrNotConfiguredError,

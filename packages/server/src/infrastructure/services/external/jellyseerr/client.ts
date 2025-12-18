@@ -1,6 +1,6 @@
 import type { JellyseerrConfig } from '@/server/infrastructure/db/schema';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
+import { MediaTypeVO } from '@/server/domain/value-objects/media-type.vo';
 import type {
   JellyseerrRequestPayload,
   JellyseerrRequestResponse,

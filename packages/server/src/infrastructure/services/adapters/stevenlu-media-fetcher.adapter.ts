@@ -1,5 +1,5 @@
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
+import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
+import { MediaTypeVO } from '@/server/domain/value-objects/media-type.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import { fetchStevenLuList } from '@/server/infrastructure/services/external/stevenlu/client';
 

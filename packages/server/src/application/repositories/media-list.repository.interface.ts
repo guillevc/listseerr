@@ -1,5 +1,5 @@
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
-import type { ProviderType } from 'shared/domain/value-objects/provider.vo';
+import type { ProviderType } from '@/server/domain/value-objects/provider.vo';
 
 /**
  * MediaList Repository Interface (Port)

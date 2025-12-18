@@ -13,10 +13,10 @@ import type { ILogger } from '@/server/application/services/core/logger.interfac
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
-import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
+import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
+import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import {
   JellyseerrNotConfiguredError,

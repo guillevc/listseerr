@@ -3,9 +3,9 @@ import { JellyseerrConfigMapper } from '@/server/application/mappers/jellyseerr-
 import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
 import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
-import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
-import { JellyseerrUserIdVO } from 'shared/domain/value-objects/jellyseerr-user-id.vo';
+import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUserIdVO } from '@/server/domain/value-objects/jellyseerr-user-id.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

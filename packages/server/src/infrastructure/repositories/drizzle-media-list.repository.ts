@@ -4,9 +4,9 @@ import * as schema from '@/server/infrastructure/db/schema';
 import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
-import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
-import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
+import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
+import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
+import { ProviderVO, type ProviderType } from '@/server/domain/value-objects/provider.vo';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}

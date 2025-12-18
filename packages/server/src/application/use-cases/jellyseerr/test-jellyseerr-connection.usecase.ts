@@ -3,8 +3,8 @@ import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
 } from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
-import { JellyseerrUrlVO } from 'shared/domain/value-objects/jellyseerr-url.vo';
-import { JellyseerrApiKeyVO } from 'shared/domain/value-objects/jellyseerr-api-key.vo';
+import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
 import { DomainError } from 'shared/domain/errors/domain.error';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

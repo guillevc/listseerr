@@ -1,6 +1,6 @@
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
-import type { MdbListApiKeyVO } from 'shared/domain/value-objects/mdblist-api-key.vo';
+import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
+import { MediaTypeVO } from '@/server/domain/value-objects/media-type.vo';
+import type { MdbListApiKeyVO } from '@/server/domain/value-objects/mdblist-api-key.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import { fetchMdbListList } from '@/server/infrastructure/services/external/mdblist/client';
 

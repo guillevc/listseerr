@@ -19,6 +19,8 @@ import type {
   ToggleListEnabledResponse,
   EnableAllListsResponse,
 } from 'shared/application/dtos/media-list/responses.dto';
+import { createListSchema, updateListSchema } from 'shared/presentation/schemas/list.schema';
+
 export interface ListsRouterDeps {
   getAllMediaListsUseCase: IUseCase<GetAllMediaListsCommand, GetAllMediaListsResponse>;
   getMediaListByIdUseCase: IUseCase<GetMediaListByIdCommand, GetMediaListByIdResponse>;
@@ -28,16 +30,6 @@ export interface ListsRouterDeps {
   toggleListEnabledUseCase: IUseCase<ToggleListEnabledCommand, ToggleListEnabledResponse>;
   enableAllListsUseCase: IUseCase<EnableAllListsCommand, EnableAllListsResponse>;
 }
-
-// Zod schemas for input validation
-const listInputSchema = z.object({
-  name: z.string().min(1),
-  url: z.url(),
-  displayUrl: z.string().optional(),
-  provider: z.enum(['trakt', 'mdblist', 'traktChart', 'stevenlu'] as const).default('trakt'),
-  enabled: z.boolean().default(true),
-  maxItems: z.number().positive().max(50).default(20),
-});
 
 /**
  * Lists Router - Thin presentation layer for media list management
@@ -63,7 +55,7 @@ export function createListsRouter(deps: ListsRouterDeps) {
       });
     }),
 
-    create: publicProcedure.input(listInputSchema).mutation(async ({ input, ctx }) => {
+    create: publicProcedure.input(createListSchema).mutation(async ({ input, ctx }) => {
       return await deps.createMediaListUseCase.execute({
         ...input,
         userId: ctx.userId,
@@ -74,7 +66,7 @@ export function createListsRouter(deps: ListsRouterDeps) {
       .input(
         z.object({
           id: z.number(),
-          data: listInputSchema.partial(),
+          data: updateListSchema,
         })
       )
       .mutation(async ({ input, ctx }) => {

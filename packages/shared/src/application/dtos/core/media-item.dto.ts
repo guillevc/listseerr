@@ -1,4 +1,4 @@
-import type { MediaType } from '../../../domain/value-objects/media-type.vo';
+import type { MediaType } from '../../../domain/types/media.types';
 
 /**
  * MediaItem Core DTO

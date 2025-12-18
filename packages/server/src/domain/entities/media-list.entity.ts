@@ -1,6 +1,7 @@
-import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
-import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
-import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
+import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
+import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
+import type { ProviderType } from 'shared/domain/types/provider.types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior
@@ -122,9 +123,9 @@ export class MediaList {
 
   /**
    * Change the provider
-   * Validates the new provider via Provider VO
+   * Receives already-validated ProviderType from schema
    */
-  changeProvider(newProvider: string): void {
+  changeProvider(newProvider: ProviderType): void {
     this._provider = ProviderVO.create(newProvider);
     this._updatedAt = new Date();
   }

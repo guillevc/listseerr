@@ -1,4 +1,5 @@
-import { ProviderVO, type ProviderType } from 'shared/domain/value-objects/provider.vo';
+import type { ProviderType } from 'shared/domain/types/provider.types';
+import { detectProviderFromUrl, getProviderDisplayName } from 'shared/domain/logic/provider.logic';
 
 interface ValidationResult {
   isValid: boolean;
@@ -23,11 +24,11 @@ export function validateAndDetectProvider(url: string): ValidationResult {
     };
   }
 
-  const detectedProvider = ProviderVO.detectFromUrl(trimmedUrl);
+  const detectedProvider = detectProviderFromUrl(trimmedUrl);
   if (detectedProvider) {
     return {
       isValid: true,
-      provider: detectedProvider.getValue(),
+      provider: detectedProvider,
     };
   }
 
@@ -38,5 +39,5 @@ export function validateAndDetectProvider(url: string): ValidationResult {
 }
 
 export function getProviderName(provider: ProviderType): string {
-  return ProviderVO.create(provider).getDisplayName();
+  return getProviderDisplayName(provider);
 }

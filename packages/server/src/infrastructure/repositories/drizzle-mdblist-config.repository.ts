@@ -3,7 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { providerConfigs } from '@/server/infrastructure/db/schema';
 import { MdbListConfig } from '@/server/domain/entities/mdblist-config.entity';
-import { MdbListApiKeyVO } from 'shared/domain/value-objects/mdblist-api-key.vo';
+import { MdbListApiKeyVO } from '@/server/domain/value-objects/mdblist-api-key.vo';
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
 import type { IEncryptionService } from '@/server/application/services/core/encryption.service.interface';
 

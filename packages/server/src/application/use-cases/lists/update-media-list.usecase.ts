@@ -2,7 +2,7 @@ import type { IMediaListRepository } from '@/server/application/repositories/med
 import type { IListUrlParserService } from '@/server/application/services/list-url-parser.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
-import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';

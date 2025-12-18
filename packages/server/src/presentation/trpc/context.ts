@@ -41,15 +41,39 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
+// Granular error-to-code mapping for domain errors
+type TRPCErrorCode = 'BAD_REQUEST' | 'NOT_FOUND' | 'FORBIDDEN' | 'CONFLICT';
+const errorCodeMap: Record<string, TRPCErrorCode> = {
+  // Validation errors -> BAD_REQUEST
+  InvalidProviderError: 'BAD_REQUEST',
+  InvalidListNameError: 'BAD_REQUEST',
+  InvalidListUrlError: 'BAD_REQUEST',
+  InvalidJellyseerrUrlError: 'BAD_REQUEST',
+  InvalidJellyseerrApiKeyError: 'BAD_REQUEST',
+  InvalidJellyseerrUserIdError: 'BAD_REQUEST',
+  InvalidTraktClientIdError: 'BAD_REQUEST',
+  InvalidMdbListApiKeyError: 'BAD_REQUEST',
+  InvalidTriggerTypeError: 'BAD_REQUEST',
+  // Not found errors -> NOT_FOUND
+  EntityNotFoundError: 'NOT_FOUND',
+  MediaListNotFoundError: 'NOT_FOUND',
+  ConfigNotFoundError: 'NOT_FOUND',
+  // Business rule violations -> FORBIDDEN
+  ProviderDisabledError: 'FORBIDDEN',
+  // Conflict errors -> CONFLICT
+  DuplicateListError: 'CONFLICT',
+};
+
 // Middleware to catch DomainErrors and wrap them in TRPCError
 const domainErrorMiddleware = t.middleware(async ({ next }) => {
   try {
     return await next();
   } catch (error) {
-    // If this is a DomainError, wrap it in a TRPCError with BAD_REQUEST code
+    // If this is a DomainError, wrap it in a TRPCError with appropriate code
     if (error instanceof DomainError) {
+      const code = errorCodeMap[error.name] ?? 'BAD_REQUEST';
       throw new TRPCError({
-        code: 'BAD_REQUEST',
+        code,
         message: error.message,
         cause: error,
       });

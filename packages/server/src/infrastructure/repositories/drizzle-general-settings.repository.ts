@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { generalSettings } from '@/server/infrastructure/db/schema';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
+import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
 
 export class DrizzleGeneralSettingsRepository implements IGeneralSettingsRepository {

@@ -1,5 +1,5 @@
-import type { ExecutionStatusType } from 'shared/domain/value-objects/execution-status.vo';
-import type { TriggerType } from 'shared/domain/value-objects/trigger-type.vo';
+import type { ExecutionStatusType } from '@/server/domain/value-objects/execution-status.vo';
+import type { TriggerType } from '@/server/domain/value-objects/trigger-type.vo';
 
 /**
  * Dashboard Stats Repository Interface

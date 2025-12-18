@@ -1,4 +1,4 @@
-import type { MediaType } from 'shared/domain/value-objects/media-type.vo';
+import type { MediaType } from '@/server/domain/value-objects/media-type.vo';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 
 export interface JellyseerrRequestPayload {

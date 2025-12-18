@@ -1,5 +1,5 @@
-import { TraktChartTypeVO } from 'shared/domain/value-objects/trakt-chart-type.vo';
-import { TraktMediaTypeVO } from 'shared/domain/value-objects/trakt-media-type.vo';
+import { TraktChartTypeVO } from '@/server/domain/value-objects/trakt-chart-type.vo';
+import { TraktMediaTypeVO } from '@/server/domain/value-objects/trakt-media-type.vo';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
@@ -57,9 +57,9 @@ export function parseTraktChartUrl(url: string): {
   const mediaTypeStr = match[3].toLowerCase();
   const chartTypeStr = match[4].toLowerCase();
 
-  // Validate using VOs (they will throw if invalid)
-  const mediaType = TraktMediaTypeVO.create(mediaTypeStr);
-  const chartType = TraktChartTypeVO.create(chartTypeStr);
+  // Validate using VOs - fromPersistence validates untrusted string input
+  const mediaType = TraktMediaTypeVO.fromPersistence(mediaTypeStr);
+  const chartType = TraktChartTypeVO.fromPersistence(chartTypeStr);
 
   return { mediaType, chartType };
 }

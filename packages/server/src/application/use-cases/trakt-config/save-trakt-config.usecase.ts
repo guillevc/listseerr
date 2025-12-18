@@ -5,7 +5,7 @@ import type {
   TraktConfigResponse,
 } from 'shared/application/dtos/trakt-config.commands.dto';
 import { TraktConfig } from '@/server/domain/entities/trakt-config.entity';
-import { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
+import { TraktClientIdVO } from '@/server/domain/value-objects/trakt-client-id.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

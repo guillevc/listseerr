@@ -1,4 +1,4 @@
-import type { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
+import type { TraktClientIdVO } from '@/server/domain/value-objects/trakt-client-id.vo';
 
 /**
  * TraktConfig Entity

@@ -1,5 +1,5 @@
-import type { ExecutionStatusType } from '../../../domain/value-objects/execution-status.vo';
-import type { TriggerType } from '../../../domain/value-objects/trigger-type.vo';
+import type { ExecutionStatusType } from '../../../domain/types/execution.types';
+import type { TriggerType } from '../../../domain/types/trigger-type.types';
 
 /**
  * ExecutionHistory Core DTO

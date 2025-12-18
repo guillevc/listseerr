@@ -1,4 +1,4 @@
-import type { ProviderVO } from 'shared/domain/value-objects/provider.vo';
+import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from './media-fetcher.service.interface';
 
 /**

@@ -3,9 +3,9 @@ import type { IListUrlParserService } from '@/server/application/services/list-u
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
-import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
-import { ListNameVO } from 'shared/domain/value-objects/list-name.vo';
-import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
+import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
+import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
+import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';

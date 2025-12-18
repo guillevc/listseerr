@@ -1,6 +1,6 @@
-import { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import { MediaTypeVO } from 'shared/domain/value-objects/media-type.vo';
-import type { TraktClientIdVO } from 'shared/domain/value-objects/trakt-client-id.vo';
+import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
+import { MediaTypeVO } from '@/server/domain/value-objects/media-type.vo';
+import type { TraktClientIdVO } from '@/server/domain/value-objects/trakt-client-id.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import { fetchTraktList } from '@/server/infrastructure/services/external/trakt/client';
 import { fetchTraktChart } from '@/server/infrastructure/services/external/trakt/chart-client';

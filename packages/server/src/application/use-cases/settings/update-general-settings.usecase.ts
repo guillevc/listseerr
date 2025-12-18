@@ -3,7 +3,7 @@ import { GeneralSettingsMapper } from '@/server/application/mappers/general-sett
 import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import { TimezoneVO } from 'shared/domain/value-objects/timezone.vo';
+import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

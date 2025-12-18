@@ -1,6 +1,6 @@
-import { ExecutionStatusVO } from 'shared/domain/value-objects/execution-status.vo';
-import { TriggerTypeVO } from 'shared/domain/value-objects/trigger-type.vo';
-import { BatchIdVO } from 'shared/domain/value-objects/batch-id.vo';
+import { ExecutionStatusVO } from '@/server/domain/value-objects/execution-status.vo';
+import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
+import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import { InvalidExecutionStatusTransitionError } from 'shared/domain/errors/processing.errors';
 /**
  * ProcessingExecution Entity

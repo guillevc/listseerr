@@ -3,8 +3,8 @@ import type {
   CategorizedMediaItems,
 } from '@/server/application/services/media-availability-checker.service.interface';
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import type { MediaItemVO } from 'shared/domain/value-objects/media-item.vo';
-import { MediaAvailabilityVO } from 'shared/domain/value-objects/media-availability.vo';
+import type { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
+import { MediaAvailabilityVO } from '@/server/domain/value-objects/media-availability.vo';
 import { getMediaAvailability } from '@/server/infrastructure/services/external/jellyseerr/client';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 

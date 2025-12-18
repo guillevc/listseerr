@@ -1,4 +1,4 @@
-import type { MdbListApiKeyVO } from 'shared/domain/value-objects/mdblist-api-key.vo';
+import type { MdbListApiKeyVO } from '@/server/domain/value-objects/mdblist-api-key.vo';
 
 /**
  * MdbListConfig Entity
