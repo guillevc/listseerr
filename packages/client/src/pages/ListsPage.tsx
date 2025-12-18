@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { RefreshCw, AlertCircle, ListPlus } from 'lucide-react';
+import { RefreshCw, Settings, ListPlus, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { ListsHeader } from '../components/lists/ListsHeader';
 import { ListStats } from '../components/lists/ListStats';
@@ -28,21 +28,23 @@ export function ListsPage() {
     <div className="flex flex-col gap-6">
       {/* Configuration Alert */}
       {!isLoadingConfig && !jellyseerrConfig && (
-        <Card variant="warning">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
-              Jellyseerr Configuration Required
-            </CardTitle>
-            <CardDescription>
-              Please configure your Jellyseerr instance in{' '}
-              <Link to="/settings/jellyseerr" className="underline hover:text-foreground">
-                Settings
-              </Link>{' '}
-              to start processing lists.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <Link to="/settings/jellyseerr">
+          <Card variant="warning" className="transition-colors hover:border-warning/50">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Get Started
+                </span>
+                <ChevronRight className="h-5 w-5" />
+              </CardTitle>
+              <CardDescription>
+                Connect your Jellyseerr instance to start automatically requesting media from your
+                lists.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
       )}
 
       {/* Header with Actions */}
