@@ -81,43 +81,43 @@ export class ListsContainer {
     // 2. Instantiate use cases wrapped with logging decorator
     this.getAllMediaListsUseCase = new LoggingUseCaseDecorator(
       new GetAllMediaListsUseCase(this.mediaListRepository),
-      new LoggerService('lists'),
+      this.logger,
       'GetAllMediaListsUseCase'
     );
 
     this.getMediaListByIdUseCase = new LoggingUseCaseDecorator(
       new GetMediaListByIdUseCase(this.mediaListRepository),
-      new LoggerService('lists'),
+      this.logger,
       'GetMediaListByIdUseCase'
     );
 
     this.createMediaListUseCase = new LoggingUseCaseDecorator(
       new CreateMediaListUseCase(this.mediaListRepository, this.urlParserService, this.logger),
-      new LoggerService('lists'),
+      this.logger,
       'CreateMediaListUseCase'
     );
 
     this.updateMediaListUseCase = new LoggingUseCaseDecorator(
       new UpdateMediaListUseCase(this.mediaListRepository, this.urlParserService, this.logger),
-      new LoggerService('lists'),
+      this.logger,
       'UpdateMediaListUseCase'
     );
 
     this.deleteMediaListUseCase = new LoggingUseCaseDecorator(
       new DeleteMediaListUseCase(this.mediaListRepository, this.logger),
-      new LoggerService('lists'),
+      this.logger,
       'DeleteMediaListUseCase'
     );
 
     this.toggleListEnabledUseCase = new LoggingUseCaseDecorator(
       new ToggleListEnabledUseCase(this.mediaListRepository, this.logger),
-      new LoggerService('lists'),
+      this.logger,
       'ToggleListEnabledUseCase'
     );
 
     this.enableAllListsUseCase = new LoggingUseCaseDecorator(
       new EnableAllListsUseCase(this.mediaListRepository, this.logger),
-      new LoggerService('lists'),
+      this.logger,
       'EnableAllListsUseCase'
     );
   }

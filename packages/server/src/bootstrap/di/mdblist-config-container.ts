@@ -51,19 +51,19 @@ export class MdbListConfigContainer {
 
     this.getMdbListConfigUseCase = new LoggingUseCaseDecorator(
       new GetMdbListConfigUseCase(this.mdbListConfigRepository),
-      new LoggerService('mdblist-config'),
+      this.logger,
       'GetMdbListConfigUseCase'
     );
 
     this.saveMdbListConfigUseCase = new LoggingUseCaseDecorator(
       new SaveMdbListConfigUseCase(this.mdbListConfigRepository, this.logger),
-      new LoggerService('mdblist-config'),
+      this.logger,
       'SaveMdbListConfigUseCase'
     );
 
     this.deleteMdbListConfigUseCase = new LoggingUseCaseDecorator(
       new DeleteMdbListConfigUseCase(this.mdbListConfigRepository, this.logger),
-      new LoggerService('mdblist-config'),
+      this.logger,
       'DeleteMdbListConfigUseCase'
     );
   }

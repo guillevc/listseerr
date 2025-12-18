@@ -106,7 +106,7 @@ export class ProcessingContainer {
         this.availabilityChecker,
         this.logger
       ),
-      new LoggerService('processing'),
+      this.logger,
       'ProcessListUseCase'
     );
 
@@ -122,13 +122,13 @@ export class ProcessingContainer {
         this.availabilityChecker,
         this.logger
       ),
-      new LoggerService('processing'),
+      this.logger,
       'ProcessBatchUseCase'
     );
 
     this.getExecutionHistoryUseCase = new LoggingUseCaseDecorator(
       new GetExecutionHistoryUseCase(this.executionHistoryRepository),
-      new LoggerService('processing'),
+      this.logger,
       'GetExecutionHistoryUseCase'
     );
   }

@@ -54,12 +54,12 @@ export class GeneralSettingsContainer {
     // 2. Instantiate use cases wrapped with logging decorator
     this.getGeneralSettingsUseCase = new LoggingUseCaseDecorator(
       new GetGeneralSettingsUseCase(this.generalSettingsRepository),
-      new LoggerService('settings'),
+      this.logger,
       'GetGeneralSettingsUseCase'
     );
     this.updateGeneralSettingsUseCase = new LoggingUseCaseDecorator(
       new UpdateGeneralSettingsUseCase(this.generalSettingsRepository, scheduler, this.logger),
-      new LoggerService('settings'),
+      this.logger,
       'UpdateGeneralSettingsUseCase'
     );
   }

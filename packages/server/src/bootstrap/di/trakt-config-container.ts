@@ -45,19 +45,19 @@ export class TraktConfigContainer {
 
     this.getTraktConfigUseCase = new LoggingUseCaseDecorator(
       new GetTraktConfigUseCase(this.traktConfigRepository),
-      new LoggerService('trakt-config'),
+      this.logger,
       'GetTraktConfigUseCase'
     );
 
     this.saveTraktConfigUseCase = new LoggingUseCaseDecorator(
       new SaveTraktConfigUseCase(this.traktConfigRepository, this.logger),
-      new LoggerService('trakt-config'),
+      this.logger,
       'SaveTraktConfigUseCase'
     );
 
     this.deleteTraktConfigUseCase = new LoggingUseCaseDecorator(
       new DeleteTraktConfigUseCase(this.traktConfigRepository, this.logger),
-      new LoggerService('trakt-config'),
+      this.logger,
       'DeleteTraktConfigUseCase'
     );
   }

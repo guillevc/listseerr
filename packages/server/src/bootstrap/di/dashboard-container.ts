@@ -43,6 +43,7 @@ export class DashboardContainer {
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly jellyseerrStatsService: JellyseerrStatsAdapter;
   private readonly schedulerInfoService: SchedulerInfoAdapter;
+  private readonly logger: LoggerService;
 
   // Application (public)
   public readonly getDashboardStatsUseCase: IUseCase<
@@ -64,23 +65,24 @@ export class DashboardContainer {
     this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
     this.jellyseerrStatsService = new JellyseerrStatsAdapter();
     this.schedulerInfoService = new SchedulerInfoAdapter();
+    this.logger = new LoggerService('dashboard');
 
     // 2. Instantiate use cases wrapped with logging decorator
     this.getDashboardStatsUseCase = new LoggingUseCaseDecorator(
       new GetDashboardStatsUseCase(this.dashboardStatsRepository, this.schedulerInfoService),
-      new LoggerService('dashboard'),
+      this.logger,
       'GetDashboardStatsUseCase'
     );
 
     this.getRecentActivityUseCase = new LoggingUseCaseDecorator(
       new GetRecentActivityUseCase(this.dashboardStatsRepository),
-      new LoggerService('dashboard'),
+      this.logger,
       'GetRecentActivityUseCase'
     );
 
     this.getPendingRequestsUseCase = new LoggingUseCaseDecorator(
       new GetPendingRequestsUseCase(this.jellyseerrConfigRepository, this.jellyseerrStatsService),
-      new LoggerService('dashboard'),
+      this.logger,
       'GetPendingRequestsUseCase'
     );
   }

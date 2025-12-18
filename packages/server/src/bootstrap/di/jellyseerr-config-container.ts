@@ -69,25 +69,25 @@ export class JellyseerrConfigContainer {
     // 2. Instantiate use cases wrapped with logging decorator
     this.getJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
       new GetJellyseerrConfigUseCase(this.jellyseerrConfigRepository),
-      new LoggerService('jellyseerr'),
+      this.logger,
       'GetJellyseerrConfigUseCase'
     );
 
     this.updateJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
       new UpdateJellyseerrConfigUseCase(this.jellyseerrConfigRepository, this.logger),
-      new LoggerService('jellyseerr'),
+      this.logger,
       'UpdateJellyseerrConfigUseCase'
     );
 
     this.testJellyseerrConnectionUseCase = new LoggingUseCaseDecorator(
       new TestJellyseerrConnectionUseCase(this.connectionTester),
-      new LoggerService('jellyseerr'),
+      this.logger,
       'TestJellyseerrConnectionUseCase'
     );
 
     this.deleteJellyseerrConfigUseCase = new LoggingUseCaseDecorator(
       new DeleteJellyseerrConfigUseCase(this.jellyseerrConfigRepository, this.logger),
-      new LoggerService('jellyseerr'),
+      this.logger,
       'DeleteJellyseerrConfigUseCase'
     );
   }
