@@ -1,4 +1,4 @@
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { RefreshCw, AlertCircle, ListPlus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { ListsHeader } from '../components/lists/ListsHeader';
 import { ListStats } from '../components/lists/ListStats';
@@ -54,11 +54,15 @@ export function ListsPage() {
       {/* Lists Table or Empty State */}
       {lists.length === 0 ? (
         <Card>
-          <CardContent className="py-12">
-            <div className="text-center text-muted">
-              <p className="mb-2 text-lg">No lists added yet</p>
-              <p className="text-sm">
-                Add lists to automatically request new content to Jellyseerr
+          <CardContent className="py-16">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 rounded-full bg-primary/10 p-4">
+                <ListPlus className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="mb-2 text-lg font-medium text-foreground">No lists added yet</h3>
+              <p className="max-w-sm text-sm text-muted">
+                Add lists from Trakt, MDBList, or StevenLu to automatically request new content to
+                Jellyseerr
               </p>
             </div>
           </CardContent>
