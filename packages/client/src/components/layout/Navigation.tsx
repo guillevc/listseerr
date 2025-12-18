@@ -126,7 +126,9 @@ function JellyseerrSection({
       {/* Status indicator with label */}
       <JellyseerrStatusIndicator status={status} url={url} compact>
         <div className={cn(containerStyles, 'cursor-help')}>
-          <StatusDot status={status} />
+          <span className={cn('flex justify-center', mobile && 'w-6')}>
+            <StatusDot status={status} />
+          </span>
           <span className="text-muted">Jellyseerr</span>
         </div>
       </JellyseerrStatusIndicator>
@@ -140,15 +142,17 @@ function JellyseerrSection({
           onClick={onClick}
           className={cn(containerStyles, 'text-muted transition-colors hover:text-foreground')}
         >
-          <Badge
-            variant="simple"
-            className={cn(
-              'px-1.5 py-0 text-xs',
-              requests.isError ? 'bg-red-500/20 text-red-500' : 'bg-muted/20 text-muted'
-            )}
-          >
-            {requests.badge}
-          </Badge>
+          <span className={cn('flex justify-center', mobile && 'w-6')}>
+            <Badge
+              variant="simple"
+              className={cn(
+                'px-1.5 py-0 text-xs',
+                requests.isError ? 'bg-red-500/20 text-red-500' : 'bg-muted/20 text-muted'
+              )}
+            >
+              {requests.badge}
+            </Badge>
+          </span>
           <span>Requests</span>
           <ExternalLink className="h-3 w-3" />
         </a>
