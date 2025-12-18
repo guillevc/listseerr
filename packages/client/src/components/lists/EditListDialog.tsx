@@ -15,7 +15,14 @@ import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import {
+  TraktChartTypeValues,
+  TraktMediaTypeValues,
+  type TraktChartType,
+  type TraktMediaType,
+} from 'shared/domain/types/trakt.types';
 import { isTraktChart, isStevenLu } from 'shared/domain/logic/provider.logic';
+import { TraktChartDisplayNames } from 'shared/domain/logic/trakt-chart-type.logic';
 import { parseTraktChartUrl } from 'shared/domain/logic/trakt-chart-url.logic';
 import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
 
@@ -45,13 +52,18 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
         };
       }
     }
-    return { mediaType: 'movies' as const, chartType: 'trending' as const };
+    return {
+      mediaType: TraktMediaTypeValues.MOVIES,
+      chartType: TraktChartTypeValues.TRENDING,
+    };
   })();
 
-  const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(
+  const [selectedMediaType, setSelectedMediaType] = useState<TraktMediaType>(
     parsedChartInfo.mediaType
   );
-  const [selectedChartType, setSelectedChartType] = useState<string>(parsedChartInfo.chartType);
+  const [selectedChartType, setSelectedChartType] = useState<TraktChartType>(
+    parsedChartInfo.chartType
+  );
 
   // Reset form when dialog state changes
   const handleOpenChange = (newOpen: boolean) => {
@@ -150,7 +162,9 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                   <div className="flex gap-2">
                     <Button
                       type="button"
-                      variant={selectedMediaType === 'movies' ? 'default' : 'outline'}
+                      variant={
+                        selectedMediaType === TraktMediaTypeValues.MOVIES ? 'default' : 'outline'
+                      }
                       className="flex-1 cursor-not-allowed opacity-60"
                       disabled
                     >
@@ -158,7 +172,9 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                     </Button>
                     <Button
                       type="button"
-                      variant={selectedMediaType === 'shows' ? 'default' : 'outline'}
+                      variant={
+                        selectedMediaType === TraktMediaTypeValues.SHOWS ? 'default' : 'outline'
+                      }
                       className="flex-1 cursor-not-allowed opacity-60"
                       disabled
                     >
@@ -178,13 +194,11 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                       <SelectValue placeholder="Select chart type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="trending">Trending</SelectItem>
-                      <SelectItem value="popular">Popular</SelectItem>
-                      <SelectItem value="favorited">Most Favorited</SelectItem>
-                      <SelectItem value="played">Most Played</SelectItem>
-                      <SelectItem value="watched">Most Watched</SelectItem>
-                      <SelectItem value="collected">Most Collected</SelectItem>
-                      <SelectItem value="anticipated">Most Anticipated</SelectItem>
+                      {Object.entries(TraktChartDisplayNames).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted">

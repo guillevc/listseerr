@@ -8,6 +8,27 @@
 import { TraktChartTypeValues, type TraktChartType } from '../types/trakt.types';
 
 /**
+ * Display names for Trakt chart types.
+ * Used in UI dropdowns and labels.
+ */
+export const TraktChartDisplayNames: Record<TraktChartType, string> = {
+  trending: 'Trending',
+  popular: 'Popular',
+  favorited: 'Most Favorited',
+  played: 'Most Played',
+  watched: 'Most Watched',
+  collected: 'Most Collected',
+  anticipated: 'Most Anticipated',
+};
+
+/**
+ * Gets the display name for a Trakt chart type.
+ */
+export function getTraktChartDisplayName(chartType: TraktChartType): string {
+  return TraktChartDisplayNames[chartType];
+}
+
+/**
  * Checks if a value is a valid Trakt chart type.
  * Normalizes to lowercase for case-insensitive matching.
  */
