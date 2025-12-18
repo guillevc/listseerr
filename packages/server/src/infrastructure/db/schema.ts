@@ -5,6 +5,18 @@ import { relations } from 'drizzle-orm';
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   username: text('username').notNull().unique(),
+  passwordHash: text('password_hash'), // Nullable for migration compatibility
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+// Sessions table for authentication
+export const sessions = sqliteTable('sessions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
@@ -102,10 +114,18 @@ export const providerCache = sqliteTable('provider_cache', {
 
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
+  sessions: many(sessions),
   jellyseerrConfigs: many(jellyseerrConfigs),
   providerConfigs: many(providerConfigs),
   generalSettings: one(generalSettings),
   mediaLists: many(mediaLists),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
 }));
 
 export const jellyseerrConfigsRelations = relations(jellyseerrConfigs, ({ one }) => ({
@@ -147,6 +167,9 @@ export const executionHistoryRelations = relations(executionHistory, ({ one }) =
 // Type exports for use in application
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;
 
 export type JellyseerrConfig = typeof jellyseerrConfigs.$inferSelect;
 export type NewJellyseerrConfig = typeof jellyseerrConfigs.$inferInsert;

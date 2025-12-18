@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Link, useRouterState } from '@tanstack/react-router';
-import { Menu, ExternalLink } from 'lucide-react';
+import { Link, useRouterState, useNavigate } from '@tanstack/react-router';
+import { Menu, ExternalLink, LogOut } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -9,6 +9,7 @@ import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
 import { JellyseerrStatusIndicator, StatusDot } from './JellyseerrStatusIndicator';
 import { getUserFacingUrl } from 'shared/domain/logic/jellyseerr.logic';
+import { useAuth } from '@/client/contexts/auth.context';
 
 // Types
 type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
@@ -161,6 +162,30 @@ function JellyseerrSection({
   );
 }
 
+function LogoutButton({ mobile = false, onClick }: { mobile?: boolean; onClick?: () => void }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onClick?.();
+    void logout().then(() => {
+      void navigate({ to: '/login' });
+    });
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size={mobile ? 'default' : 'sm'}
+      onClick={handleLogout}
+      className={cn(mobile && 'w-full justify-start')}
+    >
+      <LogOut className="h-4 w-4" />
+      {mobile && <span className="ml-2">Logout</span>}
+    </Button>
+  );
+}
+
 function DesktopNav({
   navItems,
   isActive,
@@ -219,6 +244,9 @@ function MobileNav({
             onClick={closeMenu}
             mobile
           />
+          <div className="mt-4 border-t pt-4">
+            <LogoutButton mobile onClick={closeMenu} />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -251,6 +279,9 @@ export function Navigation() {
               />
             </div>
             <ThemeToggle />
+            <div className="hidden md:block">
+              <LogoutButton />
+            </div>
             <Button
               variant="ghost"
               size="icon"

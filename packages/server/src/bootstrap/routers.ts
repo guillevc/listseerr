@@ -20,6 +20,7 @@ import { GeneralSettingsContainer } from './di/general-settings-container';
 import { JellyseerrConfigContainer } from './di/jellyseerr-config-container';
 import { TraktConfigContainer } from './di/trakt-config-container';
 import { MdbListConfigContainer } from './di/mdblist-config-container';
+import { AuthContainer } from './di/auth-container';
 
 // Import router factories from presentation
 import { createListsRouter } from '@/server/presentation/trpc/routers/lists.router';
@@ -32,6 +33,7 @@ import { createJellyseerrConfigRouter } from '@/server/presentation/trpc/routers
 import { createTraktConfigRouter } from '@/server/presentation/trpc/routers/trakt-config.router';
 import { createMdbListConfigRouter } from '@/server/presentation/trpc/routers/mdblist-config.router';
 import { createProvidersRouter } from '@/server/presentation/trpc/routers/providers.router';
+import { createAuthRouter } from '@/server/presentation/trpc/routers/auth.router';
 
 // Instantiate containers
 const listsContainer = new ListsContainer(db);
@@ -43,6 +45,7 @@ const generalSettingsContainer = new GeneralSettingsContainer(db);
 const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
 const traktConfigContainer = new TraktConfigContainer(db);
 const mdbListConfigContainer = new MdbListConfigContainer(db);
+const authContainer = new AuthContainer(db);
 
 // Build routers
 export const listsRouter = createListsRouter(listsContainer);
@@ -58,6 +61,7 @@ export const providersRouter = createProvidersRouter({
   getTraktConfigUseCase: traktConfigContainer.getTraktConfigUseCase,
   getMdbListConfigUseCase: mdbListConfigContainer.getMdbListConfigUseCase,
 });
+export const authRouter = createAuthRouter(authContainer);
 
 // Export processing container for scheduler integration
 export { processingContainer };

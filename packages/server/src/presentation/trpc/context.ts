@@ -47,6 +47,7 @@ type TRPCErrorCode =
   | 'NOT_FOUND'
   | 'FORBIDDEN'
   | 'CONFLICT'
+  | 'UNAUTHORIZED'
   | 'INTERNAL_SERVER_ERROR';
 const errorCodeMap: Record<string, TRPCErrorCode> = {
   // Validation errors -> BAD_REQUEST
@@ -85,6 +86,13 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   JellyseerrNotConfiguredError: 'FORBIDDEN',
   // Infrastructure errors -> INTERNAL_SERVER_ERROR
   EncryptionError: 'INTERNAL_SERVER_ERROR',
+  // Auth errors
+  InvalidCredentialsError: 'UNAUTHORIZED',
+  SessionNotFoundError: 'UNAUTHORIZED',
+  UserAlreadyExistsError: 'CONFLICT',
+  UserNotFoundError: 'NOT_FOUND',
+  InvalidUsernameError: 'BAD_REQUEST',
+  InvalidPasswordError: 'BAD_REQUEST',
 };
 
 // Middleware to catch DomainErrors and wrap them in TRPCError

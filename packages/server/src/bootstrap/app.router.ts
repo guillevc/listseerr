@@ -18,9 +18,11 @@ import {
   traktConfigRouter,
   mdblistConfigRouter,
   providersRouter,
+  authRouter,
 } from './routers';
 
 export const appRouter = router({
+  auth: authRouter,
   lists: listsRouter,
   config: jellyseerrConfigRouter,
   traktConfig: traktConfigRouter,

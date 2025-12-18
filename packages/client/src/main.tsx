@@ -7,6 +7,7 @@ import { httpBatchLink } from '@trpc/client';
 import { trpc } from './lib/trpc';
 import { RouterProvider } from '@tanstack/react-router';
 import { router } from './lib/router';
+import { AuthProvider } from './contexts/auth.context';
 
 export function Root() {
   const [queryClient] = useState(() => new QueryClient());
@@ -25,7 +26,9 @@ export function Root() {
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <RouterProvider router={router} />
+            <AuthProvider>
+              <RouterProvider router={router} />
+            </AuthProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </trpc.Provider>

@@ -14,3 +14,4 @@ export * from './jellyseerr.schema';
 export * from './list.schema';
 export * from './trakt.schema';
 export * from './mdblist.schema';
+export * from './auth.schema';

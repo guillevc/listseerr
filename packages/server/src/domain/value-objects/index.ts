@@ -24,3 +24,6 @@ export * from './batch-id.vo';
 export * from './media-item.vo';
 export * from './trakt-chart-type.vo';
 export * from './trakt-media-type.vo';
+export * from './username.vo';
+export * from './password.vo';
+export * from './session-token.vo';
