@@ -17,6 +17,7 @@ interface ProcessingBarProps {
   skippedPreviouslyRequested: number;
   skippedAvailable: number;
   failed: number;
+  errorMessage?: string | null;
 }
 
 function ProcessingBar({
@@ -24,10 +25,18 @@ function ProcessingBar({
   skippedPreviouslyRequested,
   skippedAvailable,
   failed,
+  errorMessage,
 }: ProcessingBarProps) {
   const total = requested + skippedPreviouslyRequested + skippedAvailable + failed;
 
   if (total === 0) {
+    if (errorMessage) {
+      return (
+        <div className="flex h-8 w-full items-center rounded-md bg-red-600/10 px-2">
+          <span className="line-clamp-1 text-xs text-red-600">{errorMessage}</span>
+        </div>
+      );
+    }
     return (
       <div className="flex h-8 w-full items-center justify-center rounded-md bg-card">
         <span className="text-xs text-muted">No items</span>
@@ -249,6 +258,7 @@ export function RecentActivity() {
                               }
                               skippedAvailable={execution.itemsSkippedAvailable ?? 0}
                               failed={execution.itemsFailed ?? 0}
+                              errorMessage={execution.errorMessage}
                             />
                           </TableCell>
                         </TableRow>
@@ -278,7 +288,7 @@ export function RecentActivity() {
                           );
 
                           return (
-                            <TableRow className="border-t-2 border-border bg-card/50 font-semibold">
+                            <TableRow className="bg-card/50 font-semibold">
                               <TableCell>Batch Total</TableCell>
                               <TableCell className="text-right">{totalFound}</TableCell>
                               <TableCell className="w-[500px]">
@@ -295,19 +305,6 @@ export function RecentActivity() {
                     </TableBody>
                   </Table>
                 </div>
-
-                {/* Show error messages if any */}
-                {group.executions.some((e) => e.errorMessage) && (
-                  <div className="space-y-2 border-t p-4">
-                    {group.executions
-                      .filter((e) => e.errorMessage)
-                      .map((e) => (
-                        <div key={e.id} className="text-sm text-red-600">
-                          <strong>{e.listName || `List #${e.listId}`}:</strong> {e.errorMessage}
-                        </div>
-                      ))}
-                  </div>
-                )}
               </div>
             );
           })}
