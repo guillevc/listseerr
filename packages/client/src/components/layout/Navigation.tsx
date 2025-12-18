@@ -70,20 +70,7 @@ function useNavigation() {
 function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2">
-      <svg
-        viewBox="0 0 24 24"
-        className="text-light-primary dark:text-dark-primary h-8 w-8"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 3h18v18H3z" />
-        <path d="M7 7h10v10H7z" />
-        <path d="M12 7v10" />
-        <path d="M7 12h10" />
-      </svg>
+      <img src="/listseerr.png" alt="Listseerr" className="h-8 w-8" />
       <span className="text-xl font-bold">Listseerr</span>
     </Link>
   );
