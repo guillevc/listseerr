@@ -3,6 +3,7 @@
  *
  * Server-only VO that handles media availability status.
  * Contains business logic for mapping Jellyseerr statuses.
+ * Delegates validation logic to shared logic functions (DRY).
  */
 
 import { InvalidMediaAvailabilityError } from 'shared/domain/errors/media-availability.errors';
@@ -11,6 +12,7 @@ import {
   JellyseerrStatusValues,
   type MediaAvailabilityType,
 } from 'shared/domain/types/media.types';
+import * as mediaAvailabilityLogic from 'shared/domain/logic/media-availability.logic';
 
 export { MediaAvailabilityValues, type MediaAvailabilityType };
 
@@ -28,10 +30,10 @@ export class MediaAvailabilityVO {
    * Creates a VO from database/persistence data.
    */
   static fromPersistence(value: string): MediaAvailabilityVO {
-    if (!Object.values(MediaAvailabilityValues).includes(value as MediaAvailabilityType)) {
+    if (!mediaAvailabilityLogic.isValidMediaAvailability(value)) {
       throw new InvalidMediaAvailabilityError(value);
     }
-    return new MediaAvailabilityVO(value as MediaAvailabilityType);
+    return new MediaAvailabilityVO(value);
   }
 
   /**

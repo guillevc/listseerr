@@ -2,10 +2,12 @@
  * Media Type Value Object
  *
  * Server-only VO that handles media type values (movie/tv).
+ * Delegates validation logic to shared logic functions (DRY).
  */
 
 import { InvalidMediaTypeError } from 'shared/domain/errors/media-type.errors';
 import { MediaTypeValues, type MediaType } from 'shared/domain/types/media.types';
+import * as mediaTypeLogic from 'shared/domain/logic/media-type.logic';
 
 export { MediaTypeValues, type MediaType };
 
@@ -23,11 +25,10 @@ export class MediaTypeVO {
    * Creates a VO from database/persistence data.
    */
   static fromPersistence(value: string): MediaTypeVO {
-    const normalized = value.toLowerCase();
-    if (!Object.values(MediaTypeValues).includes(normalized as MediaType)) {
+    if (!mediaTypeLogic.isValidMediaType(value)) {
       throw new InvalidMediaTypeError(value);
     }
-    return new MediaTypeVO(normalized as MediaType);
+    return new MediaTypeVO(mediaTypeLogic.normalizeMediaType(value));
   }
 
   // Factory methods for convenience

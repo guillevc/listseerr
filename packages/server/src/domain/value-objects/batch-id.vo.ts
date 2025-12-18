@@ -6,6 +6,7 @@
  */
 
 import { InvalidBatchIdError } from 'shared/domain/errors/processing.errors';
+import * as triggerTypeLogic from 'shared/domain/logic/trigger-type.logic';
 import { TriggerTypeVO } from './trigger-type.vo';
 
 export class BatchIdVO {
@@ -33,11 +34,8 @@ export class BatchIdVO {
 
     const [triggerTypeStr, timestampStr, randomId] = parts;
 
-    if (triggerTypeStr !== 'manual' && triggerTypeStr !== 'scheduled') {
-      throw new InvalidBatchIdError(
-        value,
-        `Invalid trigger type: ${triggerTypeStr}. Must be 'manual' or 'scheduled'.`
-      );
+    if (!triggerTypeLogic.isValidTriggerType(triggerTypeStr)) {
+      throw new InvalidBatchIdError(value, `Invalid trigger type: ${triggerTypeStr}`);
     }
 
     const timestamp = Number(timestampStr);

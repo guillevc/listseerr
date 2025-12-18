@@ -2,10 +2,12 @@
  * Trakt Chart Type Value Object
  *
  * Server-only VO that handles Trakt chart type values.
+ * Delegates validation logic to shared logic functions (DRY).
  */
 
 import { InvalidTraktChartTypeError } from 'shared/domain/errors/trakt-chart-type.errors';
 import { TraktChartTypeValues, type TraktChartType } from 'shared/domain/types/trakt.types';
+import * as traktChartTypeLogic from 'shared/domain/logic/trakt-chart-type.logic';
 
 export { TraktChartTypeValues, type TraktChartType };
 
@@ -23,11 +25,10 @@ export class TraktChartTypeVO {
    * Creates a VO from database/persistence data.
    */
   static fromPersistence(value: string): TraktChartTypeVO {
-    const normalized = value.toLowerCase();
-    if (!Object.values(TraktChartTypeValues).includes(normalized as TraktChartType)) {
+    if (!traktChartTypeLogic.isValidTraktChartType(value)) {
       throw new InvalidTraktChartTypeError(value);
     }
-    return new TraktChartTypeVO(normalized as TraktChartType);
+    return new TraktChartTypeVO(traktChartTypeLogic.normalizeTraktChartType(value));
   }
 
   getValue(): TraktChartType {
