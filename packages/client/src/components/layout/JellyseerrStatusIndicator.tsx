@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { cn } from '@/client/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
@@ -7,6 +8,7 @@ interface JellyseerrStatusIndicatorProps {
   status: JellyseerrStatus;
   url?: string;
   compact?: boolean;
+  children?: ReactNode;
 }
 
 const statusConfig = {
@@ -37,7 +39,7 @@ const statusConfig = {
   },
 };
 
-function StatusDot({ status, className }: { status: JellyseerrStatus; className?: string }) {
+export function StatusDot({ status, className }: { status: JellyseerrStatus; className?: string }) {
   const config = statusConfig[status];
 
   return (
@@ -59,18 +61,21 @@ export function JellyseerrStatusIndicator({
   status,
   url,
   compact = false,
+  children,
 }: JellyseerrStatusIndicatorProps) {
   const config = statusConfig[status];
 
-  // Compact mode: just the dot with tooltip, for embedding in other components
+  // Compact mode: wraps content with tooltip (children wrap the status dot + additional content)
   if (compact) {
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="cursor-help" aria-label={`Jellyseerr status: ${config.label}`}>
-              <StatusDot status={status} />
-            </span>
+            {children ?? (
+              <span className="cursor-help" aria-label={`Jellyseerr status: ${config.label}`}>
+                <StatusDot status={status} />
+              </span>
+            )}
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <div className="text-center">
