@@ -9,6 +9,7 @@ import { ListUrlVO } from 'shared/domain/value-objects/list-url.vo';
 import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { UrlDoesNotMatchProviderError } from 'shared/domain/errors/provider.errors';
 
 export class CreateMediaListUseCase implements IUseCase<
   CreateMediaListCommand,
@@ -21,15 +22,20 @@ export class CreateMediaListUseCase implements IUseCase<
   ) {}
 
   async execute(command: CreateMediaListCommand): Promise<CreateMediaListResponse> {
-    // 1. Validate provider and parse URLs
+    // 1. Validate provider and URL match
     const provider = ProviderVO.create(command.provider);
+    if ((provider.isTrakt() || provider.isMdbList()) && !provider.matchesUrl(command.url)) {
+      throw new UrlDoesNotMatchProviderError(command.url, command.provider);
+    }
+
+    // 2. Parse URLs
     const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(
       command.url,
       provider,
       command.displayUrl
     );
 
-    // 2. Create entity (with temporary ID 0, DB will assign real ID)
+    // 3. Create entity (with temporary ID 0, DB will assign real ID)
     const list = new MediaList({
       id: 0,
       userId: command.userId,
@@ -43,10 +49,10 @@ export class CreateMediaListUseCase implements IUseCase<
       updatedAt: new Date(),
     });
 
-    // 3. Save entity to repository
+    // 4. Save entity to repository
     const savedList = await this.mediaListRepository.save(list);
 
-    // 4. Log creation
+    // 5. Log creation
     this.logger.info(
       {
         listId: savedList.id,
@@ -59,7 +65,7 @@ export class CreateMediaListUseCase implements IUseCase<
       'List created'
     );
 
-    // 5. Convert entity to Response DTO
+    // 6. Convert entity to Response DTO
     return { list: MediaListMapper.toDTO(savedList) };
   }
 }

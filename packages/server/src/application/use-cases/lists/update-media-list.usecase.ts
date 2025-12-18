@@ -6,6 +6,7 @@ import { ProviderVO } from 'shared/domain/value-objects/provider.vo';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { UrlDoesNotMatchProviderError } from 'shared/domain/errors/provider.errors';
 
 export class UpdateMediaListUseCase implements IUseCase<
   UpdateMediaListCommand,
@@ -37,6 +38,11 @@ export class UpdateMediaListUseCase implements IUseCase<
       const providerValue = command.data.provider || list.provider.getValue();
       const provider = ProviderVO.create(providerValue);
       const url = command.data.url || list.url.getValue();
+
+      // Validate URL matches provider for user-submitted URLs
+      if ((provider.isTrakt() || provider.isMdbList()) && !provider.matchesUrl(url)) {
+        throw new UrlDoesNotMatchProviderError(url, providerValue);
+      }
 
       const { apiUrl, displayUrl } = this.urlParserService.parseUrlForProvider(
         url,

@@ -10,3 +10,15 @@ export class InvalidProviderError extends Error {
     this.name = 'InvalidProviderError';
   }
 }
+
+/**
+ * URL Does Not Match Provider Error
+ *
+ * Thrown when a URL doesn't match the expected pattern for the specified provider.
+ */
+export class UrlDoesNotMatchProviderError extends Error {
+  constructor(url: string, provider: string) {
+    super(`URL "${url}" does not match provider "${provider}"`);
+    this.name = 'UrlDoesNotMatchProviderError';
+  }
+}
