@@ -239,9 +239,9 @@ export function RecentActivity() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>List</TableHead>
-                        <TableHead>Provider</TableHead>
+                        <TableHead className="hidden md:table-cell">Provider</TableHead>
                         <TableHead className="text-right">Items</TableHead>
-                        <TableHead className="w-[300px]">Results</TableHead>
+                        <TableHead className="w-1/3 md:w-1/2">Results</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -252,7 +252,7 @@ export function RecentActivity() {
                               {execution.listName || `List #${execution.listId}`}
                             </span>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {execution.listProvider && (
                               <Badge variant={execution.listProvider as ProviderType}>
                                 {getProviderDisplayName(execution.listProvider as ProviderType)}
@@ -260,7 +260,7 @@ export function RecentActivity() {
                             )}
                           </TableCell>
                           <TableCell className="text-right">{execution.itemsFound ?? 0}</TableCell>
-                          <TableCell className="w-[500px]">
+                          <TableCell className="w-1/3 md:w-1/2">
                             <ProcessingBar
                               requested={execution.itemsRequested ?? 0}
                               skippedPreviouslyRequested={
@@ -300,9 +300,9 @@ export function RecentActivity() {
                           return (
                             <TableRow className="bg-card/50 font-semibold">
                               <TableCell>Batch Total</TableCell>
-                              <TableCell />
+                              <TableCell className="hidden md:table-cell" />
                               <TableCell className="text-right">{totalFound}</TableCell>
-                              <TableCell className="w-[500px]">
+                              <TableCell className="w-1/3 md:w-1/2">
                                 <ProcessingBar
                                   requested={totalRequested}
                                   skippedPreviouslyRequested={totalSkippedPreviouslyRequested}
