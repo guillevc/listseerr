@@ -7,6 +7,10 @@ import { Separator } from '../../components/ui/separator';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
+import {
+  jellyseerrConfigSchema,
+  jellyseerrTestConnectionSchema,
+} from 'shared/presentation/schemas/jellyseerr.schema';
 
 export function JellyseerrSettings() {
   const [url, setUrl] = useState('');
@@ -88,35 +92,45 @@ export function JellyseerrSettings() {
   }, [config]);
 
   const handleTest = () => {
-    if (!url || !apiKey || !userId) {
+    // Validate test connection params using shared schema
+    const result = jellyseerrTestConnectionSchema.safeParse({ url, apiKey });
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
       toast({
-        title: 'Error',
-        description: 'Please fill in all fields',
+        title: 'Validation Error',
+        description: firstIssue?.message ?? 'Invalid configuration',
         variant: 'destructive',
       });
       return;
     }
 
     testMutation.mutate({
-      url: url.trim(),
-      apiKey: apiKey.trim(),
+      url: result.data.url,
+      apiKey: result.data.apiKey,
     });
   };
 
   const handleSave = () => {
-    if (!url || !apiKey || !userId) {
+    // Validate full config using shared schema
+    const result = jellyseerrConfigSchema.safeParse({
+      url,
+      apiKey,
+      userIdJellyseerr: parseInt(userId) || 0,
+    });
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
       toast({
-        title: 'Error',
-        description: 'Please fill in all fields',
+        title: 'Validation Error',
+        description: firstIssue?.message ?? 'Invalid configuration',
         variant: 'destructive',
       });
       return;
     }
 
     saveMutation.mutate({
-      url: url.trim(),
-      apiKey: apiKey.trim(),
-      userIdJellyseerr: parseInt(userId),
+      url: result.data.url,
+      apiKey: result.data.apiKey,
+      userIdJellyseerr: result.data.userIdJellyseerr,
     });
   };
 

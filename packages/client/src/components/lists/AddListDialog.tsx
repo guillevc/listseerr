@@ -8,6 +8,7 @@ import {
   isMdbList,
   isStevenLu,
 } from 'shared/domain/logic/provider.logic';
+import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
 import {
   Dialog,
   DialogContent,
@@ -247,10 +248,13 @@ export function AddListDialog() {
   };
 
   const handleAdd = () => {
-    if (!name.trim()) {
+    // Validate name using shared schema
+    const nameResult = listNameSchema.safeParse(effectiveName);
+    if (!nameResult.success) {
+      const firstIssue = nameResult.error.issues[0];
       toast({
         title: 'Error',
-        description: 'Please enter a list name',
+        description: firstIssue?.message ?? 'Invalid name',
         variant: 'destructive',
       });
       return;
@@ -282,24 +286,26 @@ export function AddListDialog() {
     // Check if provider is configured
     const isConfigured = isProviderConfigured(provider);
 
-    // Validate maxItems
+    // Validate maxItems using shared schema
     const maxItemsNum = parseInt(maxItems);
-    if (isNaN(maxItemsNum) || maxItemsNum < 1 || maxItemsNum > 50) {
+    const maxItemsResult = maxItemsSchema.safeParse(maxItemsNum);
+    if (!maxItemsResult.success) {
+      const firstIssue = maxItemsResult.error.issues[0];
       toast({
         title: 'Error',
-        description: 'Max items must be between 1 and 50',
+        description: firstIssue?.message ?? 'Invalid max items',
         variant: 'destructive',
       });
       return;
     }
 
     createMutation.mutate({
-      name: effectiveName.trim(),
+      name: nameResult.data, // Use validated & trimmed name
       url: finalUrl,
       ...(displayUrl ? { displayUrl } : {}),
       provider: provider,
       enabled: isConfigured,
-      maxItems: maxItemsNum,
+      maxItems: maxItemsResult.data, // Use validated maxItems
     });
 
     // Show info message if provider not configured

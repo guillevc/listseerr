@@ -6,7 +6,7 @@
  *
  * Usage:
  * - tRPC routers: import schemas for input validation
- * - Frontend forms: import schemas for react-hook-form + zodResolver
+ * - Frontend forms: import schemas for safeParse() validation
  */
 
 export * from './provider.schema';

@@ -1,5 +1,6 @@
 import type { ProviderType } from 'shared/domain/types/provider.types';
 import { detectProviderFromUrl, getProviderDisplayName } from 'shared/domain/logic/provider.logic';
+import { listUrlSchema } from 'shared/presentation/schemas/list.schema';
 
 interface ValidationResult {
   isValid: boolean;
@@ -8,23 +9,18 @@ interface ValidationResult {
 }
 
 export function validateAndDetectProvider(url: string): ValidationResult {
-  if (!url || typeof url !== 'string') {
+  // Use shared schema for URL validation
+  const parseResult = listUrlSchema.safeParse(url);
+  if (!parseResult.success) {
+    const firstIssue = parseResult.error.issues[0];
     return {
       isValid: false,
-      error: 'URL is required',
+      error: firstIssue?.message ?? 'Invalid URL',
     };
   }
 
-  const trimmedUrl = url.trim();
-
-  if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
-    return {
-      isValid: false,
-      error: 'URL must start with http:// or https://',
-    };
-  }
-
-  const detectedProvider = detectProviderFromUrl(trimmedUrl);
+  // Detect provider from validated URL
+  const detectedProvider = detectProviderFromUrl(parseResult.data);
   if (detectedProvider) {
     return {
       isValid: true,

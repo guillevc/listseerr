@@ -27,10 +27,21 @@ export const listNameSchema: z.ZodType<ListNamePrimitive> = z
 
 /**
  * List URL schema.
- * Validates: valid URL, removes query params.
+ * Validates: valid HTTP/HTTPS URL, removes query params.
  */
 export const listUrlSchema: z.ZodType<ListUrlPrimitive> = z
-  .url({ message: 'Must be a valid URL' })
+  .url({ message: 'Please enter a valid URL' })
+  .refine(
+    (url) => {
+      try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    },
+    { message: 'URL must use HTTP or HTTPS protocol' }
+  )
   .transform((url) => url.split('?')[0]);
 
 /**
@@ -39,9 +50,9 @@ export const listUrlSchema: z.ZodType<ListUrlPrimitive> = z
  */
 export const maxItemsSchema: z.ZodType<MaxItemsPrimitive> = z
   .number()
-  .int('Must be a whole number')
-  .min(1, 'Must be at least 1')
-  .max(50, 'Maximum is 50')
+  .int({ message: 'Max items must be a whole number' })
+  .min(1, { message: 'Max items must be at least 1' })
+  .max(50, { message: 'Max items cannot exceed 50' })
   .default(20);
 
 /**

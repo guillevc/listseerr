@@ -16,6 +16,8 @@ import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
+import { traktClientIdSchema } from 'shared/presentation/schemas/trakt.schema';
+import { mdblistApiKeySchema } from 'shared/presentation/schemas/mdblist.schema';
 
 export function ApiKeysSettings() {
   // Trakt.tv state
@@ -148,17 +150,19 @@ export function ApiKeysSettings() {
       return;
     }
 
-    // Provider is enabled, save the config
-    if (!traktClientId.trim()) {
+    // Validate Client ID using shared schema
+    const result = traktClientIdSchema.safeParse(traktClientId);
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
       toast({
         title: 'Validation Error',
-        description: 'Client ID cannot be empty',
+        description: firstIssue?.message ?? 'Invalid Client ID',
         variant: 'destructive',
       });
       return;
     }
     saveTraktMutation.mutate({
-      clientId: traktClientId.trim(),
+      clientId: result.data, // Use validated & trimmed value
     });
   };
 
@@ -177,17 +181,19 @@ export function ApiKeysSettings() {
       return;
     }
 
-    // Provider is enabled, save the config
-    if (!mdbListApiKey.trim()) {
+    // Validate API Key using shared schema
+    const result = mdblistApiKeySchema.safeParse(mdbListApiKey);
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
       toast({
         title: 'Validation Error',
-        description: 'API Key cannot be empty',
+        description: firstIssue?.message ?? 'Invalid API Key',
         variant: 'destructive',
       });
       return;
     }
     saveMdbListMutation.mutate({
-      apiKey: mdbListApiKey.trim(),
+      apiKey: result.data, // Use validated & trimmed value
     });
   };
 

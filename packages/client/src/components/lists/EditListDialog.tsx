@@ -16,6 +16,7 @@ import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 import { isTraktChart, isStevenLu } from 'shared/domain/logic/provider.logic';
+import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
 
 interface EditListDialogProps {
   list: SerializedMediaList;
@@ -87,20 +88,26 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
   const isSaving = useMinLoading(updateMutation.isPending);
 
   const handleSave = () => {
-    if (!name.trim()) {
+    // Validate name using shared schema
+    const nameResult = listNameSchema.safeParse(name);
+    if (!nameResult.success) {
+      const firstIssue = nameResult.error.issues[0];
       toast({
         title: 'Error',
-        description: 'Please enter a list name',
+        description: firstIssue?.message ?? 'Invalid name',
         variant: 'destructive',
       });
       return;
     }
 
+    // Validate maxItems using shared schema
     const maxItemsNum = parseInt(maxItems);
-    if (isNaN(maxItemsNum) || maxItemsNum < 1 || maxItemsNum > 50) {
+    const maxItemsResult = maxItemsSchema.safeParse(maxItemsNum);
+    if (!maxItemsResult.success) {
+      const firstIssue = maxItemsResult.error.issues[0];
       toast({
         title: 'Error',
-        description: 'Max items must be between 1 and 50',
+        description: firstIssue?.message ?? 'Invalid max items',
         variant: 'destructive',
       });
       return;
@@ -109,8 +116,8 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
     updateMutation.mutate({
       id: list.id,
       data: {
-        name: name.trim(),
-        maxItems: maxItemsNum,
+        name: nameResult.data, // Use validated & trimmed name
+        maxItems: maxItemsResult.data, // Use validated maxItems
       },
     });
   };
