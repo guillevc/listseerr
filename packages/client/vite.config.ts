@@ -3,12 +3,24 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'path';
+import { execSync } from 'child_process';
+
+function getCommitHash(): string {
+  if (process.env.COMMIT_SHA) {
+    return process.env.COMMIT_SHA;
+  }
+  try {
+    return execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
+  } catch {
+    return 'dev';
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '0.1.0'),
-    __COMMIT_HASH__: JSON.stringify(process.env.COMMIT_SHA || 'dev'),
+    __COMMIT_HASH__: JSON.stringify(getCommitHash()),
   },
   plugins: [
     react(),

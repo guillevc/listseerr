@@ -9,7 +9,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-screen flex-col">
       <Navigation />
       <main className="container mx-auto max-w-6xl flex-1 p-4 md:p-8">{children}</main>
-      <footer className="border-t py-2 text-center text-xs text-muted">
+      <footer className="border-t py-2 text-center font-mono text-xs text-muted">
         v{__APP_VERSION__} · {__COMMIT_HASH__.slice(0, 7)}
       </footer>
     </div>
