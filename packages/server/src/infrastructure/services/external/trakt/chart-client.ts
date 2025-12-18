@@ -2,6 +2,7 @@ import { TraktChartTypeVO } from '@/server/domain/value-objects/trakt-chart-type
 import { TraktMediaTypeVO } from '@/server/domain/value-objects/trakt-media-type.vo';
 import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
+import { parseTraktChartUrl as parseTraktChartUrlPrimitive } from 'shared/domain/logic/trakt-chart-url.logic';
 
 const logger = new LoggerService('trakt-chart-client');
 
@@ -45,21 +46,15 @@ export function parseTraktChartUrl(url: string): {
   mediaType: TraktMediaTypeVO;
   chartType: TraktChartTypeVO;
 } {
-  // Accept both display URLs (trakt.tv) and API URLs (api.trakt.tv)
-  const urlPattern =
-    /^https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i;
-  const match = url.match(urlPattern);
+  const parsed = parseTraktChartUrlPrimitive(url);
 
-  if (!match) {
+  if (!parsed) {
     throw new Error(`Invalid Trakt chart URL: ${url}`);
   }
 
-  const mediaTypeStr = match[3].toLowerCase();
-  const chartTypeStr = match[4].toLowerCase();
-
-  // Validate using VOs - fromPersistence validates untrusted string input
-  const mediaType = TraktMediaTypeVO.fromPersistence(mediaTypeStr);
-  const chartType = TraktChartTypeVO.fromPersistence(chartTypeStr);
+  // Wrap primitives in VOs
+  const mediaType = TraktMediaTypeVO.fromPersistence(parsed.mediaType);
+  const chartType = TraktChartTypeVO.fromPersistence(parsed.chartType);
 
   return { mediaType, chartType };
 }

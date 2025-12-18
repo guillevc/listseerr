@@ -16,6 +16,7 @@ import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 import { isTraktChart, isStevenLu } from 'shared/domain/logic/provider.logic';
+import { parseTraktChartUrl } from 'shared/domain/logic/trakt-chart-url.logic';
 import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
 
 interface EditListDialogProps {
@@ -35,19 +36,16 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
   const parsedChartInfo = (() => {
     if (isTraktChart(list.provider)) {
       const url = list.displayUrl || list.url;
-      // URL format: https://trakt.tv/movies/trending or https://trakt.tv/shows/popular
-      const urlPattern =
-        /https?:\/\/(www\.)?(api\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)/i;
-      const match = url.match(urlPattern);
+      const parsed = parseTraktChartUrl(url);
 
-      if (match) {
+      if (parsed) {
         return {
-          mediaType: match[3] as 'movies' | 'shows',
-          chartType: match[4].toLowerCase(),
+          mediaType: parsed.mediaType,
+          chartType: parsed.chartType,
         };
       }
     }
-    return { mediaType: 'movies' as const, chartType: 'trending' };
+    return { mediaType: 'movies' as const, chartType: 'trending' as const };
   })();
 
   const [selectedMediaType, setSelectedMediaType] = useState<'movies' | 'shows'>(

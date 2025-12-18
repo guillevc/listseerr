@@ -2,10 +2,12 @@
  * Trakt Media Type Value Object
  *
  * Server-only VO that handles Trakt media type values (movies/shows).
+ * Delegates validation logic to shared logic functions (DRY).
  */
 
 import { InvalidTraktMediaTypeError } from 'shared/domain/errors/trakt-media-type.errors';
 import { TraktMediaTypeValues, type TraktMediaType } from 'shared/domain/types/trakt.types';
+import * as traktMediaTypeLogic from 'shared/domain/logic/trakt-media-type.logic';
 
 export { TraktMediaTypeValues, type TraktMediaType };
 
@@ -23,11 +25,10 @@ export class TraktMediaTypeVO {
    * Creates a VO from database/persistence data.
    */
   static fromPersistence(value: string): TraktMediaTypeVO {
-    const normalized = value.toLowerCase();
-    if (!Object.values(TraktMediaTypeValues).includes(normalized as TraktMediaType)) {
+    if (!traktMediaTypeLogic.isValidTraktMediaType(value)) {
       throw new InvalidTraktMediaTypeError(value);
     }
-    return new TraktMediaTypeVO(normalized as TraktMediaType);
+    return new TraktMediaTypeVO(traktMediaTypeLogic.normalizeTraktMediaType(value));
   }
 
   // Factory methods

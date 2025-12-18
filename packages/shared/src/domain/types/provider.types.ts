@@ -5,6 +5,8 @@
  * Schemas must satisfy these types.
  */
 
+import { TRAKT_CHART_URL_PATTERN } from '../logic/trakt-chart-url.logic';
+
 export const ProviderValues = {
   TRAKT: 'trakt',
   MDBLIST: 'mdblist',
@@ -16,9 +18,7 @@ export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 
 export const ProviderUrlPatterns: Record<ProviderType, RegExp[]> = {
   trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?/i],
-  traktChart: [
-    /^https?:\/\/(www\.)?trakt\.tv\/(movies|shows)\/(trending|popular|favorited|played|watched|collected|anticipated)\/?$/i,
-  ],
+  traktChart: [TRAKT_CHART_URL_PATTERN],
   mdblist: [/^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?/i],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],
 };
