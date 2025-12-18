@@ -32,7 +32,7 @@ export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
       const [row] = await this.db
         .update(providerConfigs)
         .set({
-          clientId: this.encryptValue(entity.clientId.getValue()),
+          clientId: this.encryptionService.encrypt(entity.clientId.getValue()),
           updatedAt: new Date(),
         })
         .where(eq(providerConfigs.id, entity.id))
@@ -46,7 +46,7 @@ export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
       .values({
         userId: entity.userId,
         provider: this.PROVIDER,
-        clientId: this.encryptValue(entity.clientId.getValue()),
+        clientId: this.encryptionService.encrypt(entity.clientId.getValue()),
         apiKey: null,
       })
       .returning();
@@ -68,25 +68,11 @@ export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
     await this.db.delete(providerConfigs).where(eq(providerConfigs.id, entity.id));
   }
 
-  private encryptValue(plaintext: string): string {
-    return this.encryptionService.encrypt(plaintext);
-  }
-
-  private decryptValue(ciphertext: string | null): string {
-    if (!ciphertext) return '';
-
-    if (ciphertext.startsWith('aes-256-gcm:')) {
-      return this.encryptionService.decrypt(ciphertext);
-    }
-
-    return ciphertext;
-  }
-
   private toDomain(row: typeof providerConfigs.$inferSelect): TraktConfig {
     return new TraktConfig({
       id: row.id,
       userId: row.userId,
-      clientId: TraktClientIdVO.create(this.decryptValue(row.clientId)),
+      clientId: TraktClientIdVO.create(this.encryptionService.decryptOrPassthrough(row.clientId)),
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
     });

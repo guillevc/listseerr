@@ -32,7 +32,7 @@ export class DrizzleMdbListConfigRepository implements IMdbListConfigRepository 
       const [row] = await this.db
         .update(providerConfigs)
         .set({
-          apiKey: this.encryptValue(entity.apiKey.getValue()),
+          apiKey: this.encryptionService.encrypt(entity.apiKey.getValue()),
           updatedAt: new Date(),
         })
         .where(eq(providerConfigs.id, entity.id))
@@ -47,7 +47,7 @@ export class DrizzleMdbListConfigRepository implements IMdbListConfigRepository 
         userId: entity.userId,
         provider: this.PROVIDER,
         clientId: null,
-        apiKey: this.encryptValue(entity.apiKey.getValue()),
+        apiKey: this.encryptionService.encrypt(entity.apiKey.getValue()),
       })
       .returning();
 
@@ -68,25 +68,11 @@ export class DrizzleMdbListConfigRepository implements IMdbListConfigRepository 
     await this.db.delete(providerConfigs).where(eq(providerConfigs.id, entity.id));
   }
 
-  private encryptValue(plaintext: string): string {
-    return this.encryptionService.encrypt(plaintext);
-  }
-
-  private decryptValue(ciphertext: string | null): string {
-    if (!ciphertext) return '';
-
-    if (ciphertext.startsWith('aes-256-gcm:')) {
-      return this.encryptionService.decrypt(ciphertext);
-    }
-
-    return ciphertext;
-  }
-
   private toDomain(row: typeof providerConfigs.$inferSelect): MdbListConfig {
     return new MdbListConfig({
       id: row.id,
       userId: row.userId,
-      apiKey: MdbListApiKeyVO.create(this.decryptValue(row.apiKey)),
+      apiKey: MdbListApiKeyVO.create(this.encryptionService.decryptOrPassthrough(row.apiKey)),
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
     });

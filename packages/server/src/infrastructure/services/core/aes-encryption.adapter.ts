@@ -72,7 +72,7 @@ export class AesEncryptionService implements IEncryptionService {
    * @returns Decrypted plaintext string
    * @throws {EncryptionError} If format is invalid, auth tag verification fails, or decryption fails
    */
-  decrypt(ciphertext: string): string {
+  private decrypt(ciphertext: string): string {
     try {
       // Parse the encrypted format
       const parts = ciphertext.split(':');
@@ -130,5 +130,17 @@ export class AesEncryptionService implements IEncryptionService {
         `Failed to decrypt data: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
+  }
+
+  /**
+   * Decrypt if encrypted, otherwise return as-is
+   * Handles null/empty values and unencrypted legacy data gracefully.
+   */
+  decryptOrPassthrough(ciphertext: string | null): string {
+    if (!ciphertext) return '';
+    if (ciphertext.startsWith('aes-256-gcm:')) {
+      return this.decrypt(ciphertext);
+    }
+    return ciphertext;
   }
 }

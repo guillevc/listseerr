@@ -16,10 +16,10 @@ export interface IEncryptionService {
   encrypt(plaintext: string): string;
 
   /**
-   * Decrypt ciphertext string
-   * @param ciphertext - The encrypted string to decrypt
-   * @returns Decrypted plaintext string
-   * @throws {EncryptionError} If decryption fails (invalid format, wrong key, corrupted data)
+   * Decrypt if encrypted, otherwise return as-is
+   * Handles null/empty values and unencrypted legacy data gracefully.
+   * @param ciphertext - The string to decrypt (may be null, empty, or unencrypted)
+   * @returns Decrypted string, or original value if not encrypted
    */
-  decrypt(ciphertext: string): string;
+  decryptOrPassthrough(ciphertext: string | null): string;
 }
