@@ -76,3 +76,14 @@ export class InvalidSessionTokenError extends DomainError {
     super('Invalid session token format');
   }
 }
+
+/**
+ * Registration Disabled Error
+ *
+ * Thrown when registration is attempted but a user already exists.
+ */
+export class RegistrationDisabledError extends DomainError {
+  constructor() {
+    super('Registration is disabled - a user account already exists');
+  }
+}

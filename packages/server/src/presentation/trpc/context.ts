@@ -93,6 +93,7 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   UserNotFoundError: 'NOT_FOUND',
   InvalidUsernameError: 'BAD_REQUEST',
   InvalidPasswordError: 'BAD_REQUEST',
+  RegistrationDisabledError: 'FORBIDDEN',
 };
 
 // Middleware to catch DomainErrors and wrap them in TRPCError

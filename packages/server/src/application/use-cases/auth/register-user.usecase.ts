@@ -10,7 +10,10 @@ import { UserMapper } from '@/server/application/mappers/user.mapper';
 import type { RegisterUserCommand } from 'shared/application/dtos/auth/commands.dto';
 import type { RegisterUserResponse } from 'shared/application/dtos/auth/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { UserAlreadyExistsError } from 'shared/domain/errors/auth.errors';
+import {
+  UserAlreadyExistsError,
+  RegistrationDisabledError,
+} from 'shared/domain/errors/auth.errors';
 
 /**
  * Register User Use Case
@@ -27,38 +30,44 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
   ) {}
 
   async execute(command: RegisterUserCommand): Promise<RegisterUserResponse> {
-    // 1. Validate input with VOs (structural validation already done by schema)
+    // 1. Check if registration is allowed (first user only)
+    const userCount = await this.userRepository.count();
+    if (userCount > 0) {
+      throw new RegistrationDisabledError();
+    }
+
+    // 2. Validate input with VOs (structural validation already done by schema)
     const username = UsernameVO.create(command.username);
     const password = PasswordVO.create(command.password); // Transient validation only
 
-    // 2. Check if user already exists
+    // 3. Check if user already exists (belt and suspenders)
     const existingUser = await this.userRepository.findByUsername(username.getValue());
     if (existingUser) {
       throw new UserAlreadyExistsError(username.getValue());
     }
 
-    // 3. Hash the password
+    // 4. Hash the password
     const passwordHash = await this.passwordService.hash(password.getValue());
 
-    // 4. Create user entity
+    // 5. Create user entity
     const user = User.create({
       username,
       passwordHash,
     });
 
-    // 5. Save user
+    // 6. Save user
     const savedUser = await this.userRepository.save(user);
 
-    // 6. Create session (auto-login) - remember me defaults to true for new registrations
+    // 7. Create session (auto-login) - remember me defaults to true for new registrations
     const session = Session.create({
       userId: savedUser.id,
       rememberMe: true,
     });
 
-    // 7. Save session
+    // 8. Save session
     const savedSession = await this.sessionRepository.save(session);
 
-    // 8. Log registration
+    // 9. Log registration
     this.logger.info(
       {
         userId: savedUser.id,
@@ -67,7 +76,7 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
       'User registered'
     );
 
-    // 9. Return response
+    // 10. Return response
     return {
       user: UserMapper.toDTO(savedUser),
       token: savedSession.token.getValue(),
