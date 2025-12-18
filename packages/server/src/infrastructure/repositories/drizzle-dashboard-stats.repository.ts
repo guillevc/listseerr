@@ -60,6 +60,7 @@ export class DrizzleDashboardStatsRepository implements IDashboardStatsRepositor
         id: executionHistory.id,
         listId: executionHistory.listId,
         listName: mediaLists.name,
+        listProvider: mediaLists.provider,
         batchId: executionHistory.batchId,
         startedAt: executionHistory.startedAt,
         completedAt: executionHistory.completedAt,

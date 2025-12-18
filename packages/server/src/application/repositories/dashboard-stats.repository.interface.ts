@@ -16,6 +16,7 @@ export interface ExecutionWithListName {
   id: number;
   listId: number | null;
   listName: string | null;
+  listProvider: string | null;
   batchId: string | null;
   startedAt: Date;
   completedAt: Date | null;

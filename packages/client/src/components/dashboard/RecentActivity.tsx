@@ -11,6 +11,8 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 import { isScheduled } from 'shared/domain/logic/trigger-type.logic';
+import { getProviderDisplayName } from 'shared/domain/logic/provider.logic';
+import type { ProviderType } from 'shared/domain/types/provider.types';
 
 interface ProcessingBarProps {
   requested: number;
@@ -237,6 +239,7 @@ export function RecentActivity() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>List</TableHead>
+                        <TableHead>Provider</TableHead>
                         <TableHead className="text-right">Items</TableHead>
                         <TableHead className="w-[300px]">Results</TableHead>
                       </TableRow>
@@ -245,9 +248,16 @@ export function RecentActivity() {
                       {group.executions.map((execution) => (
                         <TableRow key={execution.id}>
                           <TableCell className="font-medium">
-                            <div className="line-clamp-3 wrap-break-word">
+                            <span className="line-clamp-1">
                               {execution.listName || `List #${execution.listId}`}
-                            </div>
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            {execution.listProvider && (
+                              <Badge variant={execution.listProvider as ProviderType}>
+                                {getProviderDisplayName(execution.listProvider as ProviderType)}
+                              </Badge>
+                            )}
                           </TableCell>
                           <TableCell className="text-right">{execution.itemsFound ?? 0}</TableCell>
                           <TableCell className="w-[500px]">
@@ -290,6 +300,7 @@ export function RecentActivity() {
                           return (
                             <TableRow className="bg-card/50 font-semibold">
                               <TableCell>Batch Total</TableCell>
+                              <TableCell />
                               <TableCell className="text-right">{totalFound}</TableCell>
                               <TableCell className="w-[500px]">
                                 <ProcessingBar

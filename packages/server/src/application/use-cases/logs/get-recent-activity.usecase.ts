@@ -104,6 +104,7 @@ export class GetRecentActivityUseCase implements IUseCase<
       id: execution.id,
       listId: execution.listId,
       listName: execution.listName,
+      listProvider: execution.listProvider,
       batchId: execution.batchId,
       startedAt: execution.startedAt,
       completedAt: execution.completedAt,
