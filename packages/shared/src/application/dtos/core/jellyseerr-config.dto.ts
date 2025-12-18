@@ -1,5 +1,6 @@
 import type {
   JellyseerrUrlPrimitive,
+  JellyseerrExternalUrlPrimitive,
   JellyseerrApiKeyPrimitive,
   JellyseerrUserIdPrimitive,
 } from '../../../domain/types/jellyseerr.types';
@@ -19,6 +20,7 @@ export interface JellyseerrConfigDTO {
   id: number;
   userId: number;
   url: JellyseerrUrlPrimitive;
+  externalUrl?: JellyseerrExternalUrlPrimitive;
   apiKey: JellyseerrApiKeyPrimitive;
   userIdJellyseerr: JellyseerrUserIdPrimitive;
   createdAt: Date;

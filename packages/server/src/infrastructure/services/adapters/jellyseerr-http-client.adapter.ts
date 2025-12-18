@@ -19,7 +19,13 @@ export class JellyseerrHttpClient implements IJellyseerrClient {
     const itemDTOs = items.map((item) => MediaItemMapper.toDTO(item));
     const configDTO = JellyseerrConfigMapper.toDTO(config);
 
-    const result = await requestItemsToJellyseerr(itemDTOs, configDTO);
+    // Convert DTO (with undefined) to schema format (with null)
+    const configForClient = {
+      ...configDTO,
+      externalUrl: configDTO.externalUrl ?? null,
+    };
+
+    const result = await requestItemsToJellyseerr(itemDTOs, configForClient);
 
     return {
       successful: result.successful.map((dto) => MediaItemMapper.toVO(dto)),

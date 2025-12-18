@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
 import { JellyseerrStatusIndicator } from './JellyseerrStatusIndicator';
+import { getUserFacingUrl } from 'shared/domain/logic/jellyseerr.logic';
 
 // Types
 type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
@@ -37,7 +38,7 @@ function useNavigation() {
   const { data: configData } = trpc.config.get.useQuery();
   const jellyseerrConfig = configData?.config;
   const jellyseerrRequestsUrl = jellyseerrConfig?.url
-    ? `${jellyseerrConfig.url}/requests`
+    ? `${getUserFacingUrl(jellyseerrConfig)}/requests`
     : undefined;
 
   const { data: pendingRequests, isLoading: isPendingRequestsLoading } =

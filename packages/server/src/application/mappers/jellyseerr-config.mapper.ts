@@ -7,6 +7,7 @@ export class JellyseerrConfigMapper {
       id: entity.id,
       userId: entity.userId,
       url: entity.url.getValue(),
+      externalUrl: entity.externalUrl?.getValue(),
       apiKey: entity.apiKey.getValue(),
       userIdJellyseerr: entity.userIdJellyseerr.getValue(),
       createdAt: entity.createdAt,

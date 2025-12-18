@@ -16,6 +16,7 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
     .references(() => users.id, { onDelete: 'cascade' })
     .unique(),
   url: text('url').notNull(),
+  externalUrl: text('external_url'), // User-facing URL for browser links (optional, falls back to url)
   apiKey: text('api_key').notNull(),
   userIdJellyseerr: integer('user_id_jellyseerr').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),

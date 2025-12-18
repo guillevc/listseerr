@@ -76,7 +76,7 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
     return new GeneralSettings({
       id: row.id,
       userId: row.userId,
-      timezone: TimezoneVO.create(row.timezone),
+      timezone: TimezoneVO.fromPersistence(row.timezone),
       automaticProcessingEnabled: row.automaticProcessingEnabled,
       automaticProcessingSchedule: row.automaticProcessingSchedule || null,
       createdAt: row.createdAt || new Date(),

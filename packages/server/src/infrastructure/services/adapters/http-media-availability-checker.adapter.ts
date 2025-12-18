@@ -44,6 +44,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       id: config.id,
       userId: config.userId,
       url: config.url.getValue(),
+      externalUrl: config.externalUrl?.getValue() ?? null,
       apiKey: config.apiKey.getValue(),
       userIdJellyseerr: config.userIdJellyseerr.getValue(),
       createdAt: config.createdAt,
@@ -116,6 +117,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       id: number;
       userId: number;
       url: string;
+      externalUrl: string | null;
       apiKey: string;
       userIdJellyseerr: number;
       createdAt: Date;

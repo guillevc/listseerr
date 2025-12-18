@@ -14,6 +14,7 @@ import {
 
 export function JellyseerrSettings() {
   const [url, setUrl] = useState('');
+  const [externalUrl, setExternalUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [userId, setUserId] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
@@ -69,6 +70,7 @@ export function JellyseerrSettings() {
   useEffect(() => {
     if (config) {
       setUrl(config.url || '');
+      setExternalUrl(config.externalUrl || '');
       setApiKey(config.apiKey || '');
       setUserId(config.userIdJellyseerr.toString() || '');
     }
@@ -95,8 +97,10 @@ export function JellyseerrSettings() {
 
   const handleSave = () => {
     // Validate full config using shared schema
+    // Only include externalUrl if it's not empty
     const result = jellyseerrConfigSchema.safeParse({
       url,
+      externalUrl: externalUrl || undefined,
       apiKey,
       userIdJellyseerr: parseInt(userId) || 0,
     });
@@ -112,6 +116,7 @@ export function JellyseerrSettings() {
 
     saveMutation.mutate({
       url: result.data.url,
+      externalUrl: result.data.externalUrl,
       apiKey: result.data.apiKey,
       userIdJellyseerr: result.data.userIdJellyseerr,
     });
@@ -137,6 +142,19 @@ export function JellyseerrSettings() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="externalUrl">External URL (Optional)</Label>
+          <Input
+            id="externalUrl"
+            placeholder="https://jellyseerr.example.com"
+            value={externalUrl}
+            onChange={(e) => setExternalUrl(e.target.value)}
+          />
+          <p className="text-xs text-muted">
+            Use this if your internal URL differs from the public URL (e.g., Docker deployments)
+          </p>
         </div>
 
         <div className="grid gap-2">

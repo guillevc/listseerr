@@ -4,6 +4,7 @@ import * as schema from '@/server/infrastructure/db/schema';
 import { jellyseerrConfigs } from '@/server/infrastructure/db/schema';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrExternalUrlVO } from '@/server/domain/value-objects/jellyseerr-external-url.vo';
 import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
 import { JellyseerrUserIdVO } from '@/server/domain/value-objects/jellyseerr-user-id.vo';
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
@@ -30,6 +31,7 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
         .update(jellyseerrConfigs)
         .set({
           url: entity.url.getValue(),
+          externalUrl: entity.externalUrl?.getValue() ?? null,
           apiKey: entity.apiKey.getValue(),
           userIdJellyseerr: entity.userIdJellyseerr.getValue(),
           updatedAt: entity.updatedAt,
@@ -45,6 +47,7 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
         .values({
           userId: entity.userId,
           url: entity.url.getValue(),
+          externalUrl: entity.externalUrl?.getValue() ?? null,
           apiKey: entity.apiKey.getValue(),
           userIdJellyseerr: entity.userIdJellyseerr.getValue(),
         })
@@ -78,9 +81,12 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
     return new JellyseerrConfig({
       id: row.id,
       userId: row.userId,
-      url: JellyseerrUrlVO.create(row.url),
-      apiKey: JellyseerrApiKeyVO.create(row.apiKey),
-      userIdJellyseerr: JellyseerrUserIdVO.create(row.userIdJellyseerr),
+      url: JellyseerrUrlVO.fromPersistence(row.url),
+      externalUrl: row.externalUrl
+        ? JellyseerrExternalUrlVO.fromPersistence(row.externalUrl)
+        : null,
+      apiKey: JellyseerrApiKeyVO.fromPersistence(row.apiKey),
+      userIdJellyseerr: JellyseerrUserIdVO.fromPersistence(row.userIdJellyseerr),
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
     });

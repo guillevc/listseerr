@@ -6,11 +6,13 @@
  */
 
 export type JellyseerrUrlPrimitive = string;
+export type JellyseerrExternalUrlPrimitive = string;
 export type JellyseerrApiKeyPrimitive = string;
 export type JellyseerrUserIdPrimitive = number;
 
 export interface JellyseerrConfigPrimitive {
   url: JellyseerrUrlPrimitive;
+  externalUrl?: JellyseerrExternalUrlPrimitive;
   apiKey: JellyseerrApiKeyPrimitive;
   userIdJellyseerr: JellyseerrUserIdPrimitive;
 }

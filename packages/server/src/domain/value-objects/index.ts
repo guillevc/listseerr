@@ -9,6 +9,7 @@
 export * from './provider.vo';
 export * from './trigger-type.vo';
 export * from './jellyseerr-url.vo';
+export * from './jellyseerr-external-url.vo';
 export * from './jellyseerr-api-key.vo';
 export * from './jellyseerr-user-id.vo';
 export * from './list-name.vo';

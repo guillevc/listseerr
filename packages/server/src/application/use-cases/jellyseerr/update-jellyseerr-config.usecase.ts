@@ -4,6 +4,7 @@ import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jell
 import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
+import { JellyseerrExternalUrlVO } from '@/server/domain/value-objects/jellyseerr-external-url.vo';
 import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
 import { JellyseerrUserIdVO } from '@/server/domain/value-objects/jellyseerr-user-id.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
@@ -28,6 +29,9 @@ export class UpdateJellyseerrConfigUseCase implements IUseCase<
         id: 0, // Temporary ID, DB will assign real ID
         userId: command.userId,
         url: JellyseerrUrlVO.create(command.data.url),
+        externalUrl: command.data.externalUrl
+          ? JellyseerrExternalUrlVO.create(command.data.externalUrl)
+          : null,
         apiKey: JellyseerrApiKeyVO.create(command.data.apiKey),
         userIdJellyseerr: JellyseerrUserIdVO.create(command.data.userIdJellyseerr),
         createdAt: new Date(),
@@ -37,6 +41,7 @@ export class UpdateJellyseerrConfigUseCase implements IUseCase<
       // 2. Apply changes using entity mutation methods
       // Entity methods handle VO creation internally for validation
       config.changeUrl(command.data.url);
+      config.changeExternalUrl(command.data.externalUrl ?? null);
       config.changeApiKey(command.data.apiKey);
       config.changeJellyseerrUserId(command.data.userIdJellyseerr);
     }
