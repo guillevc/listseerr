@@ -1,8 +1,10 @@
+import type { JellyseerrConfigPrimitive } from '../../../domain/types/jellyseerr.types';
+
 /**
  * Command DTOs (Input)
  *
- * These represent the input data for each use case.
- * They contain only primitives - no Value Objects or Entities.
+ * Pure TypeScript interfaces - no runtime validation.
+ * Validation happens in shared/presentation/schemas/jellyseerr.schema.ts
  */
 
 export interface GetJellyseerrConfigCommand {
@@ -11,11 +13,7 @@ export interface GetJellyseerrConfigCommand {
 
 export interface UpdateJellyseerrConfigCommand {
   userId: number;
-  data: {
-    url: string;
-    apiKey: string;
-    userIdJellyseerr: number;
-  };
+  data: JellyseerrConfigPrimitive;
 }
 
 export interface DeleteJellyseerrConfigCommand {

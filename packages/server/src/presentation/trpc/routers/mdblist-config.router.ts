@@ -8,7 +8,7 @@ import type {
   DeleteMdbListConfigCommand,
   DeleteMdbListConfigResponse,
 } from 'shared/application/dtos/mdblist-config.commands.dto';
-import { saveMdbListConfigSchema } from 'shared/application/dtos/mdblist-config.commands.dto';
+import { mdblistConfigSchema } from 'shared/presentation/schemas/mdblist.schema';
 
 export interface MdbListConfigRouterDeps {
   getMdbListConfigUseCase: IUseCase<GetMdbListConfigCommand, GetMdbListConfigResponse>;
@@ -22,7 +22,7 @@ export function createMdbListConfigRouter(deps: MdbListConfigRouterDeps) {
       return await deps.getMdbListConfigUseCase.execute({ userId: ctx.userId });
     }),
 
-    save: publicProcedure.input(saveMdbListConfigSchema).mutation(async ({ input, ctx }) => {
+    save: publicProcedure.input(mdblistConfigSchema).mutation(async ({ input, ctx }) => {
       return await deps.saveMdbListConfigUseCase.execute({
         userId: ctx.userId,
         apiKey: input.apiKey,

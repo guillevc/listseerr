@@ -134,7 +134,7 @@ The codebase uses a **Contract-Driven** validation architecture where:
 ┌─────────────────────────────────────────────────────────────────┐
 │  CLIENT (Form) / PRESENTATION (tRPC Router)                     │
 │    Uses Zod Schema for structural validation                    │
-│    Schema typed as: z.ZodType<DomainType>                       │
+│    Schema typed as: z.ZodType<TraktClientIdPrimitive>           │
 └───────────────────────────────┬─────────────────────────────────┘
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐

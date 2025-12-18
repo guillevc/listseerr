@@ -8,7 +8,7 @@ import type {
   DeleteTraktConfigCommand,
   DeleteTraktConfigResponse,
 } from 'shared/application/dtos/trakt-config.commands.dto';
-import { saveTraktConfigSchema } from 'shared/application/dtos/trakt-config.commands.dto';
+import { traktConfigSchema } from 'shared/presentation/schemas/trakt.schema';
 
 export interface TraktConfigRouterDeps {
   getTraktConfigUseCase: IUseCase<GetTraktConfigCommand, GetTraktConfigResponse>;
@@ -22,7 +22,7 @@ export function createTraktConfigRouter(deps: TraktConfigRouterDeps) {
       return await deps.getTraktConfigUseCase.execute({ userId: ctx.userId });
     }),
 
-    save: publicProcedure.input(saveTraktConfigSchema).mutation(async ({ input, ctx }) => {
+    save: publicProcedure.input(traktConfigSchema).mutation(async ({ input, ctx }) => {
       return await deps.saveTraktConfigUseCase.execute({
         userId: ctx.userId,
         clientId: input.clientId,

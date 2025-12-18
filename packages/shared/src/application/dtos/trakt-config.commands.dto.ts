@@ -1,13 +1,16 @@
-import { z } from 'zod';
 import type { TraktConfigDTO } from './core/trakt-config.dto';
+import type { TraktClientIdPrimitive } from '../../domain/types/trakt.types';
 
 /**
  * Trakt Config Command DTOs
+ *
+ * Pure TypeScript interfaces - no runtime validation.
+ * Validation happens in shared/presentation/schemas/trakt.schema.ts
  */
 
 export interface SaveTraktConfigCommand {
   userId: number;
-  clientId: string;
+  clientId: TraktClientIdPrimitive;
 }
 
 export interface DeleteTraktConfigCommand {
@@ -33,13 +36,3 @@ export interface GetTraktConfigResponse {
 export interface DeleteTraktConfigResponse {
   success: boolean;
 }
-
-/**
- * Zod Schemas for tRPC validation
- */
-
-export const saveTraktConfigSchema = z.object({
-  clientId: z.string().min(1, 'Client ID is required'),
-});
-
-export type SaveTraktConfigInput = z.infer<typeof saveTraktConfigSchema>;

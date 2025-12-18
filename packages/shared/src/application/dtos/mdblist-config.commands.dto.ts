@@ -1,13 +1,16 @@
-import { z } from 'zod';
 import type { MdbListConfigDTO } from './core/mdblist-config.dto';
+import type { MdblistApiKeyPrimitive } from '../../domain/types/mdblist.types';
 
 /**
  * MdbList Config Command DTOs
+ *
+ * Pure TypeScript interfaces - no runtime validation.
+ * Validation happens in shared/presentation/schemas/mdblist.schema.ts
  */
 
 export interface SaveMdbListConfigCommand {
   userId: number;
-  apiKey: string;
+  apiKey: MdblistApiKeyPrimitive;
 }
 
 export interface DeleteMdbListConfigCommand {
@@ -33,13 +36,3 @@ export interface GetMdbListConfigResponse {
 export interface DeleteMdbListConfigResponse {
   success: boolean;
 }
-
-/**
- * Zod Schemas for tRPC validation
- */
-
-export const saveMdbListConfigSchema = z.object({
-  apiKey: z.string().min(1, 'API Key is required'),
-});
-
-export type SaveMdbListConfigInput = z.infer<typeof saveMdbListConfigSchema>;
