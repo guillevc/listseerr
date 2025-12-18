@@ -5,9 +5,14 @@
  * separate from core domain configuration management.
  */
 
+import type {
+  JellyseerrUrlPrimitive,
+  JellyseerrApiKeyPrimitive,
+} from '../../../domain/types/jellyseerr.types';
+
 export interface TestJellyseerrConnectionCommand {
-  url: string;
-  apiKey: string;
+  url: JellyseerrUrlPrimitive;
+  apiKey: JellyseerrApiKeyPrimitive;
 }
 
 export interface TestJellyseerrConnectionResponse {

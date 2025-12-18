@@ -42,10 +42,17 @@ const t = initTRPC.context<Context>().create({
 });
 
 // Granular error-to-code mapping for domain errors
-type TRPCErrorCode = 'BAD_REQUEST' | 'NOT_FOUND' | 'FORBIDDEN' | 'CONFLICT';
+type TRPCErrorCode =
+  | 'BAD_REQUEST'
+  | 'NOT_FOUND'
+  | 'FORBIDDEN'
+  | 'CONFLICT'
+  | 'INTERNAL_SERVER_ERROR';
 const errorCodeMap: Record<string, TRPCErrorCode> = {
   // Validation errors -> BAD_REQUEST
   InvalidProviderError: 'BAD_REQUEST',
+  InvalidProviderTypeError: 'BAD_REQUEST',
+  InvalidProviderConfigError: 'BAD_REQUEST',
   InvalidListNameError: 'BAD_REQUEST',
   InvalidListUrlError: 'BAD_REQUEST',
   InvalidMaxItemsError: 'BAD_REQUEST',
@@ -57,14 +64,27 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   InvalidTriggerTypeError: 'BAD_REQUEST',
   InvalidBatchIdError: 'BAD_REQUEST',
   InvalidMediaItemError: 'BAD_REQUEST',
+  InvalidExecutionStatusError: 'BAD_REQUEST',
+  InvalidMediaAvailabilityError: 'BAD_REQUEST',
+  InvalidTraktChartTypeError: 'BAD_REQUEST',
+  InvalidMediaTypeError: 'BAD_REQUEST',
+  InvalidTimezoneError: 'BAD_REQUEST',
+  InvalidTraktMediaTypeError: 'BAD_REQUEST',
+  InvalidExecutionStatusTransitionError: 'BAD_REQUEST',
+  UrlDoesNotMatchProviderError: 'BAD_REQUEST',
   // Not found errors -> NOT_FOUND
-  EntityNotFoundError: 'NOT_FOUND',
   MediaListNotFoundError: 'NOT_FOUND',
-  ConfigNotFoundError: 'NOT_FOUND',
+  TraktConfigNotFoundError: 'NOT_FOUND',
+  MdbListConfigNotFoundError: 'NOT_FOUND',
+  JellyseerrConfigNotFoundError: 'NOT_FOUND',
+  GeneralSettingsNotFoundError: 'NOT_FOUND',
+  ProviderConfigNotFoundError: 'NOT_FOUND',
+  ExecutionNotFoundError: 'NOT_FOUND',
   // Business rule violations -> FORBIDDEN
-  ProviderDisabledError: 'FORBIDDEN',
-  // Conflict errors -> CONFLICT
-  DuplicateListError: 'CONFLICT',
+  ProviderNotConfiguredError: 'FORBIDDEN',
+  JellyseerrNotConfiguredError: 'FORBIDDEN',
+  // Infrastructure errors -> INTERNAL_SERVER_ERROR
+  EncryptionError: 'INTERNAL_SERVER_ERROR',
 };
 
 // Middleware to catch DomainErrors and wrap them in TRPCError
