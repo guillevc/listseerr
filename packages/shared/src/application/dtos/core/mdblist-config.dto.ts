@@ -1,3 +1,5 @@
+import type { MdblistApiKeyPrimitive } from '../../../domain/types/mdblist.types';
+
 /**
  * MdbListConfig Core DTO
  *
@@ -7,7 +9,7 @@
 export interface MdbListConfigDTO {
   id: number;
   userId: number;
-  apiKey: string;
+  apiKey: MdblistApiKeyPrimitive;
   createdAt: Date;
   updatedAt: Date;
 }

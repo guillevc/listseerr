@@ -1,4 +1,5 @@
 import type { ProviderType } from '../../../domain/types/provider.types';
+import type { ListNamePrimitive, ListUrlPrimitive } from '../../../domain/types/list.types';
 
 /**
  * MediaList Core DTO
@@ -14,9 +15,9 @@ import type { ProviderType } from '../../../domain/types/provider.types';
 export interface MediaListDTO {
   id: number;
   userId: number;
-  name: string; // Unwrapped from ListName VO
-  url: string; // Unwrapped from ListUrl VO
-  displayUrl: string;
+  name: ListNamePrimitive;
+  url: ListUrlPrimitive;
+  displayUrl: ListUrlPrimitive;
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
@@ -47,11 +48,11 @@ export interface MediaListWithLastProcessedDTO extends MediaListDTO {
  */
 export interface SerializedMediaList {
   id: number;
-  name: string;
+  name: ListNamePrimitive;
   createdAt: string | null;
   userId: number;
-  url: string;
-  displayUrl: string | null;
+  url: ListUrlPrimitive;
+  displayUrl: ListUrlPrimitive | null;
   updatedAt: string | null;
   provider: string;
   enabled: boolean;

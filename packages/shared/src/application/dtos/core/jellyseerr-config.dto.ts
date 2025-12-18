@@ -1,3 +1,9 @@
+import type {
+  JellyseerrUrlPrimitive,
+  JellyseerrApiKeyPrimitive,
+  JellyseerrUserIdPrimitive,
+} from '../../../domain/types/jellyseerr.types';
+
 /**
  * Jellyseerr Configuration Core DTO
  *
@@ -12,9 +18,9 @@
 export interface JellyseerrConfigDTO {
   id: number;
   userId: number;
-  url: string;
-  apiKey: string;
-  userIdJellyseerr: number;
+  url: JellyseerrUrlPrimitive;
+  apiKey: JellyseerrApiKeyPrimitive;
+  userIdJellyseerr: JellyseerrUserIdPrimitive;
   createdAt: Date;
   updatedAt: Date;
 }

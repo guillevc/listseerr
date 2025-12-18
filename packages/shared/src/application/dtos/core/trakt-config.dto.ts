@@ -1,3 +1,5 @@
+import type { TraktClientIdPrimitive } from '../../../domain/types/trakt.types';
+
 /**
  * TraktConfig Core DTO
  *
@@ -7,7 +9,7 @@
 export interface TraktConfigDTO {
   id: number;
   userId: number;
-  clientId: string;
+  clientId: TraktClientIdPrimitive;
   createdAt: Date;
   updatedAt: Date;
 }

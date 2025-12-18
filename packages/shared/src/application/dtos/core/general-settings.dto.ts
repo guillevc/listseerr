@@ -1,3 +1,8 @@
+import type {
+  TimezonePrimitive,
+  CronSchedulePrimitive,
+} from '../../../domain/types/general-settings.types';
+
 /**
  * General Settings Core DTO
  *
@@ -12,9 +17,9 @@
 export interface GeneralSettingsDTO {
   id: number;
   userId: number;
-  timezone: string;
+  timezone: TimezonePrimitive;
   automaticProcessingEnabled: boolean;
-  automaticProcessingSchedule: string | null;
+  automaticProcessingSchedule: CronSchedulePrimitive;
   createdAt: Date;
   updatedAt: Date;
 }

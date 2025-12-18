@@ -93,17 +93,19 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 #### Naming Conventions
 
-| Artifact          | Pattern                     | Location                        | Example                                 |
-| ----------------- | --------------------------- | ------------------------------- | --------------------------------------- |
-| Runtime Constants | `<Name>Values`              | `shared/domain/types/`          | `ProviderValues`                        |
-| Primitive Type    | `<Name>Type`                | `shared/domain/types/`          | `ProviderType`                          |
-| Value Object      | `<Name>VO`                  | `server/domain/value-objects/`  | `ProviderVO`                            |
-| Logic Functions   | `is<Name>()`, `get<Name>()` | `shared/domain/logic/`          | `isTrakt()`, `getProviderDisplayName()` |
-| Zod Schema        | `<name>Schema`              | `shared/presentation/schemas/`  | `providerSchema`                        |
-| Entity            | `<Name>`                    | `server/domain/entities/`       | `MediaList`                             |
-| Command DTO       | `<Action><Entity>Command`   | `shared/application/dtos/`      | `SaveTraktConfigCommand`                |
-| Response DTO      | `<Action><Entity>Response`  | `shared/application/dtos/`      | `SaveTraktConfigResponse`               |
-| Core DTO          | `<Entity>DTO`               | `shared/application/dtos/core/` | `MediaListDTO`                          |
+| Artifact            | Pattern                     | Location                        | Example                                 |
+| ------------------- | --------------------------- | ------------------------------- | --------------------------------------- |
+| Runtime Constants   | `<Name>Values`              | `shared/domain/types/`          | `ProviderValues`                        |
+| Enum Type           | `<Name>Type`                | `shared/domain/types/`          | `ProviderType`                          |
+| Branded Primitive   | `<Name>Primitive`           | `shared/domain/types/`          | `TraktClientIdPrimitive`                |
+| Composite Primitive | `<Action><Name>Primitive`   | `shared/domain/types/`          | `CreateListPrimitive`                   |
+| Value Object        | `<Name>VO`                  | `server/domain/value-objects/`  | `ProviderVO`                            |
+| Logic Functions     | `is<Name>()`, `get<Name>()` | `shared/domain/logic/`          | `isTrakt()`, `getProviderDisplayName()` |
+| Zod Schema          | `<name>Schema`              | `shared/presentation/schemas/`  | `providerSchema`                        |
+| Entity              | `<Name>`                    | `server/domain/entities/`       | `MediaList`                             |
+| Command DTO         | `<Action><Entity>Command`   | `shared/application/dtos/`      | `SaveTraktConfigCommand`                |
+| Response DTO        | `<Action><Entity>Response`  | `shared/application/dtos/`      | `SaveTraktConfigResponse`               |
+| Core DTO            | `<Entity>DTO`               | `shared/application/dtos/core/` | `MediaListDTO`                          |
 
 **Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
 
@@ -120,6 +122,56 @@ export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 ```
 
 **Usage:** Export `<Name>Values` and `<Name>Type` from types file. VOs import and use these for validation—no need to duplicate the values.
+
+#### Primitive Type Hierarchy
+
+Domain types define contracts that DTOs and schemas must satisfy:
+
+```typescript
+// shared/domain/types/list.types.ts
+export type ListNamePrimitive = string;
+export type ListUrlPrimitive = string;
+
+export interface CreateListPrimitive {
+  name: ListNamePrimitive;
+  url: ListUrlPrimitive;
+  provider: ProviderType;
+  enabled: boolean;
+  maxItems: number;
+}
+
+export type UpdateListPrimitive = Partial<CreateListPrimitive>;
+```
+
+**DTOs reference primitives** instead of generic `string`:
+
+```typescript
+// Command DTO - extends composite primitive, adds request context
+export interface CreateMediaListCommand extends CreateListPrimitive {
+  userId: number;
+}
+
+// Core DTO - uses branded primitives for VO-backed fields
+export interface MediaListDTO {
+  id: number;
+  name: ListNamePrimitive; // Not generic 'string'
+  url: ListUrlPrimitive;
+  provider: ProviderType;
+  // ...
+}
+```
+
+| Primitive Category      | Purpose                         | Example                                       |
+| ----------------------- | ------------------------------- | --------------------------------------------- |
+| **Branded Primitive**   | Type alias for VO-backed values | `type TraktClientIdPrimitive = string`        |
+| **Enum Type**           | Constrained set of values       | `type ProviderType = 'trakt' \| 'mdblist'`    |
+| **Composite Primitive** | Groups related fields           | `interface CreateListPrimitive { name, url }` |
+
+**Benefits:**
+
+- DTOs are self-documenting (field types reveal domain meaning)
+- Zod schemas satisfy primitive interfaces (compile-time check)
+- Refactoring primitives propagates through all DTOs
 
 #### Contract-Driven Validation Pattern
 

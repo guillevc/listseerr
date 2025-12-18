@@ -1,3 +1,5 @@
+import type { CronSchedulePrimitive } from '../../../domain/types/general-settings.types';
+
 /**
  * ScheduledJob Core DTO
  *
@@ -11,7 +13,7 @@
  */
 export interface ScheduledJobDTO {
   name: string;
-  cronExpression: string;
+  cronExpression: NonNullable<CronSchedulePrimitive>;
   nextRun: Date | null;
   isRunning: boolean;
 }
