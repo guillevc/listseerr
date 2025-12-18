@@ -44,7 +44,6 @@ export function createHttpApp(): Hono {
     logger.info('Serving static files from ./dist/client');
     // Serve static assets
     app.use('/assets/*', serveStatic({ root: './dist/client' }));
-    app.use('/vite.svg', serveStatic({ path: './dist/client/vite.svg' }));
 
     // Serve index.html for all other routes (SPA fallback)
     app.get('*', serveStatic({ path: './dist/client/index.html' }));
