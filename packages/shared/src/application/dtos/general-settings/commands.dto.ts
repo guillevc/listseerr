@@ -5,15 +5,13 @@
  * Contains only primitives - no Value Objects or Entities.
  */
 
+import type { GeneralSettingsUpdatePrimitive } from 'shared/domain/types/general-settings.types';
+
 export interface GetGeneralSettingsCommand {
   userId: number;
 }
 
 export interface UpdateGeneralSettingsCommand {
   userId: number;
-  data: {
-    timezone?: string;
-    automaticProcessingEnabled?: boolean;
-    automaticProcessingSchedule?: string | null;
-  };
+  data: GeneralSettingsUpdatePrimitive;
 }
