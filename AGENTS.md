@@ -93,19 +93,22 @@ Stack: TypeScript, Bun, Hono, tRPC, Drizzle ORM, bun-sqlite, Croner.
 
 #### Naming Conventions
 
-| Artifact            | Pattern                     | Location                        | Example                                 |
-| ------------------- | --------------------------- | ------------------------------- | --------------------------------------- |
-| Runtime Constants   | `<Name>Values`              | `shared/domain/types/`          | `ProviderValues`                        |
-| Enum Type           | `<Name>Type`                | `shared/domain/types/`          | `ProviderType`                          |
-| Branded Primitive   | `<Name>Primitive`           | `shared/domain/types/`          | `TraktClientIdPrimitive`                |
-| Composite Primitive | `<Action><Name>Primitive`   | `shared/domain/types/`          | `CreateListPrimitive`                   |
-| Value Object        | `<Name>VO`                  | `server/domain/value-objects/`  | `ProviderVO`                            |
-| Logic Functions     | `is<Name>()`, `get<Name>()` | `shared/domain/logic/`          | `isTrakt()`, `getProviderDisplayName()` |
-| Zod Schema          | `<name>Schema`              | `shared/presentation/schemas/`  | `providerSchema`                        |
-| Entity              | `<Name>`                    | `server/domain/entities/`       | `MediaList`                             |
-| Command DTO         | `<Action><Entity>Command`   | `shared/application/dtos/`      | `SaveTraktConfigCommand`                |
-| Response DTO        | `<Action><Entity>Response`  | `shared/application/dtos/`      | `SaveTraktConfigResponse`               |
-| Core DTO            | `<Entity>DTO`               | `shared/application/dtos/core/` | `MediaListDTO`                          |
+| Artifact            | Pattern                                                           | Location                        | Example                                          |
+| ------------------- | ----------------------------------------------------------------- | ------------------------------- | ------------------------------------------------ |
+| Runtime Constants   | `<Name>Values`                                                    | `shared/domain/types/`          | `ProviderValues`                                 |
+| Enum Type           | `<Name>Type`                                                      | `shared/domain/types/`          | `ProviderType`                                   |
+| Branded Primitive   | `<Name>Primitive`                                                 | `shared/domain/types/`          | `TraktClientIdPrimitive`                         |
+| Composite Primitive | `<Action><Name>Primitive`                                         | `shared/domain/types/`          | `CreateListPrimitive`                            |
+| Value Object        | `<Name>VO`                                                        | `server/domain/value-objects/`  | `ProviderVO`                                     |
+| Logic Functions     | `is<Name>()`, `get<Name>()`, `normalize<Type>()`, `parse<Type>()` | `shared/domain/logic/`          | `isTrakt()`, `normalizeTraktMediaType()`         |
+| Display Names       | `<Type>DisplayNames`                                              | `shared/domain/logic/`          | `TraktChartDisplayNames`, `ProviderDisplayNames` |
+| URL Pattern         | `<TYPE>_URL_PATTERN`                                              | `shared/domain/logic/`          | `TRAKT_CHART_URL_PATTERN`                        |
+| URL Patterns Map    | `<Type>UrlPatterns`                                               | `shared/domain/types/`          | `ProviderUrlPatterns`                            |
+| Zod Schema          | `<name>Schema`                                                    | `shared/presentation/schemas/`  | `providerSchema`                                 |
+| Entity              | `<Name>`                                                          | `server/domain/entities/`       | `MediaList`                                      |
+| Command DTO         | `<Action><Entity>Command`                                         | `shared/application/dtos/`      | `SaveTraktConfigCommand`                         |
+| Response DTO        | `<Action><Entity>Response`                                        | `shared/application/dtos/`      | `SaveTraktConfigResponse`                        |
+| Core DTO            | `<Entity>DTO`                                                     | `shared/application/dtos/core/` | `MediaListDTO`                                   |
 
 **Type naming exception:** When the domain name already ends in "Type" (e.g., `MediaType`, `TriggerType`), don't add another `Type` suffix. Use `MediaType` not `MediaTypeType`.
 
@@ -503,3 +506,122 @@ infrastructure/services/
 - Define `DomainError` base class for Entities and Use Cases
 - tRPC middleware translates `DomainError` → appropriate HTTP status
 - Never expose raw database errors or stack traces
+
+---
+
+### 7. Client Architecture
+
+Stack: React 19, TanStack Router, TanStack Query, tRPC Client, Radix UI, Tailwind CSS.
+
+#### Folder Structure
+
+```
+packages/client/src/
+├── components/
+│   ├── ui/           # Radix UI primitives (Button, Dialog, Select, etc.)
+│   ├── lists/        # Feature components (AddListDialog, ListsTable)
+│   ├── dashboard/    # Dashboard feature components
+│   └── layout/       # App layout (Navigation, AppLayout)
+├── pages/            # Page components mapped to routes
+├── routes/           # TanStack Router route definitions
+├── hooks/            # Custom React hooks
+├── lib/              # Utilities (trpc client, router, utils)
+└── main.tsx          # App entry (providers)
+```
+
+#### tRPC Client Usage
+
+```typescript
+// Query
+const { data, isLoading } = trpc.lists.getAll.useQuery();
+
+// Mutation with cache invalidation
+const utils = trpc.useUtils();
+const createMutation = trpc.lists.create.useMutation({
+  onSuccess: () => {
+    void utils.lists.getAll.invalidate();
+    toast({ title: 'Success' });
+  },
+  onError: (error) => {
+    toast({ title: 'Error', description: error.message, variant: 'destructive' });
+  },
+});
+
+// Execute
+createMutation.mutate({ name, url, provider });
+```
+
+#### Component Types
+
+| Type              | Location                | Purpose                    | Example         |
+| ----------------- | ----------------------- | -------------------------- | --------------- |
+| UI Primitive      | `components/ui/`        | Styled Radix wrappers      | `Button`        |
+| Feature Component | `components/<feature>/` | Business logic + UI        | `AddListDialog` |
+| Page Component    | `pages/`                | Route entry, orchestration | `ListsPage`     |
+
+#### Form Validation Pattern
+
+Client uses shared Zod schemas for structural validation:
+
+```typescript
+import { listNameSchema } from 'shared/presentation/schemas/list.schema';
+
+const handleSave = () => {
+  const result = listNameSchema.safeParse(name);
+  if (!result.success) {
+    toast({ title: 'Error', description: result.error.issues[0]?.message });
+    return;
+  }
+  createMutation.mutate({ name: result.data }); // Validated primitive
+};
+```
+
+**Flow:** Form Input → Zod Schema → Validated Primitive → tRPC Mutation → Server VO
+
+#### State Management
+
+| State Type   | Tool               | Example                                       |
+| ------------ | ------------------ | --------------------------------------------- |
+| Server State | tRPC + React-Query | `trpc.lists.getAll.useQuery()`                |
+| Form State   | `useState`         | `const [name, setName] = useState('')`        |
+| UI State     | `useState`         | `const [isOpen, setIsOpen] = useState(false)` |
+
+No global state manager—React-Query handles caching and server state.
+
+#### Client Import Rules
+
+| From Shared             | Can Import | Example                                            |
+| ----------------------- | ---------- | -------------------------------------------------- |
+| `domain/types/`         | ✅         | `ProviderType`, `TraktChartTypeValues`             |
+| `domain/logic/`         | ✅         | `getProviderDisplayName()`, `parseTraktChartUrl()` |
+| `domain/errors/`        | ✅         | `InvalidProviderError`                             |
+| `presentation/schemas/` | ✅         | `listNameSchema`, `traktClientIdSchema`            |
+| `application/dtos/`     | ✅         | `SerializedMediaList`                              |
+| `server/`               | ❌         | VOs live server-side only                          |
+
+#### Custom Hooks Pattern
+
+```typescript
+// Encapsulate related state + mutations
+export function useListProcessor() {
+  const [processingLists, setProcessingLists] = useState<Set<number>>(new Set());
+  const utils = trpc.useUtils();
+
+  const processMutation = trpc.processor.processList.useMutation({
+    onSuccess: (_, variables) => {
+      setProcessingLists((prev) => {
+        prev.delete(variables.listId);
+        return new Set(prev);
+      });
+      void utils.lists.getAll.invalidate();
+    },
+  });
+
+  const handleProcess = (id: number) => {
+    setProcessingLists((prev) => new Set(prev).add(id));
+    processMutation.mutate({ listId: id, triggerType: 'manual' });
+  };
+
+  return { processingLists, handleProcess };
+}
+```
