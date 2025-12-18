@@ -5,6 +5,7 @@
  * Format: {triggerType}-{timestamp}-{randomId}
  */
 
+import { InvalidBatchIdError } from 'shared/domain/errors/processing.errors';
 import { TriggerTypeVO } from './trigger-type.vo';
 
 export class BatchIdVO {
@@ -27,26 +28,25 @@ export class BatchIdVO {
     const parts = value.split('-');
 
     if (parts.length !== 3) {
-      throw new Error(
-        `Invalid batch ID format: ${value}. Expected format: {triggerType}-{timestamp}-{randomId}`
-      );
+      throw new InvalidBatchIdError(value, 'Expected format: {triggerType}-{timestamp}-{randomId}');
     }
 
     const [triggerTypeStr, timestampStr, randomId] = parts;
 
     if (triggerTypeStr !== 'manual' && triggerTypeStr !== 'scheduled') {
-      throw new Error(
-        `Invalid trigger type in batch ID: ${triggerTypeStr}. Must be 'manual' or 'scheduled'.`
+      throw new InvalidBatchIdError(
+        value,
+        `Invalid trigger type: ${triggerTypeStr}. Must be 'manual' or 'scheduled'.`
       );
     }
 
     const timestamp = Number(timestampStr);
     if (isNaN(timestamp)) {
-      throw new Error(`Invalid timestamp in batch ID: ${timestampStr}. Must be a number.`);
+      throw new InvalidBatchIdError(value, `Invalid timestamp: ${timestampStr}. Must be a number.`);
     }
 
     if (!randomId || randomId.trim() === '') {
-      throw new Error('Invalid batch ID: random ID part is empty.');
+      throw new InvalidBatchIdError(value, 'Random ID part is empty.');
     }
 
     return new BatchIdVO(value);

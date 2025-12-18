@@ -54,7 +54,7 @@ export interface SerializedMediaList {
   url: ListUrlPrimitive;
   displayUrl: ListUrlPrimitive | null;
   updatedAt: string | null;
-  provider: string;
+  provider: ProviderType;
   enabled: boolean;
   maxItems: number | null;
   lastProcessed: string | null;

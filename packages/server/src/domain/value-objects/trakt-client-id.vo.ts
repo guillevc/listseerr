@@ -37,4 +37,8 @@ export class TraktClientIdVO {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: TraktClientIdVO): boolean {
+    return this.value === other.value;
+  }
 }

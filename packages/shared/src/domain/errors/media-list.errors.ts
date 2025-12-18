@@ -21,3 +21,9 @@ export class MediaListNotFoundError extends DomainError {
     super(`Media list not found: ${listId}`);
   }
 }
+
+export class InvalidMaxItemsError extends DomainError {
+  constructor(value: number) {
+    super(`Invalid max items: ${value}. Must be between 1 and 50.`);
+  }
+}

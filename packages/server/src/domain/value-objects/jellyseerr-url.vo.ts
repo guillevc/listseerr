@@ -48,4 +48,8 @@ export class JellyseerrUrlVO {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: JellyseerrUrlVO): boolean {
+    return this.value === other.value;
+  }
 }

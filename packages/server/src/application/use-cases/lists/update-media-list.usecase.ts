@@ -6,6 +6,7 @@ import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { UpdateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
 import type { UpdateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
 import { UrlDoesNotMatchProviderError } from 'shared/domain/errors/provider.errors';
 
 export class UpdateMediaListUseCase implements IUseCase<
@@ -23,7 +24,7 @@ export class UpdateMediaListUseCase implements IUseCase<
     const list = await this.mediaListRepository.findById(command.id, command.userId);
 
     if (!list) {
-      throw new Error('List not found');
+      throw new MediaListNotFoundError(command.id);
     }
 
     // 2. Apply changes using entity mutation methods

@@ -35,4 +35,8 @@ export class ListUrlVO {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: ListUrlVO): boolean {
+    return this.value === other.value;
+  }
 }

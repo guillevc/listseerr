@@ -38,3 +38,12 @@ export class JellyseerrNotConfiguredError extends DomainError {
     super('Jellyseerr is not configured. Please configure in Settings → Jellyseerr.');
   }
 }
+
+/**
+ * Thrown when an invalid batch ID format is provided
+ */
+export class InvalidBatchIdError extends DomainError {
+  constructor(value: string, reason: string) {
+    super(`Invalid batch ID "${value}": ${reason}`);
+  }
+}

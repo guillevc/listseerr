@@ -5,6 +5,7 @@
  * Identified by TMDB ID.
  */
 
+import { InvalidMediaItemError } from 'shared/domain/errors/media.errors';
 import { MediaTypeVO } from './media-type.vo';
 
 export interface MediaItemVOProps {
@@ -27,18 +28,22 @@ export class MediaItemVO {
    */
   static create(props: MediaItemVOProps): MediaItemVO {
     if (!props.title || props.title.trim() === '') {
-      throw new Error('Media item title cannot be empty');
+      throw new InvalidMediaItemError('Title cannot be empty');
     }
 
     if (!Number.isInteger(props.tmdbId) || props.tmdbId <= 0) {
-      throw new Error(`Invalid TMDB ID: ${props.tmdbId}. Must be a positive integer.`);
+      throw new InvalidMediaItemError(
+        `Invalid TMDB ID: ${props.tmdbId}. Must be a positive integer.`
+      );
     }
 
     if (
       props.year !== null &&
       (!Number.isInteger(props.year) || props.year < 1800 || props.year > 2100)
     ) {
-      throw new Error(`Invalid year: ${props.year}. Must be between 1800 and 2100.`);
+      throw new InvalidMediaItemError(
+        `Invalid year: ${props.year}. Must be between 1800 and 2100.`
+      );
     }
 
     return new MediaItemVO(props.title.trim(), props.year, props.tmdbId, props.mediaType);

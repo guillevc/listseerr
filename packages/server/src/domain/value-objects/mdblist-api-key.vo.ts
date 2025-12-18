@@ -37,4 +37,8 @@ export class MdbListApiKeyVO {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: MdbListApiKeyVO): boolean {
+    return this.value === other.value;
+  }
 }

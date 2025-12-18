@@ -31,4 +31,8 @@ export class JellyseerrApiKeyVO {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: JellyseerrApiKeyVO): boolean {
+    return this.value === other.value;
+  }
 }

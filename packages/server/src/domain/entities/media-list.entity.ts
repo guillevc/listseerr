@@ -1,6 +1,7 @@
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
+import { InvalidMaxItemsError } from 'shared/domain/errors/media-list.errors';
 import type { ProviderType } from 'shared/domain/types/provider.types';
 
 /**
@@ -160,7 +161,7 @@ export class MediaList {
    */
   changeMaxItems(newMaxItems: number): void {
     if (newMaxItems <= 0 || newMaxItems > 50) {
-      throw new Error('Max items must be between 1 and 50');
+      throw new InvalidMaxItemsError(newMaxItems);
     }
     this._maxItems = newMaxItems;
     this._updatedAt = new Date();

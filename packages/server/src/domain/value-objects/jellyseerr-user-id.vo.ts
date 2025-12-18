@@ -30,4 +30,8 @@ export class JellyseerrUserIdVO {
   getValue(): number {
     return this.value;
   }
+
+  equals(other: JellyseerrUserIdVO): boolean {
+    return this.value === other.value;
+  }
 }
