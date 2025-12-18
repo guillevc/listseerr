@@ -109,32 +109,3 @@ export function convertDisplayUrlToApiUrl(displayUrl: string): TraktParsedUrls {
 
   return { apiUrl, displayUrl: cleanDisplayUrl };
 }
-
-export function buildTraktApiUrl(parts: TraktUrlParts, page: number = 1, limit?: number): string {
-  const { username, listSlug, sortField, sortOrder, mediaFilter } = parts;
-
-  // Base API URL
-  let apiUrl = `https://api.trakt.tv/users/${username}/lists/${listSlug}/items`;
-
-  // Add media filter if specified (movie, show, or default to 'all')
-  const filter = mediaFilter || 'all';
-
-  // Add sort parameters if specified
-  if (sortField && sortOrder) {
-    apiUrl += `/${filter}/${sortField}/${sortOrder}`;
-  } else if (filter !== 'all') {
-    // If only filter is specified, use default sort (added/asc)
-    apiUrl += `/${filter}`;
-  }
-
-  // Add pagination parameters
-  const params = new URLSearchParams({
-    page: page.toString(),
-  });
-
-  if (limit) {
-    params.append('limit', limit.toString());
-  }
-
-  return `${apiUrl}?${params.toString()}`;
-}
