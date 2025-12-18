@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Menu, ExternalLink } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
@@ -7,8 +7,11 @@ import { Badge } from '../ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
+import { JellyseerrStatusIndicator } from './JellyseerrStatusIndicator';
 
 // Types
+type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
+
 interface BaseNavItem {
   name: string;
   path: string;
@@ -37,33 +40,47 @@ function useNavigation() {
     ? `${jellyseerrConfig.url}/requests`
     : undefined;
 
-  const { data: pendingRequests } = trpc.dashboard.getPendingRequests.useQuery(undefined, {
-    refetchInterval: 60000,
-  });
+  const { data: pendingRequests, isLoading: isPendingRequestsLoading } =
+    trpc.dashboard.getPendingRequests.useQuery(undefined, {
+      refetchInterval: 60000,
+    });
+
+  // Derive Jellyseerr connection status from pending requests query
+  const jellyseerrStatus = useMemo(() => {
+    if (isPendingRequestsLoading) return 'loading' as const;
+    if (!pendingRequests?.configured) return 'not-configured' as const;
+    if (pendingRequests?.error) return 'error' as const;
+    return 'connected' as const;
+  }, [pendingRequests, isPendingRequestsLoading]);
 
   const navItems: NavItem[] = [
     { name: 'Dashboard', path: '/', type: 'internal' },
     { name: 'Lists', path: '/lists', type: 'internal' },
     { name: 'Settings', path: '/settings', type: 'internal' },
     { name: 'Logs', path: '/logs', type: 'internal' },
-    ...(jellyseerrRequestsUrl
-      ? [
-          {
-            name: 'Requests',
-            path: jellyseerrRequestsUrl,
-            type: 'external' as const,
-            badge: pendingRequests?.error ? '!' : pendingRequests?.count || '0',
-            disabled: !pendingRequests?.configured,
-          },
-        ]
-      : []),
   ];
+
+  const requestsItem: ExternalNavItem | null = jellyseerrRequestsUrl
+    ? {
+        name: 'Pending requests',
+        path: jellyseerrRequestsUrl,
+        type: 'external' as const,
+        badge: pendingRequests?.error ? '!' : pendingRequests?.count || '0',
+        disabled: !pendingRequests?.configured,
+      }
+    : null;
 
   const isActive = (item: NavItem) =>
     item.type === 'internal' &&
     (item.path === '/' ? currentPath === '/' : currentPath.startsWith(item.path));
 
-  return { navItems, isActive };
+  return {
+    navItems,
+    isActive,
+    jellyseerrStatus,
+    jellyseerrUrl: jellyseerrConfig?.url,
+    requestsItem,
+  };
 }
 
 // Components
@@ -164,18 +181,75 @@ function NavItemRenderer({
   return <InternalLink item={item} isActive={isActive} onClick={onClick} mobile={mobile} />;
 }
 
+function JellyseerrSection({
+  status,
+  url,
+  requestsItem,
+  onClick,
+  mobile = false,
+}: {
+  status: JellyseerrStatus;
+  url?: string;
+  requestsItem: ExternalNavItem | null;
+  onClick?: () => void;
+  mobile?: boolean;
+}) {
+  const containerStyles = cn(
+    'flex h-9 items-center gap-2 rounded-md border-2 border-border bg-transparent px-3 text-sm',
+    mobile && 'w-full'
+  );
+
+  return (
+    <div className={cn('flex items-center gap-2', mobile && 'flex-col items-stretch')}>
+      {/* Status indicator with label */}
+      <div className={containerStyles}>
+        <JellyseerrStatusIndicator status={status} url={url} compact />
+        <span className="text-muted">Jellyseerr</span>
+      </div>
+
+      {/* Requests link (only when configured) */}
+      {requestsItem && !requestsItem.disabled && (
+        <a
+          href={requestsItem.path}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClick}
+          className={cn(containerStyles, 'text-muted transition-colors hover:border-muted')}
+        >
+          <Badge variant="simple" className="bg-muted/20 px-1.5 py-0 text-xs text-muted">
+            {requestsItem.badge}
+          </Badge>
+          <span>{requestsItem.name}</span>
+          <ExternalLink className="h-3 w-3" />
+        </a>
+      )}
+    </div>
+  );
+}
+
 function DesktopNav({
   navItems,
   isActive,
+  jellyseerrStatus,
+  jellyseerrUrl,
+  requestsItem,
 }: {
   navItems: NavItem[];
   isActive: (item: NavItem) => boolean;
+  jellyseerrStatus: JellyseerrStatus;
+  jellyseerrUrl?: string;
+  requestsItem: ExternalNavItem | null;
 }) {
   return (
     <div className="hidden gap-1 md:flex">
       {navItems.map((item) => (
         <NavItemRenderer key={item.path} item={item} isActive={isActive(item)} />
       ))}
+      <JellyseerrSection
+        status={jellyseerrStatus}
+        url={jellyseerrUrl}
+        requestsItem={requestsItem}
+      />
     </div>
   );
 }
@@ -185,11 +259,17 @@ function MobileNav({
   isActive,
   open,
   onOpenChange,
+  jellyseerrStatus,
+  jellyseerrUrl,
+  requestsItem,
 }: {
   navItems: NavItem[];
   isActive: (item: NavItem) => boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  jellyseerrStatus: JellyseerrStatus;
+  jellyseerrUrl?: string;
+  requestsItem: ExternalNavItem | null;
 }) {
   const closeMenu = () => onOpenChange(false);
 
@@ -209,6 +289,13 @@ function MobileNav({
               mobile
             />
           ))}
+          <JellyseerrSection
+            status={jellyseerrStatus}
+            url={jellyseerrUrl}
+            requestsItem={requestsItem}
+            onClick={closeMenu}
+            mobile
+          />
         </div>
       </SheetContent>
     </Sheet>
@@ -218,7 +305,7 @@ function MobileNav({
 // Main Component
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { navItems, isActive } = useNavigation();
+  const { navItems, isActive, jellyseerrStatus, jellyseerrUrl, requestsItem } = useNavigation();
 
   return (
     <nav className="border-b">
@@ -227,7 +314,13 @@ export function Navigation() {
           {/* Left: Logo + Desktop Nav */}
           <div className="flex items-center gap-8">
             <Logo />
-            <DesktopNav navItems={navItems} isActive={isActive} />
+            <DesktopNav
+              navItems={navItems}
+              isActive={isActive}
+              jellyseerrStatus={jellyseerrStatus}
+              jellyseerrUrl={jellyseerrUrl}
+              requestsItem={requestsItem}
+            />
           </div>
 
           {/* Right: Actions */}
@@ -252,6 +345,9 @@ export function Navigation() {
         isActive={isActive}
         open={mobileMenuOpen}
         onOpenChange={setMobileMenuOpen}
+        jellyseerrStatus={jellyseerrStatus}
+        jellyseerrUrl={jellyseerrUrl}
+        requestsItem={requestsItem}
       />
     </nav>
   );
