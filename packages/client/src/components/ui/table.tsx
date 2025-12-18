@@ -4,7 +4,7 @@ import { cn } from '@/client/lib/utils';
 
 function Table({ className, ...props }: ComponentProps<'table'>) {
   return (
-    <div className="relative w-full overflow-auto">
+    <div className="relative w-full overflow-clip">
       <table className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   );
@@ -15,7 +15,15 @@ function TableHeader({ className, ...props }: ComponentProps<'thead'>) {
 }
 
 function TableBody({ className, ...props }: ComponentProps<'tbody'>) {
-  return <tbody className={cn('[&_tr:last-child]:border-b-0', className)} {...props} />;
+  return (
+    <tbody
+      className={cn(
+        '[&_tr:last-child]:border-b-0 [&_tr:last-child:hover>td:first-child]:rounded-bl-lg [&_tr:last-child:hover>td:last-child]:rounded-br-lg',
+        className
+      )}
+      {...props}
+    />
+  );
 }
 
 function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
@@ -31,7 +39,12 @@ function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
 }
 
 function TableRow({ className, ...props }: ComponentProps<'tr'>) {
-  return <tr className={cn('border-b transition-colors hover:bg-card', className)} {...props} />;
+  return (
+    <tr
+      className={cn('group border-b transition-colors [&:hover>td]:bg-card', className)}
+      {...props}
+    />
+  );
 }
 
 function TableHead({ className, ...props }: ComponentProps<'th'>) {

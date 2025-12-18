@@ -234,7 +234,7 @@ export function RecentActivity() {
                 </div>
 
                 {/* Executions Table */}
-                <div className="overflow-hidden">
+                <div className="overflow-hidden rounded-b-lg">
                   <Table>
                     <TableHeader>
                       <TableRow>
