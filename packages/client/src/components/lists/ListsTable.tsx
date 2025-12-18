@@ -396,7 +396,7 @@ export function ListsTable({
                   key={`list-${row.original.id}`}
                   className={
                     !isProviderConfigured(row.original.provider)
-                      ? 'border-l-4 border-l-light-re dark:border-l-dark-re'
+                      ? 'border-l-4 border-l-light-re-2 dark:border-l-dark-re-2'
                       : ''
                   }
                 >
