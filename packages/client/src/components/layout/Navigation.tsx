@@ -70,7 +70,8 @@ function useNavigation() {
 function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2">
-      <img src="/listseerr.png" alt="Listseerr" className="h-8 w-8" />
+      <img src="/listseerr-light.png" alt="Listseerr" className="h-8 w-8 dark:hidden" />
+      <img src="/listseerr-dark.png" alt="Listseerr" className="hidden h-8 w-8 dark:block" />
       <span className="text-xl font-bold">Listseerr</span>
     </Link>
   );
