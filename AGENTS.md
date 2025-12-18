@@ -173,6 +173,35 @@ export interface MediaListDTO {
 - Zod schemas satisfy primitive interfaces (compile-time check)
 - Refactoring primitives propagates through all DTOs
 
+#### Primitives vs Value Objects: Shape vs Behavior
+
+**Mental Model**: Primitives are the "Blueprint", VOs are the "Actual Door"
+
+| Aspect           | Primitives (Shape)                                           | Value Objects (Behavior)                        |
+| ---------------- | ------------------------------------------------------------ | ----------------------------------------------- |
+| **Location**     | `shared/`                                                    | `server/domain/value-objects/`                  |
+| **Purpose**      | Communication & Validation                                   | Integrity & Logic                               |
+| **Used by**      | Forms, Network, DTOs, Schemas                                | Use Cases, Entities                             |
+| **What it does** | Defines structure, prevents slot mismatches                  | Enforces business rules, provides methods       |
+| **Example**      | `ListNamePrimitive` prevents passing URL where name expected | `ListNameVO.isReserved()` checks business rules |
+
+**Why both?**
+
+- Primitives **travel** (Forms → Routers → DTOs → Network)
+- VOs **think** (Use Cases → Entities → Domain Logic)
+
+```typescript
+// Router: Uses Primitive + Zod Schema for "Shape" validation
+.input(createListSchema)
+.mutation(({ input }) => {
+  // Use Case: Wraps primitive in VO for "Behavior"
+  const name = ListNameVO.create(input.name);
+
+  // Now 'name' is a smart object, not just a string
+  if (name.isReserved()) { throw new ReservedNameError(); }
+})
+```
+
 #### Contract-Driven Validation Pattern
 
 The codebase uses a **Contract-Driven** validation architecture where:
