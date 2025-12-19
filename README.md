@@ -26,6 +26,10 @@
 
 Point Listseerr at your favorite curated lists, and it automatically requests those movies and shows in Jellyseerr. Set it and forget it!
 
+> [!TIP]
+> It's recommended to create a dedicated "listseerr" user in Jellyseerr without auto-approve permissions, this way you can manually accept or reject requests in Jellyseerr with your admin account.
+> Avoids media bloat.
+
 > [!NOTE]
 > Listseerr won't request previously rejected or already available media in your Plex/Jellyfin instance.
 > This avoids having to reject multiple times the same media and lets you focus on what's new.
@@ -51,7 +55,6 @@ _Screenshots coming soon_
 
 ## Features
 
-- **Automatic Syncing** — Keep your Jellyseerr requests in sync with your favorite lists
 - **Multiple List Providers** — Import from Trakt, MDBList, StevenLu, and more
 - **Scheduled Processing** — Set it once, runs automatically on your schedule
 - **Docker Ready** — Up and running in minutes with Docker Compose
@@ -77,6 +80,13 @@ _Screenshots coming soon_
 ## Quick Start
 
 The fastest way to get started is with Docker Compose.
+
+> [!TIP]
+> You can download directly the files from the [deploy](delploy) folder and modify them afterwards:
+> ```bash
+> wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/compose.yaml &&\
+> wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/.env.example -O .env
+> ```
 
 ### 1. Create your project directory
 
@@ -105,8 +115,17 @@ services:
 ### 3. Generate an encryption key and create `.env`
 
 ```bash
-# Generate a secure encryption key
-echo "ENCRYPTION_KEY=$(openssl rand -hex 32)" > .env
+PUID=1000
+PGID=1000
+
+# Server Configuration
+PORT=3000
+LOG_LEVEL=info
+
+# Database Configuration
+DATABASE_PATH=/app/data/listseerr.db
+# Generate a secure encryption key with openssl rand -hex 32
+ENCRYPTION_KEY=
 ```
 
 ### 4. Start Listseerr
@@ -119,16 +138,16 @@ docker compose up -d
 
 ## Running Locally
 
-<details>
-<summary><strong>Development Mode</strong></summary>
-
 ### Prerequisites
 
-- [Bun](https://bun.sh) (v1.1.3+)
-
 > [!TIP]
-> If you are a [mise](https://mise.jdx.dev/) user, you can `cd` into the root of the project and run `mise install`.
-> It will install the version defined in `.bun-version`.
+> If you are a [mise](https://mise.jdx.dev/) user, you can clone the repo and run `mise install` in the root of the project.
+> It will automatically install the version defined in `.bun-version` and add it to your `$PATH`.
+
+- [Bun](https://bun.sh) (min version in ![.bun-version](.bun-version))
+
+<details>
+<summary><strong>Development Mode</strong></summary>
 
 ### Setup
 
@@ -143,9 +162,6 @@ bun install
 # Set up environment variables
 cp .env.example .env.dev
 # Edit .env.dev and set your ENCRYPTION_KEY (generate with: openssl rand -hex 32)
-
-# Run database migrations
-bun run db:migrate
 ```
 
 ### Start Development Servers
@@ -155,12 +171,14 @@ You'll need two terminal windows:
 **Terminal 1 — Backend:**
 
 ```bash
+cd listseerr
 bun run dev:server
 ```
 
 **Terminal 2 — Frontend:**
 
 ```bash
+cd listseerr
 bun run dev:client
 ```
 
@@ -173,6 +191,8 @@ bun run dev:client
 <summary><strong>Production Mode (Local Build)</strong></summary>
 
 ```bash
+cd listseerr
+
 # Install dependencies
 bun install
 
@@ -193,18 +213,19 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 <details>
 <summary><strong>Building Docker Image Locally</strong></summary>
-
+  
 ```bash
+cd listseerr
+
 # Build the image
 docker build -t listseerr .
 
+# Set up environment
+cp .env.docker.example .env.docker
+# Edit .env.docker and configure your settings
+
 # Run the container
-docker run -d \
-  -p 3000:3000 \
-  -e ENCRYPTION_KEY=$(openssl rand -hex 32) \
-  -v ./data:/app/data \
-  --name listseerr \
-  listseerr
+docker compose up -d
 ```
 
 </details>
@@ -232,7 +253,7 @@ These are the required ENV variables for running the project. All other settings
 - [ ] More list providers
 - [ ] Notifications (Discord, webhooks)
 
-Have an idea? [Share it in Discussions](https://github.com/guillevc/listseerr/discussions/categories/ideas)!
+Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)!
 
 ## License
 
