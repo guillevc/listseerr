@@ -28,10 +28,11 @@
     "dev": "bun run dev:server & bun run dev:client",
     "dev:client": "bun run --filter client dev",
     "dev:server": "bun run --watch --env-file .env.dev packages/server/src/index.ts",
-    "build": "bun run build:client && bun run build:server",
+    "build": "bun run build:client && bun run build:server && bun run build:scripts",
     "build:client": "bun run --filter client build",
     "build:client:analyze": "bun run --filter client build:analyze",
     "build:server": "bun build packages/server/src/index.ts --outdir dist --target bun --production --minify --splitting",
+    "build:scripts": "bun build packages/server/scripts/reset-password.ts --outfile dist/reset-password.js --target bun",
     "typecheck": "bun run --filter '*' typecheck",
     "lint": "eslint .",
     "lint:client": "eslint packages/client",
@@ -43,7 +44,8 @@
     "start": "bun run --env-file .env dist/index.js",
     "db:generate": "bun run --env-file .env.dev -- bunx --bun --no-install drizzle-kit generate --config packages/server/drizzle.config.ts",
     "db:migrate": "bun run --env-file .env.dev packages/server/scripts/migrate.ts",
-    "db:reset": "bun run --env-file .env.dev packages/server/scripts/reset.ts"
+    "db:reset": "bun run --env-file .env.dev packages/server/scripts/reset.ts",
+    "password:reset": "bun run --env-file .env.dev packages/server/scripts/reset-password.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

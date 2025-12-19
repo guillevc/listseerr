@@ -236,7 +236,7 @@ cp .env.docker.example .env.docker
 
 docker compose up -d
 
-```
+````
 
 </details>
 
@@ -251,6 +251,24 @@ These are the required ENV variables for running the project. All other settings
 | `DATABASE_PATH`  | Path to SQLite database file                                                                       | `/app/data/listseerr.db` |
 | `LOG_LEVEL`      | Logging verbosity (`debug`, `info`, `warn`, `error`)                                               | `info`                   |
 | `PUID` / `PGID`  | User/Group ID for Docker volume permissions                                                        | `1000`                   |
+
+## Password Recovery
+
+If you lose your password, reset it via terminal:
+
+**Docker:**
+
+```bash
+docker exec -it listseerr bun /app/dist/reset-password.js
+````
+
+**Local:**
+
+```bash
+bun run password:reset
+```
+
+This generates a new random password and displays the credentials.
 
 ## Roadmap
 
@@ -268,4 +286,3 @@ Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)!
 ## License
 
 [MIT](LICENSE)
-```
