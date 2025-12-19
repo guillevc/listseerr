@@ -26,22 +26,19 @@ _Screenshots coming soon_
 
 - **🔄 Automatic Syncing** — Keep your Jellyseerr requests in sync with your favorite lists
 - **📋 Multiple List Providers** — Import from Trakt, Letterboxd, IMDB, and more
-- **🎬 Movies & TV Shows** — Full support for both media types
-- **🌙 Dark & Light Theme** — Easy on the eyes, day or night
 - **🐳 Docker Ready** — Up and running in minutes with Docker Compose
-- **🔒 Secure** — API keys are encrypted at rest
-- **⚡ Fast & Lightweight** — Built with Bun for blazing-fast performance
 - **🖥️ Self-Hosted** — Your data stays on your server
+- **🌙 Dark & Light Theme** — Easy on the eyes, day or night
 
 ## Supported Providers
 
 | Provider          | Status       |
 | ----------------- | ------------ |
 | 🎬 **Trakt**      | ✅ Supported |
-| 🎥 **Letterboxd** | ✅ Supported |
 | 📝 **MDBList**    | ✅ Supported |
 | ⭐ **IMDB**       | ✅ Supported |
-| 🎞️ **TheMovieDB** | ✅ Supported |
+| 🎥 **Letterboxd** | Soon         |
+| 🎞️ **TheMovieDB** | Soon         |
 
 🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/categories/ideas)
 
@@ -95,7 +92,9 @@ docker compose up -d
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (v1.1+)
+- [Bun](https://bun.sh) (v1.1.3+)
+
+If you have [mise](https://mise.jdx.dev/) installed, you can cd into the root of the project and run `mise install`.
 
 ### Setup
 
