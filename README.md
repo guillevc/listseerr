@@ -3,12 +3,12 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="packages/client/public/assets/listseerr-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="packages/client/public/assets/listseerr-light.png">
-  <img alt="Listseerr" src="packages/client/public/assets/listseerr-light.png" width="200">
+  <img alt="Listseerr" src="packages/client/public/assets/listseerr-light.png" width="150">
 </picture>
 
 # Listseerr
 
-**Automatically sync your favorite movie & TV lists to Jellyseerr**
+**Automatically sync your favorite Movie & TV lists to Jellyseerr**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
@@ -16,15 +16,11 @@
 
 </div>
 
----
-
 ## Screenshots
 
 <!-- Screenshots coming soon -->
 
 _Screenshots coming soon_
-
----
 
 ## Features
 
@@ -37,8 +33,6 @@ _Screenshots coming soon_
 - **⚡ Fast & Lightweight** — Built with Bun for blazing-fast performance
 - **🖥️ Self-Hosted** — Your data stays on your server
 
----
-
 ## Supported Providers
 
 | Provider          | Status       |
@@ -50,8 +44,6 @@ _Screenshots coming soon_
 | 🎞️ **TheMovieDB** | ✅ Supported |
 
 🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/categories/ideas)
-
----
 
 ## Quick Start
 
@@ -95,8 +87,6 @@ docker compose up -d
 ```
 
 🎉 **That's it!** Open [http://localhost:3000](http://localhost:3000) and start adding your lists.
-
----
 
 ## Running Locally
 
@@ -186,8 +176,6 @@ docker run -d \
 
 </details>
 
----
-
 ## Configuration
 
 | Variable         | Description                                                                                        | Default                  |
@@ -197,8 +185,6 @@ docker run -d \
 | `DATABASE_PATH`  | Path to SQLite database file                                                                       | `/app/data/listseerr.db` |
 | `LOG_LEVEL`      | Logging verbosity (`debug`, `info`, `warn`, `error`)                                               | `info`                   |
 | `PUID` / `PGID`  | User/Group ID for Docker volume permissions                                                        | `1000`                   |
-
----
 
 ## Roadmap
 
@@ -214,8 +200,6 @@ docker run -d \
 
 Have an idea? [Share it in Discussions](https://github.com/guillevc/listseerr/discussions/categories/ideas)!
 
----
-
 ## Contributing
 
 Contributions are welcome! Whether it's bug fixes, new features, or documentation improvements — all help is appreciated.
@@ -228,4 +212,4 @@ Contributions are welcome! Whether it's bug fixes, new features, or documentatio
 
 ## License
 
-[MIT License](LICENSE) — feel free to use this project however you'd like.
+[MIT](LICENSE)
