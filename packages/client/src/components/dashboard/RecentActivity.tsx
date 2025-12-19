@@ -57,25 +57,25 @@ function ProcessingBar({
         <TooltipTrigger asChild>
           <div className="flex h-8 w-full cursor-help overflow-hidden rounded-md bg-card">
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-green-600 text-xs font-medium text-white"
+              className="flex h-full min-w-6 items-center justify-center bg-gr-2 text-xs font-medium text-foreground"
               style={{ width: `${requestedPercent}%` }}
             >
               <span>{requested}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-blue-500 text-xs font-medium text-white"
+              className="flex h-full min-w-6 items-center justify-center bg-bl-2 text-xs font-medium text-foreground"
               style={{ width: `${skippedPreviouslyRequestedPercent}%` }}
             >
               <span>{skippedPreviouslyRequested}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-purple-500 text-xs font-medium text-white"
+              className="flex h-full min-w-6 items-center justify-center bg-pu-2 text-xs font-medium text-foreground"
               style={{ width: `${skippedAvailablePercent}%` }}
             >
               <span>{skippedAvailable}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-red-600 text-xs font-medium text-white"
+              className="flex h-full min-w-6 items-center justify-center bg-re-2 text-xs font-medium text-foreground"
               style={{ width: `${failedPercent}%` }}
             >
               <span>{failed}</span>
