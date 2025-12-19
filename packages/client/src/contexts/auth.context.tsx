@@ -34,7 +34,6 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   login: (token: string, user: UserDTO, rememberMe: boolean) => void;
   logout: () => Promise<void>;
-  updateUser: (userData: UserDTO) => void;
   sessionToken: string | null;
 }
 
@@ -110,17 +109,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, [sessionToken, logoutMutation]);
 
-  const updateUser = useCallback((userData: UserDTO) => {
-    setUser(userData);
-  }, []);
-
   const value: AuthContextValue = {
     user,
     isLoading,
     isAuthenticated: !!user,
     login,
     logout,
-    updateUser,
     sessionToken,
   };
 

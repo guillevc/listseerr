@@ -6,7 +6,6 @@
  * The VO exists purely as a validation gate in the Use Case flow.
  */
 
-import { InvalidPasswordError } from 'shared/domain/errors/auth.errors';
 import type { PasswordPrimitive } from 'shared/domain/types/auth.types';
 
 export class PasswordVO {
@@ -22,18 +21,6 @@ export class PasswordVO {
   static create(value: PasswordPrimitive): PasswordVO {
     // Business invariants could go here (e.g., password complexity)
     // Per requirements: only non-empty validation is needed
-    return new PasswordVO(value);
-  }
-
-  /**
-   * For password VO, we don't have fromPersistence since
-   * passwords are never stored (only hashes are).
-   * This method exists for consistency and validation of raw input.
-   */
-  static fromRawInput(value: string): PasswordVO {
-    if (!value || typeof value !== 'string' || value.length === 0) {
-      throw new InvalidPasswordError('Password cannot be empty');
-    }
     return new PasswordVO(value);
   }
 

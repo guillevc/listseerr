@@ -25,7 +25,7 @@ export class LoginUserUseCase implements IUseCase<LoginUserCommand, LoginUserRes
 
   async execute(command: LoginUserCommand): Promise<LoginUserResponse> {
     // 1. Find user by username
-    const user = await this.userRepository.findByUsername(command.username.trim());
+    const user = await this.userRepository.findByUsername(command.username);
     if (!user) {
       throw new InvalidCredentialsError();
     }

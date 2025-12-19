@@ -16,3 +16,15 @@ export interface UserDTO {
   username: UsernamePrimitive;
   createdAt: Date;
 }
+
+/**
+ * Serialized User (as received by tRPC client)
+ *
+ * Date objects are serialized to ISO strings over the wire.
+ * Use this type on the client side for type-safe date handling.
+ */
+export interface SerializedUser {
+  id: number;
+  username: UsernamePrimitive;
+  createdAt: string;
+}

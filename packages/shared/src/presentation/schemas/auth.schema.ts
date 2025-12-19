@@ -12,6 +12,7 @@ import type {
   RegisterUserPrimitive,
   LoginUserPrimitive,
   UpdateUserCredentialsPrimitive,
+  SessionTokenPrimitive,
 } from '../../domain/types/auth.types';
 
 /**
@@ -71,3 +72,10 @@ export const updateUserCredentialsSchema = z
   .refine((data) => data.newUsername || data.newPassword, {
     message: 'At least one of new username or new password must be provided',
   }) satisfies z.ZodType<UpdateUserCredentialsPrimitive>;
+
+/**
+ * Session token schema for validation/logout operations.
+ */
+export const sessionTokenSchema = z.object({
+  token: z.string().min(1, 'Session token is required'),
+}) satisfies z.ZodType<{ token: SessionTokenPrimitive }>;

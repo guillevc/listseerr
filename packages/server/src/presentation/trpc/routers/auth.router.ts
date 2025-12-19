@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type { CheckSetupStatusResponse } from 'shared/application/dtos/auth/responses.dto';
@@ -20,6 +19,7 @@ import {
   registerUserSchema,
   loginUserSchema,
   updateUserCredentialsSchema,
+  sessionTokenSchema,
 } from 'shared/presentation/schemas/auth.schema';
 
 export interface AuthRouterDeps {
@@ -59,16 +59,9 @@ export function createAuthRouter(deps: AuthRouterDeps) {
      * Register a new user
      * Returns user and session token (auto-login)
      */
-    register: publicProcedure
-      .input(
-        registerUserSchema.transform((data) => ({
-          username: data.username,
-          password: data.password,
-        }))
-      )
-      .mutation(async ({ input }) => {
-        return await deps.registerUserUseCase.execute(input);
-      }),
+    register: publicProcedure.input(registerUserSchema).mutation(async ({ input }) => {
+      return await deps.registerUserUseCase.execute(input);
+    }),
 
     /**
      * Login with credentials
@@ -82,16 +75,14 @@ export function createAuthRouter(deps: AuthRouterDeps) {
      * Validate a session token
      * Used by frontend to check if user is authenticated
      */
-    validateSession: publicProcedure
-      .input(z.object({ token: z.string() }))
-      .query(async ({ input }) => {
-        return await deps.validateSessionUseCase.execute(input);
-      }),
+    validateSession: publicProcedure.input(sessionTokenSchema).query(async ({ input }) => {
+      return await deps.validateSessionUseCase.execute(input);
+    }),
 
     /**
      * Logout - invalidate session
      */
-    logout: publicProcedure.input(z.object({ token: z.string() })).mutation(async ({ input }) => {
+    logout: publicProcedure.input(sessionTokenSchema).mutation(async ({ input }) => {
       return await deps.logoutSessionUseCase.execute(input);
     }),
 
