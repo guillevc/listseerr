@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link, useRouterState, useNavigate } from '@tanstack/react-router';
-import { Menu, ExternalLink, LogOut } from 'lucide-react';
+import { Menu, ExternalLink, LogOut, ChevronRight } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -121,6 +121,23 @@ function JellyseerrSection({
     'flex h-9 items-center gap-2 rounded-md bg-transparent px-3 text-sm',
     mobile && 'w-full'
   );
+
+  // Show configure link when not configured
+  if (status === 'not-configured') {
+    return (
+      <Link
+        to="/settings/jellyseerr"
+        onClick={onClick}
+        className={cn(containerStyles, 'text-muted transition-colors hover:text-foreground')}
+      >
+        <span className={cn('flex justify-center', mobile && 'w-6')}>
+          <StatusDot status={status} />
+        </span>
+        <span>Set up Jellyseerr</span>
+        <ChevronRight className="h-4 w-4" />
+      </Link>
+    );
+  }
 
   return (
     <div className={cn('flex items-center gap-2', mobile && 'flex-col items-stretch')}>
