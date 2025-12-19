@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link, useRouterState, useNavigate } from '@tanstack/react-router';
-import { Menu, ExternalLink, LogOut, ChevronRight, User, Settings } from 'lucide-react';
+import { Menu, LogOut, ChevronRight, User, Settings } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -28,7 +28,7 @@ interface NavItem {
 
 interface JellyseerrRequests {
   url: string;
-  badge: string | number;
+  badge: number | null;
   isError: boolean;
 }
 
@@ -63,7 +63,7 @@ function useNavigation() {
     jellyseerrConfig?.url && pendingRequests?.configured
       ? {
           url: `${getUserFacingUrl(jellyseerrConfig)}/requests`,
-          badge: pendingRequests?.error ? '!' : (pendingRequests?.count ?? 0),
+          badge: pendingRequests?.error ? null : (pendingRequests?.count ?? 0),
           isError: !!pendingRequests?.error,
         }
       : null;
@@ -124,69 +124,49 @@ function JellyseerrSection({
   onClick?: () => void;
   mobile?: boolean;
 }) {
-  const containerStyles = cn(
-    'flex h-9 items-center gap-2 rounded-md bg-transparent px-3 text-sm',
-    mobile && 'w-full'
-  );
-
   // Show configure link when not configured
   if (status === 'not-configured') {
     return (
-      <Link
-        to="/settings/jellyseerr"
-        onClick={onClick}
-        className={cn(containerStyles, 'text-muted transition-colors hover:text-foreground')}
+      <Button
+        variant="ghost"
+        size={mobile ? 'default' : 'sm'}
+        asChild
+        className={cn(mobile && 'w-full justify-start')}
       >
-        <span className={cn('flex justify-center', mobile && 'w-6')}>
+        <Link to="/settings/jellyseerr" onClick={onClick}>
           <StatusDot status={status} />
-        </span>
-        <span>Set up Jellyseerr</span>
-        <ChevronRight className="h-4 w-4" />
-      </Link>
+          <span>Set up Jellyseerr</span>
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      </Button>
     );
   }
 
   return (
-    <div className={cn('flex items-center gap-2', mobile && 'flex-col items-stretch')}>
-      {/* Status indicator with label */}
-      <JellyseerrStatusIndicator status={status} url={url} compact>
-        <div className={cn(containerStyles, 'cursor-help')}>
-          <span className={cn('flex justify-center', mobile && 'w-6')}>
-            <StatusDot status={status} />
-          </span>
-          <span className="text-muted">Jellyseerr</span>
-        </div>
-      </JellyseerrStatusIndicator>
-
-      {/* Requests link */}
-      {requests && (
-        <a
-          href={requests.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClick}
-          className={cn(containerStyles, 'text-muted transition-colors hover:text-foreground')}
-        >
-          <span className={cn('flex justify-center', mobile && 'w-6')}>
+    <JellyseerrStatusIndicator status={status} url={url} pendingRequests={requests?.badge} compact>
+      <Button
+        variant="outline"
+        accent="purple"
+        size={mobile ? 'default' : 'sm'}
+        asChild
+        className={cn(mobile && 'w-full justify-start')}
+      >
+        <a href={requests?.url ?? url} target="_blank" rel="noopener noreferrer" onClick={onClick}>
+          {status === 'connected' ? (
             <Badge
               variant="simple"
-              className={cn(
-                'px-1.5 py-0 text-xs',
-                requests.isError
-                  ? 'bg-destructive-background text-destructive-foreground'
-                  : 'bg-pu-2 text-foreground'
-              )}
+              className="gap-1 bg-card px-1.5 py-0.5 text-xs font-medium text-foreground"
             >
-              {requests.badge}
+              <StatusDot status={status} />
+              {requests?.badge != null && requests.badge > 0 && requests.badge}
             </Badge>
-          </span>
-          <div className="flex items-center gap-2 text-muted hover:text-foreground">
-            <span>Requests</span>
-            <ExternalLink className="h-3 w-3" />
-          </div>
+          ) : (
+            <StatusDot status={status} />
+          )}
+          <span>Jellyseerr</span>
         </a>
-      )}
-    </div>
+      </Button>
+    </JellyseerrStatusIndicator>
   );
 }
 

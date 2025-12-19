@@ -43,9 +43,9 @@ const buttonVariants = tv({
       variant: 'outline',
       accent: 'purple',
       class: [
-        'text-light-pu border-light-pu-2',
+        'text-foreground border-purple-200',
         'hover:border-light-pu-2 hover:ring-light-pu-2',
-        'dark:text-dark-pu dark:border-dark-pu-2',
+        'dark:border-purple-800',
         'dark:hover:border-dark-pu-2 dark:hover:ring-dark-pu-2',
       ],
     },

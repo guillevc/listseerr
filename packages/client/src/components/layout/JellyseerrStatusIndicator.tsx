@@ -7,6 +7,7 @@ type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
 interface JellyseerrStatusIndicatorProps {
   status: JellyseerrStatus;
   url?: string;
+  pendingRequests?: number | null;
   compact?: boolean;
   children?: ReactNode;
 }
@@ -17,7 +18,7 @@ const statusConfig = {
     pulse: true,
     label: 'Connected',
     getDescription: (url?: string) =>
-      url ? `Connected to ${new URL(url).hostname}` : 'Connected to Jellyseerr',
+      url ? `${new URL(url).hostname}` : 'Connected to Jellyseerr',
   },
   error: {
     color: 'bg-red-500',
@@ -60,6 +61,7 @@ export function StatusDot({ status, className }: { status: JellyseerrStatus; cla
 export function JellyseerrStatusIndicator({
   status,
   url,
+  pendingRequests,
   compact = false,
   children,
 }: JellyseerrStatusIndicatorProps) {
@@ -81,6 +83,9 @@ export function JellyseerrStatusIndicator({
             <div className="text-center">
               <p className="font-medium">{config.label}</p>
               <p className="text-xs text-muted">{config.getDescription(url)}</p>
+              {pendingRequests != null && pendingRequests > 0 && (
+                <p className="text-xs text-muted">{pendingRequests} pending requests</p>
+              )}
             </div>
           </TooltipContent>
         </Tooltip>
