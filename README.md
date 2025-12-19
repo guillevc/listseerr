@@ -63,17 +63,16 @@ _Screenshots coming soon_
 
 ## Supported Providers
 
-| Provider                   | Status    |
-| -------------------------- | --------- |
-| **Trakt**                  | Supported |
-| **MDBList**                | Supported |
-| **StevenLu**               | Supported |
-| **IMDB**                   | Planned   |
-| **Letterboxd**             | Planned   |
-| **TheMovieDB**             | Planned   |
-| **TVDB**                   | Planned   |
-| **AniList**                | Planned   |
-| **StevenLu List variants** | Planned   |
+| Provider                                                                                             | Status       |
+| ---------------------------------------------------------------------------------------------------- | ------------ |
+| **Trakt**                                                                                            | ✅ Supported |
+| **MDBList**                                                                                          | ✅ Supported |
+| **StevenLu**                                                                                         | ✅ Supported |
+| [**StevenLu List variations**](https://github.com/sjlu/popular-movies?tab=readme-ov-file#all-movies) | 🗓️ Planned   |
+| **IMDB**                                                                                             | 🗓️ Planned   |
+| **Letterboxd**                                                                                       | 🗓️ Planned   |
+| **TheMovieDB**                                                                                       | 🗓️ Planned   |
+| **TVDB**                                                                                             | 🗓️ Planned   |
 
 **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
 
@@ -83,6 +82,7 @@ The fastest way to get started is with Docker Compose.
 
 > [!TIP]
 > You can download directly the files from the [deploy](delploy) folder and modify them afterwards:
+>
 > ```bash
 > wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/compose.yaml &&\
 > wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/.env.example -O .env
@@ -218,14 +218,19 @@ The application will be available at [http://localhost:3000](http://localhost:30
 cd listseerr
 
 # Build the image
+
 docker build -t listseerr .
 
 # Set up environment
+
 cp .env.docker.example .env.docker
+
 # Edit .env.docker and configure your settings
 
 # Run the container
+
 docker compose up -d
+
 ```
 
 </details>
@@ -258,3 +263,4 @@ Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)!
 ## License
 
 [MIT](LICENSE)
+```
