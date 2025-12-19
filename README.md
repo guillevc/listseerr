@@ -16,11 +16,23 @@
 
 </div>
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > This project is in its early development stages.
-> Although I try to fix everything I encounter as I am using the tool myself, you may encounter some bugs or important improvements.
+> Although I try to fix everything I encounter as I am using the tool myself, you may encounter some bugs or areas for improvement.
 >
-> If you have something you want to share, please go ahead as it will be heavily appretiated. You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea or a feature you find interesting to add. And of course all PRs are welcome.
+> If you have something to share, please go ahead — it will be greatly appreciated! You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea. All PRs are welcome.
+
+## How It Works
+
+```
+📋 Your Lists (Trakt, MDBList, IMDB...)
+              ↓
+        🔄 Listseerr
+              ↓
+    🎬 Jellyseerr Requests
+```
+
+Point Listseerr at your favorite curated lists, and it automatically requests those movies and shows in Jellyseerr. Set it and forget it!
 
 ## Screenshots
 
@@ -32,6 +44,7 @@ _Screenshots coming soon_
 
 - **🔄 Automatic Syncing** — Keep your Jellyseerr requests in sync with your favorite lists
 - **📋 Multiple List Providers** — Import from Trakt, Letterboxd, IMDB, and more
+- **⏰ Scheduled Processing** — Set it once, runs automatically on your schedule
 - **🐳 Docker Ready** — Up and running in minutes with Docker Compose
 - **🖥️ Self-Hosted** — Your data stays on your server
 - **🌙 Dark & Light Theme** — Easy on the eyes, day or night
@@ -46,7 +59,7 @@ _Screenshots coming soon_
 | 🎥 **Letterboxd**               | Planned      |
 | 🎞️ **TheMovieDB**               | Planned      |
 | 🎞️ **TVDB**                     | Planned      |
-| 🎞️ **AnliList**                 | Planned      |
+| 🎞️ **AniList**                  | Planned      |
 | 🎞️ **StevenLu List variations** | Planned      |
 
 🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
@@ -188,6 +201,8 @@ docker run -d \
 
 ## Configuration
 
+These are the required ENV variables for running the project. All other settings can be tuned from the web app Settings page.
+
 | Variable         | Description                                                                                        | Default                  |
 | ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
 | `ENCRYPTION_KEY` | **Required.** 32-byte hex key for encrypting API credentials. Generate with `openssl rand -hex 32` | —                        |
@@ -208,14 +223,6 @@ docker run -d \
 - [ ] Notifications (Discord, webhooks)
 
 Have an idea? [Share it in Discussions](https://github.com/guillevc/listseerr/discussions/categories/ideas)!
-
-## Contributing
-
-Contributions are welcome! Whether it's bug fixes, new features, or documentation improvements — all help is appreciated.
-
-- 🐛 **Found a bug?**
-- 💡 **Have an idea?** [Start a discussion](https://github.com/guillevc/listseerr/discussions/new?category=ideas)
-- 🔧 **Want to contribute code?** Fork the repo and submit a pull request
 
 ## License
 
