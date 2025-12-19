@@ -20,19 +20,38 @@
 > This project is in its early development stages.
 > Although I try to fix everything I encounter as I am using the tool myself, you may encounter some bugs or areas for improvement.
 >
-> If you have something to share, please go ahead — it will be greatly appreciated! You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea. All PRs are welcome.
+> If you have something to share, please go ahead — it will be greatly appreciated! You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea.
 
 ## How It Works
 
-```
-📋 Your Lists (Trakt, MDBList, IMDB...)
-              ↓
-        🔄 Listseerr
-              ↓
-    🎬 Jellyseerr Requests
-```
-
 Point Listseerr at your favorite curated lists, and it automatically requests those movies and shows in Jellyseerr. Set it and forget it!
+
+> [!NOTE]
+> Listseerr won't request previously rejected or already available media in your Plex/Jellyfin instance.
+> This avoids having to reject multiple times the same media and lets you focus on what's new.
+
+```mermaid
+flowchart LR
+    subgraph Providers[List Providers]
+        T[Trakt.tv]
+        M[MDBList]
+        O[More...]
+    end
+
+    L[Listseerr] -->|fetches lists| Providers
+    L -->|requests media| J[Jellyseerr]
+    U[User] -->|approves/rejects requests| J
+    J --> A["Your *arr stack"]
+
+    style T fill:#A02F6F,stroke:#8a2860,color:#fff
+    style M fill:#205EA6,stroke:#1a4e8a,color:#fff
+    style O fill:#555555,stroke:#333333,color:#fff,stroke-dasharray: 5 5
+    style L fill:#24837B,stroke:#1d6b65,color:#fff
+    style J fill:#5E409D,stroke:#4d3580,color:#fff
+    style U fill:#66800B,stroke:#526608,color:#fff
+    style A fill:#1C1B1A,stroke:#000000,color:#fff
+    style Providers fill:#1C1B1A,stroke:#000000,color:#fff
+```
 
 ## Screenshots
 
@@ -55,7 +74,8 @@ _Screenshots coming soon_
 | ------------------------------- | ------------ |
 | 🎬 **Trakt**                    | ✅ Supported |
 | 📝 **MDBList**                  | ✅ Supported |
-| ⭐ **IMDB**                     | ✅ Supported |
+| ⭐ **StevenLu**                 | ✅ Supported |
+| ⭐ **IMDB**                     | Planned      |
 | 🎥 **Letterboxd**               | Planned      |
 | 🎞️ **TheMovieDB**               | Planned      |
 | 🎞️ **TVDB**                     | Planned      |
