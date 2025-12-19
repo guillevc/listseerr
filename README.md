@@ -63,16 +63,21 @@ _Screenshots coming soon_
 
 ## Supported Providers
 
-| Provider                                                                                             | Status       |
-| ---------------------------------------------------------------------------------------------------- | ------------ |
-| **Trakt**                                                                                            | ✅ Supported |
-| **MDBList**                                                                                          | ✅ Supported |
-| **StevenLu**                                                                                         | ✅ Supported |
-| [**StevenLu List variations**](https://github.com/sjlu/popular-movies?tab=readme-ov-file#all-movies) | 🗓️ Planned   |
-| **IMDB**                                                                                             | 🗓️ Planned   |
-| **Letterboxd**                                                                                       | 🗓️ Planned   |
-| **TheMovieDB**                                                                                       | 🗓️ Planned   |
-| **TVDB**                                                                                             | 🗓️ Planned   |
+> [!NOTE]
+> Listseerr requests list information directly from the provider's API. Usually, this requires creating an account and obtaining a free API key.
+>
+> Relying in official APIs allows for a solid integration, mantainability and much faster processing times, instead of relying on web crawling or other sources.
+
+| Provider                                                                                             | Status       | Requirements                                                           |
+| ---------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
+| **Trakt**                                                                                            | ✅ Supported | 🔑 Free [Trakt API Client ID key](https://trakt.tv/oauth/applications) |
+| **MDBList**                                                                                          | ✅ Supported | 🔑 Free [MDBList API key](https://mdblist.com/preferences/)            |
+| **StevenLu**                                                                                         | ✅ Supported | None                                                                   |
+| [**StevenLu List variations**](https://github.com/sjlu/popular-movies?tab=readme-ov-file#all-movies) | 🗓️ Planned   | None                                                                   |
+| **IMDB**                                                                                             | 🗓️ Planned   |                                                                        |
+| **Letterboxd**                                                                                       | 🗓️ Planned   |                                                                        |
+| **TheMovieDB**                                                                                       | 🗓️ Planned   |                                                                        |
+| **TVDB**                                                                                             | 🗓️ Planned   |                                                                        |
 
 **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
 
