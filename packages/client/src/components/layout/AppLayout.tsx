@@ -9,7 +9,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-screen flex-col">
       <Navigation />
       <main className="container mx-auto max-w-6xl flex-1 p-4 md:p-8">{children}</main>
-      <footer className="flex items-center justify-center gap-1.5 border-t py-4 font-mono text-sm text-muted">
+      <footer className="flex items-center justify-center gap-1.5 border-t py-3 font-mono text-xs text-muted">
         <a
           href={`https://github.com/guillevc/listseerr/releases/tag/v${__APP_VERSION__}`}
           target="_blank"
