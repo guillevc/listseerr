@@ -249,6 +249,20 @@
   --color-dark-ma-2: var(--color-magenta-600);
 }
 
+@theme {
+  --color-pu: var(--color-light-pu);
+  --color-pu-2: var(--color-light-pu-2);
+}
+
+@layer theme {
+  * {
+    @variant dark {
+      --color-pu: var(--color-dark-pu);
+      --color-pu-2: var(--color-dark-pu-2);
+    }
+  }
+}
+
 /* Flexoki semantic color variables. Light and dark theme adaptable. */
 @theme {
   --color-background: var(--color-light-bg);

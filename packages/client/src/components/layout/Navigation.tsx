@@ -172,14 +172,18 @@ function JellyseerrSection({
               variant="simple"
               className={cn(
                 'px-1.5 py-0 text-xs',
-                requests.isError ? 'bg-red-500/20 text-red-500' : 'bg-muted/20 text-muted'
+                requests.isError
+                  ? 'bg-destructive-background text-destructive-foreground'
+                  : 'bg-pu-2 text-foreground'
               )}
             >
               {requests.badge}
             </Badge>
           </span>
-          <span>Requests</span>
-          <ExternalLink className="h-3 w-3" />
+          <div className="flex items-center gap-2 text-muted hover:text-foreground">
+            <span>Requests</span>
+            <ExternalLink className="h-3 w-3" />
+          </div>
         </a>
       )}
     </div>
