@@ -61,28 +61,28 @@ _Screenshots coming soon_
 
 ## Features
 
-- **🔄 Automatic Syncing** — Keep your Jellyseerr requests in sync with your favorite lists
-- **📋 Multiple List Providers** — Import from Trakt, Letterboxd, IMDB, and more
-- **⏰ Scheduled Processing** — Set it once, runs automatically on your schedule
-- **🐳 Docker Ready** — Up and running in minutes with Docker Compose
-- **🖥️ Self-Hosted** — Your data stays on your server
-- **🌙 Dark & Light Theme** — Easy on the eyes, day or night
+- **Automatic Syncing** — Keep your Jellyseerr requests in sync with your favorite lists
+- **Multiple List Providers** — Import from Trakt, MDBList, StevenLu, and more
+- **Scheduled Processing** — Set it once, runs automatically on your schedule
+- **Docker Ready** — Up and running in minutes with Docker Compose
+- **Self-Hosted** — Your data stays on your server
+- **Dark & Light Theme** — Easy on the eyes, day or night
 
 ## Supported Providers
 
-| Provider                        | Status       |
-| ------------------------------- | ------------ |
-| 🎬 **Trakt**                    | ✅ Supported |
-| 📝 **MDBList**                  | ✅ Supported |
-| ⭐ **StevenLu**                 | ✅ Supported |
-| ⭐ **IMDB**                     | Planned      |
-| 🎥 **Letterboxd**               | Planned      |
-| 🎞️ **TheMovieDB**               | Planned      |
-| 🎞️ **TVDB**                     | Planned      |
-| 🎞️ **AniList**                  | Planned      |
-| 🎞️ **StevenLu List variations** | Planned      |
+| Provider                   | Status    |
+| -------------------------- | --------- |
+| **Trakt**                  | Supported |
+| **MDBList**                | Supported |
+| **StevenLu**               | Supported |
+| **IMDB**                   | Planned   |
+| **Letterboxd**             | Planned   |
+| **TheMovieDB**             | Planned   |
+| **TVDB**                   | Planned   |
+| **AniList**                | Planned   |
+| **StevenLu List variants** | Planned   |
 
-🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
+**Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
 
 ## Quick Start
 
@@ -125,12 +125,12 @@ echo "ENCRYPTION_KEY=$(openssl rand -hex 32)" > .env
 docker compose up -d
 ```
 
-🎉 **That's it!** Open [http://localhost:3000](http://localhost:3000) and start adding your lists.
+**That's it!** Open [http://localhost:3000](http://localhost:3000) and start adding your lists.
 
 ## Running Locally
 
 <details>
-<summary><strong>🛠️ Development Mode</strong></summary>
+<summary><strong>Development Mode</strong></summary>
 
 ### Prerequisites
 
@@ -180,7 +180,7 @@ bun run dev:client
 </details>
 
 <details>
-<summary><strong>🚀 Production Mode (Local Build)</strong></summary>
+<summary><strong>Production Mode (Local Build)</strong></summary>
 
 ```bash
 # Install dependencies
@@ -202,7 +202,7 @@ The application will be available at [http://localhost:3000](http://localhost:30
 </details>
 
 <details>
-<summary><strong>🐳 Building Docker Image Locally</strong></summary>
+<summary><strong>Building Docker Image Locally</strong></summary>
 
 ```bash
 # Build the image
