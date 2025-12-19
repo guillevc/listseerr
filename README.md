@@ -30,27 +30,17 @@ Point Listseerr at your favorite curated lists, and it automatically requests th
 > Listseerr won't request previously rejected or already available media in your Plex/Jellyfin instance.
 > This avoids having to reject multiple times the same media and lets you focus on what's new.
 
-```mermaid
-flowchart LR
-    subgraph Providers[List Providers]
-        T[Trakt.tv]
-        M[MDBList]
-        O[More...]
-    end
-
-    L[Listseerr] -->|fetches lists| Providers
-    L -->|requests media| J[Jellyseerr]
-    U[User] -->|approves/rejects requests| J
-    J --> A["Your *arr stack"]
-
-    style T fill:#A02F6F,stroke:#8a2860,color:#fff
-    style M fill:#205EA6,stroke:#1a4e8a,color:#fff
-    style O fill:#555555,stroke:#333333,color:#fff,stroke-dasharray: 5 5
-    style L fill:#24837B,stroke:#1d6b65,color:#fff
-    style J fill:#5E409D,stroke:#4d3580,color:#fff
-    style U fill:#66800B,stroke:#526608,color:#fff
-    style A fill:#1C1B1A,stroke:#000000,color:#fff
-    style Providers fill:#1C1B1A,stroke:#000000,color:#fff
+```
+┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
+│  Trakt   │◀────│           │         │           │     │   *arr    │
+├──────────┤     │           │ request │ Jellyseerr│────▶│   stack   │
+│ StevenLu │◀────│ Listseerr │────────▶│           │     └───────────┘
+├──────────┤     │           │         └───────────┘
+│  MDBList │◀────│           │               ▲
+├──────────┤     └───────────┘               │ approve
+│  More... │◀────┘                     ┌─────┴─────┐
+└──────────┘                           │   User    │
+                                       └───────────┘
 ```
 
 ## Screenshots
