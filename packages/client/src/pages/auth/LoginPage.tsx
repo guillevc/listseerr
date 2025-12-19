@@ -1,13 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Eye, EyeOff, HelpCircle, RefreshCw } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/client/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/client/components/ui/card';
 import { Input } from '@/client/components/ui/input';
 import { Label } from '@/client/components/ui/label';
 import { Button } from '@/client/components/ui/button';

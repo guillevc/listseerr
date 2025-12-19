@@ -69,8 +69,8 @@ export const generalSettings = sqliteTable('general_settings', {
   timezone: text('timezone').notNull().default('UTC'),
   automaticProcessingEnabled: integer('automatic_processing_enabled', { mode: 'boolean' })
     .notNull()
-    .default(false),
-  automaticProcessingSchedule: text('automatic_processing_schedule'), // cron expression for global processing
+    .default(true),
+  automaticProcessingSchedule: text('automatic_processing_schedule').default('0 4 * * *'), // cron expression for global processing (daily at 4:00 AM)
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

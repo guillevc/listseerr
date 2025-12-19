@@ -1,9 +1,11 @@
 import type { IUserRepository } from '@/server/application/repositories/user.repository.interface';
 import type { ISessionRepository } from '@/server/application/repositories/session.repository.interface';
+import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
 import type { IPasswordService } from '@/server/application/services/core/password.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { User } from '@/server/domain/entities/user.entity';
 import { Session } from '@/server/domain/entities/session.entity';
+import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
 import { UsernameVO } from '@/server/domain/value-objects/username.vo';
 import { PasswordVO } from '@/server/domain/value-objects/password.vo';
 import { UserMapper } from '@/server/application/mappers/user.mapper';
@@ -25,6 +27,8 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly sessionRepository: ISessionRepository,
+    private readonly generalSettingsRepository: IGeneralSettingsRepository,
+    private readonly scheduler: { loadScheduledLists: () => Promise<void> },
     private readonly passwordService: IPasswordService,
     private readonly logger: ILogger
   ) {}
@@ -58,16 +62,23 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
     // 6. Save user
     const savedUser = await this.userRepository.save(user);
 
-    // 7. Create session (auto-login) - remember me defaults to true for new registrations
+    // 7. Create default general settings (enables automatic processing)
+    const settings = GeneralSettings.create(savedUser.id);
+    await this.generalSettingsRepository.save(settings);
+
+    // 8. Reload scheduler to activate the automatic processing job
+    await this.scheduler.loadScheduledLists();
+
+    // 9. Create session (auto-login) - remember me defaults to true for new registrations
     const session = Session.create({
       userId: savedUser.id,
       rememberMe: true,
     });
 
-    // 8. Save session
+    // 10. Save session
     const savedSession = await this.sessionRepository.save(session);
 
-    // 9. Log registration
+    // 11. Log registration
     this.logger.info(
       {
         userId: savedUser.id,
@@ -76,7 +87,7 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
       'User registered'
     );
 
-    // 10. Return response
+    // 12. Return response
     return {
       user: UserMapper.toDTO(savedUser),
       token: savedSession.token.getValue(),

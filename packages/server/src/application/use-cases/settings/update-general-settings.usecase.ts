@@ -2,10 +2,10 @@ import type { IGeneralSettingsRepository } from '@/server/application/repositori
 import { GeneralSettingsMapper } from '@/server/application/mappers/general-settings.mapper';
 import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
-import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
 import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
+import { GeneralSettingsNotFoundError } from 'shared/domain/errors/general-settings.errors';
 
 export class UpdateGeneralSettingsUseCase implements IUseCase<
   UpdateGeneralSettingsCommand,
@@ -18,20 +18,10 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
   ) {}
 
   async execute(command: UpdateGeneralSettingsCommand): Promise<UpdateGeneralSettingsResponse> {
-    // 1. Load existing entity or create new one
-    let settings = await this.generalSettingsRepository.findByUserId(command.userId);
-
+    // 1. Load existing entity (must exist after registration)
+    const settings = await this.generalSettingsRepository.findByUserId(command.userId);
     if (!settings) {
-      // Create new settings with defaults
-      settings = new GeneralSettings({
-        id: 0, // Temporary ID, DB will assign real ID
-        userId: command.userId,
-        timezone: TimezoneVO.create(command.data.timezone || 'UTC'),
-        automaticProcessingEnabled: command.data.automaticProcessingEnabled ?? false,
-        automaticProcessingSchedule: command.data.automaticProcessingSchedule ?? null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      throw new GeneralSettingsNotFoundError(command.userId);
     }
 
     // 2. Capture old state for change detection (for logging)

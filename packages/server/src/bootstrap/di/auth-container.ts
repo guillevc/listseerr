@@ -4,9 +4,11 @@ import * as schema from '@/server/infrastructure/db/schema';
 // Infrastructure layer
 import { DrizzleUserRepository } from '@/server/infrastructure/repositories/drizzle-user.repository';
 import { DrizzleSessionRepository } from '@/server/infrastructure/repositories/drizzle-session.repository';
+import { DrizzleGeneralSettingsRepository } from '@/server/infrastructure/repositories/drizzle-general-settings.repository';
 import { BunPasswordService } from '@/server/infrastructure/services/core/bun-password.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
+import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
 
 // Application layer - Use cases
 import { CheckSetupStatusUseCase } from '@/server/application/use-cases/auth/check-setup-status.usecase';
@@ -47,6 +49,7 @@ export class AuthContainer {
   // Infrastructure - Repositories
   private readonly userRepository: DrizzleUserRepository;
   private readonly sessionRepository: DrizzleSessionRepository;
+  private readonly generalSettingsRepository: DrizzleGeneralSettingsRepository;
 
   // Infrastructure - Services
   private readonly passwordService: BunPasswordService;
@@ -67,6 +70,7 @@ export class AuthContainer {
     // 1. Instantiate infrastructure layer (adapters)
     this.userRepository = new DrizzleUserRepository(db);
     this.sessionRepository = new DrizzleSessionRepository(db);
+    this.generalSettingsRepository = new DrizzleGeneralSettingsRepository(db);
     this.passwordService = new BunPasswordService();
     this.logger = new LoggerService('auth');
 
@@ -81,6 +85,8 @@ export class AuthContainer {
       new RegisterUserUseCase(
         this.userRepository,
         this.sessionRepository,
+        this.generalSettingsRepository,
+        scheduler,
         this.passwordService,
         this.logger
       ),

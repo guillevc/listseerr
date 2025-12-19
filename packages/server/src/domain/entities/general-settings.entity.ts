@@ -39,6 +39,27 @@ export class GeneralSettings {
     this._updatedAt = params.updatedAt;
   }
 
+  /**
+   * Factory for new entities with default values
+   * Uses id: 0 for unpersisted entities (New Entity Convention)
+   *
+   * Defaults:
+   * - timezone: UTC
+   * - automaticProcessingEnabled: true
+   * - automaticProcessingSchedule: '0 4 * * *' (daily at 4:00 AM)
+   */
+  static create(userId: number): GeneralSettings {
+    return new GeneralSettings({
+      id: 0,
+      userId,
+      timezone: TimezoneVO.create('UTC'),
+      automaticProcessingEnabled: true,
+      automaticProcessingSchedule: '0 4 * * *',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
   // Getters - expose state for read access
   get id(): number {
     return this._id;
