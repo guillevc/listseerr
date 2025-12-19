@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar } from 'lucide-react';
+import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar, Inbox } from 'lucide-react';
 import { trpc } from '../../lib/trpc';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -167,10 +167,13 @@ export function RecentActivity() {
           </CardTitle>
           <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="py-8 text-center text-muted">
-            <p>No recent activity</p>
-            <p className="mt-1 text-sm">Processing activity will appear here</p>
+        <CardContent className="py-12">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 rounded-full bg-muted/10 p-4">
+              <Inbox className="h-8 w-8 text-muted" />
+            </div>
+            <h3 className="mb-2 text-lg font-medium text-foreground">No recent activity</h3>
+            <p className="max-w-sm text-sm text-muted">Processing activity will appear here</p>
           </div>
         </CardContent>
       </Card>
