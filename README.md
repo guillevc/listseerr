@@ -283,6 +283,10 @@ This generates a new random password and displays the credentials.
 
 Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)!
 
+## Acknowledgments
+
+- Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
+
 ## License
 
 [MIT](LICENSE)

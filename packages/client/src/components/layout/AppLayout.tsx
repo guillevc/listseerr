@@ -10,7 +10,15 @@ export function AppLayout({ children }: AppLayoutProps) {
       <Navigation />
       <main className="container mx-auto max-w-6xl flex-1 p-4 md:p-8">{children}</main>
       <footer className="border-t py-2 text-center font-mono text-xs text-muted">
-        v{__APP_VERSION__} · {__COMMIT_HASH__.slice(0, 7)}
+        v{__APP_VERSION__} · {__COMMIT_HASH__.slice(0, 7)} ·{' '}
+        <a
+          href="https://stephango.com/flexoki"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline transition-colors hover:text-foreground"
+        >
+          Colors by Flexoki
+        </a>
       </footer>
     </div>
   );
