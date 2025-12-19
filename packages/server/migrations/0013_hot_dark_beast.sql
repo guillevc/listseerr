@@ -1,1 +1,0 @@
-ALTER TABLE `jellyseerr_configs` ADD `external_url` text;

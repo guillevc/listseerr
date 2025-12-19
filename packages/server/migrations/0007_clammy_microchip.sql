@@ -1,1 +1,0 @@
-ALTER TABLE `execution_history` ADD `batch_id` text;

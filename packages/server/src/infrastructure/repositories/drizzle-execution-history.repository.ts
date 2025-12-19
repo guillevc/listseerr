@@ -107,10 +107,6 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
    * Convert Drizzle row to ProcessingExecution domain entity
    */
   private toDomain(row: typeof executionHistory.$inferSelect): ProcessingExecution {
-    if (!row.batchId) {
-      throw new Error(`Execution ${row.id} has no batchId`);
-    }
-
     return new ProcessingExecution({
       id: row.id,
       listId: row.listId,
@@ -119,11 +115,11 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
       triggerType: TriggerTypeVO.fromPersistence(row.triggerType),
       startedAt: row.startedAt,
       completedAt: row.completedAt,
-      itemsFound: row.itemsFound || 0,
-      itemsRequested: row.itemsRequested || 0,
-      itemsFailed: row.itemsFailed || 0,
-      itemsSkippedAvailable: row.itemsSkippedAvailable || 0,
-      itemsSkippedPreviouslyRequested: row.itemsSkippedPreviouslyRequested || 0,
+      itemsFound: row.itemsFound,
+      itemsRequested: row.itemsRequested,
+      itemsFailed: row.itemsFailed,
+      itemsSkippedAvailable: row.itemsSkippedAvailable,
+      itemsSkippedPreviouslyRequested: row.itemsSkippedPreviouslyRequested,
       errorMessage: row.errorMessage,
     });
   }

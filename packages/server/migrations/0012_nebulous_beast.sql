@@ -1,1 +1,0 @@
-ALTER TABLE `media_lists` DROP COLUMN `processing_schedule`;

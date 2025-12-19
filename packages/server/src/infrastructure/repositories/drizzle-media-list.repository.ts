@@ -189,7 +189,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       displayUrl: row.displayUrl || row.url, // Fallback to url if displayUrl is null
       provider: row.provider,
       enabled: row.enabled,
-      maxItems: row.maxItems || 50, // Default to 50 if null
+      maxItems: row.maxItems,
       createdAt: row.createdAt || new Date(), // Fallback to current date if null
       updatedAt: row.updatedAt || new Date(), // Fallback to current date if null
     };

@@ -14,15 +14,10 @@ import { UsernameVO } from '@/server/domain/value-objects/username.vo';
 export class User {
   private readonly _id: number;
   private _username: UsernameVO;
-  private _passwordHash: string | null;
+  private _passwordHash: string;
   private readonly _createdAt: Date;
 
-  constructor(params: {
-    id: number;
-    username: UsernameVO;
-    passwordHash: string | null;
-    createdAt: Date;
-  }) {
+  constructor(params: { id: number; username: UsernameVO; passwordHash: string; createdAt: Date }) {
     this._id = params.id;
     this._username = params.username;
     this._passwordHash = params.passwordHash;
@@ -51,7 +46,7 @@ export class User {
     return this._username;
   }
 
-  get passwordHash(): string | null {
+  get passwordHash(): string {
     return this._passwordHash;
   }
 
@@ -73,14 +68,5 @@ export class User {
    */
   changePasswordHash(newPasswordHash: string): void {
     this._passwordHash = newPasswordHash;
-  }
-
-  // Business logic methods
-
-  /**
-   * Check if the user has a password set
-   */
-  hasPassword(): boolean {
-    return this._passwordHash !== null && this._passwordHash.length > 0;
   }
 }
