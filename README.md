@@ -10,11 +10,17 @@
 
 **Automatically sync your favorite Movie & TV lists to Jellyseerr**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
 [![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr?include_prereleases)](https://github.com/guillevc/listseerr/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 </div>
+
+> [!IMPORTANT]  
+> This project is in its early development stages.
+> Although I try to fix everything I encounter as I am using the tool myself, you may encounter some bugs or important improvements.
+>
+> If you have something you want to share, please go ahead as it will be heavily appretiated. You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea or a feature you find interesting to add. And of course all PRs are welcome.
 
 ## Screenshots
 
@@ -32,15 +38,18 @@ _Screenshots coming soon_
 
 ## Supported Providers
 
-| Provider          | Status       |
-| ----------------- | ------------ |
-| 🎬 **Trakt**      | ✅ Supported |
-| 📝 **MDBList**    | ✅ Supported |
-| ⭐ **IMDB**       | ✅ Supported |
-| 🎥 **Letterboxd** | Soon         |
-| 🎞️ **TheMovieDB** | Soon         |
+| Provider                        | Status       |
+| ------------------------------- | ------------ |
+| 🎬 **Trakt**                    | ✅ Supported |
+| 📝 **MDBList**                  | ✅ Supported |
+| ⭐ **IMDB**                     | ✅ Supported |
+| 🎥 **Letterboxd**               | Planned      |
+| 🎞️ **TheMovieDB**               | Planned      |
+| 🎞️ **TVDB**                     | Planned      |
+| 🎞️ **AnliList**                 | Planned      |
+| 🎞️ **StevenLu List variations** | Planned      |
 
-🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/categories/ideas)
+🗳️ **Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
 
 ## Quick Start
 
@@ -94,7 +103,9 @@ docker compose up -d
 
 - [Bun](https://bun.sh) (v1.1.3+)
 
-If you have [mise](https://mise.jdx.dev/) installed, you can cd into the root of the project and run `mise install`.
+> [!TIP]
+> If you are a [mise](https://mise.jdx.dev/) user, you can `cd` into the root of the project and run `mise install`.
+> It will install the version defined in `.bun-version`.
 
 ### Setup
 
@@ -188,14 +199,13 @@ docker run -d \
 ## Roadmap
 
 - [x] Core list syncing functionality
-- [x] Multiple provider support (Trakt, Letterboxd, MDBList, IMDB, TMDB)
+- [x] Multiple provider support (Trakt, MDBList, StevenLu)
 - [x] Dark/Light theme
 - [x] Docker support
-- [ ] Scheduled automatic syncing
-- [ ] Sync history and logs
-- [ ] Notifications (Discord, webhooks)
+- [x] Scheduled automatic syncing
+- [x] Sync history and logs
 - [ ] More list providers
-- [ ] Multi-user support
+- [ ] Notifications (Discord, webhooks)
 
 Have an idea? [Share it in Discussions](https://github.com/guillevc/listseerr/discussions/categories/ideas)!
 
@@ -203,11 +213,9 @@ Have an idea? [Share it in Discussions](https://github.com/guillevc/listseerr/di
 
 Contributions are welcome! Whether it's bug fixes, new features, or documentation improvements — all help is appreciated.
 
-- 🐛 **Found a bug?** [Open an issue](https://github.com/guillevc/listseerr/issues/new)
+- 🐛 **Found a bug?**
 - 💡 **Have an idea?** [Start a discussion](https://github.com/guillevc/listseerr/discussions/new?category=ideas)
 - 🔧 **Want to contribute code?** Fork the repo and submit a pull request
-
----
 
 ## License
 
