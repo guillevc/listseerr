@@ -219,7 +219,7 @@ export function ListsTable({
         enableSorting: false,
       }),
       columnHelper.accessor('lastProcessed', {
-        header: 'Processed',
+        header: 'Last processed',
         cell: (info) => (
           <TooltipProvider>
             <Tooltip>
@@ -248,7 +248,7 @@ export function ListsTable({
         minSize: 150,
       }),
       columnHelper.accessor('enabled', {
-        header: 'Scheduled',
+        header: 'Auto-process',
         cell: (info) => {
           const list = info.row.original;
           const providerConfigured = isProviderConfigured(list.provider);

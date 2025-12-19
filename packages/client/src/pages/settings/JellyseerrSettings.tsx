@@ -51,6 +51,7 @@ export function JellyseerrSettings() {
   const saveMutation = trpc.config.set.useMutation({
     onSuccess: () => {
       void utils.config.get.invalidate();
+      void utils.dashboard.getPendingRequests.invalidate();
       toast({
         title: 'Saved',
         description: 'Jellyseerr configuration saved successfully',
@@ -125,23 +126,22 @@ export function JellyseerrSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Jellyseerr Configuration</h3>
-        <p className="mt-1 text-sm text-muted">
-          Configure your Jellyseerr instance to enable automatic media requests.
-        </p>
+        <h3 className="text-lg font-semibold">Jellyseerr</h3>
+        <p className="mt-1 text-sm text-muted">Connect your Jellyseerr instance.</p>
       </div>
 
       <Separator />
 
       <div className="space-y-4">
         <div className="grid gap-2">
-          <Label htmlFor="url">Jellyseerr URL</Label>
+          <Label htmlFor="url">Internal URL</Label>
           <Input
             id="url"
             placeholder="https://jellyseerr.example.com"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
+          <p className="text-xs text-muted">Must be reachable from Listseerr.</p>
         </div>
 
         <div className="grid gap-2">
@@ -153,7 +153,7 @@ export function JellyseerrSettings() {
             onChange={(e) => setExternalUrl(e.target.value)}
           />
           <p className="text-xs text-muted">
-            Use this if your internal URL differs from the public URL (e.g., Docker deployments)
+            Use when internal URL differs from public, e.g. Docker network URLs.
           </p>
         </div>
 
@@ -187,6 +187,10 @@ export function JellyseerrSettings() {
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
           />
+          <p className="text-xs text-muted">
+            Use a dedicated user without auto-approve so you can review requests first. Skip this if
+            you prefer automatic approval.
+          </p>
         </div>
 
         <div className="flex gap-2 pt-4">

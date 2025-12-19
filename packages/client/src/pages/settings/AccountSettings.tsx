@@ -73,7 +73,7 @@ export function AccountSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold">Account</h3>
-        <p className="mt-1 text-sm text-muted">Manage your account settings.</p>
+        <p className="mt-1 text-sm text-muted">Manage your account.</p>
       </div>
 
       <Separator />
@@ -82,8 +82,7 @@ export function AccountSettings() {
         <div>
           <h4 className="text-base font-medium">Change credentials</h4>
           <p className="mt-1 text-sm text-muted">
-            Update your username or password. You must enter your current password to confirm
-            changes. You will be logged out after saving.
+            Enter your current password to save changes. You'll be logged out after.
           </p>
         </div>
 

@@ -234,9 +234,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 max="50"
                 required
               />
-              <p className="text-xs text-muted">
-                Maximum number of items to fetch from the list (1-50). Default: 20
-              </p>
+              <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
             </div>
           </div>
         </div>

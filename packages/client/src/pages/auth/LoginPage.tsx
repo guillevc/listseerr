@@ -79,7 +79,7 @@ export function LoginPage() {
         <Card className="w-full">
           <CardHeader className="text-center">
             <CardTitle>Sign In</CardTitle>
-            <CardDescription>Enter your credentials to access Listseerr</CardDescription>
+            <CardDescription>Welcome back</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -96,7 +96,7 @@ export function LoginPage() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter username"
+                  placeholder="Username"
                   autoComplete="username"
                   autoFocus
                 />
@@ -110,7 +110,7 @@ export function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
+                    placeholder="Password"
                     autoComplete="current-password"
                     className="pr-10"
                   />
@@ -144,7 +144,7 @@ export function LoginPage() {
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Password reset is not available for self-hosted instances</p>
+                      <p>Password recover not available. Try modifying the SQL database file.</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

@@ -68,8 +68,7 @@ export function ListsPage() {
               </div>
               <h3 className="mb-2 text-lg font-medium text-foreground">No lists added yet</h3>
               <p className="max-w-sm text-sm text-muted">
-                Add lists from Trakt, MDBList, or StevenLu to automatically request new content to
-                Jellyseerr
+                Add lists from Trakt, MDBList, or StevenLu to start requesting content.
               </p>
             </div>
           </CardContent>

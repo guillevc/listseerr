@@ -22,7 +22,7 @@ export function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="mt-1 text-muted">Overview of your media lists and request activity</p>
+        <p className="mt-1 text-muted">Overview of your lists and activity</p>
       </div>
 
       <DashboardStats lists={lists} />

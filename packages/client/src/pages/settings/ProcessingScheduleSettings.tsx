@@ -271,8 +271,7 @@ export function ProcessingScheduleSettings() {
       <div>
         <h3 className="text-lg font-semibold">Automatic Processing</h3>
         <p className="mt-1 text-sm text-muted">
-          Schedule automatic processing for all enabled lists. Lists are processed sequentially
-          (oldest to newest) to avoid rate limits.
+          Schedule automatic processing for all enabled lists.
         </p>
       </div>
 
@@ -292,10 +291,7 @@ export function ProcessingScheduleSettings() {
               <Label htmlFor="schedule-enabled" className="text-base">
                 Enable Automatic Processing
               </Label>
-              <p className="text-sm text-muted">
-                Process all enabled lists on the same schedule. Lists are processed sequentially
-                from oldest to newest.
-              </p>
+              <p className="text-sm text-muted">Process all lists on schedule.</p>
             </div>
           </div>
         </CardContent>

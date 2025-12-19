@@ -224,7 +224,7 @@ export function ApiKeysSettings() {
                 )}
               </CardTitle>
               <CardDescription>
-                Required for fetching Trakt lists and curated charts. Get your Client ID from{' '}
+                Fetch Trakt lists and charts. Get your Client ID from{' '}
                 <ExternalLink href="https://trakt.tv/oauth/applications">
                   Trakt.tv API Applications
                 </ExternalLink>
@@ -237,9 +237,7 @@ export function ApiKeysSettings() {
             <Card variant="warning">
               <CardContent className="flex items-center gap-2 py-3">
                 <AlertCircle className="h-5 w-5" />
-                <p className="text-sm">
-                  Provider disabled - Trakt lists and charts cannot be processed.
-                </p>
+                <p className="text-sm">Disabled — Trakt lists won't be processed.</p>
               </CardContent>
             </Card>
           )}
@@ -305,7 +303,7 @@ export function ApiKeysSettings() {
                 )}
               </CardTitle>
               <CardDescription>
-                Required for fetching MDBList lists. Get your API key from{' '}
+                Fetch MDBList lists. Get your API key from{' '}
                 <ExternalLink href="https://mdblist.com/preferences/">
                   MDBList Preferences
                 </ExternalLink>
@@ -318,7 +316,7 @@ export function ApiKeysSettings() {
             <Card variant="warning">
               <CardContent className="flex items-center gap-2 py-3">
                 <AlertCircle className="h-5 w-5" />
-                <p className="text-sm">Provider disabled - MDBList lists cannot be processed.</p>
+                <p className="text-sm">Disabled — MDBList lists won't be processed.</p>
               </CardContent>
             </Card>
           )}
@@ -370,7 +368,7 @@ export function ApiKeysSettings() {
         <CardContent className="py-8">
           <div className="text-center text-muted">
             <Plus className="mx-auto mb-2 h-8 w-8 opacity-50" />
-            <p className="text-sm">More API integrations coming soon</p>
+            <p className="text-sm">More integrations coming soon</p>
           </div>
         </CardContent>
       </Card>

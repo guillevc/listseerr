@@ -145,7 +145,7 @@ export function RecentActivity() {
             <Activity className="h-5 w-5" />
             Recent Activity
           </CardTitle>
-          <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
+          <CardDescription>Last 24 hours</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="py-8 text-center text-muted">
@@ -165,7 +165,7 @@ export function RecentActivity() {
             <Activity className="h-5 w-5" />
             Recent Activity
           </CardTitle>
-          <CardDescription>Recent list processing and events (last 24 hours)</CardDescription>
+          <CardDescription>Last 24 hours</CardDescription>
         </CardHeader>
         <CardContent className="py-12">
           <div className="flex flex-col items-center text-center">
@@ -173,7 +173,7 @@ export function RecentActivity() {
               <Inbox className="h-8 w-8 text-muted" />
             </div>
             <h3 className="mb-2 text-lg font-medium text-foreground">No recent activity</h3>
-            <p className="max-w-sm text-sm text-muted">Processing activity will appear here</p>
+            <p className="max-w-sm text-sm text-muted">Activity will appear here</p>
           </div>
         </CardContent>
       </Card>
@@ -187,7 +187,7 @@ export function RecentActivity() {
           <Activity className="h-5 w-5" />
           Recent Activity
         </CardTitle>
-        <CardDescription>Recent list processing and events</CardDescription>
+        <CardDescription>Last 24 hours</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">

@@ -176,7 +176,7 @@ export function LogsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Server Logs</h1>
-        <p className="mt-1 text-muted">Real-time server logs (auto-refreshes every 2 seconds)</p>
+        <p className="mt-1 text-muted">Live updates every 2 seconds</p>
       </div>
 
       <Card className="border-light-ui bg-background dark:border-dark-ui">

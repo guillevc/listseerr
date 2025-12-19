@@ -43,7 +43,7 @@ const PROVIDER_OPTIONS = [
   { value: 'trakt' as const, description: 'Public lists', requiresConfig: true },
   {
     value: 'traktChart' as const,
-    description: 'Curated charts like Trending, Popular, etc.',
+    description: 'Trending, Popular, and more',
     requiresConfig: true,
   },
   {
@@ -53,7 +53,7 @@ const PROVIDER_OPTIONS = [
   },
   {
     value: 'stevenlu' as const,
-    description: 'Popular movies list (updated daily)',
+    description: 'Popular movies, updated daily',
     requiresConfig: false,
   },
 ];
@@ -84,9 +84,9 @@ function ProviderOptionCard({
               <p className="text-xs text-muted">{description}</p>
             </div>
             {showConfigBadge && !isConfigured && (
-              <Badge variant="warning" className="whitespace-nowrap">
-                <AlertCircle className="mr-1 h-3 w-3" />
-                Configuration missing
+              <Badge variant="warning">
+                <AlertCircle className="mr-1 h-4 w-4" />
+                Setup required
               </Badge>
             )}
           </div>
@@ -347,8 +347,8 @@ export function AddListDialog() {
           <DialogTitle>Add New List</DialogTitle>
           <DialogDescription>
             {currentStep === 1
-              ? 'Choose a provider to continue'
-              : `Configure your ${getProviderName(provider)} list`}
+              ? 'Select a provider'
+              : `Configure ${getProviderName(provider)} list`}
           </DialogDescription>
         </DialogHeader>
 
@@ -409,12 +409,10 @@ export function AddListDialog() {
                     }}
                   />
                   {isTraktChart(provider) && (
-                    <p className="text-xs text-muted">
-                      Name is auto-generated based on your chart selection (you can edit it)
-                    </p>
+                    <p className="text-xs text-muted">Auto-generated — editable</p>
                   )}
                   {isStevenLu(provider) && (
-                    <p className="text-xs text-muted">Default name provided (you can edit it)</p>
+                    <p className="text-xs text-muted">Default name — editable</p>
                   )}
                 </div>
 
@@ -505,17 +503,13 @@ export function AddListDialog() {
                     max="50"
                     required
                   />
-                  <p className="text-xs text-muted">
-                    Maximum number of items to fetch from the list (1-50). Default: 20
-                  </p>
+                  <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
                 </div>
 
                 {/* URL format info for Trakt List and MDBList */}
                 {!isTraktChart(provider) && !isStevenLu(provider) && (
                   <div className="space-y-2 rounded-md border bg-card/50 p-3">
-                    <p className="text-sm font-medium">
-                      {getProviderDisplayName(provider)} URL format:
-                    </p>
+                    <p className="text-sm font-medium">URL format:</p>
                     <div className="space-y-1.5 text-sm">
                       {isTrakt(provider) ? (
                         <>

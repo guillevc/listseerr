@@ -64,7 +64,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="mb-1 text-xs text-muted">Total active</p>
+            <p className="mb-1 text-xs text-muted">Active</p>
             <div className="text-2xl font-bold">{activeListsCount}</div>
           </CardContent>
         </Card>
@@ -77,7 +77,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
           <PackageSearch className="h-4 w-4 text-muted" />
         </CardHeader>
         <CardContent>
-          <p className="mb-1 text-xs text-muted">All time</p>
+          <p className="mb-1 text-xs text-muted">Total</p>
           <div className="text-2xl font-bold text-green-600">
             {dashboardStats?.totalRequestedItems ?? '-'}
           </div>
