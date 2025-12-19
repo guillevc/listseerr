@@ -1,10 +1,17 @@
 import { useState, useMemo } from 'react';
 import { Link, useRouterState, useNavigate } from '@tanstack/react-router';
-import { Menu, ExternalLink, LogOut, ChevronRight } from 'lucide-react';
+import { Menu, ExternalLink, LogOut, ChevronRight, User, Settings } from 'lucide-react';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
 import { JellyseerrStatusIndicator, StatusDot } from './JellyseerrStatusIndicator';
@@ -179,27 +186,44 @@ function JellyseerrSection({
   );
 }
 
-function LogoutButton({ mobile = false, onClick }: { mobile?: boolean; onClick?: () => void }) {
-  const { logout } = useAuth();
+function UserDropdown() {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    onClick?.();
     void logout().then(() => {
       void navigate({ to: '/login' });
     });
   };
 
   return (
-    <Button
-      variant="ghost"
-      size={mobile ? 'default' : 'sm'}
-      onClick={handleLogout}
-      className={cn(mobile && 'w-full justify-start')}
-    >
-      <LogOut className="h-4 w-4" />
-      {mobile && <span className="ml-2">Logout</span>}
-    </Button>
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <span>{user?.username}</span>
+          <User className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Link to="/settings/account">
+            <User className="mr-2 h-4 w-4" />
+            Account
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/settings/general">
+            <Settings className="mr-2 h-4 w-4" />
+            Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -236,7 +260,16 @@ function MobileNav({
   jellyseerrUrl?: string;
   jellyseerrRequests: JellyseerrRequests | null;
 }) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const closeMenu = () => onOpenChange(false);
+
+  const handleLogout = () => {
+    closeMenu();
+    void logout().then(() => {
+      void navigate({ to: '/login' });
+    });
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
@@ -261,8 +294,41 @@ function MobileNav({
             onClick={closeMenu}
             mobile
           />
-          <div className="mt-4 border-t pt-4">
-            <LogoutButton mobile onClick={closeMenu} />
+          <div className="mt-4 flex flex-col gap-2 border-t pt-4">
+            <div className="px-3 py-2 text-sm font-medium text-muted">{user?.username}</div>
+            <Button
+              variant="ghost"
+              size="default"
+              asChild
+              className="w-full justify-start"
+              onClick={closeMenu}
+            >
+              <Link to="/settings/account">
+                <User className="mr-2 h-4 w-4" />
+                Account
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="default"
+              asChild
+              className="w-full justify-start"
+              onClick={closeMenu}
+            >
+              <Link to="/settings/general">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="default"
+              onClick={handleLogout}
+              className="w-full justify-start"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Log out
+            </Button>
           </div>
         </div>
       </SheetContent>
@@ -297,7 +363,7 @@ export function Navigation() {
             </div>
             <ThemeToggle />
             <div className="hidden md:block">
-              <LogoutButton />
+              <UserDropdown />
             </div>
             <Button
               variant="ghost"

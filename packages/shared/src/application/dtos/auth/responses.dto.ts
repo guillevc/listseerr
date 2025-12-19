@@ -51,3 +51,11 @@ export interface ValidateSessionResponse {
 export interface LogoutSessionResponse {
   success: boolean;
 }
+
+/**
+ * UpdateUserCredentialsResponse
+ * Returns the updated user
+ */
+export interface UpdateUserCredentialsResponse {
+  user: UserDTO;
+}

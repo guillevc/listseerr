@@ -1,4 +1,4 @@
-import { Settings, Key, Clock, SlidersHorizontal, AlertCircle } from 'lucide-react';
+import { Settings, Key, Clock, SlidersHorizontal, AlertCircle, User } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '../../lib/trpc';
@@ -36,9 +36,12 @@ const settingsCategories: SettingsCategory[] = [
     icon: <Clock className="h-4 w-4" />,
     path: '/settings/automatic-processing',
   },
-  // Future categories can be added here:
-  // { id: 'application', name: 'Application', icon: <Cog className="h-4 w-4" />, path: '/settings/application' },
-  // { id: 'account', name: 'Account', icon: <User className="h-4 w-4" />, path: '/settings/account' },
+  {
+    id: 'account',
+    name: 'Account',
+    icon: <User className="h-4 w-4" />,
+    path: '/settings/account',
+  },
 ];
 
 interface SettingsSidebarProps {

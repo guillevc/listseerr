@@ -22,3 +22,9 @@ export interface LoginUserPrimitive {
   password: PasswordPrimitive;
   rememberMe: boolean;
 }
+
+export interface UpdateUserCredentialsPrimitive {
+  currentPassword: PasswordPrimitive;
+  newUsername?: UsernamePrimitive;
+  newPassword?: PasswordPrimitive;
+}

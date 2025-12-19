@@ -11,6 +11,7 @@ import type {
   PasswordPrimitive,
   RegisterUserPrimitive,
   LoginUserPrimitive,
+  UpdateUserCredentialsPrimitive,
 } from '../../domain/types/auth.types';
 
 /**
@@ -56,3 +57,17 @@ export const loginUserSchema = z.object({
   password: passwordSchema,
   rememberMe: z.boolean().default(false),
 }) satisfies z.ZodType<LoginUserPrimitive>;
+
+/**
+ * Update user credentials schema.
+ * At least one of newUsername or newPassword must be provided.
+ */
+export const updateUserCredentialsSchema = z
+  .object({
+    currentPassword: passwordSchema,
+    newUsername: usernameSchema.optional(),
+    newPassword: passwordSchema.optional(),
+  })
+  .refine((data) => data.newUsername || data.newPassword, {
+    message: 'At least one of new username or new password must be provided',
+  }) satisfies z.ZodType<UpdateUserCredentialsPrimitive>;

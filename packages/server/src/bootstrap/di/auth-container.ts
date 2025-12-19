@@ -14,12 +14,14 @@ import { RegisterUserUseCase } from '@/server/application/use-cases/auth/registe
 import { LoginUserUseCase } from '@/server/application/use-cases/auth/login-user.usecase';
 import { ValidateSessionUseCase } from '@/server/application/use-cases/auth/validate-session.usecase';
 import { LogoutSessionUseCase } from '@/server/application/use-cases/auth/logout-session.usecase';
+import { UpdateUserCredentialsUseCase } from '@/server/application/use-cases/auth/update-user-credentials.usecase';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   RegisterUserCommand,
   LoginUserCommand,
   ValidateSessionCommand,
   LogoutSessionCommand,
+  UpdateUserCredentialsCommand,
 } from 'shared/application/dtos/auth/commands.dto';
 import type {
   CheckSetupStatusResponse,
@@ -27,6 +29,7 @@ import type {
   LoginUserResponse,
   ValidateSessionResponse,
   LogoutSessionResponse,
+  UpdateUserCredentialsResponse,
 } from 'shared/application/dtos/auth/responses.dto';
 
 /**
@@ -55,6 +58,10 @@ export class AuthContainer {
   public readonly loginUserUseCase: IUseCase<LoginUserCommand, LoginUserResponse>;
   public readonly validateSessionUseCase: IUseCase<ValidateSessionCommand, ValidateSessionResponse>;
   public readonly logoutSessionUseCase: IUseCase<LogoutSessionCommand, LogoutSessionResponse>;
+  public readonly updateUserCredentialsUseCase: IUseCase<
+    UpdateUserCredentialsCommand,
+    UpdateUserCredentialsResponse
+  >;
 
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate infrastructure layer (adapters)
@@ -102,6 +109,12 @@ export class AuthContainer {
       new LogoutSessionUseCase(this.sessionRepository, this.logger),
       this.logger,
       'LogoutSessionUseCase'
+    );
+
+    this.updateUserCredentialsUseCase = new LoggingUseCaseDecorator(
+      new UpdateUserCredentialsUseCase(this.userRepository, this.passwordService, this.logger),
+      this.logger,
+      'UpdateUserCredentialsUseCase'
     );
   }
 }

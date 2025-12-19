@@ -11,6 +11,7 @@ import type {
   SessionTokenPrimitive,
   RegisterUserPrimitive,
   LoginUserPrimitive,
+  UpdateUserCredentialsPrimitive,
 } from 'shared/domain/types/auth.types';
 
 /**
@@ -47,4 +48,12 @@ export interface ValidateSessionCommand {
  */
 export interface LogoutSessionCommand {
   token: SessionTokenPrimitive;
+}
+
+/**
+ * UpdateUserCredentialsCommand
+ * Used to update user's username and/or password
+ */
+export interface UpdateUserCredentialsCommand extends UpdateUserCredentialsPrimitive {
+  userId: number;
 }

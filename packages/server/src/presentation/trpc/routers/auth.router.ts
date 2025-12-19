@@ -7,14 +7,20 @@ import type {
   LoginUserCommand,
   ValidateSessionCommand,
   LogoutSessionCommand,
+  UpdateUserCredentialsCommand,
 } from 'shared/application/dtos/auth/commands.dto';
 import type {
   RegisterUserResponse,
   LoginUserResponse,
   ValidateSessionResponse,
   LogoutSessionResponse,
+  UpdateUserCredentialsResponse,
 } from 'shared/application/dtos/auth/responses.dto';
-import { registerUserSchema, loginUserSchema } from 'shared/presentation/schemas/auth.schema';
+import {
+  registerUserSchema,
+  loginUserSchema,
+  updateUserCredentialsSchema,
+} from 'shared/presentation/schemas/auth.schema';
 
 export interface AuthRouterDeps {
   checkSetupStatusUseCase: IUseCase<void, CheckSetupStatusResponse>;
@@ -22,6 +28,10 @@ export interface AuthRouterDeps {
   loginUserUseCase: IUseCase<LoginUserCommand, LoginUserResponse>;
   validateSessionUseCase: IUseCase<ValidateSessionCommand, ValidateSessionResponse>;
   logoutSessionUseCase: IUseCase<LogoutSessionCommand, LogoutSessionResponse>;
+  updateUserCredentialsUseCase: IUseCase<
+    UpdateUserCredentialsCommand,
+    UpdateUserCredentialsResponse
+  >;
 }
 
 /**
@@ -84,5 +94,18 @@ export function createAuthRouter(deps: AuthRouterDeps) {
     logout: publicProcedure.input(z.object({ token: z.string() })).mutation(async ({ input }) => {
       return await deps.logoutSessionUseCase.execute(input);
     }),
+
+    /**
+     * Update user credentials (username and/or password)
+     * Requires current password for security
+     */
+    updateCredentials: publicProcedure
+      .input(updateUserCredentialsSchema)
+      .mutation(async ({ input, ctx }) => {
+        return await deps.updateUserCredentialsUseCase.execute({
+          ...input,
+          userId: ctx.userId,
+        });
+      }),
   });
 }
