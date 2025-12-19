@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Eye, EyeOff, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, HelpCircle, RefreshCw } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -30,6 +30,22 @@ export function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPasswordHelp, setShowPasswordHelp] = useState(false);
+  const helpTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleHelpMouseEnter = () => {
+    if (helpTimeoutRef.current) {
+      clearTimeout(helpTimeoutRef.current);
+      helpTimeoutRef.current = null;
+    }
+    setShowPasswordHelp(true);
+  };
+
+  const handleHelpMouseLeave = () => {
+    helpTimeoutRef.current = setTimeout(() => {
+      setShowPasswordHelp(false);
+    }, 150);
+  };
 
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: (data) => {
@@ -79,7 +95,6 @@ export function LoginPage() {
         <Card className="w-full">
           <CardHeader className="text-center">
             <CardTitle>Sign In</CardTitle>
-            <CardDescription>Welcome back</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -136,15 +151,33 @@ export function LoginPage() {
                   <span>Remember me</span>
                 </label>
 
-                <TooltipProvider>
-                  <Tooltip>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip open={showPasswordHelp}>
                     <TooltipTrigger asChild>
-                      <span className="cursor-not-allowed text-sm text-muted opacity-50">
-                        Forgot password?
+                      <span
+                        className="inline-flex cursor-help items-center gap-1 text-sm"
+                        onMouseEnter={handleHelpMouseEnter}
+                        onMouseLeave={handleHelpMouseLeave}
+                      >
+                        <HelpCircle className="h-3.5 w-3.5" />
+                        Forgot credentials?
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Password recover not available. Try modifying the SQL database file.</p>
+                    <TooltipContent
+                      className="border-card-active max-w-xs border"
+                      onMouseEnter={handleHelpMouseEnter}
+                      onMouseLeave={handleHelpMouseLeave}
+                    >
+                      <div className="space-y-2 text-xs">
+                        <p className="text-muted">Docker:</p>
+                        <code className="block rounded bg-card px-3 py-2 font-mono text-foreground">
+                          docker exec -it listseerr bun /app/dist/reset-password.js
+                        </code>
+                        <p className="text-muted">Locally:</p>
+                        <code className="block rounded bg-card px-3 py-2 font-mono text-foreground">
+                          bun run password:reset
+                        </code>
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
