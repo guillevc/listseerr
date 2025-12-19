@@ -8,7 +8,7 @@
 
 # Listseerr
 
-**Automatically sync your favorite Movie & TV lists to Jellyseerr**
+**Request movies & shows in Jellyseerr from your favorite lists**
 
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
 [![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr?include_prereleases)](https://github.com/guillevc/listseerr/releases)

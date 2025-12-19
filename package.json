@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "version": "0.1.0",
-  "description": "Automatic Jellyseerr requests from your favorite lists",
+  "description": "Request movies & shows in Jellyseerr from your favorite lists",
   "author": "Guillermo Alfonso Varela Chouciño <guillevch@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/guillevc/listseerr",
