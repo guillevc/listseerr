@@ -11,7 +11,7 @@ import {
 import { Input } from '@/client/components/ui/input';
 import { Label } from '@/client/components/ui/label';
 import { Button } from '@/client/components/ui/button';
-import { useAuth } from '@/client/contexts/auth.context';
+import { useAuth } from '@/client/hooks/use-auth';
 import { trpc } from '@/client/lib/trpc';
 import { registerUserSchema } from 'shared/presentation/schemas/auth.schema';
 

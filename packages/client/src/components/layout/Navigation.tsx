@@ -16,7 +16,7 @@ import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
 import { JellyseerrStatusIndicator, StatusDot } from './JellyseerrStatusIndicator';
 import { getUserFacingUrl } from 'shared/domain/logic/jellyseerr.logic';
-import { useAuth } from '@/client/contexts/auth.context';
+import { useAuth } from '@/client/hooks/use-auth';
 
 // Types
 type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';

@@ -14,7 +14,7 @@ import {
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
-import { useAuth } from '../../contexts/auth.context';
+import { useAuth } from '../../hooks/use-auth';
 import { updateUserCredentialsSchema } from 'shared/presentation/schemas/auth.schema';
 
 export function AccountSettings() {

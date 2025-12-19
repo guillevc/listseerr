@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { UserDTO } from 'shared/application/dtos/core/user.dto';
 import { trpc } from '@/client/lib/trpc';
+import { AuthContext, type AuthContextValue } from './auth-context-value';
 
 const SESSION_COOKIE_NAME = 'session_token';
 
@@ -27,17 +28,6 @@ function setCookie(name: string, value: string, days?: number): void {
 function deleteCookie(name: string): void {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
-
-interface AuthContextValue {
-  user: UserDTO | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (token: string, user: UserDTO, rememberMe: boolean) => void;
-  logout: () => Promise<void>;
-  sessionToken: string | null;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserDTO | null>(null);
@@ -119,12 +109,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth(): AuthContextValue {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

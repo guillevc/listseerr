@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/client/components/ui/tooltip';
-import { useAuth } from '@/client/contexts/auth.context';
+import { useAuth } from '@/client/hooks/use-auth';
 import { trpc } from '@/client/lib/trpc';
 import { loginUserSchema } from 'shared/presentation/schemas/auth.schema';
 
