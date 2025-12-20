@@ -18,18 +18,11 @@
 
 > [!IMPORTANT]
 > This project is in early development. I use it daily and fix issues as I find them, but you may encounter bugs.
->
-> Feedback is welcome! [Open an issue](https://github.com/guillevc/listseerr/issues/new) to report bugs or share ideas.
+> [Open an issue](https://github.com/guillevc/listseerr/issues/new) to report problems or share ideas.
 
 ## How It Works
 
 Point Listseerr at your favorite curated lists and it automatically requests those movies and shows in Jellyseerr. Set it and forget it.
-
-> [!TIP]
-> Create a dedicated Jellyseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
-
-> [!NOTE]
-> Listseerr skips previously rejected or already available media, so you won't see duplicate requests.
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
@@ -43,6 +36,12 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
 └──────────┘                           │   User    │
                                        └───────────┘
 ```
+
+> [!TIP]
+> Create a dedicated Jellyseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
+
+> [!NOTE]
+> Listseerr skips previously rejected or already available media, so you won't see duplicate requests.
 
 ## Screenshots
 
@@ -58,11 +57,6 @@ _Coming soon_
 
 ## Supported Providers
 
-> [!NOTE]
-> Listseerr fetches list data directly from each provider's API. Most require a free API key.
->
-> Using official APIs ensures reliable integration and faster processing.
-
 | Provider                | Status       | Requirements                                        |
 | ----------------------- | ------------ | --------------------------------------------------- |
 | **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
@@ -72,7 +66,8 @@ _Coming soon_
 | **IMDB**                | 🗓️ Planned   | —                                                   |
 | **Letterboxd**          | 🗓️ Planned   | —                                                   |
 | **TheMovieDB**          | 🗓️ Planned   | —                                                   |
-| **TVDB**                | 🗓️ Planned   | —                                                   |
+
+Listseerr uses official APIs for reliable integration and faster processing.
 
 **Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
 
@@ -83,9 +78,17 @@ _Coming soon_
 >
 > ```bash
 > mkdir listseerr && cd listseerr
+>
+> # Download config files
 > wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/compose.yaml
 > wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/.env.example -O .env
+>
+> # Edit .env and set ENCRYPTION_KEY (generate with: openssl rand -hex 32)
+>
+> docker compose up -d
 > ```
+>
+> Open http://localhost:3000 and start adding lists.
 
 ### 1. Create `compose.yaml`
 
@@ -127,7 +130,7 @@ Open [http://localhost:3000](http://localhost:3000) and start adding lists.
 
 ## Configuration
 
-| Variable         | Description                                                                            | Docker                   | Local                 |
+| Variable         | Description                                                                            | Docker                   | Local build           |
 | ---------------- | -------------------------------------------------------------------------------------- | ------------------------ | --------------------- |
 | `ENCRYPTION_KEY` | **Required.** Generate with `openssl rand -hex 32`                                     | —                        | —                     |
 | `PORT`           | Server port                                                                            | `3000`                   | `3000`                |
@@ -138,7 +141,7 @@ Open [http://localhost:3000](http://localhost:3000) and start adding lists.
 
 Override defaults via `.env` file or Docker environment variables.
 
-## Running Locally
+## Development
 
 **Prerequisites:** [Bun](https://bun.sh) (version in `.bun-version`)
 
@@ -146,7 +149,7 @@ Override defaults via `.env` file or Docker environment variables.
 > [mise](https://mise.jdx.dev/) users can run `mise install` to set up Bun automatically.
 
 <details>
-<summary><strong>Development</strong></summary>
+<summary><strong>Dev server </strong></summary>
 
 ```bash
 git clone https://github.com/guillevc/listseerr.git
@@ -166,7 +169,7 @@ bun run dev
 </details>
 
 <details>
-<summary><strong>Production</strong></summary>
+<summary><strong>Production build</strong></summary>
 
 ```bash
 bun install
@@ -181,7 +184,7 @@ bun run start
 </details>
 
 <details>
-<summary><strong>Docker</strong></summary>
+<summary><strong>Docker build</strong></summary>
 
 ```bash
 docker build -t listseerr .
@@ -221,7 +224,7 @@ Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)
 
 ## Acknowledgments
 
-- Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
+Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
 
 ## License
 
