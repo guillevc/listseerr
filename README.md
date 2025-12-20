@@ -45,7 +45,14 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
 
 ## Screenshots
 
-_Coming soon_
+<p>
+  <img src="docs/screenshots/dashboard.png" width="49%">
+  <img src="docs/screenshots/lists.png" width="49%">
+</p>
+<p>
+  <img src="docs/screenshots/add-list.png" width="49%">
+  <img src="docs/screenshots/settings.png" width="49%">
+</p>
 
 ## Features
 
