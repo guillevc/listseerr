@@ -80,7 +80,7 @@ export class ProviderVO {
   private constructor(private readonly value: ProviderType) {}
 
   static create(value: ProviderType): ProviderVO {
-    return new ProviderVO(value);  // Already validated by schema
+    return new ProviderVO(value); // Already validated by schema
   }
 
   static fromPersistence(value: string): ProviderVO {
@@ -88,7 +88,9 @@ export class ProviderVO {
     return new ProviderVO(value as ProviderType);
   }
 
-  getValue(): ProviderType { return this.value; }
+  getValue(): ProviderType {
+    return this.value;
+  }
 }
 ```
 
