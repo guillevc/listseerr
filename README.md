@@ -116,8 +116,10 @@ PGID=1000
 PORT=3000
 LOG_LEVEL=info
 
-# Generate with `openssl rand -hex 32`
-ENCRYPTION_KEY=
+# Timezone in IANA format (e.g. Europe/Madrid). Defaults to UTC.
+TZ=UTC
+
+ENCRYPTION_KEY=# (REQUIRED) Generate with: `openssl rand -hex 32`
 ```
 
 ### 3. Start Listseerr
