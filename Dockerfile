@@ -28,6 +28,7 @@ ENV NODE_ENV=production \
     MIGRATIONS_FOLDER=/app/migrations \
     TZ=UTC
 
+# Default server listening port (configurable via PORT env var)
 EXPOSE 3000/tcp
 
 CMD ["bun", "./dist/index.js"]
