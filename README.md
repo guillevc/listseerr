@@ -212,7 +212,7 @@ bun run password:reset
 - [x] Dark/Light theme
 - [x] Docker support
 - [ ] More list providers
-- [ ] Notifications (Discord, webhooks)
+- [ ] Notifications
 
 Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)
 
