@@ -10,11 +10,11 @@ export const env = createEnv({
     PORT: z.coerce.number().default(3000),
     HOST: z.string().default('0.0.0.0'),
     DATABASE_PATH: z.string().default('./data/listseerr.db'),
-    MIGRATIONS_FOLDER: z.string().default('./migrations'),
+    MIGRATIONS_FOLDER: z.string().default('./packages/server/migrations'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('debug'),
     ENCRYPTION_KEY: z.string().min(1, 'ENCRYPTION_KEY is required for encrypting API keys'),
-    TZ: z.string().default('UTC'),
+    TZ: z.string().default(Intl.DateTimeFormat().resolvedOptions().timeZone),
   },
 
   /**

@@ -96,10 +96,9 @@ services:
     container_name: listseerr
     user: ${PUID:-1000}:${PGID:-1000}
     ports:
-      - '3000:3000'
-    environment:
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-      - LOG_LEVEL=info
+      - 3000:${PORT:-3000}
+    env_file:
+      - .env
     volumes:
       - ./data:/app/data
     restart: unless-stopped
@@ -107,13 +106,14 @@ services:
 
 ### 2. Create `.env`
 
-```bash
+```properties
 PUID=1000
 PGID=1000
-LOG_LEVEL=info
-DATABASE_PATH=/app/data/listseerr.db
 
-# Generate with: openssl rand -hex 32
+PORT=3000
+LOG_LEVEL=info
+
+# Generate with `openssl rand -hex 32`
 ENCRYPTION_KEY=
 ```
 
@@ -127,13 +127,16 @@ Open [http://localhost:3000](http://localhost:3000) and start adding lists.
 
 ## Configuration
 
-| Variable         | Description                                                                                        | Default                  |
-| ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
-| `ENCRYPTION_KEY` | **Required.** 32-byte hex key for encrypting API credentials. Generate with `openssl rand -hex 32` | —                        |
-| `PORT`           | Server port                                                                                        | `3000`                   |
-| `DATABASE_PATH`  | Path to SQLite database                                                                            | `/app/data/listseerr.db` |
-| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)                                                   | `info`                   |
-| `PUID` / `PGID`  | User/Group ID for Docker volumes                                                                   | `1000`                   |
+| Variable         | Description                                                                            | Docker                   | Local                 |
+| ---------------- | -------------------------------------------------------------------------------------- | ------------------------ | --------------------- |
+| `ENCRYPTION_KEY` | **Required.** Generate with `openssl rand -hex 32`                                     | —                        | —                     |
+| `PORT`           | Server port                                                                            | `3000`                   | `3000`                |
+| `DATABASE_PATH`  | Path to SQLite database                                                                | `/app/data/listseerr.db` | `./data/listseerr.db` |
+| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)                                       | `info`                   | `debug`               |
+| `TZ`             | Timezone ([IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) | `UTC`                    | System                |
+| `PUID` / `PGID`  | User/Group ID for Docker volumes                                                       | `1000`                   | N/A                   |
+
+Override defaults via `.env` file or Docker environment variables.
 
 ## Running Locally
 
