@@ -1,6 +1,6 @@
-# Database Migrations Guide
+# MIGRATIONS.md
 
-## Project Migration Setup
+## Project Migration Guide
 
 ### Structure
 
