@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="packages/client/public/assets/listseerr-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="packages/client/public/assets/listseerr-light.png">
-  <img alt="Listseerr" src="packages/client/public/assets/listseerr-light.png" width="150">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/icons/listseerr-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/icons/listseerr-light.png">
+  <img alt="Listseerr" src="docs/icons/listseerr-light.png" width="150">
 </picture>
 
 # Listseerr
@@ -178,7 +178,7 @@ bun run start
 </details>
 
 <details>
-<summary><strong>Docker (production local build)</strong></summary>
+<summary><strong>Docker</strong></summary>
 
 ```bash
 docker build -t listseerr .
