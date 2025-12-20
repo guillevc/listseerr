@@ -17,22 +17,19 @@
 </div>
 
 > [!IMPORTANT]
-> This project is in its early development stages.
-> Although I try to fix everything I encounter as I am using the tool myself, you may encounter some bugs or areas for improvement.
+> This project is in early development. I use it daily and fix issues as I find them, but you may encounter bugs.
 >
-> If you have something to share, please go ahead — it will be greatly appreciated! You can [open an issue](https://github.com/guillevc/listseerr/issues/new) if you found a bug or want to share an idea.
+> Feedback is welcome! [Open an issue](https://github.com/guillevc/listseerr/issues/new) to report bugs or share ideas.
 
 ## How It Works
 
-Point Listseerr at your favorite curated lists, and it automatically requests those movies and shows in Jellyseerr. Set it and forget it!
+Point Listseerr at your favorite curated lists and it automatically requests those movies and shows in Jellyseerr. Set it and forget it.
 
 > [!TIP]
-> It's recommended to create a dedicated "listseerr" user in Jellyseerr without auto-approve permissions, this way you can manually accept or reject requests in Jellyseerr with your admin account.
-> Avoids media bloat.
+> Create a dedicated Jellyseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
 
 > [!NOTE]
-> Listseerr won't request previously rejected or already available media in your Plex/Jellyfin instance.
-> This avoids having to reject multiple times the same media and lets you focus on what's new.
+> Listseerr skips previously rejected or already available media, so you won't see duplicate requests.
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
@@ -49,57 +46,48 @@ Point Listseerr at your favorite curated lists, and it automatically requests th
 
 ## Screenshots
 
-<!-- Screenshots coming soon -->
-
-_Screenshots coming soon_
+_Coming soon_
 
 ## Features
 
-- **Multiple List Providers** — Import from Trakt, MDBList, StevenLu, and more
-- **Scheduled Processing** — Set it once, runs automatically on your schedule
-- **Docker Ready** — Up and running in minutes with Docker Compose
+- **Multiple List Providers** — Trakt, MDBList, StevenLu, and more
+- **Scheduled Processing** — Set it once, runs automatically
+- **Docker Ready** — Up and running in minutes
 - **Self-Hosted** — Your data stays on your server
 - **Dark & Light Theme** — Easy on the eyes, day or night
 
 ## Supported Providers
 
 > [!NOTE]
-> Listseerr requests list information directly from the provider's API. Usually, this requires creating an account and obtaining a free API key.
+> Listseerr fetches list data directly from each provider's API. Most require a free API key.
 >
-> Relying in official APIs allows for a solid integration, mantainability and much faster processing times, instead of relying on web crawling or other sources.
+> Using official APIs ensures reliable integration and faster processing.
 
-| Provider                                                                                             | Status       | Requirements                                                           |
-| ---------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
-| **Trakt**                                                                                            | ✅ Supported | 🔑 Free [Trakt API Client ID key](https://trakt.tv/oauth/applications) |
-| **MDBList**                                                                                          | ✅ Supported | 🔑 Free [MDBList API key](https://mdblist.com/preferences/)            |
-| **StevenLu**                                                                                         | ✅ Supported | None                                                                   |
-| [**StevenLu List variations**](https://github.com/sjlu/popular-movies?tab=readme-ov-file#all-movies) | 🗓️ Planned   | None                                                                   |
-| **IMDB**                                                                                             | 🗓️ Planned   |                                                                        |
-| **Letterboxd**                                                                                       | 🗓️ Planned   |                                                                        |
-| **TheMovieDB**                                                                                       | 🗓️ Planned   |                                                                        |
-| **TVDB**                                                                                             | 🗓️ Planned   |                                                                        |
+| Provider                | Status       | Requirements                                        |
+| ----------------------- | ------------ | --------------------------------------------------- |
+| **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
+| **MDBList**             | ✅ Supported | [Free API key](https://mdblist.com/preferences/)    |
+| **StevenLu**            | ✅ Supported | None                                                |
+| **StevenLu variations** | 🗓️ Planned   | None                                                |
+| **IMDB**                | 🗓️ Planned   | —                                                   |
+| **Letterboxd**          | 🗓️ Planned   | —                                                   |
+| **TheMovieDB**          | 🗓️ Planned   | —                                                   |
+| **TVDB**                | 🗓️ Planned   | —                                                   |
 
-**Want another provider?** [Request or vote for new providers](https://github.com/guillevc/listseerr/discussions/1#discussion-9264033)
+**Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
 
 ## Quick Start
 
-The fastest way to get started is with Docker Compose.
-
 > [!TIP]
-> You can download directly the files from the [deploy](delploy) folder and modify them afterwards:
+> Download the config files directly:
 >
 > ```bash
-> wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/compose.yaml &&\
-> wget https://raw.githubusercontent.com/guillevc/listseerr/refs/heads/master/deploy/.env.example -O .env
+> mkdir listseerr && cd listseerr
+> wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/compose.yaml
+> wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/.env.example -O .env
 > ```
 
-### 1. Create your project directory
-
-```bash
-mkdir listseerr && cd listseerr
-```
-
-### 2. Create a `compose.yaml` file
+### 1. Create `compose.yaml`
 
 ```yaml
 services:
@@ -117,150 +105,99 @@ services:
     restart: unless-stopped
 ```
 
-### 3. Generate an encryption key and create `.env`
+### 2. Create `.env`
 
 ```bash
 PUID=1000
 PGID=1000
-
-# Server Configuration
-PORT=3000
 LOG_LEVEL=info
-
-# Database Configuration
 DATABASE_PATH=/app/data/listseerr.db
-# Generate a secure encryption key with openssl rand -hex 32
+
+# Generate with: openssl rand -hex 32
 ENCRYPTION_KEY=
 ```
 
-### 4. Start Listseerr
+### 3. Start Listseerr
 
 ```bash
 docker compose up -d
 ```
 
-**That's it!** Open [http://localhost:3000](http://localhost:3000) and start adding your lists.
-
-## Running Locally
-
-### Prerequisites
-
-> [!TIP]
-> If you are a [mise](https://mise.jdx.dev/) user, you can clone the repo and run `mise install` in the root of the project.
-> It will automatically install the version defined in `.bun-version` and add it to your `$PATH`.
-
-- [Bun](https://bun.sh) (min version in ![.bun-version](.bun-version))
-
-<details>
-<summary><strong>Development Mode</strong></summary>
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/guillevc/listseerr.git
-cd listseerr
-
-# Install dependencies
-bun install
-
-# Set up environment variables
-cp .env.example .env.dev
-# Edit .env.dev and set your ENCRYPTION_KEY (generate with: openssl rand -hex 32)
-```
-
-### Start Development Servers
-
-You'll need two terminal windows:
-
-**Terminal 1 — Backend:**
-
-```bash
-cd listseerr
-bun run dev:server
-```
-
-**Terminal 2 — Frontend:**
-
-```bash
-cd listseerr
-bun run dev:client
-```
-
-- Frontend: [http://localhost:5173](http://localhost:5173) (with hot reload)
-- Backend API: [http://localhost:3000](http://localhost:3000)
-
-</details>
-
-<details>
-<summary><strong>Production Mode (Local Build)</strong></summary>
-
-```bash
-cd listseerr
-
-# Install dependencies
-bun install
-
-# Build the application
-bun run build
-
-# Set up environment
-cp .env.example .env
-# Edit .env and configure your settings
-
-# Start the server
-bun run start
-```
-
-The application will be available at [http://localhost:3000](http://localhost:3000).
-
-</details>
-
-<details>
-<summary><strong>Building Docker Image Locally</strong></summary>
-  
-```bash
-cd listseerr
-
-# Build the image
-
-docker build -t listseerr .
-
-# Set up environment
-
-cp .env.docker.example .env.docker
-
-# Edit .env.docker and configure your settings
-
-# Run the container
-
-docker compose up -d
-
-````
-
-</details>
+Open [http://localhost:3000](http://localhost:3000) and start adding lists.
 
 ## Configuration
-
-These are the required ENV variables for running the project. All other settings can be tuned from the web app Settings page.
 
 | Variable         | Description                                                                                        | Default                  |
 | ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
 | `ENCRYPTION_KEY` | **Required.** 32-byte hex key for encrypting API credentials. Generate with `openssl rand -hex 32` | —                        |
 | `PORT`           | Server port                                                                                        | `3000`                   |
-| `DATABASE_PATH`  | Path to SQLite database file                                                                       | `/app/data/listseerr.db` |
-| `LOG_LEVEL`      | Logging verbosity (`debug`, `info`, `warn`, `error`)                                               | `info`                   |
-| `PUID` / `PGID`  | User/Group ID for Docker volume permissions                                                        | `1000`                   |
+| `DATABASE_PATH`  | Path to SQLite database                                                                            | `/app/data/listseerr.db` |
+| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)                                                   | `info`                   |
+| `PUID` / `PGID`  | User/Group ID for Docker volumes                                                                   | `1000`                   |
+
+## Running Locally
+
+**Prerequisites:** [Bun](https://bun.sh) (version in `.bun-version`)
+
+> [!TIP]
+> [mise](https://mise.jdx.dev/) users can run `mise install` to set up Bun automatically.
+
+<details>
+<summary><strong>Development</strong></summary>
+
+```bash
+git clone https://github.com/guillevc/listseerr.git
+cd listseerr
+bun install
+
+cp .env.example .env.dev
+# Edit .env.dev and set ENCRYPTION_KEY
+
+# Run both server and client
+bun run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+
+</details>
+
+<details>
+<summary><strong>Production</strong></summary>
+
+```bash
+bun install
+bun run build
+
+cp .env.example .env
+# Edit .env and set ENCRYPTION_KEY
+
+bun run start
+```
+
+</details>
+
+<details>
+<summary><strong>Docker (production local build)</strong></summary>
+
+```bash
+docker build -t listseerr .
+
+cp .env.docker.example .env.docker
+# Edit .env.docker
+
+docker compose up -d
+```
+
+</details>
 
 ## Password Recovery
-
-If you lose your password, reset it via terminal:
 
 **Docker:**
 
 ```bash
 docker exec -it listseerr bun /app/dist/reset-password.js
-````
+```
 
 **Local:**
 
@@ -268,20 +205,16 @@ docker exec -it listseerr bun /app/dist/reset-password.js
 bun run password:reset
 ```
 
-This generates a new random password and displays the credentials.
-
 ## Roadmap
 
-- [x] Core list syncing functionality
 - [x] Multiple provider support (Trakt, MDBList, StevenLu)
+- [x] Scheduled automatic processing
 - [x] Dark/Light theme
 - [x] Docker support
-- [x] Scheduled automatic syncing
-- [x] Sync history and logs
 - [ ] More list providers
 - [ ] Notifications (Discord, webhooks)
 
-Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)!
+Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)
 
 ## Acknowledgments
 
