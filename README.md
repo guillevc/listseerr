@@ -51,6 +51,8 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
   <a href="docs/screenshots/settings.png"><img src="docs/screenshots/settings.png" width="32%"></a>
 </p>
 
+[See more →](docs/screenshots)
+
 ## Features
 
 - **Multiple List Providers** — Trakt, MDBList, StevenLu, and more
