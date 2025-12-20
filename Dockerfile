@@ -24,8 +24,6 @@ RUN mkdir -p /app/data && chmod 775 /app/data
 
 # Environment variables
 ENV NODE_ENV=production \
-    PORT=3000 \
-    LOG_LEVEL=info \
     DATABASE_PATH=/app/data/listseerr.db \
     MIGRATIONS_FOLDER=/app/migrations
 

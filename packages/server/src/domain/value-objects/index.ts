@@ -16,7 +16,6 @@ export * from './list-name.vo';
 export * from './list-url.vo';
 export * from './trakt-client-id.vo';
 export * from './mdblist-api-key.vo';
-export * from './timezone.vo';
 export * from './media-type.vo';
 export * from './media-availability.vo';
 export * from './execution-status.vo';

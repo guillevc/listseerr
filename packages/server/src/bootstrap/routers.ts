@@ -45,7 +45,7 @@ const generalSettingsContainer = new GeneralSettingsContainer(db);
 const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
 const traktConfigContainer = new TraktConfigContainer(db);
 const mdbListConfigContainer = new MdbListConfigContainer(db);
-const authContainer = new AuthContainer(db);
+const authContainer = new AuthContainer(db, generalSettingsContainer.generalSettingsRepository);
 
 // Build routers
 export const listsRouter = createListsRouter(listsContainer);

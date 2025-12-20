@@ -20,14 +20,20 @@ class Scheduler {
   private jobs: Map<number, SchedulerJob> = new Map();
   private db: BunSQLiteDatabase<typeof schema> | null = null;
   private processAllListsCallback: (() => Promise<void>) | null = null;
+  private timezone: string = 'UTC';
 
   // Job ID for global automatic processing
   private readonly GLOBAL_PROCESSING_JOB_ID = 0;
 
-  initialize(db: BunSQLiteDatabase<typeof schema>, processAllListsCallback: () => Promise<void>) {
+  initialize(
+    db: BunSQLiteDatabase<typeof schema>,
+    processAllListsCallback: () => Promise<void>,
+    timezone: string
+  ) {
     this.db = db;
     this.processAllListsCallback = processAllListsCallback;
-    logger.info('Scheduler initialized');
+    this.timezone = timezone;
+    logger.info({ timezone }, 'Scheduler initialized');
   }
 
   async loadScheduledLists() {
@@ -40,30 +46,29 @@ class Scheduler {
       // Clear all existing jobs before reloading
       this.unscheduleAll();
 
-      // Get timezone and automatic processing settings
+      // Get automatic processing settings (timezone comes from env.TZ)
       const [settings] = await this.db
         .select()
         .from(generalSettings)
         .where(eq(generalSettings.userId, 1))
         .limit(1);
 
-      const timezone = settings?.timezone || 'UTC';
       const automaticProcessingEnabled = settings?.automaticProcessingEnabled || false;
       const automaticProcessingSchedule = settings?.automaticProcessingSchedule;
 
-      logger.info({ timezone }, 'Using timezone for scheduled jobs');
+      logger.info({ timezone: this.timezone }, 'Using timezone for scheduled jobs');
 
       // Schedule global automatic processing if enabled
       if (automaticProcessingEnabled && automaticProcessingSchedule) {
         logger.info(
           {
             schedule: automaticProcessingSchedule,
-            timezone,
+            timezone: this.timezone,
           },
           'Scheduling global automatic processing - all enabled lists will be processed sequentially'
         );
 
-        this.scheduleGlobalProcessing(automaticProcessingSchedule, timezone);
+        this.scheduleGlobalProcessing(automaticProcessingSchedule);
 
         logger.info(
           { activeJobs: this.jobs.size },
@@ -80,7 +85,7 @@ class Scheduler {
     }
   }
 
-  scheduleGlobalProcessing(cronExpression: string, timezone: string = 'UTC') {
+  scheduleGlobalProcessing(cronExpression: string) {
     // Remove existing global job if any
     this.unscheduleList(this.GLOBAL_PROCESSING_JOB_ID);
 
@@ -91,7 +96,7 @@ class Scheduler {
 
     try {
       const cronOptions: { timezone: string; name: string } = {
-        timezone,
+        timezone: this.timezone,
         name: `global-processing`,
       };
 
@@ -124,7 +129,7 @@ class Scheduler {
       logger.info(
         {
           cronExpression,
-          timezone,
+          timezone: this.timezone,
           nextRun: nextRun ? nextRun.toISOString() : 'N/A',
         },
         'Global automatic processing scheduled successfully'
@@ -176,7 +181,7 @@ class Scheduler {
 
 export const scheduler = new Scheduler();
 
-export class SchedulerService implements ISchedulerService {
+class SchedulerServiceAdapter implements ISchedulerService {
   async loadScheduledLists(): Promise<void> {
     await scheduler.loadScheduledLists();
   }
@@ -197,3 +202,6 @@ export class SchedulerService implements ISchedulerService {
     }));
   }
 }
+
+// Singleton instance of the scheduler service adapter
+export const schedulerService = new SchedulerServiceAdapter();

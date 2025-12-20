@@ -69,7 +69,6 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   InvalidMediaAvailabilityError: 'BAD_REQUEST',
   InvalidTraktChartTypeError: 'BAD_REQUEST',
   InvalidMediaTypeError: 'BAD_REQUEST',
-  InvalidTimezoneError: 'BAD_REQUEST',
   InvalidTraktMediaTypeError: 'BAD_REQUEST',
   InvalidExecutionStatusTransitionError: 'BAD_REQUEST',
   UrlDoesNotMatchProviderError: 'BAD_REQUEST',

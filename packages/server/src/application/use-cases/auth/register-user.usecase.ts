@@ -1,6 +1,7 @@
 import type { IUserRepository } from '@/server/application/repositories/user.repository.interface';
 import type { ISessionRepository } from '@/server/application/repositories/session.repository.interface';
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
+import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import type { IPasswordService } from '@/server/application/services/core/password.service.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { User } from '@/server/domain/entities/user.entity';
@@ -28,7 +29,7 @@ export class RegisterUserUseCase implements IUseCase<RegisterUserCommand, Regist
     private readonly userRepository: IUserRepository,
     private readonly sessionRepository: ISessionRepository,
     private readonly generalSettingsRepository: IGeneralSettingsRepository,
-    private readonly scheduler: { loadScheduledLists: () => Promise<void> },
+    private readonly scheduler: ISchedulerService,
     private readonly passwordService: IPasswordService,
     private readonly logger: ILogger
   ) {}

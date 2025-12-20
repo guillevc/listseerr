@@ -1,5 +1,5 @@
 // Infrastructure
-import { SchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { schedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
@@ -25,7 +25,6 @@ import type { ReloadSchedulerResponse } from 'shared/application/dtos/scheduler/
  */
 export class SchedulerContainer {
   // Infrastructure (private)
-  private readonly schedulerService: SchedulerService;
   private readonly logger: LoggerService;
 
   // Application (public)
@@ -37,17 +36,16 @@ export class SchedulerContainer {
 
   constructor() {
     // 1. Instantiate infrastructure layer
-    this.schedulerService = new SchedulerService();
     this.logger = new LoggerService('scheduler');
 
-    // 2. Instantiate use cases wrapped with logging decorator
+    // 2. Instantiate use cases wrapped with logging decorator (using singleton schedulerService)
     this.getScheduledJobsUseCase = new LoggingUseCaseDecorator(
-      new GetScheduledJobsUseCase(this.schedulerService),
+      new GetScheduledJobsUseCase(schedulerService),
       this.logger,
       'GetScheduledJobsUseCase'
     );
     this.reloadSchedulerUseCase = new LoggingUseCaseDecorator(
-      new ReloadSchedulerUseCase(this.schedulerService),
+      new ReloadSchedulerUseCase(schedulerService),
       this.logger,
       'ReloadSchedulerUseCase'
     );

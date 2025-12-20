@@ -3,7 +3,6 @@ import { eq } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { generalSettings } from '@/server/infrastructure/db/schema';
 import { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
 
 export class DrizzleGeneralSettingsRepository implements IGeneralSettingsRepository {
@@ -31,7 +30,6 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
       const [row] = await this.db
         .update(generalSettings)
         .set({
-          timezone: entity.timezone.getValue(),
           automaticProcessingEnabled: entity.automaticProcessingEnabled,
           automaticProcessingSchedule: entity.automaticProcessingSchedule,
           updatedAt: entity.updatedAt,
@@ -46,7 +44,6 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
         .insert(generalSettings)
         .values({
           userId: entity.userId,
-          timezone: entity.timezone.getValue(),
           automaticProcessingEnabled: entity.automaticProcessingEnabled,
           automaticProcessingSchedule: entity.automaticProcessingSchedule,
         })
@@ -71,12 +68,12 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
 
   /**
    * Convert Drizzle row to GeneralSettings domain entity
+   * Note: Timezone is no longer stored in DB - comes from TZ env var
    */
   private toDomain(row: typeof generalSettings.$inferSelect): GeneralSettings {
     return new GeneralSettings({
       id: row.id,
       userId: row.userId,
-      timezone: TimezoneVO.fromPersistence(row.timezone),
       automaticProcessingEnabled: row.automaticProcessingEnabled,
       automaticProcessingSchedule: row.automaticProcessingSchedule || null,
       createdAt: row.createdAt || new Date(),

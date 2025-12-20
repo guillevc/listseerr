@@ -16,11 +16,11 @@ export interface GeneralSettingsRouterDeps {
     UpdateGeneralSettingsCommand,
     UpdateGeneralSettingsResponse
   >;
+  timezone: string;
 }
 
 // Zod schemas for input validation
 const settingsInputSchema = z.object({
-  timezone: z.string().min(1, 'Timezone is required').optional(),
   automaticProcessingEnabled: z.boolean().optional(),
   automaticProcessingSchedule: z.string().nullable().optional(),
 });
@@ -41,6 +41,10 @@ export function createGeneralSettingsRouter(deps: GeneralSettingsRouterDeps) {
     get: publicProcedure.query(async ({ ctx }) => {
       return await deps.getGeneralSettingsUseCase.execute({ userId: ctx.userId });
     }),
+
+    getTimezone: publicProcedure.query(() => ({
+      timezone: deps.timezone,
+    })),
 
     set: publicProcedure.input(settingsInputSchema).mutation(async ({ input, ctx }) => {
       return await deps.updateGeneralSettingsUseCase.execute({

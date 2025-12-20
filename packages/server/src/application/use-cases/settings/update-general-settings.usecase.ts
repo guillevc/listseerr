@@ -1,8 +1,8 @@
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
+import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import { GeneralSettingsMapper } from '@/server/application/mappers/general-settings.mapper';
 import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
 import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
-import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import { GeneralSettingsNotFoundError } from 'shared/domain/errors/general-settings.errors';
@@ -13,7 +13,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
 > {
   constructor(
     private readonly generalSettingsRepository: IGeneralSettingsRepository,
-    private readonly scheduler: { loadScheduledLists: () => Promise<void> },
+    private readonly scheduler: ISchedulerService,
     private readonly logger: ILogger
   ) {}
 
@@ -25,16 +25,10 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
     }
 
     // 2. Capture old state for change detection (for logging)
-    const oldTimezone = settings.timezone.getValue();
     const oldEnabled = settings.automaticProcessingEnabled;
     const oldSchedule = settings.automaticProcessingSchedule;
 
     // 3. Apply changes using entity mutation methods
-    if (command.data.timezone !== undefined) {
-      const timezoneVO = TimezoneVO.create(command.data.timezone);
-      settings.changeTimezone(timezoneVO);
-    }
-
     if (command.data.automaticProcessingEnabled !== undefined) {
       if (command.data.automaticProcessingEnabled) {
         settings.enableAutomaticProcessing();
@@ -50,21 +44,9 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
     // 4. Save entity (repository handles insert vs update)
     const savedSettings = await this.generalSettingsRepository.save(settings);
 
-    // 5. Log changes (match legacy behavior)
-    const newTimezone = savedSettings.timezone.getValue();
+    // 5. Log changes
     const newEnabled = savedSettings.automaticProcessingEnabled;
     const newSchedule = savedSettings.automaticProcessingSchedule;
-
-    if (oldTimezone !== newTimezone) {
-      this.logger.info(
-        {
-          oldTimezone: oldTimezone || 'none',
-          newTimezone,
-          userId: command.userId,
-        },
-        '⏰ Timezone changed'
-      );
-    }
 
     if (oldEnabled !== newEnabled || oldSchedule !== newSchedule) {
       this.logger.info(
@@ -79,7 +61,7 @@ export class UpdateGeneralSettingsUseCase implements IUseCase<
       );
     }
 
-    // 6. Reload scheduler if needed (match legacy behavior)
+    // 6. Reload scheduler if needed
     if (savedSettings.requiresSchedulerReload(command.data)) {
       try {
         await this.scheduler.loadScheduledLists();

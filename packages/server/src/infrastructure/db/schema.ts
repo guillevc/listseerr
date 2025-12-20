@@ -60,13 +60,13 @@ export const providerConfigs = sqliteTable(
 );
 
 // General settings
+// Note: Timezone is configured via TZ environment variable, not stored in DB
 export const generalSettings = sqliteTable('general_settings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' })
     .unique(),
-  timezone: text('timezone').notNull().default('UTC'),
   automaticProcessingEnabled: integer('automatic_processing_enabled', { mode: 'boolean' })
     .notNull()
     .default(true),

@@ -1,13 +1,12 @@
-import type {
-  TimezonePrimitive,
-  CronSchedulePrimitive,
-} from '../../../domain/types/general-settings.types';
+import type { CronSchedulePrimitive } from '../../../domain/types/general-settings.types';
 
 /**
  * General Settings Core DTO
  *
  * Represents the serialized form of a GeneralSettings entity.
  * Contains only primitives - all Value Objects are unwrapped.
+ *
+ * Note: Timezone is configured via TZ environment variable, not stored in DB.
  *
  * Used by:
  * - GeneralSettings entity toDTO() method
@@ -17,7 +16,6 @@ import type {
 export interface GeneralSettingsDTO {
   id: number;
   userId: number;
-  timezone: TimezonePrimitive;
   automaticProcessingEnabled: boolean;
   automaticProcessingSchedule: CronSchedulePrimitive;
   createdAt: Date;

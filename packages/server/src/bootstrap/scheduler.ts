@@ -2,6 +2,7 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import * as schema from '@/server/infrastructure/db/schema';
 import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
+import { env } from '@/server/env';
 
 const logger = new LoggerService('scheduler');
 
@@ -57,8 +58,8 @@ async function processAllListsCallback(): Promise<void> {
  */
 export async function initializeScheduler(db: BunSQLiteDatabase<typeof schema>): Promise<void> {
   try {
-    // Initialize scheduler with database and global processing callback
-    scheduler.initialize(db, () => processAllListsCallback());
+    // Initialize scheduler with database, callback, and timezone from environment
+    scheduler.initialize(db, () => processAllListsCallback(), env.TZ);
 
     // Load the global schedule
     await scheduler.loadScheduledLists();

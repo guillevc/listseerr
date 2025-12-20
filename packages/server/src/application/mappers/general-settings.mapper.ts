@@ -6,7 +6,6 @@ export class GeneralSettingsMapper {
     return {
       id: entity.id,
       userId: entity.userId,
-      timezone: entity.timezone.getValue(),
       automaticProcessingEnabled: entity.automaticProcessingEnabled,
       automaticProcessingSchedule: entity.automaticProcessingSchedule,
       createdAt: entity.createdAt,

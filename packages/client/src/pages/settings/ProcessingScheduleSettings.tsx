@@ -251,7 +251,6 @@ export function ProcessingScheduleSettings() {
     }
 
     saveMutation.mutate({
-      timezone: settings?.timezone || 'UTC',
       automaticProcessingEnabled: isEnabled,
       automaticProcessingSchedule: isEnabled ? cronExpression : undefined,
     });

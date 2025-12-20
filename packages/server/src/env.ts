@@ -14,6 +14,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('debug'),
     ENCRYPTION_KEY: z.string().min(1, 'ENCRYPTION_KEY is required for encrypting API keys'),
+    TZ: z.string().default('UTC'),
   },
 
   /**

@@ -1,5 +1,3 @@
-import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
-
 /**
  * GeneralSettings Entity - Domain Model with Rich Behavior
  *
@@ -10,12 +8,13 @@ import { TimezoneVO } from '@/server/domain/value-objects/timezone.vo';
  *
  * Entities are mutable through their behavioral methods,
  * not through direct property access.
+ *
+ * Note: Timezone is configured via TZ environment variable, not stored in DB.
  */
 export class GeneralSettings {
   // Private state - encapsulated
   private readonly _id: number;
   private readonly _userId: number;
-  private _timezone: TimezoneVO;
   private _automaticProcessingEnabled: boolean;
   private _automaticProcessingSchedule: string | null;
   private readonly _createdAt: Date;
@@ -24,7 +23,6 @@ export class GeneralSettings {
   constructor(params: {
     id: number;
     userId: number;
-    timezone: TimezoneVO;
     automaticProcessingEnabled: boolean;
     automaticProcessingSchedule: string | null;
     createdAt: Date;
@@ -32,7 +30,6 @@ export class GeneralSettings {
   }) {
     this._id = params.id;
     this._userId = params.userId;
-    this._timezone = params.timezone;
     this._automaticProcessingEnabled = params.automaticProcessingEnabled;
     this._automaticProcessingSchedule = params.automaticProcessingSchedule;
     this._createdAt = params.createdAt;
@@ -44,7 +41,6 @@ export class GeneralSettings {
    * Uses id: 0 for unpersisted entities (New Entity Convention)
    *
    * Defaults:
-   * - timezone: UTC
    * - automaticProcessingEnabled: true
    * - automaticProcessingSchedule: '0 4 * * *' (daily at 4:00 AM)
    */
@@ -52,7 +48,6 @@ export class GeneralSettings {
     return new GeneralSettings({
       id: 0,
       userId,
-      timezone: TimezoneVO.create('UTC'),
       automaticProcessingEnabled: true,
       automaticProcessingSchedule: '0 4 * * *',
       createdAt: new Date(),
@@ -67,10 +62,6 @@ export class GeneralSettings {
 
   get userId(): number {
     return this._userId;
-  }
-
-  get timezone(): TimezoneVO {
-    return this._timezone;
   }
 
   get automaticProcessingEnabled(): boolean {
@@ -90,15 +81,6 @@ export class GeneralSettings {
   }
 
   // Mutation methods - behavioral API for changing state
-
-  /**
-   * Change the timezone
-   * Accepts a validated Timezone Value Object
-   */
-  changeTimezone(newTimezone: TimezoneVO): void {
-    this._timezone = newTimezone;
-    this._updatedAt = new Date();
-  }
 
   /**
    * Enable automatic processing
@@ -139,17 +121,16 @@ export class GeneralSettings {
 
   /**
    * Determine if scheduler needs to be reloaded based on changes
-   * Scheduler reload is required when timezone, enabled state, or schedule changes
+   * Scheduler reload is required when enabled state or schedule changes
+   * Note: Timezone changes require app restart (env var)
    */
   requiresSchedulerReload(changes: {
-    timezone?: unknown;
     automaticProcessingEnabled?: unknown;
     automaticProcessingSchedule?: unknown;
   }): boolean {
     return (
       changes.automaticProcessingEnabled !== undefined ||
-      changes.automaticProcessingSchedule !== undefined ||
-      changes.timezone !== undefined
+      changes.automaticProcessingSchedule !== undefined
     );
   }
 

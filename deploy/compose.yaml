@@ -9,6 +9,8 @@ services:
       - ${PORT:-3000}:3000
     env_file:
       - .env
+    environment:
+      - TZ=${TZ:-UTC}
     volumes:
       - ./data:/app/data
     restart: unless-stopped
