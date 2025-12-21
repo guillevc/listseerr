@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import type { ProviderType } from 'shared/domain/types/provider.types';
-import { isTrakt, isTraktChart, isMdbList, isStevenLu } from 'shared/domain/logic/provider.logic';
+import type { ProviderType } from 'shared/domain/types';
+import { isTrakt, isTraktChart, isMdbList, isStevenLu } from 'shared/domain/logic';
 import { trpc } from '../lib/trpc';
 
 interface ProviderConfigData {

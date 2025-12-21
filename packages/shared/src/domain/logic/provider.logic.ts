@@ -6,6 +6,7 @@
  */
 
 import { ProviderValues, ProviderUrlPatterns, type ProviderType } from '../types/provider.types';
+import { createEnumValidator, createEnumGuard, createDisplayNameGetter } from './enum-utils.logic';
 
 /**
  * Display names for provider types.
@@ -21,9 +22,12 @@ export const ProviderDisplayNames: Record<ProviderType, string> = {
 /**
  * Checks if a value is a valid provider type.
  */
-export function isValidProvider(value: string): value is ProviderType {
-  return Object.values(ProviderValues).includes(value as ProviderType);
-}
+export const isValidProvider = createEnumValidator(ProviderValues);
+
+/**
+ * Gets the human-readable display name for a provider.
+ */
+export const getProviderDisplayName = createDisplayNameGetter(ProviderDisplayNames);
 
 /**
  * Detects the provider from a URL by testing against all provider patterns.
@@ -44,13 +48,6 @@ export function detectProviderFromUrl(url: string): ProviderType | null {
 }
 
 /**
- * Gets the human-readable display name for a provider.
- */
-export function getProviderDisplayName(provider: ProviderType): string {
-  return ProviderDisplayNames[provider];
-}
-
-/**
  * Checks if a URL matches a specific provider's patterns.
  */
 export function matchesProviderUrl(provider: ProviderType, url: string): boolean {
@@ -62,21 +59,10 @@ export function matchesProviderUrl(provider: ProviderType, url: string): boolean
 }
 
 // Type guard functions
-export function isTrakt(provider: ProviderType): boolean {
-  return provider === ProviderValues.TRAKT;
-}
-
-export function isMdbList(provider: ProviderType): boolean {
-  return provider === ProviderValues.MDBLIST;
-}
-
-export function isTraktChart(provider: ProviderType): boolean {
-  return provider === ProviderValues.TRAKT_CHART;
-}
-
-export function isStevenLu(provider: ProviderType): boolean {
-  return provider === ProviderValues.STEVENLU;
-}
+export const isTrakt = createEnumGuard(ProviderValues.TRAKT);
+export const isMdbList = createEnumGuard(ProviderValues.MDBLIST);
+export const isTraktChart = createEnumGuard(ProviderValues.TRAKT_CHART);
+export const isStevenLu = createEnumGuard(ProviderValues.STEVENLU);
 
 /**
  * Checks if a provider requires URL conversion (Trakt-based providers).

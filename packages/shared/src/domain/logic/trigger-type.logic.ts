@@ -5,20 +5,14 @@
  * These are shared between the frontend and server VOs (DRY principle).
  */
 
-import { TriggerTypeValues, type TriggerType } from '../types/trigger-type.types';
+import { TriggerTypeValues } from '../types/trigger-type.types';
+import { createEnumValidator, createEnumGuard } from './enum-utils.logic';
 
 /**
  * Checks if a value is a valid trigger type.
  */
-export function isValidTriggerType(value: string): value is TriggerType {
-  return Object.values(TriggerTypeValues).includes(value as TriggerType);
-}
+export const isValidTriggerType = createEnumValidator(TriggerTypeValues);
 
 // Type guard functions
-export function isManual(triggerType: TriggerType): boolean {
-  return triggerType === TriggerTypeValues.MANUAL;
-}
-
-export function isScheduled(triggerType: TriggerType): boolean {
-  return triggerType === TriggerTypeValues.SCHEDULED;
-}
+export const isManual = createEnumGuard(TriggerTypeValues.MANUAL);
+export const isScheduled = createEnumGuard(TriggerTypeValues.SCHEDULED);

@@ -13,7 +13,7 @@ import { Label } from '@/client/components/ui/label';
 import { Button } from '@/client/components/ui/button';
 import { useAuth } from '@/client/hooks/use-auth';
 import { trpc } from '@/client/lib/trpc';
-import { registerUserSchema } from 'shared/presentation/schemas/auth.schema';
+import { registerUserSchema } from 'shared/presentation/schemas';
 
 export function RegisterPage() {
   const navigate = useNavigate();

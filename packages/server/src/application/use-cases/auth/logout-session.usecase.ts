@@ -1,7 +1,7 @@
 import type { ISessionRepository } from '@/server/application/repositories/session.repository.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
-import type { LogoutSessionCommand } from 'shared/application/dtos/auth/commands.dto';
-import type { LogoutSessionResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { LogoutSessionCommand } from 'shared/application/dtos';
+import type { LogoutSessionResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

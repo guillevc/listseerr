@@ -1,7 +1,7 @@
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import { JellyseerrConfigMapper } from '@/server/application/mappers/jellyseerr-config.mapper';
-import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
-import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
+import type { UpdateJellyseerrConfigCommand } from 'shared/application/dtos';
+import type { UpdateJellyseerrConfigResponse } from 'shared/application/dtos';
 import { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
 import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
 import { JellyseerrExternalUrlVO } from '@/server/domain/value-objects/jellyseerr-external-url.vo';

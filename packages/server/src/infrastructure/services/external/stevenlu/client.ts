@@ -3,7 +3,7 @@ import { db } from '@/server/infrastructure/db/client';
 import { providerCache } from '@/server/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
 import type { StevenLuItem } from './types';
-import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
+import type { MediaItemDTO } from 'shared/application/dtos';
 
 const logger = new LoggerService('stevenlu-client');
 

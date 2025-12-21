@@ -4,10 +4,10 @@ import type { IPasswordService } from '@/server/application/services/core/passwo
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import { Session } from '@/server/domain/entities/session.entity';
 import { UserMapper } from '@/server/application/mappers/user.mapper';
-import type { LoginUserCommand } from 'shared/application/dtos/auth/commands.dto';
-import type { LoginUserResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { LoginUserCommand } from 'shared/application/dtos';
+import type { LoginUserResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { InvalidCredentialsError } from 'shared/domain/errors/auth.errors';
+import { InvalidCredentialsError } from 'shared/domain/errors';
 
 /**
  * Login User Use Case

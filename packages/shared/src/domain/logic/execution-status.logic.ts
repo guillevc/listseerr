@@ -6,27 +6,21 @@
  */
 
 import { ExecutionStatusValues, type ExecutionStatusType } from '../types/execution.types';
+import { createEnumValidator, createEnumGuard } from './enum-utils.logic';
 
 /**
  * Checks if a value is a valid execution status.
  */
-export function isValidExecutionStatus(value: string): value is ExecutionStatusType {
-  return Object.values(ExecutionStatusValues).includes(value as ExecutionStatusType);
-}
+export const isValidExecutionStatus = createEnumValidator(ExecutionStatusValues);
 
 // Type guard functions
-export function isRunning(status: ExecutionStatusType): boolean {
-  return status === ExecutionStatusValues.RUNNING;
-}
+export const isRunning = createEnumGuard(ExecutionStatusValues.RUNNING);
+export const isSuccess = createEnumGuard(ExecutionStatusValues.SUCCESS);
+export const isError = createEnumGuard(ExecutionStatusValues.ERROR);
 
-export function isSuccess(status: ExecutionStatusType): boolean {
-  return status === ExecutionStatusValues.SUCCESS;
-}
-
-export function isError(status: ExecutionStatusType): boolean {
-  return status === ExecutionStatusValues.ERROR;
-}
-
+/**
+ * Checks if the execution status represents a completed state (success or error).
+ */
 export function isCompleted(status: ExecutionStatusType): boolean {
   return status === ExecutionStatusValues.SUCCESS || status === ExecutionStatusValues.ERROR;
 }

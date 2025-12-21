@@ -8,13 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { useToast } from '../hooks/use-toast';
-import { useMinLoading } from '../hooks/use-min-loading';
-import { trpc } from '../lib/trpc';
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { useToast } from '../../hooks/use-toast';
+import { useMinLoading } from '../../hooks/use-min-loading';
+import { trpc } from '../../lib/trpc';
 
 export function JellyseerrConfigDialog() {
   const [open, setOpen] = useState(false);

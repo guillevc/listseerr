@@ -9,7 +9,7 @@ import type {
   DeleteMediaListCommand,
   ToggleListEnabledCommand,
   EnableAllListsCommand,
-} from 'shared/application/dtos/media-list/commands.dto';
+} from 'shared/application/dtos';
 import type {
   GetAllMediaListsResponse,
   GetMediaListByIdResponse,
@@ -18,8 +18,8 @@ import type {
   DeleteMediaListResponse,
   ToggleListEnabledResponse,
   EnableAllListsResponse,
-} from 'shared/application/dtos/media-list/responses.dto';
-import { createListSchema, updateListSchema } from 'shared/presentation/schemas/list.schema';
+} from 'shared/application/dtos';
+import { createListSchema, updateListSchema } from 'shared/presentation/schemas';
 
 export interface ListsRouterDeps {
   getAllMediaListsUseCase: IUseCase<GetAllMediaListsCommand, GetAllMediaListsResponse>;

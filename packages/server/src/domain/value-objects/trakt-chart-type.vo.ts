@@ -5,9 +5,9 @@
  * Delegates validation logic to shared logic functions (DRY).
  */
 
-import { InvalidTraktChartTypeError } from 'shared/domain/errors/trakt-chart-type.errors';
-import { TraktChartTypeValues, type TraktChartType } from 'shared/domain/types/trakt.types';
-import * as traktChartTypeLogic from 'shared/domain/logic/trakt-chart-type.logic';
+import { InvalidTraktChartTypeError } from 'shared/domain/errors';
+import { TraktChartTypeValues, type TraktChartType } from 'shared/domain/types';
+import * as traktChartTypeLogic from 'shared/domain/logic';
 
 export { TraktChartTypeValues, type TraktChartType };
 

@@ -13,64 +13,37 @@ import type {
   JellyseerrUserIdPrimitive,
   JellyseerrConfigPrimitive,
 } from '../../domain/types/jellyseerr.types';
+import { createHttpUrlSchema, createApiKeySchema, createPositiveIntSchema } from './common.schema';
 
 /**
  * Jellyseerr URL schema.
  * Validates: non-empty, valid URL, HTTP/HTTPS protocol, removes trailing slash.
  */
-export const jellyseerrUrlSchema: z.ZodType<JellyseerrUrlPrimitive> = z
-  .url({ message: 'Must be a valid URL' })
-  .refine(
-    (url) => {
-      try {
-        const parsed = new URL(url);
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-      } catch {
-        return false;
-      }
-    },
-    { message: 'Must be a valid HTTP/HTTPS URL' }
-  )
-  .transform((url) => url.replace(/\/$/, ''));
+export const jellyseerrUrlSchema: z.ZodType<JellyseerrUrlPrimitive> = createHttpUrlSchema({
+  stripTrailingSlash: true,
+});
 
 /**
  * Jellyseerr External URL schema (optional).
  * User-facing URL for browser links when internal URL differs.
  * Uses same validation as jellyseerrUrlSchema.
  */
-export const jellyseerrExternalUrlSchema: z.ZodType<JellyseerrExternalUrlPrimitive | undefined> = z
-  .url({ message: 'Must be a valid URL' })
-  .refine(
-    (url) => {
-      try {
-        const parsed = new URL(url);
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-      } catch {
-        return false;
-      }
-    },
-    { message: 'Must be a valid HTTP/HTTPS URL' }
-  )
-  .transform((url) => url.replace(/\/$/, ''))
-  .optional();
+export const jellyseerrExternalUrlSchema: z.ZodType<JellyseerrExternalUrlPrimitive | undefined> =
+  createHttpUrlSchema({ stripTrailingSlash: true }).optional();
 
 /**
  * Jellyseerr API key schema.
  * Validates: non-empty string, trimmed.
  */
-export const jellyseerrApiKeySchema: z.ZodType<JellyseerrApiKeyPrimitive> = z
-  .string()
-  .min(1, 'API key is required')
-  .transform((key) => key.trim());
+export const jellyseerrApiKeySchema: z.ZodType<JellyseerrApiKeyPrimitive> =
+  createApiKeySchema('API key');
 
 /**
  * Jellyseerr User ID schema.
  * Validates: positive integer.
  */
-export const jellyseerrUserIdSchema: z.ZodType<JellyseerrUserIdPrimitive> = z
-  .number()
-  .int('User ID must be an integer')
-  .positive('User ID must be positive');
+export const jellyseerrUserIdSchema: z.ZodType<JellyseerrUserIdPrimitive> =
+  createPositiveIntSchema('User ID');
 
 /**
  * Combined Jellyseerr config schema for forms.

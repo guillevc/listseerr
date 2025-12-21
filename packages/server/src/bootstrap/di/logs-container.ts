@@ -7,11 +7,8 @@ import { LoggerService } from '@/server/infrastructure/services/core/logger.adap
 import { GetLogsUseCase } from '@/server/application/use-cases/logs/get-logs.usecase';
 import { ClearLogsUseCase } from '@/server/application/use-cases/logs/clear-logs.usecase';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type { GetLogsCommand, ClearLogsCommand } from 'shared/application/dtos/logs/commands.dto';
-import type {
-  GetLogsResponse,
-  ClearLogsResponse,
-} from 'shared/application/dtos/logs/responses.dto';
+import type { GetLogsCommand, ClearLogsCommand } from 'shared/application/dtos';
+import type { GetLogsResponse, ClearLogsResponse } from 'shared/application/dtos';
 
 /**
  * Logs Dependency Injection Container

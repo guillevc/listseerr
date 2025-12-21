@@ -1,9 +1,7 @@
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
 import { MdbListConfigMapper } from '@/server/application/mappers/mdblist-config.mapper';
-import type {
-  GetMdbListConfigCommand,
-  GetMdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
+import type { GetMdbListConfigCommand } from 'shared/application/dtos';
+import type { GetMdbListConfigResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class GetMdbListConfigUseCase implements IUseCase<

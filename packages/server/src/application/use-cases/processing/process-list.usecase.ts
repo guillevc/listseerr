@@ -5,19 +5,16 @@ import type { IMediaFetcherFactory } from '@/server/application/services/media-f
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
 import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
-import type { ProcessListCommand } from 'shared/application/dtos/processing/commands.dto';
-import type { ProcessListResponse } from 'shared/application/dtos/processing/responses.dto';
+import type { ProcessListCommand } from 'shared/application/dtos';
+import type { ProcessListResponse } from 'shared/application/dtos';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
 import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
 import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
-import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
-import {
-  JellyseerrNotConfiguredError,
-  ProviderNotConfiguredError,
-} from 'shared/domain/errors/processing.errors';
+import { MediaListNotFoundError } from 'shared/domain/errors';
+import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 
 /**

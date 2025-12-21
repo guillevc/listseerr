@@ -5,7 +5,7 @@
  * Contains only primitives - no Value Objects or Entities.
  */
 
-import type { GeneralSettingsUpdatePrimitive } from 'shared/domain/types/general-settings.types';
+import type { GeneralSettingsUpdatePrimitive } from 'shared/domain/types';
 
 export interface GetGeneralSettingsCommand {
   userId: number;

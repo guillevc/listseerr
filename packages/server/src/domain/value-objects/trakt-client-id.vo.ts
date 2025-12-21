@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for Trakt client IDs.
  */
 
-import { InvalidTraktClientIdError } from 'shared/domain/errors/provider-config.errors';
-import type { TraktClientIdPrimitive } from 'shared/domain/types/trakt.types';
+import { InvalidTraktClientIdError } from 'shared/domain/errors';
+import type { TraktClientIdPrimitive } from 'shared/domain/types';
 
 export class TraktClientIdVO {
   private constructor(private readonly value: TraktClientIdPrimitive) {}

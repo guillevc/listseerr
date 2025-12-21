@@ -14,16 +14,13 @@ import type {
   UpdateUserCredentialsPrimitive,
   SessionTokenPrimitive,
 } from '../../domain/types/auth.types';
+import { createNonEmptyStringSchema } from './common.schema';
 
 /**
  * Username schema.
  * Validates: non-empty string, trimmed.
  */
-export const usernameSchema: z.ZodType<UsernamePrimitive> = z
-  .string()
-  .min(1, 'Username is required')
-  .transform((name) => name.trim())
-  .refine((name) => name.length > 0, { message: 'Username cannot be empty' });
+export const usernameSchema: z.ZodType<UsernamePrimitive> = createNonEmptyStringSchema('Username');
 
 /**
  * Password schema.

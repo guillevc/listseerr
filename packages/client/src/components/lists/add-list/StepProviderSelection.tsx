@@ -1,4 +1,4 @@
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { ProviderType } from 'shared/domain/types';
 import { Label } from '../../ui/label';
 import { RadioGroup } from '../../ui/radio-group';
 import { Button } from '../../ui/button';

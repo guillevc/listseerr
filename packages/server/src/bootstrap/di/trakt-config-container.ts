@@ -10,12 +10,14 @@ import { DeleteTraktConfigUseCase } from '@/server/application/use-cases/trakt-c
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   GetTraktConfigCommand,
-  GetTraktConfigResponse,
   SaveTraktConfigCommand,
-  TraktConfigResponse,
   DeleteTraktConfigCommand,
+} from 'shared/application/dtos';
+import type {
+  GetTraktConfigResponse,
+  TraktConfigResponse,
   DeleteTraktConfigResponse,
-} from 'shared/application/dtos/trakt-config.commands.dto';
+} from 'shared/application/dtos';
 import { env } from '@/server/env';
 
 export class TraktConfigContainer {

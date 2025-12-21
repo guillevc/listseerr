@@ -5,12 +5,9 @@
  * Delegates validation logic to shared logic functions (DRY).
  */
 
-import { InvalidExecutionStatusError } from 'shared/domain/errors/execution-status.errors';
-import {
-  ExecutionStatusValues,
-  type ExecutionStatusType,
-} from 'shared/domain/types/execution.types';
-import * as executionStatusLogic from 'shared/domain/logic/execution-status.logic';
+import { InvalidExecutionStatusError } from 'shared/domain/errors';
+import { ExecutionStatusValues, type ExecutionStatusType } from 'shared/domain/types';
+import * as executionStatusLogic from 'shared/domain/logic';
 
 export { ExecutionStatusValues, type ExecutionStatusType };
 

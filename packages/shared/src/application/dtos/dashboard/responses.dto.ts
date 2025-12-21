@@ -1,5 +1,4 @@
-import type { TriggerType } from '../../../domain/types/trigger-type.types';
-import type { ExecutionDTO } from '../core/execution.dto';
+import type { ActivityGroup } from '../core/execution.dto';
 
 /**
  * Dashboard Response DTOs
@@ -12,12 +11,6 @@ export interface DashboardStatsResponse {
   totalRequestedItems: number;
   lastScheduledProcessing: Date | null;
   nextScheduledProcessing: string | null;
-}
-
-export interface ActivityGroup {
-  timestamp: Date;
-  triggerType: TriggerType;
-  executions: ExecutionDTO[];
 }
 
 export interface GetRecentActivityResponse {

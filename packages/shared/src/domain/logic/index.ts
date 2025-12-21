@@ -1,10 +1,10 @@
 /**
  * Domain Logic Functions
  *
- * Pure functions for display and detection behavior.
- * These are shared between the frontend and server VOs (DRY principle).
+ * Pure functions for validation, display and detection behavior.
  */
 
+export * from './enum-utils.logic';
 export * from './provider.logic';
 export * from './trigger-type.logic';
 export * from './media-type.logic';

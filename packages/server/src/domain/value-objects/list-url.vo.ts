@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for list URLs.
  */
 
-import { InvalidListUrlError } from 'shared/domain/errors/media-list.errors';
-import type { ListUrlPrimitive } from 'shared/domain/types/list.types';
+import { InvalidListUrlError } from 'shared/domain/errors';
+import type { ListUrlPrimitive } from 'shared/domain/types';
 
 export class ListUrlVO {
   private constructor(private readonly value: ListUrlPrimitive) {}

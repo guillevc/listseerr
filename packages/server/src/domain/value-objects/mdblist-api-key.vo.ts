@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for MDBList API keys.
  */
 
-import { InvalidMdbListApiKeyError } from 'shared/domain/errors/provider-config.errors';
-import type { MdblistApiKeyPrimitive } from 'shared/domain/types/mdblist.types';
+import { InvalidMdbListApiKeyError } from 'shared/domain/errors';
+import type { MdblistApiKeyPrimitive } from 'shared/domain/types';
 
 export class MdbListApiKeyVO {
   private constructor(private readonly value: MdblistApiKeyPrimitive) {}

@@ -16,8 +16,8 @@ import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
-import { traktClientIdSchema } from 'shared/presentation/schemas/trakt.schema';
-import { mdblistApiKeySchema } from 'shared/presentation/schemas/mdblist.schema';
+import { traktClientIdSchema } from 'shared/presentation/schemas';
+import { mdblistApiKeySchema } from 'shared/presentation/schemas';
 
 export function ApiKeysSettings() {
   // Trakt.tv state

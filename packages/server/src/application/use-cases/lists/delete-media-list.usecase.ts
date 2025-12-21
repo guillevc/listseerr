@@ -1,9 +1,9 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
-import type { DeleteMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
-import type { DeleteMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { DeleteMediaListCommand } from 'shared/application/dtos';
+import type { DeleteMediaListResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { MediaListNotFoundError } from 'shared/domain/errors/media-list.errors';
+import { MediaListNotFoundError } from 'shared/domain/errors';
 
 export class DeleteMediaListUseCase implements IUseCase<
   DeleteMediaListCommand,

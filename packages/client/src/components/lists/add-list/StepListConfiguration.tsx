@@ -1,16 +1,11 @@
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { ProviderType } from 'shared/domain/types';
 import {
   TraktMediaTypeValues,
   type TraktChartType,
   type TraktMediaType,
-} from 'shared/domain/types/trakt.types';
-import {
-  getProviderDisplayName,
-  isTrakt,
-  isTraktChart,
-  isStevenLu,
-} from 'shared/domain/logic/provider.logic';
-import { TraktChartDisplayNames } from 'shared/domain/logic/trakt-chart-type.logic';
+} from 'shared/domain/types';
+import { getProviderDisplayName, isTrakt, isTraktChart, isStevenLu } from 'shared/domain/logic';
+import { TraktChartDisplayNames } from 'shared/domain/logic';
 import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';

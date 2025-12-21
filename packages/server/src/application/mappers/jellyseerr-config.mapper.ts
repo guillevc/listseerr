@@ -1,5 +1,5 @@
 import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
-import type { JellyseerrConfigDTO } from 'shared/application/dtos/core/jellyseerr-config.dto';
+import type { JellyseerrConfigDTO } from 'shared/application/dtos';
 
 export class JellyseerrConfigMapper {
   static toDTO(entity: JellyseerrConfig): JellyseerrConfigDTO {

@@ -1,5 +1,5 @@
 import type { GeneralSettings } from '@/server/domain/entities/general-settings.entity';
-import type { GeneralSettingsDTO } from 'shared/application/dtos/core/general-settings.dto';
+import type { GeneralSettingsDTO } from 'shared/application/dtos';
 
 export class GeneralSettingsMapper {
   static toDTO(entity: GeneralSettings): GeneralSettingsDTO {

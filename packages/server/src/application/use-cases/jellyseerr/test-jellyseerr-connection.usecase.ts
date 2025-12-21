@@ -2,10 +2,10 @@ import type { IJellyseerrConnectionTester } from '@/server/application/services/
 import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
-} from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
+} from 'shared/application/dtos';
 import { JellyseerrUrlVO } from '@/server/domain/value-objects/jellyseerr-url.vo';
 import { JellyseerrApiKeyVO } from '@/server/domain/value-objects/jellyseerr-api-key.vo';
-import { DomainError } from 'shared/domain/errors/domain.error';
+import { DomainError } from 'shared/domain/errors';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class TestJellyseerrConnectionUseCase implements IUseCase<

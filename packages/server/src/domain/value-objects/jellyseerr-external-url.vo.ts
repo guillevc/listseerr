@@ -6,8 +6,8 @@
  * is not accessible from the web (e.g., Docker internal networks).
  */
 
-import { InvalidJellyseerrUrlError } from 'shared/domain/errors/jellyseerr-config.errors';
-import type { JellyseerrExternalUrlPrimitive } from 'shared/domain/types/jellyseerr.types';
+import { InvalidJellyseerrUrlError } from 'shared/domain/errors';
+import type { JellyseerrExternalUrlPrimitive } from 'shared/domain/types';
 
 export class JellyseerrExternalUrlVO {
   private constructor(private readonly value: JellyseerrExternalUrlPrimitive) {}

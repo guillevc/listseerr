@@ -1,13 +1,9 @@
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type {
-  GetTraktConfigCommand,
-  GetTraktConfigResponse,
-} from 'shared/application/dtos/trakt-config.commands.dto';
-import type {
-  GetMdbListConfigCommand,
-  GetMdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
+import type { GetTraktConfigCommand } from 'shared/application/dtos';
+import type { GetTraktConfigResponse } from 'shared/application/dtos';
+import type { GetMdbListConfigCommand } from 'shared/application/dtos';
+import type { GetMdbListConfigResponse } from 'shared/application/dtos';
 
 export interface ProvidersRouterDeps {
   getTraktConfigUseCase: IUseCase<GetTraktConfigCommand, GetTraktConfigResponse>;

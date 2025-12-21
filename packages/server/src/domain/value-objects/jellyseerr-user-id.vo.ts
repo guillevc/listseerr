@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for Jellyseerr user IDs.
  */
 
-import { InvalidJellyseerrUserIdError } from 'shared/domain/errors/jellyseerr-config.errors';
-import type { JellyseerrUserIdPrimitive } from 'shared/domain/types/jellyseerr.types';
+import { InvalidJellyseerrUserIdError } from 'shared/domain/errors';
+import type { JellyseerrUserIdPrimitive } from 'shared/domain/types';
 
 export class JellyseerrUserIdVO {
   private constructor(private readonly value: JellyseerrUserIdPrimitive) {}

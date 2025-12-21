@@ -1,5 +1,5 @@
 import type { MdbListConfig } from '@/server/domain/entities/mdblist-config.entity';
-import type { MdbListConfigDTO } from 'shared/application/dtos/core/mdblist-config.dto';
+import type { MdbListConfigDTO } from 'shared/application/dtos';
 
 export class MdbListConfigMapper {
   static toDTO(entity: MdbListConfig): MdbListConfigDTO {

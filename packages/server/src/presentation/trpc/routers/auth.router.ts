@@ -1,26 +1,26 @@
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type { CheckSetupStatusResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { CheckSetupStatusResponse } from 'shared/application/dtos';
 import type {
   RegisterUserCommand,
   LoginUserCommand,
   ValidateSessionCommand,
   LogoutSessionCommand,
   UpdateUserCredentialsCommand,
-} from 'shared/application/dtos/auth/commands.dto';
+} from 'shared/application/dtos';
 import type {
   RegisterUserResponse,
   LoginUserResponse,
   ValidateSessionResponse,
   LogoutSessionResponse,
   UpdateUserCredentialsResponse,
-} from 'shared/application/dtos/auth/responses.dto';
+} from 'shared/application/dtos';
 import {
   registerUserSchema,
   loginUserSchema,
   updateUserCredentialsSchema,
   sessionTokenSchema,
-} from 'shared/presentation/schemas/auth.schema';
+} from 'shared/presentation/schemas';
 
 export interface AuthRouterDeps {
   checkSetupStatusUseCase: IUseCase<void, CheckSetupStatusResponse>;

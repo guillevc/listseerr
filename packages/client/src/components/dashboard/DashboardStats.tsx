@@ -6,7 +6,7 @@ import { Separator } from '../ui/separator';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
 import { useProviderConfig } from '../../hooks/use-provider-config';
-import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import type { SerializedMediaList } from 'shared/application/dtos';
 
 interface DashboardStatsProps {
   lists: SerializedMediaList[];

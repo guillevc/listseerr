@@ -1,9 +1,7 @@
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import { TraktConfigMapper } from '@/server/application/mappers/trakt-config.mapper';
-import type {
-  SaveTraktConfigCommand,
-  TraktConfigResponse,
-} from 'shared/application/dtos/trakt-config.commands.dto';
+import type { SaveTraktConfigCommand } from 'shared/application/dtos';
+import type { TraktConfigResponse } from 'shared/application/dtos';
 import { TraktConfig } from '@/server/domain/entities/trakt-config.entity';
 import { TraktClientIdVO } from '@/server/domain/value-objects/trakt-client-id.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';

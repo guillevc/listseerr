@@ -5,9 +5,9 @@
  * Delegates validation logic to shared logic functions (DRY).
  */
 
-import { InvalidTraktMediaTypeError } from 'shared/domain/errors/trakt-media-type.errors';
-import { TraktMediaTypeValues, type TraktMediaType } from 'shared/domain/types/trakt.types';
-import * as traktMediaTypeLogic from 'shared/domain/logic/trakt-media-type.logic';
+import { InvalidTraktMediaTypeError } from 'shared/domain/errors';
+import { TraktMediaTypeValues, type TraktMediaType } from 'shared/domain/types';
+import * as traktMediaTypeLogic from 'shared/domain/logic';
 
 export { TraktMediaTypeValues, type TraktMediaType };
 

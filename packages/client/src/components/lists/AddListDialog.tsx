@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { ProviderType } from 'shared/domain/types';
 import {
   TraktChartTypeValues,
   TraktMediaTypeValues,
   type TraktChartType,
   type TraktMediaType,
-} from 'shared/domain/types/trakt.types';
+} from 'shared/domain/types';
 import {
   getProviderDisplayName,
   isTrakt,
   isTraktChart,
   isMdbList,
   isStevenLu,
-} from 'shared/domain/logic/provider.logic';
-import { getTraktChartDisplayName } from 'shared/domain/logic/trakt-chart-type.logic';
-import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
+} from 'shared/domain/logic';
+import { getTraktChartDisplayName } from 'shared/domain/logic';
+import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas';
 import {
   Dialog,
   DialogContent,

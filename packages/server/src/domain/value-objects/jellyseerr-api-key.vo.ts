@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for Jellyseerr API keys.
  */
 
-import { InvalidJellyseerrApiKeyError } from 'shared/domain/errors/jellyseerr-config.errors';
-import type { JellyseerrApiKeyPrimitive } from 'shared/domain/types/jellyseerr.types';
+import { InvalidJellyseerrApiKeyError } from 'shared/domain/errors';
+import type { JellyseerrApiKeyPrimitive } from 'shared/domain/types';
 
 export class JellyseerrApiKeyVO {
   private constructor(private readonly value: JellyseerrApiKeyPrimitive) {}

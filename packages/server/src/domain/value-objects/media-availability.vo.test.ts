@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test';
 import { MediaAvailabilityVO, MediaAvailabilityValues } from './media-availability.vo';
-import { JellyseerrStatusValues } from 'shared/domain/types/media.types';
+import { JellyseerrStatusValues } from 'shared/domain/types';
 
 describe('MediaAvailabilityVO', () => {
   describe('fromJellyseerrStatus', () => {

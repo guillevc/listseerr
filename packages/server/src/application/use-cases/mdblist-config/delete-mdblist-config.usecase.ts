@@ -1,9 +1,7 @@
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
-import type {
-  DeleteMdbListConfigCommand,
-  DeleteMdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
-import { MdbListConfigNotFoundError } from 'shared/domain/errors/mdblist-config.errors';
+import type { DeleteMdbListConfigCommand } from 'shared/application/dtos';
+import type { DeleteMdbListConfigResponse } from 'shared/application/dtos';
+import { MdbListConfigNotFoundError } from 'shared/domain/errors';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 

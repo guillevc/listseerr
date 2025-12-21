@@ -1,7 +1,7 @@
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IJellyseerrStatsService } from '@/server/application/services/jellyseerr-stats.service.interface';
-import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { GetPendingRequestsCommand } from 'shared/application/dtos';
+import type { GetPendingRequestsResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

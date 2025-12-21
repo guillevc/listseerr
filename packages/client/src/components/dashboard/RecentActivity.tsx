@@ -10,9 +10,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import { isScheduled } from 'shared/domain/logic/trigger-type.logic';
-import { getProviderDisplayName } from 'shared/domain/logic/provider.logic';
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import { isScheduled } from 'shared/domain/logic';
+import { getProviderDisplayName } from 'shared/domain/logic';
+import type { ProviderType } from 'shared/domain/types';
 
 interface ProcessingBarProps {
   requested: number;

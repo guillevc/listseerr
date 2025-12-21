@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { UserDTO } from 'shared/application/dtos/core/user.dto';
+import type { UserDTO } from 'shared/application/dtos';
 import { trpc } from '@/client/lib/trpc';
 import { AuthContext, type AuthContextValue } from './auth-context-value';
 

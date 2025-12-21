@@ -5,12 +5,12 @@ import type {
   GetDashboardStatsCommand,
   GetRecentActivityCommand,
   GetPendingRequestsCommand,
-} from 'shared/application/dtos/dashboard/commands.dto';
+} from 'shared/application/dtos';
 import type {
   DashboardStatsResponse,
   GetRecentActivityResponse,
   GetPendingRequestsResponse,
-} from 'shared/application/dtos/dashboard/responses.dto';
+} from 'shared/application/dtos';
 
 export interface DashboardRouterDeps {
   getDashboardStatsUseCase: IUseCase<GetDashboardStatsCommand, DashboardStatsResponse>;

@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for list names.
  */
 
-import { InvalidListNameError } from 'shared/domain/errors/media-list.errors';
-import type { ListNamePrimitive } from 'shared/domain/types/list.types';
+import { InvalidListNameError } from 'shared/domain/errors';
+import type { ListNamePrimitive } from 'shared/domain/types';
 
 export class ListNameVO {
   private constructor(private readonly value: ListNamePrimitive) {}

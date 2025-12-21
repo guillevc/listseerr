@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { DomainError } from 'shared/domain/errors/domain.error';
+import { DomainError } from 'shared/domain/errors';
 
 /**
  * Create tRPC context for each request.

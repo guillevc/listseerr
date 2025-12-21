@@ -10,7 +10,7 @@ import { trpc } from '../../lib/trpc';
 import {
   jellyseerrConfigSchema,
   jellyseerrTestConnectionSchema,
-} from 'shared/presentation/schemas/jellyseerr.schema';
+} from 'shared/presentation/schemas';
 
 export function JellyseerrSettings() {
   const [url, setUrl] = useState('');

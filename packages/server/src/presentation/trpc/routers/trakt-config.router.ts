@@ -2,13 +2,15 @@ import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   GetTraktConfigCommand,
-  GetTraktConfigResponse,
   SaveTraktConfigCommand,
-  TraktConfigResponse,
   DeleteTraktConfigCommand,
+} from 'shared/application/dtos';
+import type {
+  GetTraktConfigResponse,
+  TraktConfigResponse,
   DeleteTraktConfigResponse,
-} from 'shared/application/dtos/trakt-config.commands.dto';
-import { traktConfigSchema } from 'shared/presentation/schemas/trakt.schema';
+} from 'shared/application/dtos';
+import { traktConfigSchema } from 'shared/presentation/schemas';
 
 export interface TraktConfigRouterDeps {
   getTraktConfigUseCase: IUseCase<GetTraktConfigCommand, GetTraktConfigResponse>;

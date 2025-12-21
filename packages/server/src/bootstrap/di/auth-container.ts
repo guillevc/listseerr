@@ -26,7 +26,7 @@ import type {
   ValidateSessionCommand,
   LogoutSessionCommand,
   UpdateUserCredentialsCommand,
-} from 'shared/application/dtos/auth/commands.dto';
+} from 'shared/application/dtos';
 import type {
   CheckSetupStatusResponse,
   RegisterUserResponse,
@@ -34,7 +34,7 @@ import type {
   ValidateSessionResponse,
   LogoutSessionResponse,
   UpdateUserCredentialsResponse,
-} from 'shared/application/dtos/auth/responses.dto';
+} from 'shared/application/dtos';
 
 /**
  * Dependency Injection Container for Authentication Domain

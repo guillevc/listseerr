@@ -1,5 +1,5 @@
 import { SessionTokenVO } from '@/server/domain/value-objects/session-token.vo';
-import { getSessionExpiryDate, isSessionExpired } from 'shared/domain/logic/auth.logic';
+import { getSessionExpiryDate, isSessionExpired } from 'shared/domain/logic';
 
 /**
  * Session Entity - Domain Model for Authentication Sessions

@@ -1,13 +1,7 @@
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type {
-  GetScheduledJobsCommand,
-  ReloadSchedulerCommand,
-} from 'shared/application/dtos/scheduler/commands.dto';
-import type {
-  GetScheduledJobsResponse,
-  ReloadSchedulerResponse,
-} from 'shared/application/dtos/scheduler/responses.dto';
+import type { GetScheduledJobsCommand, ReloadSchedulerCommand } from 'shared/application/dtos';
+import type { GetScheduledJobsResponse, ReloadSchedulerResponse } from 'shared/application/dtos';
 
 export interface SchedulerRouterDeps {
   getScheduledJobsUseCase: IUseCase<GetScheduledJobsCommand, GetScheduledJobsResponse>;

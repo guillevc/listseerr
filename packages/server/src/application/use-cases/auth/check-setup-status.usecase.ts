@@ -1,5 +1,5 @@
 import type { IUserRepository } from '@/server/application/repositories/user.repository.interface';
-import type { CheckSetupStatusResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { CheckSetupStatusResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

@@ -6,7 +6,7 @@
  * The VO exists purely as a validation gate in the Use Case flow.
  */
 
-import type { PasswordPrimitive } from 'shared/domain/types/auth.types';
+import type { PasswordPrimitive } from 'shared/domain/types';
 
 export class PasswordVO {
   private constructor(private readonly value: PasswordPrimitive) {}

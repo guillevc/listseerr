@@ -5,9 +5,9 @@
  * Delegates display/detection logic to shared logic functions (DRY).
  */
 
-import { InvalidProviderError } from 'shared/domain/errors/provider.errors';
-import { ProviderValues, type ProviderType } from 'shared/domain/types/provider.types';
-import * as providerLogic from 'shared/domain/logic/provider.logic';
+import { InvalidProviderError } from 'shared/domain/errors';
+import { ProviderValues, type ProviderType } from 'shared/domain/types';
+import * as providerLogic from 'shared/domain/logic';
 
 export { ProviderValues, type ProviderType };
 

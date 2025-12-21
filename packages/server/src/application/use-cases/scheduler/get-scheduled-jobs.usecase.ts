@@ -1,6 +1,6 @@
 import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
-import type { GetScheduledJobsCommand } from 'shared/application/dtos/scheduler/commands.dto';
-import type { GetScheduledJobsResponse } from 'shared/application/dtos/scheduler/responses.dto';
+import type { GetScheduledJobsCommand } from 'shared/application/dtos';
+import type { GetScheduledJobsResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

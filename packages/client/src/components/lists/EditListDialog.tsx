@@ -14,17 +14,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
-import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
+import type { SerializedMediaList } from 'shared/application/dtos';
 import {
   TraktChartTypeValues,
   TraktMediaTypeValues,
   type TraktChartType,
   type TraktMediaType,
-} from 'shared/domain/types/trakt.types';
-import { isTraktChart, isStevenLu } from 'shared/domain/logic/provider.logic';
-import { TraktChartDisplayNames } from 'shared/domain/logic/trakt-chart-type.logic';
-import { parseTraktChartUrl } from 'shared/domain/logic/trakt-chart-url.logic';
-import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
+} from 'shared/domain/types';
+import { isTraktChart, isStevenLu } from 'shared/domain/logic';
+import { TraktChartDisplayNames } from 'shared/domain/logic';
+import { parseTraktChartUrl } from 'shared/domain/logic';
+import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas';
 
 interface EditListDialogProps {
   list: SerializedMediaList;

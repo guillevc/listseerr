@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { UserDTO } from 'shared/application/dtos/core/user.dto';
+import type { UserDTO } from 'shared/application/dtos';
 
 export interface AuthContextValue {
   user: UserDTO | null;

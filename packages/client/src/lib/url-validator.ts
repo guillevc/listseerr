@@ -1,6 +1,6 @@
-import type { ProviderType } from 'shared/domain/types/provider.types';
-import { detectProviderFromUrl, getProviderDisplayName } from 'shared/domain/logic/provider.logic';
-import { listUrlSchema } from 'shared/presentation/schemas/list.schema';
+import type { ProviderType } from 'shared/domain/types';
+import { detectProviderFromUrl, getProviderDisplayName } from 'shared/domain/logic';
+import { listUrlSchema } from 'shared/presentation/schemas';
 
 interface ValidationResult {
   isValid: boolean;

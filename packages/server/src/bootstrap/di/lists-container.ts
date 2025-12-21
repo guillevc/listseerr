@@ -24,7 +24,7 @@ import type {
   DeleteMediaListCommand,
   ToggleListEnabledCommand,
   EnableAllListsCommand,
-} from 'shared/application/dtos/media-list/commands.dto';
+} from 'shared/application/dtos';
 import type {
   GetAllMediaListsResponse,
   GetMediaListByIdResponse,
@@ -33,7 +33,7 @@ import type {
   DeleteMediaListResponse,
   ToggleListEnabledResponse,
   EnableAllListsResponse,
-} from 'shared/application/dtos/media-list/responses.dto';
+} from 'shared/application/dtos';
 
 /**
  * Dependency Injection Container for Lists Management Domain

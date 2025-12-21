@@ -5,12 +5,12 @@ import type {
   ProcessListCommand,
   ProcessBatchCommand,
   GetExecutionHistoryCommand,
-} from 'shared/application/dtos/processing/commands.dto';
+} from 'shared/application/dtos';
 import type {
   ProcessListResponse,
   ProcessBatchResponse,
   GetExecutionHistoryResponse,
-} from 'shared/application/dtos/processing/responses.dto';
+} from 'shared/application/dtos';
 
 export interface ProcessingRouterDeps {
   processListUseCase: IUseCase<ProcessListCommand, ProcessListResponse>;

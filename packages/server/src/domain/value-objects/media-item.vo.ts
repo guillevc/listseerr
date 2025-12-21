@@ -5,7 +5,7 @@
  * Identified by TMDB ID.
  */
 
-import { InvalidMediaItemError } from 'shared/domain/errors/media.errors';
+import { InvalidMediaItemError } from 'shared/domain/errors';
 import { MediaTypeVO } from './media-type.vo';
 
 export interface MediaItemVOProps {

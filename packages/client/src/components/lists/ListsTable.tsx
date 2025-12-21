@@ -15,16 +15,10 @@ import { useProviderConfig } from '../../hooks/use-provider-config';
 import { invalidateListQueries } from '../../lib/cache-utils';
 import { showListOperationToast, showErrorToast } from '../../lib/toast-helpers';
 import { EditListDialog } from './EditListDialog';
-import {
-  ProviderCell,
-  UrlCell,
-  LastProcessedCell,
-  AutoProcessCell,
-  ActionsCell,
-} from './table';
+import { ProviderCell, UrlCell, LastProcessedCell, AutoProcessCell, ActionsCell } from './table';
 
-import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import type { SerializedMediaList } from 'shared/application/dtos';
+import type { ProviderType } from 'shared/domain/types';
 
 // Transform DTO type for table use - provider is validated by server
 type MediaList = Omit<SerializedMediaList, 'provider'> & {

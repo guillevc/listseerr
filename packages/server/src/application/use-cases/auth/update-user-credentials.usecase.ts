@@ -4,14 +4,14 @@ import type { ILogger } from '@/server/application/services/core/logger.interfac
 import { UsernameVO } from '@/server/domain/value-objects/username.vo';
 import { PasswordVO } from '@/server/domain/value-objects/password.vo';
 import { UserMapper } from '@/server/application/mappers/user.mapper';
-import type { UpdateUserCredentialsCommand } from 'shared/application/dtos/auth/commands.dto';
-import type { UpdateUserCredentialsResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { UpdateUserCredentialsCommand } from 'shared/application/dtos';
+import type { UpdateUserCredentialsResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import {
   InvalidCredentialsError,
   UserAlreadyExistsError,
   UserNotFoundError,
-} from 'shared/domain/errors/auth.errors';
+} from 'shared/domain/errors';
 
 /**
  * Update User Credentials Use Case

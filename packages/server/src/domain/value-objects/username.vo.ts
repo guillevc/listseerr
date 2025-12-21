@@ -4,8 +4,8 @@
  * Server-only VO that handles business invariants for usernames.
  */
 
-import { InvalidUsernameError } from 'shared/domain/errors/auth.errors';
-import type { UsernamePrimitive } from 'shared/domain/types/auth.types';
+import { InvalidUsernameError } from 'shared/domain/errors';
+import type { UsernamePrimitive } from 'shared/domain/types';
 
 export class UsernameVO {
   private constructor(private readonly value: UsernamePrimitive) {}

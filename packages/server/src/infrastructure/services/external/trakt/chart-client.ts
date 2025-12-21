@@ -1,8 +1,8 @@
 import { TraktChartTypeVO } from '@/server/domain/value-objects/trakt-chart-type.vo';
 import { TraktMediaTypeVO } from '@/server/domain/value-objects/trakt-media-type.vo';
-import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
+import type { MediaItemDTO } from 'shared/application/dtos';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
-import { parseTraktChartUrl as parseTraktChartUrlPrimitive } from 'shared/domain/logic/trakt-chart-url.logic';
+import { parseTraktChartUrl as parseTraktChartUrlPrimitive } from 'shared/domain/logic';
 
 const logger = new LoggerService('trakt-chart-client');
 

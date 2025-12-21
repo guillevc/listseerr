@@ -1,8 +1,8 @@
 import type { ISessionRepository } from '@/server/application/repositories/session.repository.interface';
 import type { IUserRepository } from '@/server/application/repositories/user.repository.interface';
 import { UserMapper } from '@/server/application/mappers/user.mapper';
-import type { ValidateSessionCommand } from 'shared/application/dtos/auth/commands.dto';
-import type { ValidateSessionResponse } from 'shared/application/dtos/auth/responses.dto';
+import type { ValidateSessionCommand } from 'shared/application/dtos';
+import type { ValidateSessionResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

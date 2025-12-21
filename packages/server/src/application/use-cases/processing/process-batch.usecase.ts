@@ -7,8 +7,8 @@ import type { IMediaFetcherFactory } from '@/server/application/services/media-f
 import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
 import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
-import type { ProcessBatchCommand } from 'shared/application/dtos/processing/commands.dto';
-import type { ProcessBatchResponse } from 'shared/application/dtos/processing/responses.dto';
+import type { ProcessBatchCommand } from 'shared/application/dtos';
+import type { ProcessBatchResponse } from 'shared/application/dtos';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
@@ -18,10 +18,7 @@ import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
 import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
-import {
-  JellyseerrNotConfiguredError,
-  ProviderNotConfiguredError,
-} from 'shared/domain/errors/processing.errors';
+import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
 
 /**
  * ProcessBatchUseCase

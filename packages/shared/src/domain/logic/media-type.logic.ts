@@ -5,34 +5,25 @@
  * Shared between frontend and server VOs (DRY principle).
  */
 
-import { MediaTypeValues, type MediaType } from '../types/media.types';
+import { MediaTypeValues } from '../types/media.types';
+import {
+  createCaseInsensitiveEnumValidator,
+  createEnumNormalizer,
+  createEnumGuard,
+} from './enum-utils.logic';
 
 /**
  * Checks if a value is a valid media type.
  * Normalizes to lowercase for case-insensitive matching.
  */
-export function isValidMediaType(value: string): value is MediaType {
-  const normalized = value.toLowerCase();
-  return Object.values(MediaTypeValues).includes(normalized as MediaType);
-}
+export const isValidMediaType = createCaseInsensitiveEnumValidator(MediaTypeValues);
 
 /**
  * Normalizes a media type string to the canonical lowercase form.
  * Returns the normalized value if valid, throws if invalid.
  */
-export function normalizeMediaType(value: string): MediaType {
-  const normalized = value.toLowerCase();
-  if (!Object.values(MediaTypeValues).includes(normalized as MediaType)) {
-    throw new Error(`Invalid media type: ${value}`);
-  }
-  return normalized as MediaType;
-}
+export const normalizeMediaType = createEnumNormalizer(MediaTypeValues, 'media type');
 
 // Type guard functions
-export function isMovie(mediaType: MediaType): boolean {
-  return mediaType === MediaTypeValues.MOVIE;
-}
-
-export function isTv(mediaType: MediaType): boolean {
-  return mediaType === MediaTypeValues.TV;
-}
+export const isMovie = createEnumGuard(MediaTypeValues.MOVIE);
+export const isTv = createEnumGuard(MediaTypeValues.TV);

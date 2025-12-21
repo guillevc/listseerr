@@ -2,7 +2,6 @@
  * Domain Types
  *
  * Pure TypeScript contracts that schemas and VOs must satisfy.
- * These types define the "shape" of data without any validation library dependency.
  */
 
 export * from './provider.types';

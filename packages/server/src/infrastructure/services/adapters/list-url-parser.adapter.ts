@@ -5,7 +5,7 @@ import type {
 } from '@/server/application/services/list-url-parser.service.interface';
 import { convertDisplayUrlToApiUrl as convertTraktUrl } from '@/server/infrastructure/services/external/trakt/url-parser';
 import { convertDisplayUrlToApiUrl as convertTraktChartUrl } from '@/server/infrastructure/services/external/trakt/chart-client';
-import { InvalidProviderError } from 'shared/domain/errors/provider.errors';
+import { InvalidProviderError } from 'shared/domain/errors';
 
 export class ListUrlParserService implements IListUrlParserService {
   parseUrlForProvider(url: string, provider: ProviderVO, providedDisplayUrl?: string): ParsedUrls {

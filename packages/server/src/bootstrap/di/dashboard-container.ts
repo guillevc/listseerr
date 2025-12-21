@@ -14,12 +14,12 @@ import { GetDashboardStatsUseCase } from '@/server/application/use-cases/dashboa
 import { GetRecentActivityUseCase } from '@/server/application/use-cases/logs/get-recent-activity.usecase';
 import { GetPendingRequestsUseCase } from '@/server/application/use-cases/processing/get-pending-requests.usecase';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
-import type { GetRecentActivityCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { GetRecentActivityResponse } from 'shared/application/dtos/dashboard/responses.dto';
-import type { GetPendingRequestsCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { GetPendingRequestsResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { GetDashboardStatsCommand } from 'shared/application/dtos';
+import type { DashboardStatsResponse } from 'shared/application/dtos';
+import type { GetRecentActivityCommand } from 'shared/application/dtos';
+import type { GetRecentActivityResponse } from 'shared/application/dtos';
+import type { GetPendingRequestsCommand } from 'shared/application/dtos';
+import type { GetPendingRequestsResponse } from 'shared/application/dtos';
 
 /**
  * Dashboard Dependency Injection Container

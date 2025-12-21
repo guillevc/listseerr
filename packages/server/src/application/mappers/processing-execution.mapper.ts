@@ -1,5 +1,5 @@
 import type { ProcessingExecution } from '@/server/domain/entities/processing-execution.entity';
-import type { ExecutionHistoryDTO } from 'shared/application/dtos/core/execution-history.dto';
+import type { ExecutionHistoryDTO } from 'shared/application/dtos';
 
 export class ProcessingExecutionMapper {
   static toDTO(entity: ProcessingExecution): ExecutionHistoryDTO {

@@ -1,9 +1,7 @@
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
 import { MdbListConfigMapper } from '@/server/application/mappers/mdblist-config.mapper';
-import type {
-  SaveMdbListConfigCommand,
-  MdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
+import type { SaveMdbListConfigCommand } from 'shared/application/dtos';
+import type { MdbListConfigResponse } from 'shared/application/dtos';
 import { MdbListConfig } from '@/server/domain/entities/mdblist-config.entity';
 import { MdbListApiKeyVO } from '@/server/domain/value-objects/mdblist-api-key.vo';
 import type { ILogger } from '@/server/application/services/core/logger.interface';

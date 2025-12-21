@@ -1,7 +1,7 @@
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
-import type { GetExecutionHistoryCommand } from 'shared/application/dtos/processing/commands.dto';
-import type { GetExecutionHistoryResponse } from 'shared/application/dtos/processing/responses.dto';
+import type { GetExecutionHistoryCommand } from 'shared/application/dtos';
+import type { GetExecutionHistoryResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

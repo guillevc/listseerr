@@ -6,10 +6,10 @@ import { MediaListMapper } from '@/server/application/mappers/media-list.mapper'
 import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
-import type { CreateMediaListCommand } from 'shared/application/dtos/media-list/commands.dto';
-import type { CreateMediaListResponse } from 'shared/application/dtos/media-list/responses.dto';
+import type { CreateMediaListCommand } from 'shared/application/dtos';
+import type { CreateMediaListResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { UrlDoesNotMatchProviderError } from 'shared/domain/errors/provider.errors';
+import { UrlDoesNotMatchProviderError } from 'shared/domain/errors';
 
 export class CreateMediaListUseCase implements IUseCase<
   CreateMediaListCommand,

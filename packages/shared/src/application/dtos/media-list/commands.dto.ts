@@ -6,7 +6,7 @@
  * Primitive types are used (e.g., ProviderType) which schemas validate.
  */
 
-import type { CreateListPrimitive, UpdateListPrimitive } from 'shared/domain/types/list.types';
+import type { CreateListPrimitive, UpdateListPrimitive } from 'shared/domain/types';
 
 export interface CreateMediaListCommand extends CreateListPrimitive {
   userId: number;

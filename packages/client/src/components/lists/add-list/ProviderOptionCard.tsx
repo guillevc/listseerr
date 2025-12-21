@@ -1,6 +1,6 @@
 import { AlertCircle } from 'lucide-react';
-import type { ProviderType } from 'shared/domain/types/provider.types';
-import { getProviderDisplayName } from 'shared/domain/logic/provider.logic';
+import type { ProviderType } from 'shared/domain/types';
+import { getProviderDisplayName } from 'shared/domain/logic';
 import { RadioGroupItem } from '../../ui/radio-group';
 import { Badge } from '../../ui/badge';
 

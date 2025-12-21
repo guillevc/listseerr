@@ -12,7 +12,7 @@ import type {
   RegisterUserPrimitive,
   LoginUserPrimitive,
   UpdateUserCredentialsPrimitive,
-} from 'shared/domain/types/auth.types';
+} from 'shared/domain/types';
 
 /**
  * RegisterUserCommand

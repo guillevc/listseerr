@@ -1,5 +1,5 @@
 import type { TraktConfig } from '@/server/domain/entities/trakt-config.entity';
-import type { TraktConfigDTO } from 'shared/application/dtos/core/trakt-config.dto';
+import type { TraktConfigDTO } from 'shared/application/dtos';
 
 export class TraktConfigMapper {
   static toDTO(entity: TraktConfig): TraktConfigDTO {

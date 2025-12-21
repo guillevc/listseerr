@@ -5,9 +5,9 @@
  * Delegates validation logic to shared logic functions (DRY).
  */
 
-import { InvalidMediaTypeError } from 'shared/domain/errors/media-type.errors';
-import { MediaTypeValues, type MediaType } from 'shared/domain/types/media.types';
-import * as mediaTypeLogic from 'shared/domain/logic/media-type.logic';
+import { InvalidMediaTypeError } from 'shared/domain/errors';
+import { MediaTypeValues, type MediaType } from 'shared/domain/types';
+import * as mediaTypeLogic from 'shared/domain/logic';
 
 export { MediaTypeValues, type MediaType };
 

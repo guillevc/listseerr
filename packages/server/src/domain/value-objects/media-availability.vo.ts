@@ -6,13 +6,13 @@
  * Delegates validation logic to shared logic functions (DRY).
  */
 
-import { InvalidMediaAvailabilityError } from 'shared/domain/errors/media-availability.errors';
+import { InvalidMediaAvailabilityError } from 'shared/domain/errors';
 import {
   MediaAvailabilityValues,
   JellyseerrStatusValues,
   type MediaAvailabilityType,
-} from 'shared/domain/types/media.types';
-import * as mediaAvailabilityLogic from 'shared/domain/logic/media-availability.logic';
+} from 'shared/domain/types';
+import * as mediaAvailabilityLogic from 'shared/domain/logic';
 
 export { MediaAvailabilityValues, type MediaAvailabilityType };
 

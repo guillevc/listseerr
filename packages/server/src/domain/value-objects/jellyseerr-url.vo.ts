@@ -6,8 +6,8 @@
  * VO handles business rules (e.g., blocking localhost in production).
  */
 
-import { InvalidJellyseerrUrlError } from 'shared/domain/errors/jellyseerr-config.errors';
-import type { JellyseerrUrlPrimitive } from 'shared/domain/types/jellyseerr.types';
+import { InvalidJellyseerrUrlError } from 'shared/domain/errors';
+import type { JellyseerrUrlPrimitive } from 'shared/domain/types';
 
 export class JellyseerrUrlVO {
   private constructor(private readonly value: JellyseerrUrlPrimitive) {}

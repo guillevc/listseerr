@@ -1,11 +1,11 @@
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
 import type { ISchedulerService } from '@/server/application/services/core/scheduler.service.interface';
 import { GeneralSettingsMapper } from '@/server/application/mappers/general-settings.mapper';
-import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos/general-settings/commands.dto';
-import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos/general-settings/responses.dto';
+import type { UpdateGeneralSettingsCommand } from 'shared/application/dtos';
+import type { UpdateGeneralSettingsResponse } from 'shared/application/dtos';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import { GeneralSettingsNotFoundError } from 'shared/domain/errors/general-settings.errors';
+import { GeneralSettingsNotFoundError } from 'shared/domain/errors';
 
 export class UpdateGeneralSettingsUseCase implements IUseCase<
   UpdateGeneralSettingsCommand,

@@ -4,20 +4,20 @@ import type {
   GetJellyseerrConfigCommand,
   UpdateJellyseerrConfigCommand,
   DeleteJellyseerrConfigCommand,
-} from 'shared/application/dtos/jellyseerr-config/commands.dto';
+} from 'shared/application/dtos';
 import type {
   GetJellyseerrConfigResponse,
   UpdateJellyseerrConfigResponse,
   DeleteJellyseerrConfigResponse,
-} from 'shared/application/dtos/jellyseerr-config/responses.dto';
+} from 'shared/application/dtos';
 import type {
   TestJellyseerrConnectionCommand,
   TestJellyseerrConnectionResponse,
-} from 'shared/application/dtos/diagnostics/jellyseerr-connection-test.dto';
+} from 'shared/application/dtos';
 import {
   jellyseerrConfigSchema,
   jellyseerrTestConnectionSchema,
-} from 'shared/presentation/schemas/jellyseerr.schema';
+} from 'shared/presentation/schemas';
 
 export interface JellyseerrConfigRouterDeps {
   getJellyseerrConfigUseCase: IUseCase<GetJellyseerrConfigCommand, GetJellyseerrConfigResponse>;

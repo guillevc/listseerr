@@ -51,6 +51,28 @@ export default [
       ],
     },
   },
+  // Enforce proper shared package imports in client and server
+  {
+    files: ['packages/client/**/*.{ts,tsx}', 'packages/server/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/shared/src/**'],
+              message: 'Use "shared/..." package imports instead of relative paths.',
+            },
+            {
+              group: ['shared/**/*.*'],
+              message:
+                'Import from index files only (e.g., "shared/domain/types" not "shared/domain/types/provider.types").',
+            },
+          ],
+        },
+      ],
+    },
+  },
   // UI primitives export variants alongside components - no benefit from fast refresh rule
   {
     files: ['packages/client/src/components/ui/**/*.tsx'],

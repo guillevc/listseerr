@@ -15,11 +15,11 @@ import type { IUseCase } from '@/server/application/use-cases/use-case.interface
 import type {
   GetGeneralSettingsCommand,
   UpdateGeneralSettingsCommand,
-} from 'shared/application/dtos/general-settings/commands.dto';
+} from 'shared/application/dtos';
 import type {
   GetGeneralSettingsResponse,
   UpdateGeneralSettingsResponse,
-} from 'shared/application/dtos/general-settings/responses.dto';
+} from 'shared/application/dtos';
 
 /**
  * Dependency Injection Container for General Settings Domain

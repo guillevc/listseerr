@@ -1,11 +1,8 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
-import type { GetLogsCommand, ClearLogsCommand } from 'shared/application/dtos/logs/commands.dto';
-import type {
-  GetLogsResponse,
-  ClearLogsResponse,
-} from 'shared/application/dtos/logs/responses.dto';
+import type { GetLogsCommand, ClearLogsCommand } from 'shared/application/dtos';
+import type { GetLogsResponse, ClearLogsResponse } from 'shared/application/dtos';
 
 export interface LogsRouterDeps {
   getLogsUseCase: IUseCase<GetLogsCommand, GetLogsResponse>;

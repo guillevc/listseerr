@@ -5,9 +5,9 @@
  * Delegates logic to shared logic functions (DRY).
  */
 
-import { InvalidTriggerTypeError } from 'shared/domain/errors/trigger-type.errors';
-import { TriggerTypeValues, type TriggerType } from 'shared/domain/types/trigger-type.types';
-import * as triggerTypeLogic from 'shared/domain/logic/trigger-type.logic';
+import { InvalidTriggerTypeError } from 'shared/domain/errors';
+import { TriggerTypeValues, type TriggerType } from 'shared/domain/types';
+import * as triggerTypeLogic from 'shared/domain/logic';
 
 export { TriggerTypeValues, type TriggerType };
 

@@ -2,13 +2,15 @@ import { router, publicProcedure } from '@/server/presentation/trpc/context';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   GetMdbListConfigCommand,
-  GetMdbListConfigResponse,
   SaveMdbListConfigCommand,
-  MdbListConfigResponse,
   DeleteMdbListConfigCommand,
+} from 'shared/application/dtos';
+import type {
+  GetMdbListConfigResponse,
+  MdbListConfigResponse,
   DeleteMdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
-import { mdblistConfigSchema } from 'shared/presentation/schemas/mdblist.schema';
+} from 'shared/application/dtos';
+import { mdblistConfigSchema } from 'shared/presentation/schemas';
 
 export interface MdbListConfigRouterDeps {
   getMdbListConfigUseCase: IUseCase<GetMdbListConfigCommand, GetMdbListConfigResponse>;

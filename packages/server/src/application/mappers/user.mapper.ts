@@ -1,5 +1,5 @@
 import type { User } from '@/server/domain/entities/user.entity';
-import type { UserDTO } from 'shared/application/dtos/core/user.dto';
+import type { UserDTO } from 'shared/application/dtos';
 
 /**
  * User Mapper

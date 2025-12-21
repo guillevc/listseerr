@@ -1,8 +1,8 @@
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
-import { InvalidMaxItemsError } from 'shared/domain/errors/media-list.errors';
-import type { ProviderType } from 'shared/domain/types/provider.types';
+import { InvalidMaxItemsError } from 'shared/domain/errors';
+import type { ProviderType } from 'shared/domain/types';
 
 /**
  * MediaList Entity - Domain Model with Rich Behavior

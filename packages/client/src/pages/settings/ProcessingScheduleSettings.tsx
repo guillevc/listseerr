@@ -11,7 +11,11 @@ import { Switch } from '../../components/ui/switch';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
-import { validateAndParseCron, COMMON_CRON_PATTERNS, type CronValidation } from '../../lib/cron-validator';
+import {
+  validateAndParseCron,
+  COMMON_CRON_PATTERNS,
+  type CronValidation,
+} from '../../lib/cron-validator';
 
 export function ProcessingScheduleSettings() {
   const [cronExpression, setCronExpression] = useState('');
@@ -105,7 +109,6 @@ export function ProcessingScheduleSettings() {
       automaticProcessingSchedule: isEnabled ? cronExpression : undefined,
     });
   };
-
 
   return (
     <div className="space-y-6">

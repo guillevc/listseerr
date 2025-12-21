@@ -5,8 +5,8 @@
  * Format: {triggerType}-{timestamp}-{randomId}
  */
 
-import { InvalidBatchIdError } from 'shared/domain/errors/processing.errors';
-import * as triggerTypeLogic from 'shared/domain/logic/trigger-type.logic';
+import { InvalidBatchIdError } from 'shared/domain/errors';
+import * as triggerTypeLogic from 'shared/domain/logic';
 import { TriggerTypeVO } from './trigger-type.vo';
 
 export class BatchIdVO {

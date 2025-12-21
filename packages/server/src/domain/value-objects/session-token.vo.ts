@@ -5,8 +5,8 @@
  * Generates cryptographically secure random tokens.
  */
 
-import type { SessionTokenPrimitive } from 'shared/domain/types/auth.types';
-import { InvalidSessionTokenError } from 'shared/domain/errors/auth.errors';
+import type { SessionTokenPrimitive } from 'shared/domain/types';
+import { InvalidSessionTokenError } from 'shared/domain/errors';
 
 const TOKEN_BYTES = 32; // 32 bytes = 64 hex characters
 

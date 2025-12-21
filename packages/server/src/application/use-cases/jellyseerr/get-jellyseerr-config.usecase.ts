@@ -1,7 +1,7 @@
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import { JellyseerrConfigMapper } from '@/server/application/mappers/jellyseerr-config.mapper';
-import type { GetJellyseerrConfigCommand } from 'shared/application/dtos/jellyseerr-config/commands.dto';
-import type { GetJellyseerrConfigResponse } from 'shared/application/dtos/jellyseerr-config/responses.dto';
+import type { GetJellyseerrConfigCommand } from 'shared/application/dtos';
+import type { GetJellyseerrConfigResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class GetJellyseerrConfigUseCase implements IUseCase<

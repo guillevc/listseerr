@@ -1,5 +1,5 @@
 import type { MediaList } from '@/server/domain/entities/media-list.entity';
-import type { MediaListDTO } from 'shared/application/dtos/core/media-list.dto';
+import type { MediaListDTO } from 'shared/application/dtos';
 
 export class MediaListMapper {
   static toDTO(entity: MediaList): MediaListDTO {

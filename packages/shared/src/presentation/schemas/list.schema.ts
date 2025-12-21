@@ -14,46 +14,37 @@ import type {
   UpdateListPrimitive,
 } from '../../domain/types/list.types';
 import { providerSchema } from './provider.schema';
+import {
+  createHttpUrlSchema,
+  createNonEmptyStringSchema,
+  createBoundedIntSchema,
+} from './common.schema';
 
 /**
  * List name schema.
  * Validates: non-empty string, trimmed.
  */
-export const listNameSchema: z.ZodType<ListNamePrimitive> = z
-  .string()
-  .min(1, 'Name is required')
-  .transform((name) => name.trim())
-  .refine((name) => name.length > 0, { message: 'Name cannot be empty' });
+export const listNameSchema: z.ZodType<ListNamePrimitive> = createNonEmptyStringSchema('Name');
 
 /**
  * List URL schema.
  * Validates: valid HTTP/HTTPS URL, removes query params.
  */
-export const listUrlSchema: z.ZodType<ListUrlPrimitive> = z
-  .url({ message: 'Please enter a valid URL' })
-  .refine(
-    (url) => {
-      try {
-        const parsed = new URL(url);
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-      } catch {
-        return false;
-      }
-    },
-    { message: 'URL must use HTTP or HTTPS protocol' }
-  )
-  .transform((url) => url.split('?')[0]);
+export const listUrlSchema: z.ZodType<ListUrlPrimitive> = createHttpUrlSchema({
+  stripQueryParams: true,
+});
 
 /**
  * Max items schema.
  * Validates: positive integer between 1 and 50.
  */
-export const maxItemsSchema: z.ZodType<MaxItemsPrimitive> = z
-  .number()
-  .int({ message: 'Max items must be a whole number' })
-  .min(1, { message: 'Max items must be at least 1' })
-  .max(50, { message: 'Max items cannot exceed 50' })
-  .default(20);
+export const maxItemsSchema: z.ZodType<MaxItemsPrimitive> = createBoundedIntSchema({
+  min: 1,
+  max: 50,
+  default: 20,
+  minMessage: 'Max items must be at least 1',
+  maxMessage: 'Max items cannot exceed 50',
+});
 
 /**
  * Create list schema.

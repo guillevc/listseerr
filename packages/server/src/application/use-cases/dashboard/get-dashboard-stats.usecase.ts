@@ -1,7 +1,7 @@
 import type { IDashboardStatsRepository } from '@/server/application/repositories/dashboard-stats.repository.interface';
 import type { ISchedulerInfoService } from '@/server/application/services/core/scheduler-info.service.interface';
-import type { GetDashboardStatsCommand } from 'shared/application/dtos/dashboard/commands.dto';
-import type { DashboardStatsResponse } from 'shared/application/dtos/dashboard/responses.dto';
+import type { GetDashboardStatsCommand } from 'shared/application/dtos';
+import type { DashboardStatsResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 /**

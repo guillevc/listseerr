@@ -1,5 +1,5 @@
 import type { UserDTO } from '../core/user.dto';
-import type { SessionTokenPrimitive } from 'shared/domain/types/auth.types';
+import type { SessionTokenPrimitive } from 'shared/domain/types';
 
 /**
  * Auth Response DTOs (Output)

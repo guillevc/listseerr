@@ -1,5 +1,5 @@
-import type { ProviderType } from 'shared/domain/types/provider.types';
-import type { TraktChartType, TraktMediaType } from 'shared/domain/types/trakt.types';
+import type { ProviderType } from 'shared/domain/types';
+import type { TraktChartType, TraktMediaType } from 'shared/domain/types';
 
 export interface AddListFormState {
   name: string;

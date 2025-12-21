@@ -1,5 +1,5 @@
 import type { TraktListItem } from './types';
-import type { MediaItemDTO } from 'shared/application/dtos/core/media-item.dto';
+import type { MediaItemDTO } from 'shared/application/dtos';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 const logger = new LoggerService('trakt-client');

@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import type { IEncryptionService } from '@/server/application/services/core/encryption.service.interface';
-import { EncryptionError } from 'shared/domain/errors/provider-config.errors';
+import { EncryptionError } from 'shared/domain/errors';
 
 /**
  * AES-256-GCM Encryption Service

@@ -10,12 +10,14 @@ import { DeleteMdbListConfigUseCase } from '@/server/application/use-cases/mdbli
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 import type {
   GetMdbListConfigCommand,
-  GetMdbListConfigResponse,
   SaveMdbListConfigCommand,
-  MdbListConfigResponse,
   DeleteMdbListConfigCommand,
+} from 'shared/application/dtos';
+import type {
+  GetMdbListConfigResponse,
+  MdbListConfigResponse,
   DeleteMdbListConfigResponse,
-} from 'shared/application/dtos/mdblist-config.commands.dto';
+} from 'shared/application/dtos';
 import { env } from '@/server/env';
 
 export class MdbListConfigContainer {

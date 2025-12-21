@@ -1,9 +1,7 @@
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import { TraktConfigMapper } from '@/server/application/mappers/trakt-config.mapper';
-import type {
-  GetTraktConfigCommand,
-  GetTraktConfigResponse,
-} from 'shared/application/dtos/trakt-config.commands.dto';
+import type { GetTraktConfigCommand } from 'shared/application/dtos';
+import type { GetTraktConfigResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
 
 export class GetTraktConfigUseCase implements IUseCase<
