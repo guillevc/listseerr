@@ -32,13 +32,6 @@ export interface ParsedTraktChartUrl {
 }
 
 /**
- * Checks if a URL is a valid Trakt chart URL.
- */
-export function isValidTraktChartUrl(url: string): boolean {
-  return TRAKT_CHART_URL_PATTERN.test(url);
-}
-
-/**
  * Parses a Trakt chart URL to extract media type and chart type.
  * Returns null if the URL doesn't match the expected pattern.
  *

@@ -6,6 +6,7 @@
  */
 
 import { TRAKT_CHART_URL_PATTERN } from '../logic/trakt-chart-url.logic';
+import { MDBLIST_URL_PATTERN } from '../logic/mdblist-url.logic';
 
 export const ProviderValues = {
   TRAKT: 'trakt',
@@ -19,6 +20,6 @@ export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 export const ProviderUrlPatterns: Record<ProviderType, RegExp[]> = {
   trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?/i],
   traktChart: [TRAKT_CHART_URL_PATTERN],
-  mdblist: [/^https?:\/\/(www\.)?mdblist\.com\/lists\/[^/]+\/[^/]+\/?/i],
+  mdblist: [MDBLIST_URL_PATTERN],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],
 };

@@ -1,30 +1,32 @@
-import { MdbListUrlParts } from './types';
+import { InvalidListUrlError } from 'shared/domain/errors';
+import { parseMdbListUrl as parseUrl, type ParsedMdbListUrl } from 'shared/domain/logic';
+import type { MdbListUrlParts } from './types';
 
+/**
+ * Parses an MDBList URL into its component parts.
+ * @throws InvalidListUrlError if URL is invalid
+ */
 export function parseMdbListUrl(url: string): MdbListUrlParts {
-  // Expected format: https://mdblist.com/lists/{username}/{list-slug}
-  const urlPattern = /^https?:\/\/(?:www\.)?mdblist\.com\/lists\/([^/]+)\/([^/?]+)/i;
-  const match = url.match(urlPattern);
-
-  if (!match) {
-    throw new Error(
-      'Invalid MDBList URL format. Expected: https://mdblist.com/lists/{username}/{list-slug}'
-    );
+  const parsed = parseUrl(url);
+  if (!parsed) {
+    throw new InvalidListUrlError(url);
   }
-
-  return {
-    username: match[1],
-    listSlug: match[2],
-  };
+  return parsed;
 }
 
+// Re-export shared types for convenience
+export type { ParsedMdbListUrl };
+
+/**
+ * Builds the MDBList API URL from parsed parts.
+ */
 export function buildMdbListApiUrl(parts: MdbListUrlParts, limit: number, apiKey: string): string {
-  // Build API URL with required parameters
   const baseUrl = 'https://api.mdblist.com';
   const path = `/lists/${parts.username}/${parts.listSlug}/items/`;
   const params = new URLSearchParams({
     limit: limit.toString(),
     apikey: apiKey,
-    unified: 'true', // Return both movies and shows together
+    unified: 'true',
   });
 
   return `${baseUrl}${path}?${params.toString()}`;
