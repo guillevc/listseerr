@@ -4,8 +4,10 @@ import type { IExecutionHistoryRepository } from '@/server/application/repositor
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
-import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
-import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
+import type {
+  IListProcessingService,
+  ListProcessingResult,
+} from '@/server/application/services/list-processing.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessBatchCommand } from 'shared/application/dtos';
 import type { ProcessBatchResponse } from 'shared/application/dtos';
@@ -39,8 +41,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     private readonly traktConfigRepository: ITraktConfigRepository,
     private readonly mdbListConfigRepository: IMdbListConfigRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
-    private readonly jellyseerrClient: IJellyseerrClient,
-    private readonly availabilityChecker: IMediaAvailabilityChecker,
+    private readonly listProcessingService: IListProcessingService,
     private readonly logger: ILogger
   ) {}
 
@@ -110,50 +111,27 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       'Global deduplication completed'
     );
 
-    // 4. Load Jellyseerr config and check availability
+    // 4. Load Jellyseerr config and process items
     const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
-    const categorized = await this.availabilityChecker.checkAndCategorize(
-      uniqueItems,
-      jellyseerrConfig
-    );
+    const result = await this.listProcessingService.processItems(uniqueItems, jellyseerrConfig);
 
-    this.logger.info(
-      {
-        uniqueItems: uniqueItems.length,
-        toBeRequested: categorized.toBeRequested.length,
-        previouslyRequested: categorized.previouslyRequested.length,
-        available: categorized.available.length,
-      },
-      'Media availability check completed'
-    );
-
-    // 5. Request only TO_BE_REQUESTED items to Jellyseerr
-    const results = await this.jellyseerrClient.requestItems(
-      categorized.toBeRequested,
-      jellyseerrConfig
-    );
-    this.logger.info(
-      { successful: results.successful.length, failed: results.failed.length },
-      'Jellyseerr batch requests completed'
-    );
-
-    // 6. Update all execution histories
-    const executions = await this.updateAllExecutions(listsWithItems, results, categorized);
+    // 5. Update all execution histories
+    const executions = await this.updateAllExecutions(listsWithItems, result);
 
     this.logger.info(
       { processedLists: listsToProcess.length },
       'Batch processing completed successfully'
     );
 
-    // 7. Return aggregate response
+    // 6. Return aggregate response
     return {
       success: true,
       processedLists: listsToProcess.length,
       totalItemsFound,
-      itemsRequested: results.successful.length,
-      itemsFailed: results.failed.length,
-      itemsSkippedPreviouslyRequested: categorized.previouslyRequested.length,
-      itemsSkippedAvailable: categorized.available.length,
+      itemsRequested: result.successful.length,
+      itemsFailed: result.failed.length,
+      itemsSkippedPreviouslyRequested: result.previouslyRequested.length,
+      itemsSkippedAvailable: result.available.length,
       executions: executions.map((e) => ProcessingExecutionMapper.toDTO(e)),
     };
   }
@@ -246,20 +224,13 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       items: MediaItemVO[];
       execution: ProcessingExecution;
     }>,
-    results: { successful: MediaItemVO[]; failed: Array<{ item: MediaItemVO; error: string }> },
-    categorized: {
-      toBeRequested: MediaItemVO[];
-      previouslyRequested: MediaItemVO[];
-      available: MediaItemVO[];
-    }
+    result: ListProcessingResult
   ): Promise<ProcessingExecution[]> {
     const updatedExecutions: ProcessingExecution[] = [];
 
     // Build sets for quick lookup
-    const previouslyRequestedTmdbIds = new Set(
-      categorized.previouslyRequested.map((i) => i.tmdbId)
-    );
-    const availableTmdbIds = new Set(categorized.available.map((i) => i.tmdbId));
+    const previouslyRequestedTmdbIds = new Set(result.previouslyRequested.map((i) => i.tmdbId));
+    const availableTmdbIds = new Set(result.available.map((i) => i.tmdbId));
 
     for (const { items, execution } of listsWithItems) {
       // Skip already-failed executions
@@ -270,8 +241,8 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
 
       // Calculate counts for this list's items
       const listTmdbIds = new Set(items.map((i) => i.tmdbId));
-      const successfulCount = results.successful.filter((i) => listTmdbIds.has(i.tmdbId)).length;
-      const failedCount = results.failed.filter((f) => listTmdbIds.has(f.item.tmdbId)).length;
+      const successfulCount = result.successful.filter((i) => listTmdbIds.has(i.tmdbId)).length;
+      const failedCount = result.failed.filter((f) => listTmdbIds.has(f.item.tmdbId)).length;
       const skippedAvailableCount = items.filter((i) => availableTmdbIds.has(i.tmdbId)).length;
       const skippedPreviouslyRequestedCount = items.filter((i) =>
         previouslyRequestedTmdbIds.has(i.tmdbId)

@@ -2,8 +2,7 @@ import type { IMediaListRepository } from '@/server/application/repositories/med
 import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
-import type { IJellyseerrClient } from '@/server/application/services/jellyseerr-client.service.interface';
-import type { IMediaAvailabilityChecker } from '@/server/application/services/media-availability-checker.service.interface';
+import type { IListProcessingService } from '@/server/application/services/list-processing.service.interface';
 import { ProcessingExecutionMapper } from '@/server/application/mappers/processing-execution.mapper';
 import type { ProcessListCommand } from 'shared/application/dtos';
 import type { ProcessListResponse } from 'shared/application/dtos';
@@ -34,8 +33,7 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
-    private readonly jellyseerrClient: IJellyseerrClient,
-    private readonly availabilityChecker: IMediaAvailabilityChecker,
+    private readonly listProcessingService: IListProcessingService,
     private readonly logger: ILogger
   ) {}
 
@@ -73,38 +71,16 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
       const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems);
       this.logger.info({ itemCount: items.length }, 'Items fetched from provider');
 
-      // 5. Check availability in Jellyseerr and categorize items
-      const categorized = await this.availabilityChecker.checkAndCategorize(
-        items,
-        jellyseerrConfig
-      );
-      this.logger.info(
-        {
-          totalItems: items.length,
-          toBeRequested: categorized.toBeRequested.length,
-          previouslyRequested: categorized.previouslyRequested.length,
-          available: categorized.available.length,
-        },
-        'Media availability check completed'
-      );
+      // 5. Process items: check availability and request to Jellyseerr
+      const result = await this.listProcessingService.processItems(items, jellyseerrConfig);
 
-      // 6. Request only TO_BE_REQUESTED items to Jellyseerr
-      const results = await this.jellyseerrClient.requestItems(
-        categorized.toBeRequested,
-        jellyseerrConfig
-      );
-      this.logger.info(
-        { successful: results.successful.length, failed: results.failed.length },
-        'Jellyseerr requests completed'
-      );
-
-      // 7. Mark execution as success
+      // 6. Mark execution as success
       savedExecution.markAsSuccess(
         items.length,
-        results.successful.length,
-        results.failed.length,
-        categorized.available.length,
-        categorized.previouslyRequested.length
+        result.successful.length,
+        result.failed.length,
+        result.available.length,
+        result.previouslyRequested.length
       );
       await this.executionHistoryRepository.save(savedExecution);
 
@@ -113,11 +89,11 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
         'List processing completed successfully'
       );
 
-      // 8. Return response with skipped counts
+      // 7. Return response with skipped counts
       return {
         execution: ProcessingExecutionMapper.toDTO(savedExecution),
-        itemsSkippedPreviouslyRequested: categorized.previouslyRequested.length,
-        itemsSkippedAvailable: categorized.available.length,
+        itemsSkippedPreviouslyRequested: result.previouslyRequested.length,
+        itemsSkippedAvailable: result.available.length,
       };
     } catch (error) {
       // Error handling: mark execution as failed

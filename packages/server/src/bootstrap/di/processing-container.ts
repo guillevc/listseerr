@@ -10,6 +10,7 @@ import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repos
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { HttpMediaAvailabilityChecker } from '@/server/infrastructure/services/adapters/http-media-availability-checker.adapter';
+import { ListProcessingService } from '@/server/infrastructure/services/adapters/list-processing.adapter';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 
@@ -50,8 +51,7 @@ export class ProcessingContainer {
   private readonly mdbListConfigRepository: DrizzleMdbListConfigRepository;
   private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
   private readonly mediaFetcherFactory: MediaFetcherFactory;
-  private readonly jellyseerrClient: JellyseerrHttpClient;
-  private readonly availabilityChecker: HttpMediaAvailabilityChecker;
+  private readonly listProcessingService: ListProcessingService;
   private readonly logger: LoggerService;
 
   // Application (public)
@@ -87,10 +87,11 @@ export class ProcessingContainer {
       this.mdbListConfigRepository
     );
 
-    this.jellyseerrClient = new JellyseerrHttpClient();
-
-    this.availabilityChecker = new HttpMediaAvailabilityChecker(
-      new LoggerService('availability-checker')
+    // List processing service (shared between ProcessListUseCase and ProcessBatchUseCase)
+    this.listProcessingService = new ListProcessingService(
+      new HttpMediaAvailabilityChecker(new LoggerService('availability-checker')),
+      new JellyseerrHttpClient(),
+      new LoggerService('list-processing')
     );
 
     this.logger = new LoggerService('processing');
@@ -102,8 +103,7 @@ export class ProcessingContainer {
         this.jellyseerrConfigRepository,
         this.executionHistoryRepository,
         this.mediaFetcherFactory,
-        this.jellyseerrClient,
-        this.availabilityChecker,
+        this.listProcessingService,
         this.logger
       ),
       this.logger,
@@ -118,8 +118,7 @@ export class ProcessingContainer {
         this.traktConfigRepository,
         this.mdbListConfigRepository,
         this.mediaFetcherFactory,
-        this.jellyseerrClient,
-        this.availabilityChecker,
+        this.listProcessingService,
         this.logger
       ),
       this.logger,

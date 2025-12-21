@@ -267,7 +267,10 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
     const data = (await response.json()) as JellyseerrPendingRequestsResponse;
     const count = data.pageInfo.results;
 
-    logger.info({ pendingRequestsCount: count }, 'Successfully fetched pending requests count');
+    logger.info(
+      { pendingRequestsCount: count },
+      'Successfully fetched pending requests count from Jellyseerr'
+    );
 
     return count;
   } catch (error) {
