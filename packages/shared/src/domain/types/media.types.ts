@@ -29,6 +29,7 @@ export type MediaAvailabilityType =
  * 4 = PARTIALLY_AVAILABLE - Some content available (e.g., some seasons)
  * 5 = AVAILABLE - Fully available in library
  * 6 = DELETED - Was requested but later deleted
+ * 7+ = UNDOCUMENTED_STATE - Any value >= 7, treat based on hasRequests
  */
 export const JellyseerrStatusValues = {
   UNKNOWN: 1,
@@ -37,6 +38,7 @@ export const JellyseerrStatusValues = {
   PARTIALLY_AVAILABLE: 4,
   AVAILABLE: 5,
   DELETED: 6,
+  UNDOCUMENTED_STATE: 7, // Sentinel for values >= 7
 } as const;
 
 export type JellyseerrStatus = (typeof JellyseerrStatusValues)[keyof typeof JellyseerrStatusValues];

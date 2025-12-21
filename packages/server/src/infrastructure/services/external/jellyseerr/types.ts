@@ -45,6 +45,7 @@ export interface JellyseerrPendingRequestsResponse {
  * - 4 = PARTIALLY_AVAILABLE (some content available)
  * - 5 = AVAILABLE (fully available)
  * - 6 = DELETED (was requested but deleted)
+ * - >= 7 = UNDOCUMENTED_STATE (treat based on hasRequests)
  *
  * If mediaInfo is missing, the media is not in Jellyseerr.
  */
@@ -55,5 +56,7 @@ export interface JellyseerrMediaInfoResponse {
   mediaInfo?: {
     id: number;
     status: number;
+    status4k?: number; // 4K availability (same codes as status)
+    requests?: unknown[]; // Only need to check if non-empty
   };
 }

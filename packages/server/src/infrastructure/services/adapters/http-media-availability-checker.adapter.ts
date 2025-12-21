@@ -126,9 +126,11 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
   ): Promise<MediaAvailabilityVO> {
     const response = await getMediaAvailability(item.tmdbId, item.mediaType, configDTO);
 
-    // Extract status from response (null if not found or no mediaInfo)
+    // Extract status fields from response (null if not found or no mediaInfo)
     const status = response?.mediaInfo?.status ?? null;
+    const status4k = response?.mediaInfo?.status4k ?? null;
+    const hasRequests = (response?.mediaInfo?.requests?.length ?? 0) > 0;
 
-    return MediaAvailabilityVO.fromJellyseerrStatus(status);
+    return MediaAvailabilityVO.fromCombinedJellyseerrStatus(status, status4k, hasRequests);
   }
 }

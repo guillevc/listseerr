@@ -39,8 +39,14 @@ export class MediaAvailabilityVO {
   /**
    * Creates a VO from Jellyseerr mediaInfo.status.
    * This is server-side business logic for external API mapping.
+   *
+   * @param status - The status code (1-6 known, >=7 undocumented, null = not found)
+   * @param hasRequests - Whether mediaInfo.requests[] is non-empty (only affects UNDOCUMENTED_STATE)
    */
-  static fromJellyseerrStatus(status: number | null | undefined): MediaAvailabilityVO {
+  static fromJellyseerrStatus(
+    status: number | null | undefined,
+    hasRequests: boolean = false
+  ): MediaAvailabilityVO {
     if (status === null || status === undefined) {
       return this.toBeRequested();
     }
@@ -57,8 +63,42 @@ export class MediaAvailabilityVO {
         return this.available();
 
       default:
+        // Undocumented states (>= 7): check hasRequests
+        if (status >= JellyseerrStatusValues.UNDOCUMENTED_STATE) {
+          return hasRequests ? this.previouslyRequested() : this.toBeRequested();
+        }
         return this.toBeRequested();
     }
+  }
+
+  /**
+   * Determines combined availability from both standard and 4K status.
+   * Only returns TO_BE_REQUESTED if BOTH resolve to TO_BE_REQUESTED.
+   *
+   * @param status - Standard status code
+   * @param status4k - 4K status code (null/undefined treated as TO_BE_REQUESTED)
+   * @param hasRequests - Whether mediaInfo.requests[] is non-empty
+   */
+  static fromCombinedJellyseerrStatus(
+    status: number | null | undefined,
+    status4k: number | null | undefined,
+    hasRequests: boolean = false
+  ): MediaAvailabilityVO {
+    const standardAvailability = this.fromJellyseerrStatus(status, hasRequests);
+    const fourKAvailability = this.fromJellyseerrStatus(status4k, hasRequests);
+
+    // Only request if BOTH are TO_BE_REQUESTED
+    if (standardAvailability.isToBeRequested() && fourKAvailability.isToBeRequested()) {
+      return this.toBeRequested();
+    }
+
+    // AVAILABLE takes priority
+    if (standardAvailability.isAvailable() || fourKAvailability.isAvailable()) {
+      return this.available();
+    }
+
+    // Otherwise PREVIOUSLY_REQUESTED
+    return this.previouslyRequested();
   }
 
   // Factory methods
