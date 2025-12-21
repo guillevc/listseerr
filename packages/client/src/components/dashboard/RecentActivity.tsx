@@ -204,7 +204,7 @@ export function RecentActivity() {
                 <div className="flex items-center justify-between border-b border-border p-4">
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant={triggerIsScheduled ? 'default' : 'secondary'}
+                      variant={triggerIsScheduled ? 'scheduled' : 'manual'}
                       className="text-xs"
                     >
                       {triggerIsScheduled ? (

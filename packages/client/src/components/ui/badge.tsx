@@ -8,7 +8,7 @@ const badgeVariants = tv({
   variants: {
     variant: {
       // legacy
-      default: 'bg-primary text-white hover:bg-primary-hover',
+      default: 'bg-primary text-foreground hover:bg-primary-hover',
       secondary: 'bg-card text-foreground',
       simple: '',
       // new
@@ -21,6 +21,8 @@ const badgeVariants = tv({
       traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
       mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
       stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
+      scheduled: 'bg-primary/50 border border-border text-primary-foreground',
+      manual: 'bg-background border border-border text-foreground',
     },
     size: {
       default: 'px-2.5 py-0.5 text-xs',
