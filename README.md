@@ -8,7 +8,7 @@
 
 # Listseerr
 
-**Request movies & shows in Jellyseerr from your favorite lists**
+**Request movies & shows in Jellyseerr/Overseerr from your favorite lists**
 
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
 [![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr?include_prereleases)](https://github.com/guillevc/listseerr/releases)
@@ -23,7 +23,7 @@
 
 ## How It Works
 
-Point Listseerr at your favorite curated lists and it automatically requests those movies and shows in Jellyseerr. Set it and forget it.
+Point Listseerr at your favorite curated lists and it automatically requests those movies and shows in Jellyseerr/Overseerr. Set it and forget it.
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
@@ -39,7 +39,7 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
 ```
 
 > [!TIP]
-> Create a dedicated Jellyseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
+> Create a dedicated Jellyseerr/Overseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
 
 > [!NOTE]
 > Listseerr skips previously rejected or already available media, so you won't see duplicate requests.
