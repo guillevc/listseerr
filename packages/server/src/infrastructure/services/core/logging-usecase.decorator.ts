@@ -26,7 +26,7 @@ export class LoggingUseCaseDecorator<TCommand, TResponse> implements IUseCase<TC
     try {
       const result = await this.inner.execute(command);
       const duration = Date.now() - startTime;
-      this.logger.info({ duration }, `Completed ${this.useCaseName} in ${duration}ms`);
+      this.logger.debug({ duration }, `Completed ${this.useCaseName} in ${duration}ms`);
       return result;
     } catch (error) {
       const duration = Date.now() - startTime;

@@ -95,16 +95,6 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       }
     }
 
-    this.logger.info(
-      {
-        total: items.length,
-        toBeRequested: result.toBeRequested.length,
-        previouslyRequested: result.previouslyRequested.length,
-        available: result.available.length,
-      },
-      'Media availability check completed'
-    );
-
     return result;
   }
 
