@@ -92,32 +92,6 @@ export function createEnumGuard<T extends string>(targetValue: T): (value: strin
 }
 
 /**
- * Creates multiple type guard functions for all values in an enum.
- * Returns an object with `is{Key}` functions for each enum key.
- *
- * @param values - The const object defining valid values
- * @returns An object with type guard functions
- *
- * @example
- * const guards = createEnumGuards(MediaTypeValues);
- * guards.isMovie('movie'); // true
- * guards.isTv('movie'); // false
- */
-export function createEnumGuards<T extends string>(
-  values: Record<string, T>
-): Record<string, (value: T) => boolean> {
-  const guards: Record<string, (value: T) => boolean> = {};
-
-  for (const [key, value] of Object.entries(values)) {
-    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-    const guardName = `is${capitalizedKey}`;
-    guards[guardName] = createEnumGuard(value);
-  }
-
-  return guards;
-}
-
-/**
  * Creates a display name getter function for an enum.
  *
  * @param displayNames - Record mapping enum values to display names

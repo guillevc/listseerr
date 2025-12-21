@@ -3,16 +3,6 @@ import type { ToasterToast } from '../hooks/use-toast';
 type ToastFn = (props: Omit<ToasterToast, 'id'>) => void;
 
 /**
- * Show a success toast notification.
- */
-export function showSuccessToast(toast: ToastFn, title: string, description?: string): void {
-  toast({
-    title,
-    description,
-  });
-}
-
-/**
  * Show an error toast notification.
  */
 export function showErrorToast(toast: ToastFn, error: Error | string): void {
@@ -62,24 +52,4 @@ export function showListOperationToast(
 
   const { title, description } = messages[operation];
   toast({ title, description });
-}
-
-/**
- * Show a toast for config save operations.
- */
-export function showConfigSavedToast(toast: ToastFn, configName: string): void {
-  toast({
-    title: 'Success',
-    description: `${configName} saved successfully`,
-  });
-}
-
-/**
- * Show a toast for config delete operations.
- */
-export function showConfigDeletedToast(toast: ToastFn, configName: string): void {
-  toast({
-    title: 'Success',
-    description: `${configName} removed`,
-  });
 }

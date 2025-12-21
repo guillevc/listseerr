@@ -49,21 +49,19 @@ export class ExecutionStatusVO {
   }
 
   isRunning(): boolean {
-    return this.value === ExecutionStatusValues.RUNNING;
+    return executionStatusLogic.isRunning(this.value);
   }
 
   isSuccess(): boolean {
-    return this.value === ExecutionStatusValues.SUCCESS;
+    return executionStatusLogic.isSuccess(this.value);
   }
 
   isError(): boolean {
-    return this.value === ExecutionStatusValues.ERROR;
+    return executionStatusLogic.isError(this.value);
   }
 
   isCompleted(): boolean {
-    return (
-      this.value === ExecutionStatusValues.SUCCESS || this.value === ExecutionStatusValues.ERROR
-    );
+    return executionStatusLogic.isCompleted(this.value);
   }
 
   equals(other: ExecutionStatusVO): boolean {

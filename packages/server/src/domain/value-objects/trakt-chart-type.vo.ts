@@ -36,42 +36,35 @@ export class TraktChartTypeVO {
   }
 
   isTrending(): boolean {
-    return this.value === TraktChartTypeValues.TRENDING;
+    return traktChartTypeLogic.isTrending(this.value);
   }
 
   isPopular(): boolean {
-    return this.value === TraktChartTypeValues.POPULAR;
+    return traktChartTypeLogic.isPopular(this.value);
   }
 
   isFavorited(): boolean {
-    return this.value === TraktChartTypeValues.FAVORITED;
+    return traktChartTypeLogic.isFavorited(this.value);
   }
 
   isPlayed(): boolean {
-    return this.value === TraktChartTypeValues.PLAYED;
+    return traktChartTypeLogic.isPlayed(this.value);
   }
 
   isWatched(): boolean {
-    return this.value === TraktChartTypeValues.WATCHED;
+    return traktChartTypeLogic.isWatched(this.value);
   }
 
   isCollected(): boolean {
-    return this.value === TraktChartTypeValues.COLLECTED;
+    return traktChartTypeLogic.isCollected(this.value);
   }
 
   isAnticipated(): boolean {
-    return this.value === TraktChartTypeValues.ANTICIPATED;
+    return traktChartTypeLogic.isAnticipated(this.value);
   }
 
   isWrappedChartType(): boolean {
-    return (
-      this.value === TraktChartTypeValues.TRENDING ||
-      this.value === TraktChartTypeValues.ANTICIPATED ||
-      this.value === TraktChartTypeValues.COLLECTED ||
-      this.value === TraktChartTypeValues.PLAYED ||
-      this.value === TraktChartTypeValues.WATCHED ||
-      this.value === TraktChartTypeValues.FAVORITED
-    );
+    return traktChartTypeLogic.isWrappedChartType(this.value);
   }
 
   equals(other: TraktChartTypeVO): boolean {

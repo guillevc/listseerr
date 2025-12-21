@@ -119,19 +119,19 @@ export class MediaAvailabilityVO {
   }
 
   isToBeRequested(): boolean {
-    return this.value === MediaAvailabilityValues.TO_BE_REQUESTED;
+    return mediaAvailabilityLogic.isToBeRequested(this.value);
   }
 
   isPreviouslyRequested(): boolean {
-    return this.value === MediaAvailabilityValues.PREVIOUSLY_REQUESTED;
+    return mediaAvailabilityLogic.isPreviouslyRequested(this.value);
   }
 
   isAvailable(): boolean {
-    return this.value === MediaAvailabilityValues.AVAILABLE;
+    return mediaAvailabilityLogic.isAvailable(this.value);
   }
 
   shouldRequest(): boolean {
-    return this.isToBeRequested();
+    return mediaAvailabilityLogic.shouldRequest(this.value);
   }
 
   equals(other: MediaAvailabilityVO): boolean {

@@ -45,11 +45,11 @@ export class TraktMediaTypeVO {
   }
 
   isMovies(): boolean {
-    return this.value === TraktMediaTypeValues.MOVIES;
+    return traktMediaTypeLogic.isMovies(this.value);
   }
 
   isShows(): boolean {
-    return this.value === TraktMediaTypeValues.SHOWS;
+    return traktMediaTypeLogic.isShows(this.value);
   }
 
   equals(other: TraktMediaTypeVO): boolean {
