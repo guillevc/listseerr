@@ -20,10 +20,7 @@ function buildHeaders(config: JellyseerrConfig) {
   };
 }
 
-export async function requestToJellyseerr(
-  item: MediaItemDTO,
-  config: JellyseerrConfig
-): Promise<boolean> {
+async function requestToJellyseerr(item: MediaItemDTO, config: JellyseerrConfig): Promise<boolean> {
   logger.debug(
     {
       title: item.title,
@@ -267,7 +264,7 @@ export async function getPendingRequestsCount(config: JellyseerrConfig): Promise
     const data = (await response.json()) as JellyseerrPendingRequestsResponse;
     const count = data.pageInfo.results;
 
-    logger.info(
+    logger.debug(
       { pendingRequestsCount: count },
       'Successfully fetched pending requests count from Jellyseerr'
     );

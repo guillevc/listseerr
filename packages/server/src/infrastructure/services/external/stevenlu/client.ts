@@ -36,7 +36,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
       const cacheAge = now.getTime() - cachedData.cachedAt.getTime();
 
       if (cacheAge < CACHE_DURATION_MS) {
-        logger.info(
+        logger.debug(
           {
             cacheAge: Math.floor(cacheAge / 1000 / 60), // minutes
             cacheExpiresIn: Math.floor((CACHE_DURATION_MS - cacheAge) / 1000 / 60), // minutes
@@ -127,7 +127,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
       .map(transformStevenLuItem)
       .filter((item): item is MediaItemDTO => item !== null);
 
-    logger.info(
+    logger.debug(
       {
         total: limitedItems.length,
         withTmdbId: mediaItems.length,

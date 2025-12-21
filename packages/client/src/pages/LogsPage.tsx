@@ -35,7 +35,7 @@ export function LogsPage() {
   const { toast } = useToast();
 
   const { data, refetch } = trpc.logs.getLogs.useQuery(
-    { limit: 1000, level: 'all' },
+    { limit: 1000, level: 'info' },
     {
       refetchInterval: 2000,
       refetchIntervalInBackground: false,
@@ -164,8 +164,9 @@ export function LogsPage() {
       <div key={log.id || index} className="mb-1">
         <div>
           <span className="text-muted">[{timestamp}]</span>{' '}
-          <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}:</span>{' '}
-          <span className="text-foreground">{log.msg}</span>
+          <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}</span>
+          {log.module && <span className="text-cyan-400"> ({log.module})</span>}
+          <span className="text-muted">:</span> <span className="text-foreground">{log.msg}</span>
         </div>
         {log.data && Object.keys(log.data).length > 0 && <div>{formatData(log.data)}</div>}
       </div>

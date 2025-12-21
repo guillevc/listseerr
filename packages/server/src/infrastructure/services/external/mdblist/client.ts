@@ -13,7 +13,7 @@ export async function fetchMdbListList(
   try {
     // Parse the MDBList URL
     const urlParts = parseMdbListUrl(url);
-    logger.info({ urlParts }, 'Parsed MDBList URL');
+    logger.debug({ urlParts }, 'Parsed MDBList URL');
 
     // Determine limit
     const limit = maxItems ? Math.min(maxItems, 50) : 50; // Max 50 per API docs
@@ -52,7 +52,7 @@ export async function fetchMdbListList(
       .map(transformMdbListItem)
       .filter((item): item is MediaItemDTO => item !== null);
 
-    logger.info(
+    logger.debug(
       {
         total: data.length,
         withTmdbId: mediaItems.length,
