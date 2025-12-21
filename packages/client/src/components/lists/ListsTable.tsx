@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,44 +7,24 @@ import {
   createColumnHelper,
   SortingState,
 } from '@tanstack/react-table';
-import {
-  RefreshCw,
-  Trash2,
-  ExternalLink,
-  Clock,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  MoreHorizontal,
-  Pencil,
-  AlertCircle,
-} from 'lucide-react';
-import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { Badge } from '../ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { getProviderName } from '../../lib/url-validator';
-import { getRelativeTime } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
+import { useProviderConfig } from '../../hooks/use-provider-config';
+import { invalidateListQueries } from '../../lib/cache-utils';
+import { showListOperationToast, showErrorToast } from '../../lib/toast-helpers';
 import { EditListDialog } from './EditListDialog';
+import {
+  ProviderCell,
+  UrlCell,
+  LastProcessedCell,
+  AutoProcessCell,
+  ActionsCell,
+} from './table';
 
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
 import type { ProviderType } from 'shared/domain/types/provider.types';
-import {
-  getProviderDisplayName,
-  isTrakt,
-  isTraktChart,
-  isMdbList,
-  isStevenLu,
-} from 'shared/domain/logic/provider.logic';
 
 // Transform DTO type for table use - provider is validated by server
 type MediaList = Omit<SerializedMediaList, 'provider'> & {
@@ -59,12 +39,6 @@ interface Props {
 }
 
 const columnHelper = createColumnHelper<MediaList>();
-
-// Utility function to truncate text from the tail (show leading characters)
-const truncateTail = (text: string, maxLength: number = 30): string => {
-  if (text.length <= maxLength) return text;
-  return `${text.substring(0, maxLength)}...`;
-};
 
 export function ListsTable({
   lists,
@@ -84,39 +58,15 @@ export function ListsTable({
   const isAutomaticProcessingEnabled = settings?.automaticProcessingEnabled ?? false;
 
   // Check provider configurations
-  const { data: traktData } = trpc.traktConfig.get.useQuery();
-  const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
-  const mdbListConfig = mdbListData?.config;
-
-  const isProviderConfigured = useCallback(
-    (provider: ProviderType) => {
-      if (isStevenLu(provider)) return true;
-      if (isTrakt(provider) || isTraktChart(provider)) return !!traktConfig?.clientId;
-      if (isMdbList(provider)) return !!mdbListConfig?.apiKey;
-      return false;
-    },
-    [traktConfig, mdbListConfig]
-  );
+  const { isProviderConfigured } = useProviderConfig();
 
   const deleteMutation = trpc.lists.delete.useMutation({
     onSuccess: () => {
-      // Invalidate all related queries
-      void utils.lists.getAll.invalidate();
-      void utils.dashboard.getStats.invalidate();
-      void utils.dashboard.getRecentActivity.invalidate();
-
-      toast({
-        title: 'List Removed',
-        description: 'The list has been removed successfully',
-      });
+      invalidateListQueries(utils);
+      showListOperationToast(toast, 'delete');
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error);
     },
   });
 
@@ -125,26 +75,15 @@ export function ListsTable({
       setMutatingListId(id);
     },
     onSuccess: () => {
-      // Invalidate all related queries
       void utils.lists.getAll.invalidate();
       void utils.dashboard.getStats.invalidate();
       setMutatingListId(null);
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error);
       setMutatingListId(null);
     },
   });
-
-  const formatDate = (date?: Date | string | null) => {
-    if (!date) return 'Never';
-    const d = new Date(date);
-    return d.toLocaleString();
-  };
 
   const columns = useMemo(
     () => [
@@ -156,27 +95,11 @@ export function ListsTable({
         header: 'Provider',
         cell: (info) => {
           const list = info.row.original;
-          const providerConfigured = isProviderConfigured(list.provider);
-
           return (
-            <div className="flex items-center gap-2 whitespace-nowrap">
-              <Badge variant={info.getValue()}>{getProviderName(info.getValue())}</Badge>
-              {!providerConfigured && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <AlertCircle className="h-4 w-4 shrink-0 text-destructive" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {getProviderDisplayName(info.getValue())} provider is not configured.
-                        Configure API key in Settings → API Keys to enable processing.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-            </div>
+            <ProviderCell
+              provider={list.provider}
+              isProviderConfigured={isProviderConfigured(list.provider)}
+            />
           );
         },
       }),
@@ -184,28 +107,7 @@ export function ListsTable({
         header: 'URL',
         cell: (info) => {
           const list = info.row.original;
-          // Use displayUrl if available, otherwise fall back to url
-          const displayUrl = list.displayUrl || info.getValue();
-          return (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href={displayUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex max-w-[150px] items-center gap-1 text-sm text-muted transition-colors hover:text-foreground sm:max-w-[180px]"
-                  >
-                    <span className="truncate">{truncateTail(displayUrl, 30)}</span>
-                    <ExternalLink className="h-3 w-3 shrink-0" />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="max-w-md break-all">{displayUrl}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          );
+          return <UrlCell url={info.getValue()} displayUrl={list.displayUrl} />;
         },
         enableSorting: false,
       }),
@@ -220,21 +122,7 @@ export function ListsTable({
       }),
       columnHelper.accessor('lastProcessed', {
         header: 'Last processed',
-        cell: (info) => (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex cursor-help items-center gap-1.5 text-sm whitespace-nowrap">
-                  <Clock className="h-3.5 w-3.5 shrink-0" />
-                  <span>{getRelativeTime(info.getValue())}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{formatDate(info.getValue())}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ),
+        cell: (info) => <LastProcessedCell lastProcessed={info.getValue()} />,
         sortingFn: (rowA, rowB) => {
           const dateA = rowA.original.lastProcessed
             ? new Date(rowA.original.lastProcessed).getTime()
@@ -251,45 +139,16 @@ export function ListsTable({
         header: 'Auto-process',
         cell: (info) => {
           const list = info.row.original;
-          const providerConfigured = isProviderConfigured(list.provider);
-          const isMutating = mutatingListId === list.id;
-          const isDisabled = !isAutomaticProcessingEnabled || isMutating || !providerConfigured;
-          // Show as OFF when automatic processing is disabled or provider not configured
-          const checkedState =
-            isAutomaticProcessingEnabled && providerConfigured ? info.getValue() : false;
-
           return (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div>
-                    <Switch
-                      checked={checkedState}
-                      onCheckedChange={() => toggleMutation.mutate({ id: list.id })}
-                      disabled={isDisabled}
-                      className="transition-all duration-200"
-                    />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {!providerConfigured ? (
-                    <p>
-                      {getProviderDisplayName(list.provider)} provider is not configured. Configure
-                      API key in <span className="font-medium">Settings → API Keys</span> to enable
-                      processing.
-                    </p>
-                  ) : !isAutomaticProcessingEnabled ? (
-                    <p>
-                      Automatic processing is disabled. Enable it in{' '}
-                      <span className="font-medium">Settings → Automatic Processing</span> to enable
-                      scheduled processing.
-                    </p>
-                  ) : (
-                    <p>Toggle scheduled automatic processing for this list</p>
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <AutoProcessCell
+              listId={list.id}
+              provider={list.provider}
+              enabled={info.getValue()}
+              isProviderConfigured={isProviderConfigured(list.provider)}
+              isAutomaticProcessingEnabled={isAutomaticProcessingEnabled}
+              isMutating={mutatingListId === list.id}
+              onToggle={(id) => toggleMutation.mutate({ id })}
+            />
           );
         },
       }),
@@ -298,39 +157,17 @@ export function ListsTable({
         header: () => <div className="text-right">Actions</div>,
         cell: (info) => {
           const list = info.row.original;
-          const isProcessing = processingLists.has(list.id);
-          const providerConfigured = isProviderConfigured(list.provider);
           return (
-            <div className="flex items-center justify-end">
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" avoidCollisions={true}>
-                  <DropdownMenuItem
-                    onClick={() => onProcess(list.id)}
-                    disabled={isProcessing || !providerConfigured || !jellyseerrConfigured}
-                  >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isProcessing ? 'animate-spin' : ''}`} />
-                    Process
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setEditingList(list)}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => deleteMutation.mutate({ id: list.id })}
-                    disabled={deleteMutation.isPending}
-                    className="text-light-re focus:text-light-re dark:text-dark-re focus:dark:text-dark-re"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <ActionsCell
+              listId={list.id}
+              isProcessing={processingLists.has(list.id)}
+              isProviderConfigured={isProviderConfigured(list.provider)}
+              jellyseerrConfigured={jellyseerrConfigured}
+              isDeleting={deleteMutation.isPending}
+              onProcess={onProcess}
+              onEdit={() => setEditingList(list)}
+              onDelete={(id) => deleteMutation.mutate({ id })}
+            />
           );
         },
       }),

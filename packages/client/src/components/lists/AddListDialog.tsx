@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, AlertCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { ProviderType } from 'shared/domain/types/provider.types';
 import {
   TraktChartTypeValues,
@@ -14,87 +14,24 @@ import {
   isMdbList,
   isStevenLu,
 } from 'shared/domain/logic/provider.logic';
-import {
-  TraktChartDisplayNames,
-  getTraktChartDisplayName,
-} from 'shared/domain/logic/trakt-chart-type.logic';
+import { getTraktChartDisplayName } from 'shared/domain/logic/trakt-chart-type.logic';
 import { listNameSchema, maxItemsSchema } from 'shared/presentation/schemas/list.schema';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Badge } from '../ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { validateAndDetectProvider, getProviderName } from '../../lib/url-validator';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
+import { useProviderConfig } from '../../hooks/use-provider-config';
 import { trpc } from '../../lib/trpc';
-
-const PROVIDER_OPTIONS = [
-  { value: 'trakt' as const, description: 'Public lists', requiresConfig: true },
-  {
-    value: 'traktChart' as const,
-    description: 'Trending, Popular, and more',
-    requiresConfig: true,
-  },
-  {
-    value: 'mdblist' as const,
-    description: 'Public and custom lists',
-    requiresConfig: true,
-  },
-  {
-    value: 'stevenlu' as const,
-    description: 'Popular movies, updated daily',
-    requiresConfig: false,
-  },
-];
-
-interface ProviderOptionCardProps {
-  value: ProviderType;
-  description: string;
-  isConfigured?: boolean;
-  showConfigBadge?: boolean;
-}
-
-function ProviderOptionCard({
-  value,
-  description,
-  isConfigured,
-  showConfigBadge,
-}: ProviderOptionCardProps) {
-  const label = getProviderDisplayName(value);
-
-  return (
-    <label className="block cursor-pointer">
-      <RadioGroupItem value={value} className="peer sr-only" />
-      <div className="flex min-h-[80px] items-center gap-4 rounded-lg border-2 border-input p-5 transition-colors peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary/20 hover:border-primary-hover/50 peer-data-[state=checked]:hover:border-primary">
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{label}</p>
-              <p className="text-xs text-muted">{description}</p>
-            </div>
-            {showConfigBadge && !isConfigured && (
-              <Badge variant="warning">
-                <AlertCircle className="mr-1 h-4 w-4" />
-                Setup required
-              </Badge>
-            )}
-          </div>
-        </div>
-      </div>
-    </label>
-  );
-}
+import { showErrorToast, showValidationErrorToast } from '../../lib/toast-helpers';
+import { StepProviderSelection, StepListConfiguration } from './add-list';
 
 export function AddListDialog() {
   const [open, setOpen] = useState(false);
@@ -115,19 +52,7 @@ export function AddListDialog() {
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
-
-  // Query provider configs for status indicators
-  const { data: traktData } = trpc.traktConfig.get.useQuery();
-  const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
-  const mdbListConfig = mdbListData?.config;
-
-  const isProviderConfigured = (providerValue: ProviderType): boolean => {
-    if (isStevenLu(providerValue)) return true;
-    if (isTrakt(providerValue) || isTraktChart(providerValue)) return !!traktConfig?.clientId;
-    if (isMdbList(providerValue)) return !!mdbListConfig?.apiKey;
-    return false;
-  };
+  const { isProviderConfigured } = useProviderConfig();
 
   const createMutation = trpc.lists.create.useMutation({
     onSuccess: (result) => {
@@ -155,11 +80,7 @@ export function AddListDialog() {
       setOpen(false);
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error);
     },
   });
   const isCreating = useMinLoading(createMutation.isPending);
@@ -266,11 +187,7 @@ export function AddListDialog() {
     const nameResult = listNameSchema.safeParse(effectiveName);
     if (!nameResult.success) {
       const firstIssue = nameResult.error.issues[0];
-      toast({
-        title: 'Error',
-        description: firstIssue?.message ?? 'Invalid name',
-        variant: 'destructive',
-      });
+      showValidationErrorToast(toast, firstIssue?.message ?? 'Invalid name');
       return;
     }
 
@@ -288,11 +205,10 @@ export function AddListDialog() {
       // Validate URL for trakt and mdblist
       const result = validateAndDetectProvider(url);
       if (!result.isValid || result.provider !== provider) {
-        toast({
-          title: 'Error',
-          description: `Please enter a valid ${getProviderDisplayName(provider)} URL`,
-          variant: 'destructive',
-        });
+        showValidationErrorToast(
+          toast,
+          `Please enter a valid ${getProviderDisplayName(provider)} URL`
+        );
         return;
       }
     }
@@ -305,11 +221,7 @@ export function AddListDialog() {
     const maxItemsResult = maxItemsSchema.safeParse(maxItemsNum);
     if (!maxItemsResult.success) {
       const firstIssue = maxItemsResult.error.issues[0];
-      toast({
-        title: 'Error',
-        description: firstIssue?.message ?? 'Invalid max items',
-        variant: 'destructive',
-      });
+      showValidationErrorToast(toast, firstIssue?.message ?? 'Invalid max items');
       return;
     }
 
@@ -364,181 +276,36 @@ export function AddListDialog() {
 
         {/* STEP 1: Provider Selection */}
         {currentStep === 1 && (
-          <>
-            <div className="space-y-3 py-4">
-              <div className="grid gap-2">
-                <Label>Provider</Label>
-                <RadioGroup
-                  value={provider}
-                  onValueChange={(value) => handleProviderChange(value as ProviderType)}
-                >
-                  {PROVIDER_OPTIONS.map((option) => (
-                    <ProviderOptionCard
-                      key={option.value}
-                      value={option.value}
-                      description={option.description}
-                      isConfigured={isProviderConfigured(option.value)}
-                      showConfigBadge={option.requiresConfig}
-                    />
-                  ))}
-                </RadioGroup>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button onClick={goToStep2}>Continue</Button>
-            </DialogFooter>
-          </>
+          <StepProviderSelection
+            provider={provider}
+            onProviderChange={handleProviderChange}
+            isProviderConfigured={isProviderConfigured}
+            onContinue={goToStep2}
+          />
         )}
 
         {/* STEP 2: Configure Details */}
         {currentStep === 2 && (
-          <>
-            <div className="py-4">
-              <div className="min-h-[350px] space-y-4">
-                {/* List Name - ALWAYS FIRST */}
-                <div className="grid gap-2">
-                  <Label htmlFor="name">List Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="My List"
-                    value={effectiveName}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      setUserEditedName(true);
-                    }}
-                  />
-                  {isTraktChart(provider) && (
-                    <p className="text-xs text-muted">Auto-generated — editable</p>
-                  )}
-                  {isStevenLu(provider) && (
-                    <p className="text-xs text-muted">Default name — editable</p>
-                  )}
-                </div>
-
-                {/* Media Type and Chart Type fields for Trakt Chart */}
-                {isTraktChart(provider) && (
-                  <>
-                    {/* Media Type Selection */}
-                    <div className="grid gap-2">
-                      <Label>Media Type</Label>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          variant={
-                            selectedMediaType === TraktMediaTypeValues.MOVIES
-                              ? 'default'
-                              : 'outline'
-                          }
-                          onClick={() => setSelectedMediaType(TraktMediaTypeValues.MOVIES)}
-                          className="flex-1"
-                        >
-                          Movies
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={
-                            selectedMediaType === TraktMediaTypeValues.SHOWS ? 'default' : 'outline'
-                          }
-                          onClick={() => setSelectedMediaType(TraktMediaTypeValues.SHOWS)}
-                          className="flex-1"
-                        >
-                          Shows
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Chart Type Dropdown */}
-                    <div className="grid gap-2">
-                      <Label htmlFor="chartType">Chart Type</Label>
-                      <Select
-                        value={selectedChartType}
-                        onValueChange={(v) => setSelectedChartType(v as TraktChartType)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select chart type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.entries(TraktChartDisplayNames).map(([value, label]) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </>
-                )}
-
-                {/* URL field for Trakt List and MDBList (not for Trakt Chart or StevenLu) */}
-                {!isTraktChart(provider) && !isStevenLu(provider) && (
-                  <div className="grid gap-2">
-                    <Label htmlFor="url">List URL</Label>
-                    <Input
-                      id="url"
-                      placeholder="https://..."
-                      value={url}
-                      onChange={(e) => handleUrlChange(e.target.value)}
-                      variant={urlError ? 'error' : url ? 'success' : 'default'}
-                    />
-                    {urlError && <p className="text-sm text-destructive">{urlError}</p>}
-                    {!urlError && url && (
-                      <p className="text-sm text-success">
-                        Valid {getProviderDisplayName(provider)} URL detected
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Max Items */}
-                <div className="grid gap-2">
-                  <Label htmlFor="maxItems">Max Items</Label>
-                  <Input
-                    id="maxItems"
-                    type="number"
-                    placeholder="20"
-                    value={maxItems}
-                    onChange={(e) => setMaxItems(e.target.value)}
-                    min="1"
-                    max="50"
-                    required
-                  />
-                  <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
-                </div>
-
-                {/* URL format info for Trakt List and MDBList */}
-                {!isTraktChart(provider) && !isStevenLu(provider) && (
-                  <div className="space-y-2 rounded-md border bg-card/50 p-3">
-                    <p className="text-sm font-medium">URL format:</p>
-                    <div className="space-y-1.5 text-sm">
-                      {isTrakt(provider) ? (
-                        <>
-                          <code className="block rounded bg-background px-1.5 py-0.5 text-xs">
-                            https://trakt.tv/users/USERNAME/lists/LIST-SLUG?sort=rank
-                          </code>
-                        </>
-                      ) : (
-                        <>
-                          <code className="block rounded bg-background px-1.5 py-0.5 text-xs">
-                            https://mdblist.com/lists/USERNAME/LIST-SLUG
-                          </code>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <DialogFooter className="flex gap-2">
-              <Button variant="outline" onClick={goToStep1}>
-                Back
-              </Button>
-              <Button onClick={handleAdd} loading={isCreating}>
-                Add List
-              </Button>
-            </DialogFooter>
-          </>
+          <StepListConfiguration
+            provider={provider}
+            name={effectiveName}
+            onNameChange={(value) => {
+              setName(value);
+              setUserEditedName(true);
+            }}
+            url={url}
+            onUrlChange={handleUrlChange}
+            urlError={urlError}
+            maxItems={maxItems}
+            onMaxItemsChange={setMaxItems}
+            selectedMediaType={selectedMediaType}
+            onMediaTypeChange={setSelectedMediaType}
+            selectedChartType={selectedChartType}
+            onChartTypeChange={setSelectedChartType}
+            onBack={goToStep1}
+            onSubmit={handleAdd}
+            isLoading={isCreating}
+          />
         )}
       </DialogContent>
     </Dialog>

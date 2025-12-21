@@ -5,8 +5,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { Separator } from '../ui/separator';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
+import { useProviderConfig } from '../../hooks/use-provider-config';
 import type { SerializedMediaList } from 'shared/application/dtos/core/media-list.dto';
-import { isTrakt, isTraktChart, isMdbList, isStevenLu } from 'shared/domain/logic/provider.logic';
 
 interface DashboardStatsProps {
   lists: SerializedMediaList[];
@@ -14,23 +14,12 @@ interface DashboardStatsProps {
 
 export function DashboardStats({ lists }: DashboardStatsProps) {
   const { data: dashboardStats } = trpc.dashboard.getStats.useQuery();
-
-  // Check provider configurations
-  const { data: traktData } = trpc.traktConfig.get.useQuery();
-  const traktConfig = traktData?.config;
-  const { data: mdbListData } = trpc.mdblistConfig.get.useQuery();
-  const mdbListConfig = mdbListData?.config;
+  const { isProviderConfigured } = useProviderConfig();
 
   // Calculate active lists (enabled AND provider is configured)
   const activeListsCount = lists.filter((list) => {
     if (!list.enabled) return false;
-
-    const isProviderConfigured =
-      ((isTrakt(list.provider) || isTraktChart(list.provider)) && !!traktConfig?.clientId) ||
-      (isMdbList(list.provider) && !!mdbListConfig?.apiKey) ||
-      isStevenLu(list.provider); // Always configured (no API key needed)
-
-    return isProviderConfigured;
+    return isProviderConfigured(list.provider);
   }).length;
 
   // Get last scheduled processing time from stats
