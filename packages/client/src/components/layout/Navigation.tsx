@@ -23,7 +23,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { cn } from '@/client/lib/utils';
 import { trpc } from '@/client/lib/trpc';
-import { JellyseerrStatusIndicator, StatusDot } from './JellyseerrStatusIndicator';
+import { JellyseerrStatusIndicator, StatusDot } from '../common/JellyseerrStatusIndicator';
 import { getUserFacingUrl } from 'shared/domain/logic/jellyseerr.logic';
 import { useAuth } from '@/client/hooks/use-auth';
 
