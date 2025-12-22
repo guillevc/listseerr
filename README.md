@@ -17,6 +17,9 @@
 
 </div>
 
+> [!WARNING]
+> Docker images were previously private by mistake. This is now fixed — pull with `docker pull ghcr.io/guillevc/listseerr:latest`
+
 > [!IMPORTANT]
 > This project is in early development. I use it daily and fix issues as I find them, but you may encounter bugs.
 > [Open an issue](https://github.com/guillevc/listseerr/issues/new) to report problems or share ideas.
