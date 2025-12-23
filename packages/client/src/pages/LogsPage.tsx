@@ -104,11 +104,18 @@ export function LogsPage() {
             {key}: {`"${value}"`}
           </div>
         );
-      } else if (typeof value === 'number' || typeof value === 'boolean') {
+      } else if (typeof value === 'number') {
         lines.push(
           <div key={key} className="text-muted">
             {'    '}
             {key}: {value}
+          </div>
+        );
+      } else if (typeof value === 'boolean') {
+        lines.push(
+          <div key={key} className="text-muted">
+            {'    '}
+            {key}: {String(value)}
           </div>
         );
       } else if (Array.isArray(value)) {
@@ -136,9 +143,11 @@ export function LogsPage() {
               {`"${k}"`}:{' '}
               {typeof v === 'string'
                 ? `"${v}"`
-                : typeof v === 'number' || typeof v === 'boolean'
+                : typeof v === 'number'
                   ? v
-                  : JSON.stringify(v)}
+                  : typeof v === 'boolean'
+                    ? String(v)
+                    : JSON.stringify(v)}
               {comma}
             </div>
           );
