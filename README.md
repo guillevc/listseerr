@@ -17,16 +17,7 @@
 
 </div>
 
-> [!WARNING]
-> Docker images were previously private by mistake. This is now fixed — pull with `docker pull ghcr.io/guillevc/listseerr:latest`
-
-> [!IMPORTANT]
-> This project is in early development. I use it daily and fix issues as I find them, but you may encounter bugs.
-> [Open an issue](https://github.com/guillevc/listseerr/issues/new) to report problems or share ideas.
-
 ## How It Works
-
-Point Listseerr at your favorite curated lists and it automatically requests those movies and shows in Jellyseerr/Overseerr. Set it and forget it.
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
@@ -41,11 +32,12 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
                                        └───────────┘
 ```
 
-> [!TIP]
-> Create a dedicated Jellyseerr/Overseerr user without auto-approve permissions. This lets you review requests before approval to avoid media bloat.
+1. **Listseerr fetches media from your lists** — Connect your favorite curated lists from Trakt, MDBList, StevenLu, and more
+2. **Requests are sent to Jellyseerr/Overseerr** — Movies and shows from your lists are automatically requested
+3. **You review and approve** — Requests appear in Jellyseerr/Overseerr for you to approve (create a dedicated user without auto-approve permissions to review before downloading)
+4. **Your \*arr stack downloads the media** — Once approved, Sonarr/Radarr handle the rest
 
-> [!NOTE]
-> Listseerr skips previously rejected or already available media, so you won't see duplicate requests.
+Listseerr skips media that was previously rejected or is already available, so you won't see duplicate requests. Set it up once and let it run on a schedule.
 
 ## Screenshots
 
@@ -56,14 +48,6 @@ Point Listseerr at your favorite curated lists and it automatically requests tho
 </p>
 
 [See more →](docs/screenshots)
-
-## Features
-
-- **Multiple List Providers** — Trakt, MDBList, StevenLu, and more
-- **Scheduled Processing** — Set it once, runs automatically
-- **Docker Ready** — Up and running in minutes
-- **Self-Hosted** — Your data stays on your server
-- **Dark & Light Theme** — Easy on the eyes, day or night
 
 ## Supported Providers
 
