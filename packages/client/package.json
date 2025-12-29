@@ -8,7 +8,7 @@
     "dev": "bun vite",
     "build": "bun vite build --outDir ../../dist/client",
     "build:analyze": "ANALYZE=true bun vite build --outDir ../../dist/client",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --project tsconfig.app.json"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",

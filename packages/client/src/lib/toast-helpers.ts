@@ -4,9 +4,10 @@ type ToastFn = (props: Omit<ToasterToast, 'id'>) => void;
 
 /**
  * Show an error toast notification.
+ * Accepts Error objects, strings, or any object with a message property (e.g., TRPCClientError).
  */
-export function showErrorToast(toast: ToastFn, error: Error | string): void {
-  const message = error instanceof Error ? error.message : error;
+export function showErrorToast(toast: ToastFn, error: Error | string | { message: string }): void {
+  const message = typeof error === 'string' ? error : error.message;
   toast({
     title: 'Error',
     description: message,

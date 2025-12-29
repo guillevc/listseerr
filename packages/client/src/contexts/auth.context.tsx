@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { UserDTO } from 'shared/application/dtos';
+import type { SerializedUser } from 'shared/application/dtos';
 import { trpc } from '@/client/lib/trpc';
 import { AuthContext, type AuthContextValue } from './auth-context-value';
 
@@ -30,7 +30,7 @@ function deleteCookie(name: string): void {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserDTO | null>(null);
+  const [user, setUser] = useState<SerializedUser | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(() =>
     getCookie(SESSION_COOKIE_NAME)
   );
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     validateSessionQuery.isError,
   ]);
 
-  const login = useCallback((token: string, userData: UserDTO, rememberMe: boolean) => {
+  const login = useCallback((token: string, userData: SerializedUser, rememberMe: boolean) => {
     // Set cookie - if rememberMe, set for 100 years, otherwise session cookie
     if (rememberMe) {
       setCookie(SESSION_COOKIE_NAME, token, 36500); // ~100 years

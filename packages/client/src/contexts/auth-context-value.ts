@@ -1,11 +1,11 @@
 import { createContext } from 'react';
-import type { UserDTO } from 'shared/application/dtos';
+import type { SerializedUser } from 'shared/application/dtos';
 
 export interface AuthContextValue {
-  user: UserDTO | null;
+  user: SerializedUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (token: string, user: UserDTO, rememberMe: boolean) => void;
+  login: (token: string, user: SerializedUser, rememberMe: boolean) => void;
   logout: () => Promise<void>;
   sessionToken: string | null;
 }
