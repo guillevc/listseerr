@@ -1,17 +1,9 @@
 [settings]
-  idiomatic_version_file_enable_tools = ["bun"]
+idiomatic_version_file_enable_tools = ["bun"]
 
 [tasks.docker-build]
-  run = [
-    "docker build -t listseerr .",
-    "docker images listseerr | awk 'NR==2 {print \"📦 Image size: \" $7}'",
-    "echo '✅ Docker build successful!' 1>/dev/null",
-  ]
-
-
-[tasks.docker-run]
-  run = [
-    "echo '🚀 Starting container...' 1>/dev/null",
-    "docker run -p 3000:3000 -v $(pwd)/data:/app/data listseerr",
-    "echo 'Container stopped.' 1>/dev/null",
-  ]
+run = [
+  "docker build -t listseerr .",
+  "docker images listseerr | awk 'NR==2 {print \"📦 Image size: \" $7}'",
+  "echo '✅ Docker build successful!' 1>/dev/null",
+]

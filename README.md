@@ -140,53 +140,35 @@ Override defaults via `.env` file or Docker environment variables.
 
 ## Development
 
+<details>
+<summary><strong>Dev server </strong></summary>
+
 **Prerequisites:** [Bun](https://bun.sh) (version in `.bun-version`)
 
 > [!TIP]
 > [mise](https://mise.jdx.dev/) users can run `mise install` to set up Bun automatically.
-
-<details>
-<summary><strong>Dev server </strong></summary>
 
 ```bash
 git clone https://github.com/guillevc/listseerr.git
 cd listseerr
 bun install
 
-cp .env.example .env.dev
-# Edit .env.dev and set ENCRYPTION_KEY
+cp .env.example .env
+# Edit .env and set ENCRYPTION_KEY
 
 # Run both server and client
 bun run dev
 ```
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:3000
-
 </details>
 
 <details>
-<summary><strong>Production build</strong></summary>
-
-```bash
-bun install
-bun run build
-
-cp .env.example .env
-# Edit .env and set ENCRYPTION_KEY
-
-bun run start
-```
-
-</details>
-
-<details>
-<summary><strong>Docker build</strong></summary>
+<summary><strong>Local docker build</strong></summary>
 
 ```bash
 docker build -t listseerr .
 
-cp .env.docker.example .env.docker
+cp deploy/.env.example .env.docker
 # Edit .env.docker
 
 docker compose up -d

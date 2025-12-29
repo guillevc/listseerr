@@ -1,3 +1,9 @@
 {
-  "recommendations": ["prettier.prettier-vscode", "dbaeumer.vscode-eslint"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "prettier.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "EditorConfig.EditorConfig",
+    "tamasfe.even-better-toml"
+  ]
 }

@@ -10,6 +10,7 @@ services:
     ports:
       - ${PORT:-3000}:3000
     env_file:
+      # copy from deploy/.env.example
       - .env.docker
     volumes:
       - ./data:/app/data
