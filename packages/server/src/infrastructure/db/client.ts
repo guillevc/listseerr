@@ -30,8 +30,3 @@ export const db = drizzle(sqlite, { schema });
 
 // Export the raw SQLite instance if needed
 export { sqlite };
-
-// Helper function to close the database connection
-export function closeDatabase() {
-  sqlite.close();
-}
