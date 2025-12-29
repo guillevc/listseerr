@@ -142,10 +142,7 @@ Override defaults via `.env` file or Docker environment variables.
 
 <details>
 <summary><strong>Dev server </strong></summary>
-
 **Prerequisites:** [Bun](https://bun.sh) (version in `.bun-version`)
-
-> [!TIP]
 > [mise](https://mise.jdx.dev/) users can run `mise install` to set up Bun automatically.
 
 ```bash
