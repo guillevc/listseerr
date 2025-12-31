@@ -66,7 +66,6 @@ services:
     restart: unless-stopped
 ```
 
-
 > [!IMPORTANT]
 > Remember to include the `ENCRYPTION_KEY` environment variable, which has no default value.
 >
