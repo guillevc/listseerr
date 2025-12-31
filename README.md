@@ -46,6 +46,22 @@
 
 Listseerr skips media that was previously rejected or is already available, so you won't see duplicate requests. Set it up once and let it run on a schedule.
 
+## 🔗 Supported Providers
+
+| Provider                | Status       | Requirements                                        |
+| ----------------------- | ------------ | --------------------------------------------------- |
+| **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
+| **MDBList**             | ✅ Supported | [Free API key](https://mdblist.com/preferences/)    |
+| **StevenLu**            | ✅ Supported | None                                                |
+| **StevenLu variations** | 🗓️ Planned   | None                                                |
+| **IMDB**                | 🗓️ Planned   | —                                                   |
+| **Letterboxd**          | 🗓️ Planned   | —                                                   |
+| **TheMovieDB**          | 🗓️ Planned   | —                                                   |
+
+Listseerr uses official APIs for reliable integration and faster processing.
+
+**Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
+
 ## 🚀 Quick Start
 
 ### 1. Create a `compose.yaml`
@@ -92,22 +108,6 @@ Open [http://localhost:3000](http://localhost:3000) and create your account.
 | `TZ`             | Timezone (IANA format)                             | `UTC`                    |
 
 Override defaults via Docker environment variables.
-
-## 🔗 Supported Providers
-
-| Provider                | Status       | Requirements                                        |
-| ----------------------- | ------------ | --------------------------------------------------- |
-| **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
-| **MDBList**             | ✅ Supported | [Free API key](https://mdblist.com/preferences/)    |
-| **StevenLu**            | ✅ Supported | None                                                |
-| **StevenLu variations** | 🗓️ Planned   | None                                                |
-| **IMDB**                | 🗓️ Planned   | —                                                   |
-| **Letterboxd**          | 🗓️ Planned   | —                                                   |
-| **TheMovieDB**          | 🗓️ Planned   | —                                                   |
-
-Listseerr uses official APIs for reliable integration and faster processing.
-
-**Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
 
 ## 🔑 Password Recovery
 
