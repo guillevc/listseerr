@@ -16,8 +16,8 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?logo=ko-fi&logoColor=white)](https://ko-fi.com/guillevc)
 
 <p>
-  <a href="docs/screenshots/dashboard.png"><img src="docs/screenshots/dashboard.png" width="40%"></a>
-  <a href="docs/screenshots/lists.png"><img src="docs/screenshots/lists.png" width="40%"></a>
+  <a href="docs/screenshots/dashboard.png"><img src="docs/screenshots/dashboard.png" width="49%"></a>
+  <a href="docs/screenshots/lists.png"><img src="docs/screenshots/lists.png" width="49%"></a>
 </p>
 
 [See more screenshots →](docs/screenshots)
