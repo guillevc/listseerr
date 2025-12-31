@@ -66,7 +66,11 @@ services:
     restart: unless-stopped
 ```
 
-Remember to include the `ENCRYPTION_KEY` environment variable, which has no default value.
+
+> [!IMPORTANT]
+> Remember to include the `ENCRYPTION_KEY` environment variable, which has no default value.
+>
+> Generate a value with `openssl rand -hex 32`
 
 ### 2. Run the container
 
