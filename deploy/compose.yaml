@@ -4,11 +4,15 @@ services:
   listseerr:
     image: ghcr.io/guillevc/listseerr:latest
     container_name: listseerr
-    user: ${PUID:-1000}:${PGID:-1000}
     ports:
-      - 3000:${PORT:-3000}
-    env_file:
-      - .env
+      - 3000:${PORT}
+    environment:
+      PORT: ${PORT}
+      LOG_LEVEL: ${LOG_LEVEL}
+      TZ: ${TZ}
+      # (REQUIRED) Used for database encryption of API keys
+      # Generate with: openssl rand -hex 32
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
     volumes:
       - ./data:/app/data
     restart: unless-stopped

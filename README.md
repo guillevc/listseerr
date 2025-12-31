@@ -11,13 +11,20 @@
 **Request movies & shows in Jellyseerr/Overseerr from your favorite lists**
 
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
-[![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr?include_prereleases)](https://github.com/guillevc/listseerr/releases)
-[![Docker](https://img.shields.io/badge/Docker-GHCR-2496ED?logo=docker&logoColor=white)](https://ghcr.io/guillevc/listseerr)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr)](https://github.com/guillevc/listseerr/releases)
+[![Docker Image](https://img.shields.io/badge/ghcr.io-blue?logo=docker&logoColor=white)](https://ghcr.io/guillevc/listseerr)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?logo=ko-fi&logoColor=white)](https://ko-fi.com/guillevc)
+
+<p>
+  <a href="docs/screenshots/dashboard.png"><img src="docs/screenshots/dashboard.png" width="40%"></a>
+  <a href="docs/screenshots/lists.png"><img src="docs/screenshots/lists.png" width="40%"></a>
+</p>
+
+[See more screenshots →](docs/screenshots)
 
 </div>
 
-## How It Works
+## 🧩 How It Works
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
@@ -39,17 +46,51 @@
 
 Listseerr skips media that was previously rejected or is already available, so you won't see duplicate requests. Set it up once and let it run on a schedule.
 
-## Screenshots
+## 🚀 Quick Start
 
-<p>
-  <a href="docs/screenshots/dashboard.png"><img src="docs/screenshots/dashboard.png" width="32%"></a>
-  <a href="docs/screenshots/lists.png"><img src="docs/screenshots/lists.png" width="32%"></a>
-  <a href="docs/screenshots/settings.png"><img src="docs/screenshots/settings.png" width="32%"></a>
-</p>
+### 1. Create a `compose.yaml`
 
-[See more →](docs/screenshots)
+```yaml
+services:
+  listseerr:
+    image: ghcr.io/guillevc/listseerr:latest
+    container_name: listseerr
+    ports:
+      - 3000:3000
+    environment:
+      TZ: 'UTC'
+      # (REQUIRED) Generate with: openssl rand -hex 32
+      ENCRYPTION_KEY: ''
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+```
 
-## Supported Providers
+Remember to include the `ENCRYPTION_KEY` environment variable, which has no default value.
+
+### 2. Run the container
+
+```bash
+docker compose up -d
+```
+
+### 3. Start adding lists
+
+Open [http://localhost:3000](http://localhost:3000) and create your account.
+
+## ⚙️ Configuration
+
+| Variable         | Description                                        | Default (Docker)         |
+| ---------------- | -------------------------------------------------- | ------------------------ |
+| `ENCRYPTION_KEY` | **Required.** Generate with `openssl rand -hex 32` | —                        |
+| `PORT`           | Server port                                        | `3000`                   |
+| `DATABASE_PATH`  | Path to SQLite database                            | `/app/data/listseerr.db` |
+| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)   | `info`                   |
+| `TZ`             | Timezone (IANA format)                             | `UTC`                    |
+
+Override defaults via Docker environment variables.
+
+## 🔗 Supported Providers
 
 | Provider                | Status       | Requirements                                        |
 | ----------------------- | ------------ | --------------------------------------------------- |
@@ -65,115 +106,7 @@ Listseerr uses official APIs for reliable integration and faster processing.
 
 **Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
 
-## Quick Start
-
-> [!TIP]
-> Download the config files directly:
->
-> ```bash
-> mkdir listseerr && cd listseerr
->
-> # Download config files
-> wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/compose.yaml
-> wget https://raw.githubusercontent.com/guillevc/listseerr/master/deploy/.env.example -O .env
->
-> # Edit .env and set ENCRYPTION_KEY (generate with: openssl rand -hex 32)
->
-> docker compose up -d
-> ```
->
-> Open http://localhost:3000 and start adding lists.
-
-### 1. Create `compose.yaml`
-
-```yaml
-services:
-  listseerr:
-    image: ghcr.io/guillevc/listseerr:latest
-    container_name: listseerr
-    user: ${PUID:-1000}:${PGID:-1000}
-    ports:
-      - 3000:${PORT:-3000}
-    env_file:
-      - .env
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
-```
-
-### 2. Create `.env`
-
-```properties
-PUID=1000
-PGID=1000
-
-PORT=3000
-LOG_LEVEL=info
-
-# Timezone in IANA format (e.g. Europe/Madrid). Defaults to UTC.
-TZ=UTC
-
-# (REQUIRED) Generate with: openssl rand -hex 32
-ENCRYPTION_KEY=
-```
-
-### 3. Start Listseerr
-
-```bash
-docker compose up -d
-```
-
-Open [http://localhost:3000](http://localhost:3000) and start adding lists.
-
-## Configuration
-
-| Variable         | Description                                                                            | Docker                   | Local build           |
-| ---------------- | -------------------------------------------------------------------------------------- | ------------------------ | --------------------- |
-| `ENCRYPTION_KEY` | **Required.** Generate with `openssl rand -hex 32`                                     | —                        | —                     |
-| `PORT`           | Server port                                                                            | `3000`                   | `3000`                |
-| `DATABASE_PATH`  | Path to SQLite database                                                                | `/app/data/listseerr.db` | `./data/listseerr.db` |
-| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)                                       | `info`                   | `debug`               |
-| `TZ`             | Timezone ([IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) | `UTC`                    | System                |
-| `PUID` / `PGID`  | User/Group ID for Docker volumes                                                       | `1000`                   | N/A                   |
-
-Override defaults via `.env` file or Docker environment variables.
-
-## Development
-
-<details>
-<summary><strong>Dev server </strong></summary>
-**Prerequisites:** [Bun](https://bun.sh) (version in `.bun-version`)
-> [mise](https://mise.jdx.dev/) users can run `mise install` to set up Bun automatically.
-
-```bash
-git clone https://github.com/guillevc/listseerr.git
-cd listseerr
-bun install
-
-cp .env.example .env
-# Edit .env and set ENCRYPTION_KEY
-
-# Run both server and client
-bun run dev
-```
-
-</details>
-
-<details>
-<summary><strong>Local docker build</strong></summary>
-
-```bash
-docker build -t listseerr .
-
-cp deploy/.env.example .env.docker
-# Edit .env.docker
-
-docker compose up -d
-```
-
-</details>
-
-## Password Recovery
+## 🔑 Password Recovery
 
 **Docker:**
 
@@ -187,7 +120,7 @@ docker exec -it listseerr bun /app/dist/reset-password.js
 bun run password:reset
 ```
 
-## Roadmap
+## 🗺️ Roadmap
 
 - [x] Multiple provider support (Trakt, MDBList, StevenLu)
 - [x] Scheduled automatic processing
@@ -198,10 +131,17 @@ bun run password:reset
 
 Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)
 
-## Acknowledgments
+## 💜 Support
 
-Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
+If Listseerr is useful to you, consider supporting its development:
 
-## License
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/guillevc)
+
+## 🤝 Acknowledgments
+
+- Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
+- Inspired by the amazing self-hosted community
+
+## 📄 License
 
 [MIT](LICENSE)
