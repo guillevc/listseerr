@@ -226,7 +226,7 @@ export function LogsPage() {
           {/* Logs Display */}
           <div
             ref={logsContainerRef}
-            className="h-[calc(100vh-280px)] overflow-y-auto p-4 font-mono text-xs whitespace-pre"
+            className="h-[calc(100vh-400px)] overflow-y-auto p-4 font-mono text-xs whitespace-pre"
             style={{
               fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
             }}
