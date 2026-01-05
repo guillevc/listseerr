@@ -152,13 +152,13 @@ function JellyseerrSection({
         className={cn(mobile && 'w-full justify-start')}
       >
         <a href={requests?.url ?? url} target="_blank" rel="noopener noreferrer" onClick={onClick}>
-          {status === 'connected' ? (
+          {status === 'connected' && requests?.badge != null && requests.badge > 0 ? (
             <Badge
               variant="simple"
               className="gap-1 bg-card px-1.5 py-0.5 text-xs font-medium text-foreground"
             >
               <StatusDot status={status} />
-              {requests?.badge != null && requests.badge > 0 && requests.badge}
+              {requests.badge}
             </Badge>
           ) : (
             <StatusDot status={status} />
