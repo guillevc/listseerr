@@ -1,7 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Activity, CheckCircle, XCircle, AlertCircle, Clock, Calendar, Inbox } from 'lucide-react';
+import { Activity, AlertCircle, Calendar, CheckCircle, Clock, Inbox, XCircle } from 'lucide-react';
+import { getProviderDisplayName, isScheduled } from 'shared/domain/logic';
+import type { ProviderType } from 'shared/domain/types';
 import { trpc } from '../../lib/trpc';
 import { Badge } from '../ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import {
   Tooltip,
@@ -10,9 +12,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import { isScheduled } from 'shared/domain/logic';
-import { getProviderDisplayName } from 'shared/domain/logic';
-import type { ProviderType } from 'shared/domain/types';
 
 interface ProcessingBarProps {
   requested: number;
@@ -34,13 +33,13 @@ function ProcessingBar({
   if (total === 0) {
     if (errorMessage) {
       return (
-        <div className="flex h-8 w-full items-center rounded-md bg-red-600/10 px-2">
+        <div className="flex h-6 w-full items-center rounded-md bg-red-600/10 px-2">
           <span className="line-clamp-1 text-xs text-red-600">{errorMessage}</span>
         </div>
       );
     }
     return (
-      <div className="flex h-8 w-full items-center justify-center rounded-md bg-card">
+      <div className="flex h-6 w-full items-center justify-center rounded-md bg-card">
         <span className="text-xs text-muted">No items</span>
       </div>
     );
@@ -55,7 +54,7 @@ function ProcessingBar({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex h-8 w-full cursor-help overflow-hidden rounded-md bg-card">
+          <div className="flex h-6 w-full cursor-help overflow-hidden rounded-md bg-card">
             <div
               className="flex h-full min-w-6 items-center justify-center bg-gr-2 text-xs font-medium text-foreground"
               style={{ width: `${requestedPercent}%` }}
@@ -85,26 +84,26 @@ function ProcessingBar({
         <TooltipContent>
           <div className="space-y-1 text-xs">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-3 w-3 text-green-600" />
+              <CheckCircle className="h-4 w-4 text-green-600" />
               <span>
                 Requested: {requested} ({requestedPercent.toFixed(1)}%)
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-3 w-3 text-blue-500" />
+              <AlertCircle className="h-4 w-4 text-blue-500" />
               <span>
                 Previously requested: {skippedPreviouslyRequested} (
                 {skippedPreviouslyRequestedPercent.toFixed(1)}%)
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-3 w-3 text-purple-500" />
+              <AlertCircle className="h-4 w-4 text-purple-500" />
               <span>
                 Available: {skippedAvailable} ({skippedAvailablePercent.toFixed(1)}%)
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <XCircle className="h-3 w-3 text-red-600" />
+              <XCircle className="h-4 w-4 text-red-600" />
               <span>
                 Failed: {failed} ({failedPercent.toFixed(1)}%)
               </span>
@@ -194,22 +193,15 @@ export function RecentActivity() {
           {activityGroups.map((group, groupIdx) => {
             const timestamp = new Date(group.timestamp);
             const triggerIsScheduled = isScheduled(group.triggerType);
-
             return (
-              <div
-                key={`group-${groupIdx}`}
-                className="rounded-lg border border-border hover:border-border-hover"
-              >
+              <div key={`group-${groupIdx}`}>
                 {/* Group header */}
-                <div className="flex items-center justify-between border-b border-border p-4">
+                <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Badge
-                      variant={triggerIsScheduled ? 'scheduled' : 'manual'}
-                      className="text-xs"
-                    >
+                    <Badge variant={triggerIsScheduled ? 'scheduled' : 'manual'}>
                       {triggerIsScheduled ? (
                         <>
-                          <Calendar className="mr-1 h-3 w-3" />
+                          <Calendar className="h-3 w-3" />
                           Scheduled
                         </>
                       ) : (
@@ -237,14 +229,14 @@ export function RecentActivity() {
                 </div>
 
                 {/* Executions Table */}
-                <div className="overflow-x-auto rounded-b-lg">
+                <div className="overflow-x-auto rounded-lg rounded-b-lg border border-border hover:border-border-hover">
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>List</TableHead>
                         <TableHead className="hidden md:table-cell">Provider</TableHead>
                         <TableHead className="text-right">Items</TableHead>
-                        <TableHead className="w-1/3 md:w-1/2">Results</TableHead>
+                        <TableHead className="w-1/4 md:w-1/3">Results</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -263,7 +255,7 @@ export function RecentActivity() {
                             )}
                           </TableCell>
                           <TableCell className="text-right">{execution.itemsFound ?? 0}</TableCell>
-                          <TableCell className="w-1/3 md:w-1/2">
+                          <TableCell className="w-1/3 md:w-1/3">
                             <ProcessingBar
                               requested={execution.itemsRequested ?? 0}
                               skippedPreviouslyRequested={
@@ -305,7 +297,7 @@ export function RecentActivity() {
                               <TableCell>Batch Total</TableCell>
                               <TableCell className="hidden md:table-cell" />
                               <TableCell className="text-right">{totalFound}</TableCell>
-                              <TableCell className="w-1/3 md:w-1/2">
+                              <TableCell className="w-1/3 md:w-1/3">
                                 <ProcessingBar
                                   requested={totalRequested}
                                   skippedPreviouslyRequested={totalSkippedPreviouslyRequested}
