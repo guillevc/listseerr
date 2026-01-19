@@ -21,6 +21,7 @@ const badgeVariants = tv({
       traktChart: 'bg-magenta-100 text-magenta-600 dark:bg-magenta-900 dark:text-magenta-100',
       mdblist: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-100',
       stevenlu: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-100',
+      anilist: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-100',
       scheduled: 'bg-primary/50 border border-border text-primary-foreground',
       manual: 'bg-background border border-border text-foreground',
     },

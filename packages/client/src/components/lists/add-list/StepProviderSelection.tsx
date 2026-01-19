@@ -22,6 +22,11 @@ const PROVIDER_OPTIONS = [
     description: 'Popular movies, updated daily',
     requiresConfig: false,
   },
+  {
+    value: 'anilist' as const,
+    description: 'Anime watchlists',
+    requiresConfig: false,
+  },
 ];
 
 interface StepProviderSelectionProps {

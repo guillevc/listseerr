@@ -11,3 +11,4 @@ export * from './list.schema';
 export * from './trakt.schema';
 export * from './mdblist.schema';
 export * from './auth.schema';
+export * from './anilist.schema';

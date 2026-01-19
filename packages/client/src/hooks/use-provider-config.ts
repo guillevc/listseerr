@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { ProviderType } from 'shared/domain/types';
-import { isTrakt, isTraktChart, isMdbList, isStevenLu } from 'shared/domain/logic';
+import { isTrakt, isTraktChart, isMdbList, isStevenLu, isAnilist } from 'shared/domain/logic';
 import { trpc } from '../lib/trpc';
 
 interface ProviderConfigData {
@@ -31,6 +31,7 @@ export function useProviderConfig(): UseProviderConfigReturn {
   const isProviderConfigured = useCallback(
     (provider: ProviderType): boolean => {
       if (isStevenLu(provider)) return true;
+      if (isAnilist(provider)) return true; // No config needed for AniList (public API)
       if (isTrakt(provider) || isTraktChart(provider)) return !!traktConfig?.clientId;
       if (isMdbList(provider)) return !!mdbListConfig?.apiKey;
       return false;

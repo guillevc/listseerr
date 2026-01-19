@@ -14,3 +14,4 @@ export * from './media.types';
 export * from './execution.types';
 export * from './general-settings.types';
 export * from './auth.types';
+export * from './anilist.types';

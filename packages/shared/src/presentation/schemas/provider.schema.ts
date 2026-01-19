@@ -17,4 +17,5 @@ export const providerSchema: z.ZodType<ProviderType> = z.enum([
   ProviderValues.MDBLIST,
   ProviderValues.TRAKT_CHART,
   ProviderValues.STEVENLU,
+  ProviderValues.ANILIST,
 ] as const);

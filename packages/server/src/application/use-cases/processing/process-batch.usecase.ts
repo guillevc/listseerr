@@ -62,10 +62,11 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     // 3. Filter out unconfigured providers (silently skip, no error records)
     const listsToProcess = candidateLists.filter((list) => {
       const provider = list.provider;
-      if (provider.isStevenLu()) return true; // No config needed
-      if (provider.isTrakt() || provider.isTraktChart()) return !!traktConfig;
-      if (provider.isMdbList()) return !!mdbListConfig;
-      return false;
+      // Providers that require config - skip if not configured
+      if ((provider.isTrakt() || provider.isTraktChart()) && !traktConfig) return false;
+      if (provider.isMdbList() && !mdbListConfig) return false;
+      // All other providers (StevenLu, AniList, etc.) don't need config
+      return true;
     });
 
     this.logger.info(

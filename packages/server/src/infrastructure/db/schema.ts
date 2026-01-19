@@ -47,7 +47,9 @@ export const providerConfigs = sqliteTable(
     userId: integer('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
+    provider: text('provider', {
+      enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu', 'anilist'],
+    }).notNull(),
     clientId: text('client_id'),
     apiKey: text('api_key'),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -86,7 +88,9 @@ export const mediaLists = sqliteTable(
     name: text('name').notNull(),
     url: text('url').notNull(), // API URL used internally for fetching
     displayUrl: text('display_url'), // User-facing URL shown in UI (optional, falls back to url if not set)
-    provider: text('provider', { enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu'] }).notNull(),
+    provider: text('provider', {
+      enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu', 'anilist'],
+    }).notNull(),
     enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
     maxItems: integer('max_items').notNull().default(50),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
@@ -126,11 +130,11 @@ export const executionHistory = sqliteTable(
   ]
 );
 
-// Provider cache for external data (e.g., StevenLu JSON)
+// Provider cache for external data (e.g., StevenLu JSON, anime-ids mapping)
 // Stores cached responses from providers with timestamps for cache invalidation
 export const providerCache = sqliteTable('provider_cache', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  provider: text('provider', { enum: ['stevenlu'] })
+  provider: text('provider', { enum: ['stevenlu', 'anime-ids'] })
     .notNull()
     .unique(),
   data: text('data').notNull(), // JSON string of the cached response

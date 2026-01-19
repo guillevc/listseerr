@@ -17,6 +17,7 @@ export const ProviderDisplayNames: Record<ProviderType, string> = {
   traktChart: 'Trakt Chart',
   mdblist: 'MDBList',
   stevenlu: 'StevenLu',
+  anilist: 'AniList',
 };
 
 /**
@@ -63,6 +64,7 @@ export const isTrakt = createEnumGuard(ProviderValues.TRAKT);
 export const isMdbList = createEnumGuard(ProviderValues.MDBLIST);
 export const isTraktChart = createEnumGuard(ProviderValues.TRAKT_CHART);
 export const isStevenLu = createEnumGuard(ProviderValues.STEVENLU);
+export const isAnilist = createEnumGuard(ProviderValues.ANILIST);
 
 /**
  * Checks if a provider requires URL conversion (Trakt-based providers).

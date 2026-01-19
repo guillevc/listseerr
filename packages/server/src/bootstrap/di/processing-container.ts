@@ -8,6 +8,7 @@ import { DrizzleTraktConfigRepository } from '@/server/infrastructure/repositori
 import { DrizzleMdbListConfigRepository } from '@/server/infrastructure/repositories/drizzle-mdblist-config.repository';
 import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
+import { animeIdCache } from '@/server/infrastructure/services/external/anime-id-cache/client';
 import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
 import { HttpMediaAvailabilityChecker } from '@/server/infrastructure/services/adapters/http-media-availability-checker.adapter';
 import { ListProcessingService } from '@/server/infrastructure/services/adapters/list-processing.adapter';
@@ -84,7 +85,8 @@ export class ProcessingContainer {
     // Media fetcher factory (creates fetchers on-demand with fresh credentials)
     this.mediaFetcherFactory = new MediaFetcherFactory(
       this.traktConfigRepository,
-      this.mdbListConfigRepository
+      this.mdbListConfigRepository,
+      animeIdCache
     );
 
     // List processing service (shared between ProcessListUseCase and ProcessBatchUseCase)

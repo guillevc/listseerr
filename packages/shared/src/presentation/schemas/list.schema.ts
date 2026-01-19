@@ -13,12 +13,10 @@ import type {
   CreateListPrimitive,
   UpdateListPrimitive,
 } from '../../domain/types/list.types';
+import { ProviderValues, type ProviderType } from '../../domain/types/provider.types';
+import { matchesProviderUrl, getProviderDisplayName } from '../../domain/logic/provider.logic';
 import { providerSchema } from './provider.schema';
-import {
-  createHttpUrlSchema,
-  createNonEmptyStringSchema,
-  createBoundedIntSchema,
-} from './common.schema';
+import { createNonEmptyStringSchema, createBoundedIntSchema } from './common.schema';
 
 /**
  * List name schema.
@@ -28,11 +26,19 @@ export const listNameSchema: z.ZodType<ListNamePrimitive> = createNonEmptyString
 
 /**
  * List URL schema.
- * Validates: valid HTTP/HTTPS URL, removes query params.
+ * Basic string validation - provider-specific validation happens at parent schema level.
  */
-export const listUrlSchema: z.ZodType<ListUrlPrimitive> = createHttpUrlSchema({
-  stripQueryParams: true,
-});
+export const listUrlSchema: z.ZodType<ListUrlPrimitive> = z.string().min(1, 'URL is required');
+
+/**
+ * Normalizes HTTP URLs by stripping query parameters.
+ */
+function normalizeUrl(url: string): string {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url.split('?')[0];
+  }
+  return url;
+}
 
 /**
  * Max items schema.
@@ -49,26 +55,68 @@ export const maxItemsSchema: z.ZodType<MaxItemsPrimitive> = createBoundedIntSche
 /**
  * Create list schema.
  * Output type matches CreateListPrimitive.
+ * Uses superRefine for cross-field validation (URL must match provider format).
  */
-export const createListSchema = z.object({
-  name: listNameSchema,
-  url: listUrlSchema,
-  displayUrl: z.string().optional(),
-  provider: providerSchema.default('trakt'),
-  enabled: z.boolean().default(true),
-  maxItems: maxItemsSchema,
-}) satisfies z.ZodType<CreateListPrimitive>;
+export const createListSchema = z
+  .object({
+    name: listNameSchema,
+    url: listUrlSchema,
+    displayUrl: z.string().optional(),
+    provider: providerSchema.default('trakt'),
+    enabled: z.boolean().default(true),
+    maxItems: maxItemsSchema,
+  })
+  .superRefine((data, ctx) => {
+    // StevenLu has a fixed URL, skip validation
+    if (data.provider === ProviderValues.STEVENLU) {
+      return;
+    }
+
+    if (!matchesProviderUrl(data.provider as ProviderType, data.url)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `URL does not match expected format for ${getProviderDisplayName(data.provider as ProviderType)}`,
+        path: ['url'],
+      });
+    }
+  })
+  .transform((data) => ({
+    ...data,
+    url: normalizeUrl(data.url),
+  })) satisfies z.ZodType<CreateListPrimitive>;
 
 /**
  * Update list schema (partial, no defaults).
  * Output type matches UpdateListPrimitive.
  * Note: Defined separately to avoid inheriting .default() values from createListSchema.
+ * Cross-field validation only applies when both url and provider are provided.
  */
-export const updateListSchema = z.object({
-  name: listNameSchema.optional(),
-  url: listUrlSchema.optional(),
-  displayUrl: z.string().optional(),
-  provider: providerSchema.optional(),
-  enabled: z.boolean().optional(),
-  maxItems: z.number().int().min(1).max(50).optional(),
-}) satisfies z.ZodType<UpdateListPrimitive>;
+export const updateListSchema = z
+  .object({
+    name: listNameSchema.optional(),
+    url: listUrlSchema.optional(),
+    displayUrl: z.string().optional(),
+    provider: providerSchema.optional(),
+    enabled: z.boolean().optional(),
+    maxItems: z.number().int().min(1).max(50).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Only validate URL-provider match when both are provided
+    if (data.url && data.provider) {
+      if (data.provider === ProviderValues.STEVENLU) {
+        return;
+      }
+
+      if (!matchesProviderUrl(data.provider as ProviderType, data.url)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `URL does not match expected format for ${getProviderDisplayName(data.provider as ProviderType)}`,
+          path: ['url'],
+        });
+      }
+    }
+  })
+  .transform((data) => ({
+    ...data,
+    url: data.url ? normalizeUrl(data.url) : data.url,
+  })) satisfies z.ZodType<UpdateListPrimitive>;

@@ -13,6 +13,7 @@ export const ProviderValues = {
   MDBLIST: 'mdblist',
   TRAKT_CHART: 'traktChart',
   STEVENLU: 'stevenlu',
+  ANILIST: 'anilist',
 } as const;
 
 export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
@@ -22,4 +23,5 @@ export const ProviderUrlPatterns: Record<ProviderType, RegExp[]> = {
   traktChart: [TRAKT_CHART_URL_PATTERN],
   mdblist: [MDBLIST_URL_PATTERN],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],
+  anilist: [/^anilist:[^:]+:(CURRENT|PLANNING|COMPLETED|DROPPED|PAUSED|REPEATING)$/i],
 };

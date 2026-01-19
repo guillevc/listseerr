@@ -64,6 +64,10 @@ export class ProviderVO {
     return providerLogic.isStevenLu(this.value);
   }
 
+  isAnilist(): boolean {
+    return providerLogic.isAnilist(this.value);
+  }
+
   getDisplayName(): string {
     return providerLogic.getProviderDisplayName(this.value);
   }

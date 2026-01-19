@@ -8,6 +8,13 @@
       "when": 1766107207786,
       "tag": "0000_boring_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1768772559380,
+      "tag": "0001_freezing_shadow_king",
+      "breakpoints": true
     }
   ]
 }

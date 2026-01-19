@@ -1,7 +1,7 @@
 [settings]
 idiomatic_version_file_enable_tools = ["bun"]
 
-[tasks.docker-build]
+[tasks.docker-size]
 run = [
   "docker build -t listseerr .",
   "docker images listseerr | awk 'NR==2 {print \"📦 Image size: \" $7}'",

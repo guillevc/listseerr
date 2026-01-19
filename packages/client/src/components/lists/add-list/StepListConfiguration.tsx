@@ -4,8 +4,16 @@ import {
   type TraktChartType,
   type TraktMediaType,
 } from 'shared/domain/types';
-import { getProviderDisplayName, isTrakt, isTraktChart, isStevenLu } from 'shared/domain/logic';
+import {
+  getProviderDisplayName,
+  isTrakt,
+  isTraktChart,
+  isStevenLu,
+  isAnilist,
+  isMdbList,
+} from 'shared/domain/logic';
 import { TraktChartDisplayNames } from 'shared/domain/logic';
+import { anilistStatusDisplayNames, type AnilistStatus } from 'shared/presentation/schemas';
 import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
@@ -25,6 +33,12 @@ interface StepListConfigurationProps {
   onMediaTypeChange: (mediaType: TraktMediaType) => void;
   selectedChartType: TraktChartType;
   onChartTypeChange: (chartType: TraktChartType) => void;
+  // AniList-specific props
+  anilistUsername: string;
+  onAnilistUsernameChange: (username: string) => void;
+  anilistUsernameError: string | null;
+  anilistStatus: AnilistStatus;
+  onAnilistStatusChange: (status: AnilistStatus) => void;
   onBack: () => void;
   onSubmit: () => void;
   isLoading: boolean;
@@ -43,10 +57,18 @@ export function StepListConfiguration({
   onMediaTypeChange,
   selectedChartType,
   onChartTypeChange,
+  anilistUsername,
+  onAnilistUsernameChange,
+  anilistUsernameError,
+  anilistStatus,
+  onAnilistStatusChange,
   onBack,
   onSubmit,
   isLoading,
 }: StepListConfigurationProps) {
+  // Determine if URL field should be shown
+  const showUrlField = isTrakt(provider) || isMdbList(provider);
+
   return (
     <>
       <div className="py-4">
@@ -59,11 +81,13 @@ export function StepListConfiguration({
               placeholder="My List"
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
+              disabled={isLoading}
             />
             {isTraktChart(provider) && (
-              <p className="text-xs text-muted">Auto-generated — editable</p>
+              <p className="text-xs text-muted">Auto-generated - editable</p>
             )}
-            {isStevenLu(provider) && <p className="text-xs text-muted">Default name — editable</p>}
+            {isStevenLu(provider) && <p className="text-xs text-muted">Default name - editable</p>}
+            {isAnilist(provider) && <p className="text-xs text-muted">Auto-generated - editable</p>}
           </div>
 
           {/* Media Type and Chart Type fields for Trakt Chart */}
@@ -80,6 +104,7 @@ export function StepListConfiguration({
                     }
                     onClick={() => onMediaTypeChange(TraktMediaTypeValues.MOVIES)}
                     className="flex-1"
+                    disabled={isLoading}
                   >
                     Movies
                   </Button>
@@ -90,6 +115,7 @@ export function StepListConfiguration({
                     }
                     onClick={() => onMediaTypeChange(TraktMediaTypeValues.SHOWS)}
                     className="flex-1"
+                    disabled={isLoading}
                   >
                     Shows
                   </Button>
@@ -102,6 +128,7 @@ export function StepListConfiguration({
                 <Select
                   value={selectedChartType}
                   onValueChange={(v) => onChartTypeChange(v as TraktChartType)}
+                  disabled={isLoading}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select chart type" />
@@ -118,8 +145,55 @@ export function StepListConfiguration({
             </>
           )}
 
-          {/* URL field for Trakt List and MDBList (not for Trakt Chart or StevenLu) */}
-          {!isTraktChart(provider) && !isStevenLu(provider) && (
+          {/* AniList-specific fields */}
+          {isAnilist(provider) && (
+            <>
+              {/* Username Input */}
+              <div className="grid gap-2">
+                <Label htmlFor="anilistUsername">AniList Username</Label>
+                <Input
+                  id="anilistUsername"
+                  placeholder="Username"
+                  value={anilistUsername}
+                  onChange={(e) => onAnilistUsernameChange(e.target.value)}
+                  variant={anilistUsernameError ? 'error' : anilistUsername ? 'success' : 'default'}
+                  disabled={isLoading}
+                />
+                {anilistUsernameError && (
+                  <p className="text-sm text-destructive">{anilistUsernameError}</p>
+                )}
+                {!anilistUsernameError && (
+                  <p className="text-xs text-muted">
+                    Your AniList username. Profile must be public.
+                  </p>
+                )}
+              </div>
+
+              {/* Status Dropdown */}
+              <div className="grid gap-2">
+                <Label htmlFor="anilistStatus">List Status</Label>
+                <Select
+                  value={anilistStatus}
+                  onValueChange={(v) => onAnilistStatusChange(v as AnilistStatus)}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select list status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(anilistStatusDisplayNames).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          {/* URL field for Trakt List and MDBList (not for Trakt Chart, StevenLu, or AniList) */}
+          {showUrlField && (
             <div className="grid gap-2">
               <Label htmlFor="url">List URL</Label>
               <Input
@@ -128,6 +202,7 @@ export function StepListConfiguration({
                 value={url}
                 onChange={(e) => onUrlChange(e.target.value)}
                 variant={urlError ? 'error' : url ? 'success' : 'default'}
+                disabled={isLoading}
               />
               {urlError && <p className="text-sm text-destructive">{urlError}</p>}
               {!urlError && url && (
@@ -150,12 +225,13 @@ export function StepListConfiguration({
               min="1"
               max="50"
               required
+              disabled={isLoading}
             />
             <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
           </div>
 
           {/* URL format info for Trakt List and MDBList */}
-          {!isTraktChart(provider) && !isStevenLu(provider) && (
+          {showUrlField && (
             <div className="space-y-2 rounded-md border bg-card/50 p-3">
               <p className="text-sm font-medium">URL format:</p>
               <div className="space-y-1.5 text-sm">
@@ -175,7 +251,7 @@ export function StepListConfiguration({
       </div>
 
       <DialogFooter className="flex gap-2">
-        <Button variant="outline" onClick={onBack}>
+        <Button variant="outline" onClick={onBack} disabled={isLoading}>
           Back
         </Button>
         <Button onClick={onSubmit} loading={isLoading}>

@@ -25,6 +25,10 @@ export class ListUrlParserService implements IListUrlParserService {
       return this.parseStevenLuUrl(url, providedDisplayUrl);
     }
 
+    if (provider.isAnilist()) {
+      return this.parseAnilistUrl(url, providedDisplayUrl);
+    }
+
     throw new InvalidProviderError(provider.getValue());
   }
 
@@ -82,5 +86,25 @@ export class ListUrlParserService implements IListUrlParserService {
       apiUrl: url,
       displayUrl: providedDisplayUrl || url,
     };
+  }
+
+  private parseAnilistUrl(url: string, providedDisplayUrl?: string): ParsedUrls {
+    // AniList URLs are in format: anilist:{username}:{status}
+    // No conversion needed - extract username for display URL if not provided
+    const displayUrl = providedDisplayUrl || this.buildAnilistDisplayUrl(url);
+    return {
+      apiUrl: url,
+      displayUrl,
+    };
+  }
+
+  private buildAnilistDisplayUrl(url: string): string {
+    // url format: anilist:{username}:{status}
+    const parts = url.split(':');
+    if (parts.length >= 2) {
+      const username = parts[1];
+      return `https://anilist.co/user/${username}/animelist`;
+    }
+    return url;
   }
 }

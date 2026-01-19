@@ -2,15 +2,18 @@ import type { IMediaFetcherFactory } from '@/server/application/services/media-f
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
+import type { IAnimeIdCache } from '@/server/infrastructure/services/external/anime-id-cache/types';
 import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import { TraktMediaFetcher } from './trakt-media-fetcher.adapter';
 import { MdbListMediaFetcher } from './mdblist-media-fetcher.adapter';
 import { StevenLuMediaFetcher } from './stevenlu-media-fetcher.adapter';
+import { AnilistMediaFetcher } from './anilist-media-fetcher.adapter';
 
 export class MediaFetcherFactory implements IMediaFetcherFactory {
   constructor(
     private readonly traktConfigRepository: ITraktConfigRepository,
-    private readonly mdbListConfigRepository: IMdbListConfigRepository
+    private readonly mdbListConfigRepository: IMdbListConfigRepository,
+    private readonly animeIdCache: IAnimeIdCache
   ) {}
 
   async createFetcher(provider: ProviderVO, userId: number): Promise<IMediaFetcher | null> {
@@ -28,6 +31,11 @@ export class MediaFetcherFactory implements IMediaFetcherFactory {
       const mdbListConfig = await this.mdbListConfigRepository.findByUserId(userId);
       if (!mdbListConfig) return null;
       return new MdbListMediaFetcher(mdbListConfig.apiKey);
+    }
+
+    if (provider.isAnilist()) {
+      // AniList requires no auth - public API
+      return new AnilistMediaFetcher(this.animeIdCache);
     }
 
     return null;
