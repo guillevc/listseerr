@@ -41,6 +41,30 @@ function normalizeUrl(url: string): string {
 }
 
 /**
+ * Validates that a URL matches the expected format for a provider.
+ * Extracted to reduce duplication between createListSchema and updateListSchema.
+ */
+function validateUrlProviderMatch(
+  url: string | undefined,
+  provider: ProviderType | undefined,
+  ctx: z.RefinementCtx
+): void {
+  // Skip validation if either url or provider is missing
+  if (!url || !provider) return;
+
+  // StevenLu has a fixed URL, skip validation
+  if (provider === ProviderValues.STEVENLU) return;
+
+  if (!matchesProviderUrl(provider, url)) {
+    ctx.addIssue({
+      code: 'custom',
+      message: `URL does not match expected format for ${getProviderDisplayName(provider)}`,
+      path: ['url'],
+    });
+  }
+}
+
+/**
  * Max items schema.
  * Validates: positive integer between 1 and 50.
  */
@@ -67,18 +91,7 @@ export const createListSchema = z
     maxItems: maxItemsSchema,
   })
   .superRefine((data, ctx) => {
-    // StevenLu has a fixed URL, skip validation
-    if (data.provider === ProviderValues.STEVENLU) {
-      return;
-    }
-
-    if (!matchesProviderUrl(data.provider as ProviderType, data.url)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: `URL does not match expected format for ${getProviderDisplayName(data.provider as ProviderType)}`,
-        path: ['url'],
-      });
-    }
+    validateUrlProviderMatch(data.url, data.provider, ctx);
   })
   .transform((data) => ({
     ...data,
@@ -102,19 +115,7 @@ export const updateListSchema = z
   })
   .superRefine((data, ctx) => {
     // Only validate URL-provider match when both are provided
-    if (data.url && data.provider) {
-      if (data.provider === ProviderValues.STEVENLU) {
-        return;
-      }
-
-      if (!matchesProviderUrl(data.provider as ProviderType, data.url)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: `URL does not match expected format for ${getProviderDisplayName(data.provider as ProviderType)}`,
-          path: ['url'],
-        });
-      }
-    }
+    validateUrlProviderMatch(data.url, data.provider, ctx);
   })
   .transform((data) => ({
     ...data,

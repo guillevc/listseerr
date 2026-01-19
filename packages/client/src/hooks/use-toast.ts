@@ -134,4 +134,4 @@ function useToast() {
   };
 }
 
-export { useToast, toast, type ToasterToast };
+export { useToast, type ToasterToast };

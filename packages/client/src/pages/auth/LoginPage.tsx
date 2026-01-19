@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Eye, EyeOff, HelpCircle, RefreshCw } from 'lucide-react';
+import { HelpCircle, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/components/ui/card';
 import { Input } from '@/client/components/ui/input';
+import { PasswordInput } from '@/client/components/ui/password-input';
 import { Label } from '@/client/components/ui/label';
 import { Button } from '@/client/components/ui/button';
 import {
@@ -22,7 +23,6 @@ export function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPasswordHelp, setShowPasswordHelp] = useState(false);
   const helpTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -113,25 +113,13 @@ export function LoginPage() {
 
               <div className="flex flex-col gap-2">
                 <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    autoComplete="current-password"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted hover:text-foreground"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
+                <PasswordInput
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  autoComplete="current-password"
+                />
               </div>
 
               <div className="flex items-center justify-between">

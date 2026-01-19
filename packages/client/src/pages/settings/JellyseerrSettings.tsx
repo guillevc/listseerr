@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { PasswordInput } from '../../components/ui/password-input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { useToast } from '../../hooks/use-toast';
@@ -17,7 +17,6 @@ export function JellyseerrSettings() {
   const [externalUrl, setExternalUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [userId, setUserId] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -159,23 +158,12 @@ export function JellyseerrSettings() {
 
         <div className="grid gap-2">
           <Label htmlFor="apiKey">API Key</Label>
-          <div className="relative">
-            <Input
-              id="apiKey"
-              type={showApiKey ? 'text' : 'password'}
-              placeholder="Your API key"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="pr-10"
-            />
-            <button
-              type="button"
-              onClick={() => setShowApiKey(!showApiKey)}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted hover:text-foreground"
-            >
-              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          </div>
+          <PasswordInput
+            id="apiKey"
+            placeholder="Your API key"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+          />
         </div>
 
         <div className="grid gap-2">

@@ -2,6 +2,7 @@ import { Activity, AlertCircle, Calendar, CheckCircle, Clock, Inbox, XCircle } f
 import { getProviderDisplayName, isScheduled } from 'shared/domain/logic';
 import type { ProviderType } from 'shared/domain/types';
 import { trpc } from '../../lib/trpc';
+import { getRelativeTime } from '../../lib/utils';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -116,19 +117,6 @@ function ProcessingBar({
   );
 }
 
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins} min ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-  return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-}
-
 export function RecentActivity() {
   const { data, isLoading } = trpc.dashboard.getRecentActivity.useQuery({
     limit: 20,
@@ -218,7 +206,7 @@ export function RecentActivity() {
                       <TooltipTrigger asChild>
                         <span className="flex cursor-help items-center gap-1 text-sm text-muted">
                           <Clock className="h-3.5 w-3.5" />
-                          {formatRelativeTime(timestamp)}
+                          {getRelativeTime(timestamp)}
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>

@@ -2,18 +2,16 @@
  * Logs Response DTOs
  */
 
-export interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: string;
-  module?: string;
-  msg: string;
-  data?: Record<string, unknown>;
-}
+import type { LogEntryDTO } from '../core/log-entry.dto';
 
 export interface GetLogsResponse {
-  logs: LogEntry[];
+  logs: LogEntryDTO[];
 }
+
+/**
+ * @deprecated Use LogEntryDTO from '../core/log-entry.dto' instead
+ */
+export type LogEntry = LogEntryDTO;
 
 export interface ClearLogsResponse {
   success: boolean;

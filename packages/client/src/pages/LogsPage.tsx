@@ -42,6 +42,8 @@ export function LogsPage() {
     }
   );
   const logs = useMemo(() => data?.logs ?? [], [data?.logs]);
+  // Memoize reversed logs to avoid recreating array on each render
+  const reversedLogs = useMemo(() => [...logs].reverse(), [logs]);
 
   const clearLogsMutation = trpc.logs.clearLogs.useMutation({
     onSuccess: () => {
@@ -231,12 +233,12 @@ export function LogsPage() {
               fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
             }}
           >
-            {!logs || logs.length === 0 ? (
+            {reversedLogs.length === 0 ? (
               <div className="text-muted">No logs available</div>
             ) : (
               <div>
-                {/* Reverse logs so newest is at the bottom (like terminal) */}
-                {[...logs].reverse().map((log, index) => renderLogEntry(log, index))}
+                {/* Logs are reversed so newest is at the bottom (like terminal) */}
+                {reversedLogs.map((log, index) => renderLogEntry(log, index))}
                 <div ref={logsEndRef} />
               </div>
             )}

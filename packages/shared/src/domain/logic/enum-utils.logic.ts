@@ -27,8 +27,12 @@ export function createEnumValidator<T extends string>(
   const validValues = Object.values(values);
 
   return (value: string): value is T => {
-    const checkValue = caseSensitive ? value : value.toLowerCase();
-    return validValues.includes(checkValue as T);
+    if (caseSensitive) {
+      return validValues.includes(value as T);
+    }
+    // For case-insensitive comparison, normalize both sides
+    const lowerValue = value.toLowerCase();
+    return validValues.some((v) => v.toLowerCase() === lowerValue);
   };
 }
 
@@ -67,11 +71,19 @@ export function createEnumNormalizer<T extends string>(
   const validValues = Object.values(values);
 
   return (value: string): T => {
-    const normalized = caseSensitive ? value : value.toLowerCase();
-    if (!validValues.includes(normalized as T)) {
+    if (caseSensitive) {
+      if (!validValues.includes(value as T)) {
+        throw new Error(`Invalid ${typeName}: ${value}`);
+      }
+      return value as T;
+    }
+    // For case-insensitive, find the matching canonical value
+    const lowerValue = value.toLowerCase();
+    const match = validValues.find((v) => v.toLowerCase() === lowerValue);
+    if (!match) {
       throw new Error(`Invalid ${typeName}: ${value}`);
     }
-    return normalized as T;
+    return match;
   };
 }
 

@@ -1,14 +1,17 @@
 import { DomainError } from './domain.error';
+import { ProviderValues } from '../types/provider.types';
+
+// Generate valid providers list dynamically to stay in sync
+const validProviders = Object.values(ProviderValues).join(', ');
 
 /**
  * Invalid Provider Error
  *
  * Thrown when an invalid provider type is provided.
- * Valid providers: trakt, mdblist, traktChart, stevenlu
  */
 export class InvalidProviderError extends DomainError {
   constructor(provider: string) {
-    super(`Invalid provider: ${provider}. Must be one of: trakt, mdblist, traktChart, stevenlu`);
+    super(`Invalid provider: ${provider}. Must be one of: ${validProviders}`);
   }
 }
 

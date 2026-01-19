@@ -1,11 +1,9 @@
 import { mkdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { Database } from 'bun:sqlite';
-import { drizzle, type BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
+import { drizzle } from 'drizzle-orm/bun-sqlite';
 import * as schema from './schema';
 import { env } from '@/server/env';
-
-export type DbClient = BunSQLiteDatabase<typeof schema>;
 
 const DB_PATH = resolve(env.DATABASE_PATH);
 

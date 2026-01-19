@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import {
   Card,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { ExternalLink } from '../../components/ui/external-link';
-import { Input } from '../../components/ui/input';
+import { PasswordInput } from '../../components/ui/password-input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { Switch } from '../../components/ui/switch';
@@ -23,14 +23,12 @@ export function ApiKeysSettings() {
   // Trakt.tv state
   const [traktClientId, setTraktClientId] = useState('');
   const [traktEnabled, setTraktEnabled] = useState(false);
-  const [showTraktKey, setShowTraktKey] = useState(false);
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
   // MDBList state
-  const [mdbListApiKey, setTmdbApiKey] = useState('');
-  const [mdbListEnabled, setTmdbEnabled] = useState(false);
-  const [showMdbListKey, setShowTmdbKey] = useState(false);
+  const [mdbListApiKey, setMdbListApiKey] = useState('');
+  const [mdbListEnabled, setMdbListEnabled] = useState(false);
 
   // Load Trakt config
   const { data: traktData } = trpc.traktConfig.get.useQuery();
@@ -52,10 +50,10 @@ export function ApiKeysSettings() {
 
   useEffect(() => {
     if (mdbListConfig?.apiKey) {
-      setTmdbApiKey(mdbListConfig.apiKey);
-      setTmdbEnabled(true);
+      setMdbListApiKey(mdbListConfig.apiKey);
+      setMdbListEnabled(true);
     } else {
-      setTmdbEnabled(false);
+      setMdbListEnabled(false);
     }
   }, [mdbListConfig]);
 
@@ -115,7 +113,7 @@ export function ApiKeysSettings() {
   const deleteMdbListMutation = trpc.mdblistConfig.delete.useMutation({
     onSuccess: () => {
       void utils.mdblistConfig.get.invalidate();
-      setTmdbApiKey('');
+      setMdbListApiKey('');
       toast({
         title: 'Success',
         description: 'MDBList API Key removed',
@@ -169,7 +167,7 @@ export function ApiKeysSettings() {
   // MDBList handlers
   const handleMdbListToggle = (checked: boolean) => {
     // Just toggle the state, don't delete immediately
-    setTmdbEnabled(checked);
+    setMdbListEnabled(checked);
   };
 
   const handleMdbListSave = () => {
@@ -244,30 +242,16 @@ export function ApiKeysSettings() {
 
           <div className="grid gap-2">
             <Label htmlFor="trakt-client-id">Client ID</Label>
-            <div className="relative">
-              <Input
-                id="trakt-client-id"
-                type={showTraktKey ? 'text' : 'password'}
-                placeholder="Your Trakt.tv Client ID"
-                value={traktClientId}
-                onChange={(e) => setTraktClientId(e.target.value)}
-                disabled={
-                  !traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending
-                }
-                className="pr-10"
-              />
-              {traktEnabled && (
-                <div className="absolute top-1/2 right-3 -translate-y-1/2">
-                  <button
-                    type="button"
-                    onClick={() => setShowTraktKey(!showTraktKey)}
-                    className="text-muted hover:text-foreground"
-                  >
-                    {showTraktKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              )}
-            </div>
+            <PasswordInput
+              id="trakt-client-id"
+              placeholder="Your Trakt.tv Client ID"
+              value={traktClientId}
+              onChange={(e) => setTraktClientId(e.target.value)}
+              disabled={
+                !traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending
+              }
+              showToggle={traktEnabled}
+            />
             <p className="text-xs text-muted">
               Only the Client ID is required for reading public lists
             </p>
@@ -322,33 +306,17 @@ export function ApiKeysSettings() {
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="tmdb-api-key">API Key</Label>
-            <div className="relative">
-              <Input
-                id="tmdb-api-key"
-                type={showMdbListKey ? 'text' : 'password'}
-                placeholder="Your MDBList API Key"
-                value={mdbListApiKey}
-                onChange={(e) => setTmdbApiKey(e.target.value)}
-                disabled={
-                  !mdbListEnabled ||
-                  saveMdbListMutation.isPending ||
-                  deleteMdbListMutation.isPending
-                }
-                className="pr-10"
-              />
-              {mdbListEnabled && (
-                <div className="absolute top-1/2 right-3 -translate-y-1/2">
-                  <button
-                    type="button"
-                    onClick={() => setShowTmdbKey(!showMdbListKey)}
-                    className="text-muted hover:text-foreground"
-                  >
-                    {showMdbListKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              )}
-            </div>
+            <Label htmlFor="mdblist-api-key">API Key</Label>
+            <PasswordInput
+              id="mdblist-api-key"
+              placeholder="Your MDBList API Key"
+              value={mdbListApiKey}
+              onChange={(e) => setMdbListApiKey(e.target.value)}
+              disabled={
+                !mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending
+              }
+              showToggle={mdbListEnabled}
+            />
           </div>
 
           <div className="flex gap-2">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import type { SerializedUser } from 'shared/application/dtos';
 import { trpc } from '@/client/lib/trpc';
 import { AuthContext, type AuthContextValue } from './auth-context-value';
@@ -99,14 +99,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, [sessionToken, logoutMutation]);
 
-  const value: AuthContextValue = {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    sessionToken,
-  };
+  // Memoize context value to prevent unnecessary re-renders in consumers
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      isLoading,
+      isAuthenticated: !!user,
+      login,
+      logout,
+      sessionToken,
+    }),
+    [user, isLoading, login, logout, sessionToken]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
