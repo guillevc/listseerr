@@ -3,7 +3,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/icons/listseerr-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="docs/icons/listseerr-light.png">
-  <img alt="Listseerr" src="docs/icons/listseerr-light.png" width="150">
+  <img alt="Listseerr" src="docs/icons/listseerr-light.png" width="120">
 </picture>
 
 # Listseerr
