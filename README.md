@@ -48,8 +48,8 @@ Listseerr skips media that was previously rejected or is already available, so y
 
 ## 🔗 Supported Providers
 
-| Provider                | Status      | Requirements                                        |
-| ----------------------- | ----------- | --------------------------------------------------- |
+| Provider                | Status       | Requirements                                        |
+| ----------------------- | ------------ | --------------------------------------------------- |
 | **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
 | **MDBList**             | ✅ Supported | [Free API key](https://mdblist.com/preferences/)    |
 | **StevenLu**            | ✅ Supported | None                                                |
