@@ -35,7 +35,8 @@ export const listUrlSchema: z.ZodType<ListUrlPrimitive> = z.string().min(1, 'URL
  */
 function normalizeUrl(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url.split('?')[0];
+    const [withoutQuery = url] = url.split('?');
+    return withoutQuery;
   }
   return url;
 }
@@ -111,7 +112,7 @@ export const updateListSchema = z
     displayUrl: z.string().optional(),
     provider: providerSchema.optional(),
     enabled: z.boolean().optional(),
-    maxItems: z.number().int().min(1).max(50).optional(),
+    maxItems: maxItemsSchema.optional(),
   })
   .superRefine((data, ctx) => {
     // Only validate URL-provider match when both are provided

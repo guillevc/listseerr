@@ -6,8 +6,6 @@
  */
 
 import type {
-  UsernamePrimitive,
-  PasswordPrimitive,
   SessionTokenPrimitive,
   RegisterUserPrimitive,
   LoginUserPrimitive,
@@ -19,20 +17,13 @@ import type {
  * Extends RegisterUserPrimitive but excludes confirmPassword
  * (password matching is validated at schema level, not stored)
  */
-export interface RegisterUserCommand extends Omit<RegisterUserPrimitive, 'confirmPassword'> {
-  username: UsernamePrimitive;
-  password: PasswordPrimitive;
-}
+export type RegisterUserCommand = Omit<RegisterUserPrimitive, 'confirmPassword'>;
 
 /**
  * LoginUserCommand
  * Contains credentials for authentication
  */
-export interface LoginUserCommand extends LoginUserPrimitive {
-  username: UsernamePrimitive;
-  password: PasswordPrimitive;
-  rememberMe: boolean;
-}
+export type LoginUserCommand = LoginUserPrimitive;
 
 /**
  * ValidateSessionCommand

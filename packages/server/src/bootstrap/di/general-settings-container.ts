@@ -5,7 +5,8 @@ import { env } from '@/server/env';
 // Infrastructure layer
 import { DrizzleGeneralSettingsRepository } from '@/server/infrastructure/repositories/drizzle-general-settings.repository';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
-import { schedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { LazySchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { getSchedulerService } from '@/server/bootstrap/scheduler';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
 // Application layer - Use cases
@@ -65,7 +66,7 @@ export class GeneralSettingsContainer {
     this.updateGeneralSettingsUseCase = new LoggingUseCaseDecorator(
       new UpdateGeneralSettingsUseCase(
         this.generalSettingsRepository,
-        schedulerService,
+        new LazySchedulerService(getSchedulerService),
         this.logger
       ),
       this.logger,

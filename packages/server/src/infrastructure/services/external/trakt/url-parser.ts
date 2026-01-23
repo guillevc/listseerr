@@ -24,8 +24,7 @@ export function parseTraktUrl(url: string): TraktUrlParts {
       );
     }
 
-    const username = pathParts[1];
-    const listSlug = pathParts[3];
+    const [, username = '', , listSlug = ''] = pathParts;
 
     // Extract query parameters
     const searchParams = urlObj.searchParams;
@@ -46,8 +45,7 @@ export function parseTraktUrl(url: string): TraktUrlParts {
     if (sort) {
       const sortParts = sort.split(',');
       if (sortParts.length === 2) {
-        sortField = sortParts[0];
-        sortOrder = sortParts[1];
+        [sortField = '', sortOrder = ''] = sortParts;
       }
     }
 

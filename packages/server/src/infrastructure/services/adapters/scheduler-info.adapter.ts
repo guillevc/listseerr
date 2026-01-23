@@ -2,21 +2,28 @@ import type {
   ISchedulerInfoService,
   ScheduledJobInfo,
 } from '@/server/application/services/core/scheduler-info.service.interface';
-import { scheduler } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { getSchedulerService } from '@/server/bootstrap/scheduler';
 
 /**
  * SchedulerInfoAdapter
  *
- * Infrastructure adapter that wraps the scheduler singleton for read-only queries.
+ * Infrastructure adapter that lazily resolves the scheduler service for read-only queries.
  * Implements ISchedulerInfoService interface.
  *
  * Implementation Details:
- * - Wraps scheduler.getScheduledJobs() method
+ * - Uses lazy resolution to get scheduler service at runtime
  * - Returns minimal job info (listId, nextRun)
  * - Read-only operations only
  */
 export class SchedulerInfoAdapter implements ISchedulerInfoService {
   getScheduledJobs(): ScheduledJobInfo[] {
-    return scheduler.getScheduledJobs();
+    const schedulerService = getSchedulerService();
+    const jobs = schedulerService.getScheduledJobs();
+
+    // Transform ScheduledJob[] to ScheduledJobInfo[]
+    return jobs.map((job) => ({
+      listId: 0, // Global job ID
+      nextRun: job.nextRun ? job.nextRun.toISOString() : null,
+    }));
   }
 }

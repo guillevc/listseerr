@@ -31,8 +31,11 @@ export function parseMdbListUrl(url: string): ParsedMdbListUrl | null {
   const match = url.trim().match(MDBLIST_URL_PATTERN);
   if (!match?.groups) return null;
 
+  const { username, listSlug } = match.groups;
+  if (!username || !listSlug) return null;
+
   return {
-    username: match.groups.username,
-    listSlug: match.groups.listSlug,
+    username,
+    listSlug,
   };
 }

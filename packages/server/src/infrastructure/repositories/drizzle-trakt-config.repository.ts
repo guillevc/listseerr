@@ -38,6 +38,9 @@ export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
         .where(eq(providerConfigs.id, entity.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update Trakt config with id ${entity.id}`);
+      }
       return this.toDomain(row);
     }
 
@@ -51,6 +54,9 @@ export class DrizzleTraktConfigRepository implements ITraktConfigRepository {
       })
       .returning();
 
+    if (!row) {
+      throw new Error(`Failed to insert Trakt config for user ${entity.userId}`);
+    }
     return this.toDomain(row);
   }
 

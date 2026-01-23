@@ -32,7 +32,7 @@ export class BatchIdVO {
       throw new InvalidBatchIdError(value, 'Expected format: {triggerType}-{timestamp}-{randomId}');
     }
 
-    const [triggerTypeStr, timestampStr, randomId] = parts;
+    const [triggerTypeStr = '', timestampStr = '', randomId = ''] = parts;
 
     if (!triggerTypeLogic.isValidTriggerType(triggerTypeStr)) {
       throw new InvalidBatchIdError(value, `Invalid trigger type: ${triggerTypeStr}`);
@@ -43,7 +43,7 @@ export class BatchIdVO {
       throw new InvalidBatchIdError(value, `Invalid timestamp: ${timestampStr}. Must be a number.`);
     }
 
-    if (!randomId || randomId.trim() === '') {
+    if (randomId.trim() === '') {
       throw new InvalidBatchIdError(value, 'Random ID part is empty.');
     }
 
@@ -55,14 +55,13 @@ export class BatchIdVO {
   }
 
   getTriggerType(): TriggerTypeVO {
-    const triggerTypeStr = this.value.split('-')[0];
+    const [triggerTypeStr = ''] = this.value.split('-');
     return TriggerTypeVO.fromPersistence(triggerTypeStr);
   }
 
   getTimestamp(): Date {
-    const timestampStr = this.value.split('-')[1];
-    const timestamp = Number(timestampStr);
-    return new Date(timestamp);
+    const [, timestampStr = ''] = this.value.split('-');
+    return new Date(Number(timestampStr));
   }
 
   equals(other: BatchIdVO): boolean {

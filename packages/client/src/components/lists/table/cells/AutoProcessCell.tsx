@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ProviderType } from 'shared/domain/types';
 import { getProviderDisplayName } from 'shared/domain/logic';
 import { Switch } from '../../../ui/switch';
@@ -13,7 +14,7 @@ interface AutoProcessCellProps {
   onToggle: (id: number) => void;
 }
 
-export function AutoProcessCell({
+export const AutoProcessCell = memo(function AutoProcessCell({
   listId,
   provider,
   enabled,
@@ -58,4 +59,4 @@ export function AutoProcessCell({
       </Tooltip>
     </TooltipProvider>
   );
-}
+});

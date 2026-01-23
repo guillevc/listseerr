@@ -16,3 +16,4 @@ export * from './mdblist-url.logic';
 export * from './media-availability.logic';
 export * from './jellyseerr.logic';
 export * from './auth.logic';
+export * from './anilist.logic';

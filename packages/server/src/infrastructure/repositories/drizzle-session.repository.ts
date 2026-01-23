@@ -34,6 +34,9 @@ export class DrizzleSessionRepository implements ISessionRepository {
         .where(eq(sessions.id, entity.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update session with id ${entity.id}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new entity
@@ -46,6 +49,9 @@ export class DrizzleSessionRepository implements ISessionRepository {
         })
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to insert session for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     }
   }

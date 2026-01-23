@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AlertCircle } from 'lucide-react';
 import type { ProviderType } from 'shared/domain/types';
 import { getProviderDisplayName } from 'shared/domain/logic';
@@ -10,7 +11,10 @@ interface ProviderCellProps {
   isProviderConfigured: boolean;
 }
 
-export function ProviderCell({ provider, isProviderConfigured }: ProviderCellProps) {
+export const ProviderCell = memo(function ProviderCell({
+  provider,
+  isProviderConfigured,
+}: ProviderCellProps) {
   return (
     <div className="flex items-center gap-2 whitespace-nowrap">
       <Badge variant={provider}>{getProviderName(provider)}</Badge>
@@ -31,4 +35,4 @@ export function ProviderCell({ provider, isProviderConfigured }: ProviderCellPro
       )}
     </div>
   );
-}
+});

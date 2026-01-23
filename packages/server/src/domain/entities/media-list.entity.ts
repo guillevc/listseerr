@@ -53,6 +53,34 @@ export class MediaList {
     this._updatedAt = params.updatedAt;
   }
 
+  /**
+   * Factory method for creating a new MediaList (not yet persisted).
+   * Validates input through Value Objects.
+   */
+  static create(props: {
+    userId: number;
+    name: string;
+    url: string;
+    displayUrl: string;
+    provider: ProviderType;
+    enabled: boolean;
+    maxItems: number;
+  }): MediaList {
+    const now = new Date();
+    return new MediaList({
+      id: 0, // Will be set by repository on save
+      userId: props.userId,
+      name: ListNameVO.create(props.name),
+      url: ListUrlVO.create(props.url),
+      displayUrl: props.displayUrl,
+      provider: ProviderVO.create(props.provider),
+      enabled: props.enabled,
+      maxItems: props.maxItems,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
   // Getters - expose state for read access
   get id(): number {
     return this._id;

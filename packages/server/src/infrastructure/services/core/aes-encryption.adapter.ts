@@ -83,7 +83,7 @@ export class AesEncryptionService implements IEncryptionService {
         );
       }
 
-      const [algorithm, ivHex, authTagHex, encryptedHex] = parts;
+      const [algorithm = '', ivHex = '', authTagHex = '', encryptedHex = ''] = parts;
 
       // Validate algorithm
       if (algorithm !== AesEncryptionService.ALGORITHM) {

@@ -68,6 +68,11 @@ export function generateCronDescription(cronExpression: string): string {
 
   const [minute, hour, dayOfMonth, month, dayOfWeek] = parts;
 
+  // Early return if any required part is missing (should not happen after length check, but satisfies TypeScript)
+  if (!minute || !hour || !dayOfMonth || !month || !dayOfWeek) {
+    return 'Invalid cron expression';
+  }
+
   // Handle special expressions
   if (minute === '*' && hour === '*' && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
     return 'Every minute';
@@ -79,7 +84,7 @@ export function generateCronDescription(cronExpression: string): string {
   if (minute === '*') {
     description = 'Every minute';
   } else if (minute.includes('/')) {
-    const interval = minute.split('/')[1];
+    const interval = minute.split('/')[1] ?? '';
     description = `Every ${interval} minutes`;
   } else if (minute.includes(',')) {
     description += `minutes ${minute} `;
@@ -90,7 +95,7 @@ export function generateCronDescription(cronExpression: string): string {
   // Handle hour
   if (hour !== '*' && !description.startsWith('Every')) {
     if (hour.includes('/')) {
-      const interval = hour.split('/')[1];
+      const interval = hour.split('/')[1] ?? '';
       description = `Every ${interval} hours`;
     } else if (hour.includes(',')) {
       description += `of hours ${hour}`;
@@ -103,7 +108,7 @@ export function generateCronDescription(cronExpression: string): string {
   // Handle day of month
   if (dayOfMonth !== '*') {
     if (dayOfMonth.includes('/')) {
-      const interval = dayOfMonth.split('/')[1];
+      const interval = dayOfMonth.split('/')[1] ?? '';
       description += `, every ${interval} days`;
     } else if (dayOfMonth.includes(',')) {
       description += ` on days ${dayOfMonth}`;
@@ -127,29 +132,45 @@ export function generateCronDescription(cronExpression: string): string {
       'Oct',
       'Nov',
       'Dec',
-    ];
+    ] as const;
     if (month.includes(',')) {
       const months = month
         .split(',')
-        .map((m) => monthNames[parseInt(m) - 1])
+        .map((m) => {
+          const idx = parseInt(m) - 1;
+          return monthNames[idx] ?? m;
+        })
         .join(', ');
       description += ` in ${months}`;
     } else {
-      description += ` in ${monthNames[parseInt(month) - 1]}`;
+      const idx = parseInt(month) - 1;
+      description += ` in ${monthNames[idx] ?? month}`;
     }
   }
 
   // Handle day of week
   if (dayOfWeek !== '*') {
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ] as const;
     if (dayOfWeek.includes(',')) {
       const days = dayOfWeek
         .split(',')
-        .map((d) => dayNames[parseInt(d)])
+        .map((d) => {
+          const idx = parseInt(d);
+          return dayNames[idx] ?? d;
+        })
         .join(', ');
       description += ` on ${days}`;
     } else {
-      description += ` on ${dayNames[parseInt(dayOfWeek)]}`;
+      const idx = parseInt(dayOfWeek);
+      description += ` on ${dayNames[idx] ?? dayOfWeek}`;
     }
   }
 

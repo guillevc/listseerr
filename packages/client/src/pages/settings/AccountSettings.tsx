@@ -16,6 +16,7 @@ import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { useAuth } from '../../hooks/use-auth';
+import { handleValidationResult, showSuccessToast, showErrorToast } from '../../lib/toast-helpers';
 import { updateUserCredentialsSchema } from 'shared/presentation/schemas';
 
 export function AccountSettings() {
@@ -29,20 +30,17 @@ export function AccountSettings() {
 
   const updateCredentialsMutation = trpc.auth.updateCredentials.useMutation({
     onSuccess: () => {
-      toast({
-        title: 'Success',
-        description: 'Your credentials have been updated. Please log in again.',
-      });
+      showSuccessToast(
+        toast,
+        'Success',
+        'Your credentials have been updated. Please log in again.'
+      );
       void logout().then(() => {
         void navigate({ to: '/login' });
       });
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to update credentials',
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error.message || 'Failed to update credentials');
     },
   });
   const isSaving = useMinLoading(updateCredentialsMutation.isPending);
@@ -55,14 +53,7 @@ export function AccountSettings() {
     };
 
     const result = updateUserCredentialsSchema.safeParse(data);
-    if (!result.success) {
-      toast({
-        title: 'Validation Error',
-        description: result.error.issues[0]?.message ?? 'Invalid input',
-        variant: 'destructive',
-      });
-      return;
-    }
+    if (!handleValidationResult(toast, result, 'Invalid input')) return;
 
     updateCredentialsMutation.mutate(result.data);
   };

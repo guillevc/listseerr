@@ -37,6 +37,9 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
         .where(eq(generalSettings.userId, entity.userId))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update general settings for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new entity
@@ -49,6 +52,9 @@ export class DrizzleGeneralSettingsRepository implements IGeneralSettingsReposit
         })
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to insert general settings for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     }
   }

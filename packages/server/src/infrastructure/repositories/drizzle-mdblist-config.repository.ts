@@ -38,6 +38,9 @@ export class DrizzleMdbListConfigRepository implements IMdbListConfigRepository 
         .where(eq(providerConfigs.id, entity.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update MDBList config with id ${entity.id}`);
+      }
       return this.toDomain(row);
     }
 
@@ -51,6 +54,9 @@ export class DrizzleMdbListConfigRepository implements IMdbListConfigRepository 
       })
       .returning();
 
+    if (!row) {
+      throw new Error(`Failed to insert MDBList config for user ${entity.userId}`);
+    }
     return this.toDomain(row);
   }
 

@@ -12,6 +12,11 @@ import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import {
+  showValidationErrorToast,
+  showErrorToast,
+  showSuccessToast,
+} from '../../lib/toast-helpers';
+import {
   validateAndParseCron,
   COMMON_CRON_PATTERNS,
   type CronValidation,
@@ -54,21 +59,16 @@ export function ProcessingScheduleSettings() {
       const wasJustEnabled =
         data.automaticProcessingEnabled && !settings?.automaticProcessingEnabled;
 
-      toast({
-        title: 'Success',
-        description: wasJustEnabled
-          ? `Automatic processing enabled with schedule: ${cronExpression}. All lists have been enabled.`
-          : data.automaticProcessingEnabled
-            ? `Automatic processing updated with schedule: ${cronExpression}`
-            : 'Automatic processing disabled',
-      });
+      const description = wasJustEnabled
+        ? `Automatic processing enabled with schedule: ${cronExpression}. All lists have been enabled.`
+        : data.automaticProcessingEnabled
+          ? `Automatic processing updated with schedule: ${cronExpression}`
+          : 'Automatic processing disabled';
+
+      showSuccessToast(toast, 'Success', description);
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to save settings',
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error.message || 'Failed to save settings');
     },
   });
   const isSaving = useMinLoading(saveMutation.isPending);
@@ -96,11 +96,7 @@ export function ProcessingScheduleSettings() {
 
   const handleSave = () => {
     if (isEnabled && !validation.isValid) {
-      toast({
-        title: 'Validation Error',
-        description: 'Please enter a valid cron expression',
-        variant: 'destructive',
-      });
+      showValidationErrorToast(toast, 'Please enter a valid cron expression');
       return;
     }
 

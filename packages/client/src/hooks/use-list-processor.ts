@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { trpc } from '../lib/trpc';
 import { useToast } from './use-toast';
+import { invalidateProcessingQueries } from '../lib/cache-utils';
 
 interface MediaList {
   id: number;
@@ -27,10 +28,7 @@ export function useListProcessor() {
       });
 
       // Invalidate queries to refresh UI
-      void utils.lists.getAll.invalidate();
-      void utils.dashboard.getStats.invalidate();
-      void utils.dashboard.getRecentActivity.invalidate();
-      void utils.dashboard.getPendingRequests.invalidate();
+      invalidateProcessingQueries(utils);
 
       // Destructure wrapped response
       const { execution, itemsSkippedPreviouslyRequested, itemsSkippedAvailable } = result;
@@ -78,10 +76,7 @@ export function useListProcessor() {
       setProcessingLists(new Set()); // Clear all processing lists
 
       // Invalidate queries to refresh UI
-      void utils.lists.getAll.invalidate();
-      void utils.dashboard.getStats.invalidate();
-      void utils.dashboard.getRecentActivity.invalidate();
-      void utils.dashboard.getPendingRequests.invalidate();
+      invalidateProcessingQueries(utils);
 
       if (result.success) {
         const parts = [

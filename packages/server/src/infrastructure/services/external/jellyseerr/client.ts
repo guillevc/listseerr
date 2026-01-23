@@ -185,6 +185,12 @@ export async function requestItemsToJellyseerr(
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
+
+    // Skip if item is undefined (shouldn't happen, but satisfies noUncheckedIndexedAccess)
+    if (!item) {
+      continue;
+    }
+
     logger.debug(
       {
         progress: `${i + 1}/${items.length}`,

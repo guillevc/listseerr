@@ -16,16 +16,21 @@ export interface SchedulerRouterDeps {
  * 2. Delegates to use cases via injected dependencies
  * 3. Returns Response DTOs directly
  * 4. Contains ZERO business logic
+ *
+ * Accepts a getter function to lazily resolve dependencies,
+ * avoiding circular dependency issues during module initialization.
  */
-export function createSchedulerRouter(deps: SchedulerRouterDeps) {
+export function createSchedulerRouter(getDeps: () => SchedulerRouterDeps) {
   return router({
     getScheduledJobs: publicProcedure.query(async ({ ctx }) => {
+      const deps = getDeps();
       return await deps.getScheduledJobsUseCase.execute({
         userId: ctx.userId,
       });
     }),
 
     reload: publicProcedure.mutation(async ({ ctx }) => {
+      const deps = getDeps();
       return await deps.reloadSchedulerUseCase.execute({
         userId: ctx.userId,
       });

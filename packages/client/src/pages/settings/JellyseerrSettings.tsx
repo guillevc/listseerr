@@ -8,6 +8,12 @@ import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
 import { trpc } from '../../lib/trpc';
 import {
+  handleValidationResult,
+  createMutationCallbacks,
+  showErrorToast,
+  showSuccessToast,
+} from '../../lib/toast-helpers';
+import {
   jellyseerrConfigSchema,
   jellyseerrTestConnectionSchema,
 } from 'shared/presentation/schemas';
@@ -26,10 +32,7 @@ export function JellyseerrSettings() {
   const testMutation = trpc.config.test.useMutation({
     onSuccess: (result) => {
       if (result.success) {
-        toast({
-          title: 'Success',
-          description: result.message,
-        });
+        showSuccessToast(toast, 'Success', result.message);
       } else {
         toast({
           title: 'Connection Failed',
@@ -39,30 +42,19 @@ export function JellyseerrSettings() {
       }
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
+      showErrorToast(toast, error);
     },
   });
 
   const saveMutation = trpc.config.set.useMutation({
-    onSuccess: () => {
-      void utils.config.get.invalidate();
-      void utils.dashboard.getPendingRequests.invalidate();
-      toast({
-        title: 'Saved',
-        description: 'Jellyseerr configuration saved successfully',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
+    ...createMutationCallbacks(toast, {
+      onSuccessTitle: 'Saved',
+      onSuccessDescription: 'Jellyseerr configuration saved successfully',
+      onSuccessCallback: () => {
+        void utils.config.get.invalidate();
+        void utils.dashboard.getPendingRequests.invalidate();
+      },
+    }),
   });
   const isSaving = useMinLoading(saveMutation.isPending);
 
@@ -77,17 +69,8 @@ export function JellyseerrSettings() {
   }, [config]);
 
   const handleTest = () => {
-    // Validate test connection params using shared schema
     const result = jellyseerrTestConnectionSchema.safeParse({ url, apiKey });
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      toast({
-        title: 'Validation Error',
-        description: firstIssue?.message ?? 'Invalid configuration',
-        variant: 'destructive',
-      });
-      return;
-    }
+    if (!handleValidationResult(toast, result, 'Invalid configuration')) return;
 
     testMutation.mutate({
       url: result.data.url,
@@ -96,23 +79,13 @@ export function JellyseerrSettings() {
   };
 
   const handleSave = () => {
-    // Validate full config using shared schema
-    // Only include externalUrl if it's not empty
     const result = jellyseerrConfigSchema.safeParse({
       url,
       externalUrl: externalUrl || undefined,
       apiKey,
       userIdJellyseerr: parseInt(userId) || 0,
     });
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      toast({
-        title: 'Validation Error',
-        description: firstIssue?.message ?? 'Invalid configuration',
-        variant: 'destructive',
-      });
-      return;
-    }
+    if (!handleValidationResult(toast, result, 'Invalid configuration')) return;
 
     saveMutation.mutate({
       url: result.data.url,

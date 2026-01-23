@@ -6,42 +6,44 @@ import { Cron } from 'croner';
 import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite';
 import { eq } from 'drizzle-orm';
 import { generalSettings } from '@/server/infrastructure/db/schema';
-import { LoggerService } from './logger.adapter';
+import type { ILogger } from '@/server/application/services/core/logger.interface';
 import * as schema from '@/server/infrastructure/db/schema';
-
-const logger = new LoggerService('scheduler');
 
 interface SchedulerJob {
   listId: number;
   cronJob: Cron;
 }
 
-class Scheduler {
+export interface SchedulerDependencies {
+  db: BunSQLiteDatabase<typeof schema>;
+  processAllListsCallback: () => Promise<void>;
+  timezone: string;
+  logger: ILogger;
+}
+
+/**
+ * Scheduler class that manages cron jobs for automatic list processing.
+ * Accepts all dependencies through constructor for proper DI.
+ */
+export class Scheduler {
   private jobs: Map<number, SchedulerJob> = new Map();
-  private db: BunSQLiteDatabase<typeof schema> | null = null;
-  private processAllListsCallback: (() => Promise<void>) | null = null;
-  private timezone: string = 'UTC';
+  private readonly db: BunSQLiteDatabase<typeof schema>;
+  private readonly processAllListsCallback: () => Promise<void>;
+  private readonly timezone: string;
+  private readonly logger: ILogger;
 
   // Job ID for global automatic processing
   private readonly GLOBAL_PROCESSING_JOB_ID = 0;
 
-  initialize(
-    db: BunSQLiteDatabase<typeof schema>,
-    processAllListsCallback: () => Promise<void>,
-    timezone: string
-  ) {
-    this.db = db;
-    this.processAllListsCallback = processAllListsCallback;
-    this.timezone = timezone;
-    logger.info({ timezone }, 'Scheduler initialized');
+  constructor(deps: SchedulerDependencies) {
+    this.db = deps.db;
+    this.processAllListsCallback = deps.processAllListsCallback;
+    this.timezone = deps.timezone;
+    this.logger = deps.logger;
+    this.logger.info({ timezone: this.timezone }, 'Scheduler initialized');
   }
 
   async loadScheduledLists() {
-    if (!this.db) {
-      logger.error('Scheduler not initialized - database connection missing');
-      return;
-    }
-
     try {
       // Clear all existing jobs before reloading
       this.unscheduleAll();
@@ -56,11 +58,11 @@ class Scheduler {
       const automaticProcessingEnabled = settings?.automaticProcessingEnabled || false;
       const automaticProcessingSchedule = settings?.automaticProcessingSchedule;
 
-      logger.info({ timezone: this.timezone }, 'Using timezone for scheduled jobs');
+      this.logger.info({ timezone: this.timezone }, 'Using timezone for scheduled jobs');
 
       // Schedule global automatic processing if enabled
       if (automaticProcessingEnabled && automaticProcessingSchedule) {
-        logger.info(
+        this.logger.info(
           {
             schedule: automaticProcessingSchedule,
             timezone: this.timezone,
@@ -70,15 +72,15 @@ class Scheduler {
 
         this.scheduleGlobalProcessing(automaticProcessingSchedule);
 
-        logger.info(
+        this.logger.info(
           { activeJobs: this.jobs.size },
           'Global automatic processing scheduled successfully'
         );
       } else {
-        logger.info('Global automatic processing is disabled');
+        this.logger.info('Global automatic processing is disabled');
       }
     } catch (error) {
-      logger.error(
+      this.logger.error(
         { error: error instanceof Error ? error.message : 'Unknown error' },
         'Failed to load scheduled lists'
       );
@@ -89,11 +91,6 @@ class Scheduler {
     // Remove existing global job if any
     this.unscheduleList(this.GLOBAL_PROCESSING_JOB_ID);
 
-    if (!this.processAllListsCallback) {
-      logger.error('Process all callback not set');
-      return;
-    }
-
     try {
       const cronOptions: { timezone: string; name: string } = {
         timezone: this.timezone,
@@ -101,17 +98,15 @@ class Scheduler {
       };
 
       const job = new Cron(cronExpression, cronOptions, async () => {
-        logger.info(
+        this.logger.info(
           { cronExpression },
           'Global automatic processing triggered - processing all enabled lists'
         );
 
         try {
-          if (this.processAllListsCallback) {
-            await this.processAllListsCallback();
-          }
+          await this.processAllListsCallback();
         } catch (error) {
-          logger.error(
+          this.logger.error(
             {
               error: error instanceof Error ? error.message : 'Unknown error',
             },
@@ -126,7 +121,7 @@ class Scheduler {
       });
 
       const nextRun = job.nextRun();
-      logger.info(
+      this.logger.info(
         {
           cronExpression,
           timezone: this.timezone,
@@ -135,7 +130,7 @@ class Scheduler {
         'Global automatic processing scheduled successfully'
       );
     } catch (error) {
-      logger.error(
+      this.logger.error(
         {
           cronExpression,
           error: error instanceof Error ? error.message : 'Unknown error',
@@ -150,12 +145,12 @@ class Scheduler {
     if (job) {
       job.cronJob.stop();
       this.jobs.delete(listId);
-      logger.info({ listId }, 'List unscheduled');
+      this.logger.info({ listId }, 'List unscheduled');
     }
   }
 
   unscheduleAll() {
-    logger.info({ count: this.jobs.size }, 'Unscheduling all jobs');
+    this.logger.info({ count: this.jobs.size }, 'Unscheduling all jobs');
     for (const job of this.jobs.values()) {
       job.cronJob.stop();
     }
@@ -179,19 +174,23 @@ class Scheduler {
   }
 }
 
-export const scheduler = new Scheduler();
+/**
+ * SchedulerServiceAdapter implements ISchedulerService interface
+ * by delegating to the Scheduler instance injected via constructor.
+ */
+export class SchedulerServiceAdapter implements ISchedulerService {
+  constructor(private readonly scheduler: Scheduler) {}
 
-class SchedulerServiceAdapter implements ISchedulerService {
   async loadScheduledLists(): Promise<void> {
-    await scheduler.loadScheduledLists();
+    await this.scheduler.loadScheduledLists();
   }
 
   unscheduleList(listId: number): void {
-    scheduler.unscheduleList(listId);
+    this.scheduler.unscheduleList(listId);
   }
 
   getScheduledJobs(): ScheduledJob[] {
-    const jobs = scheduler.getScheduledJobs();
+    const jobs = this.scheduler.getScheduledJobs();
 
     // Transform to richer DTO format
     return jobs.map((job) => ({
@@ -203,5 +202,23 @@ class SchedulerServiceAdapter implements ISchedulerService {
   }
 }
 
-// Singleton instance of the scheduler service adapter
-export const schedulerService = new SchedulerServiceAdapter();
+/**
+ * LazySchedulerService implements ISchedulerService interface
+ * by lazily resolving the actual scheduler service at runtime.
+ * This allows containers to be created before the scheduler is initialized.
+ */
+export class LazySchedulerService implements ISchedulerService {
+  constructor(private readonly getService: () => ISchedulerService) {}
+
+  async loadScheduledLists(): Promise<void> {
+    await this.getService().loadScheduledLists();
+  }
+
+  unscheduleList(listId: number): void {
+    this.getService().unscheduleList(listId);
+  }
+
+  getScheduledJobs(): ScheduledJob[] {
+    return this.getService().getScheduledJobs();
+  }
+}

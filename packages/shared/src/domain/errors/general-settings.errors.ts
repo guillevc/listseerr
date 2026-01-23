@@ -5,6 +5,8 @@ import { DomainError } from './domain.error';
  */
 
 export class GeneralSettingsNotFoundError extends DomainError {
+  readonly code = 'GENERAL_SETTINGS_NOT_FOUND_ERROR' as const;
+
   constructor(userId: number) {
     super(`General settings not found for user ${userId}`);
   }

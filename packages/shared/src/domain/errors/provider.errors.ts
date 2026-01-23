@@ -10,6 +10,8 @@ const validProviders = Object.values(ProviderValues).join(', ');
  * Thrown when an invalid provider type is provided.
  */
 export class InvalidProviderError extends DomainError {
+  readonly code = 'INVALID_PROVIDER_ERROR' as const;
+
   constructor(provider: string) {
     super(`Invalid provider: ${provider}. Must be one of: ${validProviders}`);
   }
@@ -21,6 +23,8 @@ export class InvalidProviderError extends DomainError {
  * Thrown when a URL doesn't match the expected pattern for the specified provider.
  */
 export class UrlDoesNotMatchProviderError extends DomainError {
+  readonly code = 'URL_DOES_NOT_MATCH_PROVIDER_ERROR' as const;
+
   constructor(url: string, provider: string) {
     super(`URL "${url}" does not match provider "${provider}"`);
   }

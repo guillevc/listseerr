@@ -3,7 +3,10 @@ import { eq, desc, and, max } from 'drizzle-orm';
 import * as schema from '@/server/infrastructure/db/schema';
 import { mediaLists, executionHistory } from '@/server/infrastructure/db/schema';
 import { MediaList } from '@/server/domain/entities/media-list.entity';
-import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
+import type {
+  IMediaListRepository,
+  MediaListWithLastProcessed,
+} from '@/server/application/repositories/media-list.repository.interface';
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import { ProviderVO, type ProviderType } from '@/server/domain/value-objects/provider.vo';
@@ -31,21 +34,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     return row ? this.toDomain(row) : null;
   }
 
-  async findAllWithLastProcessed(userId: number): Promise<
-    {
-      id: number;
-      userId: number;
-      name: string;
-      url: string;
-      displayUrl: string;
-      provider: ProviderType;
-      enabled: boolean;
-      maxItems: number;
-      createdAt: Date;
-      updatedAt: Date;
-      lastProcessed: Date | null;
-    }[]
-  > {
+  async findAllWithLastProcessed(userId: number): Promise<MediaListWithLastProcessed[]> {
     // Subquery to get the most recent successful execution for each list
     // Uses GROUP BY with MAX() to ensure only one row per list
     const latestExecutions = this.db
@@ -101,6 +90,9 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
         .where(eq(mediaLists.id, entity.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update media list with id ${entity.id}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new entity
@@ -117,6 +109,9 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
         })
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to insert media list for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     }
   }
@@ -147,17 +142,18 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
   }
 
   /**
-   * Convert Drizzle row to MediaList domain entity
+   * Convert Drizzle row to MediaList domain entity.
+   * Uses fromPersistence() for VOs since data comes from database (not validated by schema).
    */
   private toDomain(row: typeof mediaLists.$inferSelect): MediaList {
     const params = this.toParams(row);
     return new MediaList({
       id: params.id,
       userId: params.userId,
-      name: ListNameVO.create(params.name),
-      url: ListUrlVO.create(params.url),
+      name: ListNameVO.fromPersistence(params.name),
+      url: ListUrlVO.fromPersistence(params.url),
       displayUrl: params.displayUrl,
-      provider: ProviderVO.create(params.provider),
+      provider: ProviderVO.fromPersistence(params.provider),
       enabled: params.enabled,
       maxItems: params.maxItems,
       createdAt: params.createdAt,

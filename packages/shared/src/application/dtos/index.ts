@@ -19,3 +19,6 @@ export * from './media-list';
 export * from './processing';
 export * from './scheduler';
 export * from './trakt-config';
+
+// Utility types
+export * from './utils.dto';

@@ -50,11 +50,11 @@ export function createHttpUrlSchema(
   );
 
   if (stripTrailingSlash && stripQueryParams) {
-    return schema.transform((url) => url.split('?')[0].replace(/\/$/, ''));
+    return schema.transform((url) => (url.split('?')[0] ?? url).replace(/\/$/, ''));
   } else if (stripTrailingSlash) {
     return schema.transform((url) => url.replace(/\/$/, ''));
   } else if (stripQueryParams) {
-    return schema.transform((url) => url.split('?')[0]);
+    return schema.transform((url) => url.split('?')[0] ?? url);
   }
 
   return schema;

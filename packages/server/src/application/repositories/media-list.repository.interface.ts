@@ -2,35 +2,39 @@ import type { MediaList } from '@/server/domain/entities/media-list.entity';
 import type { ProviderType } from '@/server/domain/value-objects/provider.vo';
 
 /**
+ * Read model for MediaList with last processed timestamp.
+ * Used for read-only queries that need additional computed/joined data.
+ */
+export interface MediaListWithLastProcessed {
+  id: number;
+  userId: number;
+  name: string;
+  url: string;
+  displayUrl: string;
+  provider: ProviderType;
+  enabled: boolean;
+  maxItems: number;
+  createdAt: Date;
+  updatedAt: Date;
+  lastProcessed: Date | null;
+}
+
+/**
  * MediaList Repository Interface (Port)
  *
  * Following DDD Repository Pattern:
  * - Repositories work exclusively with domain entities, never DTOs
  * - save() method handles both create and update (entity knows if it's new or existing)
  * - delete() takes entity instead of ID (entity encapsulates its own ID)
- * - Query methods return entities or plain objects for read-only operations
+ * - Query methods return entities or read models for read-only operations
  *
  * This interface defines the contract that infrastructure adapters must implement.
  */
 export interface IMediaListRepository {
-  // Query operations - return entities or DTOs
+  // Query operations - return entities or read models
   findAll(userId: number): Promise<MediaList[]>;
   findById(id: number, userId: number): Promise<MediaList | null>;
-  findAllWithLastProcessed(userId: number): Promise<
-    {
-      id: number;
-      userId: number;
-      name: string;
-      url: string;
-      displayUrl: string;
-      provider: ProviderType;
-      enabled: boolean;
-      maxItems: number;
-      createdAt: Date;
-      updatedAt: Date;
-      lastProcessed: Date | null;
-    }[]
-  >;
+  findAllWithLastProcessed(userId: number): Promise<MediaListWithLastProcessed[]>;
 
   // Command operations - work with entities
   /**

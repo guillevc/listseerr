@@ -21,8 +21,19 @@ export class ListUrlVO {
    * Creates a VO from database/persistence data.
    */
   static fromPersistence(value: string): ListUrlVO {
-    const cleaned = value.split('?')[0];
+    const [cleaned = value] = value.split('?');
 
+    // Handle special AniList URL scheme: anilist:{username}:{status}
+    if (cleaned.startsWith('anilist:')) {
+      const anilistPattern =
+        /^anilist:[^:]+:(CURRENT|PLANNING|COMPLETED|DROPPED|PAUSED|REPEATING)$/i;
+      if (!anilistPattern.test(cleaned)) {
+        throw new InvalidListUrlError(value);
+      }
+      return new ListUrlVO(cleaned);
+    }
+
+    // Standard URL validation
     try {
       new URL(cleaned);
     } catch {

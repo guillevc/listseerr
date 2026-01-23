@@ -43,8 +43,11 @@ export function parseTraktChartUrl(url: string): ParsedTraktChartUrl | null {
   const match = url.match(TRAKT_CHART_URL_PATTERN);
   if (!match?.groups) return null;
 
+  const { mediaType, chartType } = match.groups;
+  if (!mediaType || !chartType) return null;
+
   return {
-    mediaType: match.groups.mediaType.toLowerCase() as TraktMediaType,
-    chartType: match.groups.chartType.toLowerCase() as TraktChartType,
+    mediaType: mediaType.toLowerCase() as TraktMediaType,
+    chartType: chartType.toLowerCase() as TraktChartType,
   };
 }

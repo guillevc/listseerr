@@ -70,6 +70,9 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
         .where(eq(executionHistory.id, execution.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update execution history with id ${execution.id}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new execution
@@ -84,6 +87,9 @@ export class DrizzleExecutionHistoryRepository implements IExecutionHistoryRepos
         })
         .returning();
 
+      if (!row) {
+        throw new Error('Failed to insert execution history');
+      }
       return this.toDomain(row);
     }
   }

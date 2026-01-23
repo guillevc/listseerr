@@ -166,11 +166,14 @@ export function ListsTable({
         },
       }),
     ],
+    // Using stable references (.isPending, .mutate) instead of full mutation objects for performance
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       onProcess,
       processingLists,
-      deleteMutation,
-      toggleMutation,
+      deleteMutation.isPending,
+      deleteMutation.mutate,
+      toggleMutation.mutate,
       isAutomaticProcessingEnabled,
       isProviderConfigured,
       mutatingListId,

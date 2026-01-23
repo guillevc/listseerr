@@ -39,6 +39,9 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
         .where(eq(jellyseerrConfigs.userId, entity.userId))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update Jellyseerr config for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new entity
@@ -53,6 +56,9 @@ export class DrizzleJellyseerrConfigRepository implements IJellyseerrConfigRepos
         })
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to insert Jellyseerr config for user ${entity.userId}`);
+      }
       return this.toDomain(row);
     }
   }

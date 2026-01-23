@@ -139,6 +139,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
 
   /**
    * Fetch items from all lists and create execution records
+   * Uses parallel processing with Promise.allSettled for better performance
    */
   private async fetchFromAllLists(
     lists: MediaList[],
@@ -146,13 +147,8 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
     batchId: BatchIdVO,
     triggerType: TriggerTypeVO
   ): Promise<Array<{ list: MediaList; items: MediaItemVO[]; execution: ProcessingExecution }>> {
-    const results: Array<{
-      list: MediaList;
-      items: MediaItemVO[];
-      execution: ProcessingExecution;
-    }> = [];
-
-    for (const list of lists) {
+    // Process all lists in parallel using Promise.allSettled
+    const fetchPromises = lists.map(async (list) => {
       // Create execution record (status: running)
       const execution = ProcessingExecution.create({
         listId: list.id,
@@ -176,7 +172,7 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
           'Items fetched from provider'
         );
 
-        results.push({ list, items, execution: savedExecution });
+        return { list, items, execution: savedExecution };
       } catch (error) {
         // Mark execution as failed for this list
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -188,12 +184,25 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
         savedExecution.markAsError(errorMessage);
         await this.executionHistoryRepository.save(savedExecution);
 
-        // Continue processing other lists
-        results.push({ list, items: [], execution: savedExecution });
+        // Return with empty items array instead of throwing
+        return { list, items: [] as MediaItemVO[], execution: savedExecution };
       }
-    }
+    });
 
-    return results;
+    const settledResults = await Promise.allSettled(fetchPromises);
+
+    // Extract successful results (all should be fulfilled since we handle errors internally)
+    return settledResults
+      .filter(
+        (
+          result
+        ): result is PromiseFulfilledResult<{
+          list: MediaList;
+          items: MediaItemVO[];
+          execution: ProcessingExecution;
+        }> => result.status === 'fulfilled'
+      )
+      .map((result) => result.value);
   }
 
   /**

@@ -7,7 +7,8 @@ import { DrizzleSessionRepository } from '@/server/infrastructure/repositories/d
 import { BunPasswordService } from '@/server/infrastructure/services/core/bun-password.adapter';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
-import { schedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { LazySchedulerService } from '@/server/infrastructure/services/core/scheduler.adapter';
+import { getSchedulerService } from '@/server/bootstrap/scheduler';
 
 // Application layer - Interfaces
 import type { IGeneralSettingsRepository } from '@/server/application/repositories/general-settings.repository.interface';
@@ -89,7 +90,7 @@ export class AuthContainer {
         this.userRepository,
         this.sessionRepository,
         generalSettingsRepository,
-        schedulerService,
+        new LazySchedulerService(getSchedulerService),
         this.passwordService,
         this.logger
       ),

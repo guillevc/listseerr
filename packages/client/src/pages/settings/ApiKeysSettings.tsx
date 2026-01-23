@@ -1,23 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Plus, CheckCircle2, AlertCircle } from 'lucide-react';
-import { Button } from '../../components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card';
-import { ExternalLink } from '../../components/ui/external-link';
-import { PasswordInput } from '../../components/ui/password-input';
-import { Label } from '../../components/ui/label';
+import { Plus } from 'lucide-react';
+import { Card, CardContent } from '../../components/ui/card';
 import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
+import { ProviderConfigCard } from '../../components/settings/ProviderConfigCard';
 import { trpc } from '../../lib/trpc';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
-import { traktClientIdSchema } from 'shared/presentation/schemas';
-import { mdblistApiKeySchema } from 'shared/presentation/schemas';
+import { handleValidationResult, createMutationCallbacks } from '../../lib/toast-helpers';
+import { traktClientIdSchema, mdblistApiKeySchema } from 'shared/presentation/schemas';
 
 export function ApiKeysSettings() {
   // Trakt.tv state
@@ -57,75 +47,48 @@ export function ApiKeysSettings() {
     }
   }, [mdbListConfig]);
 
-  // Mutations
+  // Trakt mutations
   const saveTraktMutation = trpc.traktConfig.save.useMutation({
-    onSuccess: () => {
-      void utils.traktConfig.get.invalidate();
-      toast({
-        title: 'Success',
-        description: 'Trakt Client ID saved successfully',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to save Trakt Client ID',
-        variant: 'destructive',
-      });
-    },
+    ...createMutationCallbacks(toast, {
+      onSuccessTitle: 'Success',
+      onSuccessDescription: 'Trakt Client ID saved successfully',
+      onErrorFallback: 'Failed to save Trakt Client ID',
+      onSuccessCallback: () => void utils.traktConfig.get.invalidate(),
+    }),
   });
 
   const deleteTraktMutation = trpc.traktConfig.delete.useMutation({
-    onSuccess: () => {
-      void utils.traktConfig.get.invalidate();
-      setTraktClientId('');
-      toast({
-        title: 'Success',
-        description: 'Trakt Client ID removed',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to remove Trakt Client ID',
-        variant: 'destructive',
-      });
-    },
+    ...createMutationCallbacks(toast, {
+      onSuccessTitle: 'Success',
+      onSuccessDescription: 'Trakt Client ID removed',
+      onErrorFallback: 'Failed to remove Trakt Client ID',
+      onSuccessCallback: () => {
+        void utils.traktConfig.get.invalidate();
+        setTraktClientId('');
+      },
+    }),
   });
 
+  // MDBList mutations
   const saveMdbListMutation = trpc.mdblistConfig.save.useMutation({
-    onSuccess: () => {
-      void utils.mdblistConfig.get.invalidate();
-      toast({
-        title: 'Success',
-        description: 'MDBList API Key saved successfully',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to save MDBList API Key',
-        variant: 'destructive',
-      });
-    },
+    ...createMutationCallbacks(toast, {
+      onSuccessTitle: 'Success',
+      onSuccessDescription: 'MDBList API Key saved successfully',
+      onErrorFallback: 'Failed to save MDBList API Key',
+      onSuccessCallback: () => void utils.mdblistConfig.get.invalidate(),
+    }),
   });
 
   const deleteMdbListMutation = trpc.mdblistConfig.delete.useMutation({
-    onSuccess: () => {
-      void utils.mdblistConfig.get.invalidate();
-      setMdbListApiKey('');
-      toast({
-        title: 'Success',
-        description: 'MDBList API Key removed',
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to remove MDBList API Key',
-        variant: 'destructive',
-      });
-    },
+    ...createMutationCallbacks(toast, {
+      onSuccessTitle: 'Success',
+      onSuccessDescription: 'MDBList API Key removed',
+      onErrorFallback: 'Failed to remove MDBList API Key',
+      onSuccessCallback: () => {
+        void utils.mdblistConfig.get.invalidate();
+        setMdbListApiKey('');
+      },
+    }),
   });
 
   const isSavingTrakt = useMinLoading(saveTraktMutation.isPending || deleteTraktMutation.isPending);
@@ -134,65 +97,31 @@ export function ApiKeysSettings() {
   );
 
   // Trakt handlers
-  const handleTraktToggle = (checked: boolean) => {
-    // Just toggle the state, don't delete immediately
-    setTraktEnabled(checked);
-  };
-
   const handleTraktSave = () => {
     if (!traktEnabled) {
-      // Provider is disabled, delete the config
       if (traktConfig?.clientId) {
         deleteTraktMutation.mutate();
       }
       return;
     }
 
-    // Validate Client ID using shared schema
     const result = traktClientIdSchema.safeParse(traktClientId);
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      toast({
-        title: 'Validation Error',
-        description: firstIssue?.message ?? 'Invalid Client ID',
-        variant: 'destructive',
-      });
-      return;
-    }
-    saveTraktMutation.mutate({
-      clientId: result.data, // Use validated & trimmed value
-    });
+    if (!handleValidationResult(toast, result, 'Invalid Client ID')) return;
+    saveTraktMutation.mutate({ clientId: result.data });
   };
 
   // MDBList handlers
-  const handleMdbListToggle = (checked: boolean) => {
-    // Just toggle the state, don't delete immediately
-    setMdbListEnabled(checked);
-  };
-
   const handleMdbListSave = () => {
     if (!mdbListEnabled) {
-      // Provider is disabled, delete the config
       if (mdbListConfig?.apiKey) {
         deleteMdbListMutation.mutate();
       }
       return;
     }
 
-    // Validate API Key using shared schema
     const result = mdblistApiKeySchema.safeParse(mdbListApiKey);
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      toast({
-        title: 'Validation Error',
-        description: firstIssue?.message ?? 'Invalid API Key',
-        variant: 'destructive',
-      });
-      return;
-    }
-    saveMdbListMutation.mutate({
-      apiKey: result.data, // Use validated & trimmed value
-    });
+    if (!handleValidationResult(toast, result, 'Invalid API Key')) return;
+    saveMdbListMutation.mutate({ apiKey: result.data });
   };
 
   return (
@@ -204,132 +133,42 @@ export function ApiKeysSettings() {
 
       <Separator />
 
-      {/* Trakt.tv API Keys */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-start gap-4">
-            <Switch
-              className="mt-1"
-              checked={traktEnabled}
-              onCheckedChange={handleTraktToggle}
-              disabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
-            />
-            <div>
-              <CardTitle className="flex items-center gap-2 text-base">
-                Trakt
-                {traktEnabled && traktConfig?.clientId && (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                )}
-              </CardTitle>
-              <CardDescription>
-                Fetch Trakt lists and charts. Get your Client ID from{' '}
-                <ExternalLink href="https://trakt.tv/oauth/applications">
-                  Trakt.tv API Applications
-                </ExternalLink>
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {!traktEnabled && (
-            <Card variant="warning">
-              <CardContent className="flex items-center gap-2 py-3">
-                <AlertCircle className="h-5 w-5" />
-                <p className="text-sm">Disabled — Trakt lists won't be processed.</p>
-              </CardContent>
-            </Card>
-          )}
+      <ProviderConfigCard
+        name="Trakt"
+        description="Fetch Trakt lists and charts. Get your Client ID from"
+        helpUrl="https://trakt.tv/oauth/applications"
+        helpLinkText="Trakt.tv API Applications"
+        inputLabel="Client ID"
+        inputPlaceholder="Your Trakt.tv Client ID"
+        inputHelperText="Only the Client ID is required for reading public lists"
+        value={traktClientId}
+        onChange={setTraktClientId}
+        enabled={traktEnabled}
+        onToggle={setTraktEnabled}
+        onSave={handleTraktSave}
+        isConfigured={!!traktConfig?.clientId}
+        isSaving={isSavingTrakt}
+        isDisabled={saveTraktMutation.isPending || deleteTraktMutation.isPending}
+        disabledWarning="Disabled — Trakt lists won't be processed."
+      />
 
-          <div className="grid gap-2">
-            <Label htmlFor="trakt-client-id">Client ID</Label>
-            <PasswordInput
-              id="trakt-client-id"
-              placeholder="Your Trakt.tv Client ID"
-              value={traktClientId}
-              onChange={(e) => setTraktClientId(e.target.value)}
-              disabled={
-                !traktEnabled || saveTraktMutation.isPending || deleteTraktMutation.isPending
-              }
-              showToggle={traktEnabled}
-            />
-            <p className="text-xs text-muted">
-              Only the Client ID is required for reading public lists
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              onClick={handleTraktSave}
-              loading={isSavingTrakt}
-              disabled={traktEnabled && !traktClientId.trim()}
-            >
-              Save Changes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* MDBList API Key */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-start gap-4">
-            <Switch
-              className="mt-1"
-              checked={mdbListEnabled}
-              onCheckedChange={handleMdbListToggle}
-              disabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
-            />
-            <div>
-              <CardTitle className="flex items-center gap-2 text-base">
-                MDBList
-                {mdbListEnabled && mdbListConfig?.apiKey && (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                )}
-              </CardTitle>
-              <CardDescription>
-                Fetch MDBList lists. Get your API key from{' '}
-                <ExternalLink href="https://mdblist.com/preferences/">
-                  MDBList Preferences
-                </ExternalLink>
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {!mdbListEnabled && (
-            <Card variant="warning">
-              <CardContent className="flex items-center gap-2 py-3">
-                <AlertCircle className="h-5 w-5" />
-                <p className="text-sm">Disabled — MDBList lists won't be processed.</p>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid gap-2">
-            <Label htmlFor="mdblist-api-key">API Key</Label>
-            <PasswordInput
-              id="mdblist-api-key"
-              placeholder="Your MDBList API Key"
-              value={mdbListApiKey}
-              onChange={(e) => setMdbListApiKey(e.target.value)}
-              disabled={
-                !mdbListEnabled || saveMdbListMutation.isPending || deleteMdbListMutation.isPending
-              }
-              showToggle={mdbListEnabled}
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              onClick={handleMdbListSave}
-              loading={isSavingMdbList}
-              disabled={mdbListEnabled && !mdbListApiKey.trim()}
-            >
-              Save Changes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <ProviderConfigCard
+        name="MDBList"
+        description="Fetch MDBList lists. Get your API key from"
+        helpUrl="https://mdblist.com/preferences/"
+        helpLinkText="MDBList Preferences"
+        inputLabel="API Key"
+        inputPlaceholder="Your MDBList API Key"
+        value={mdbListApiKey}
+        onChange={setMdbListApiKey}
+        enabled={mdbListEnabled}
+        onToggle={setMdbListEnabled}
+        onSave={handleMdbListSave}
+        isConfigured={!!mdbListConfig?.apiKey}
+        isSaving={isSavingMdbList}
+        isDisabled={saveMdbListMutation.isPending || deleteMdbListMutation.isPending}
+        disabledWarning="Disabled — MDBList lists won't be processed."
+      />
 
       {/* Future API Keys can be added here */}
       <Card className="border-dashed">

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Clock } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip';
 import { getRelativeTime } from '../../../../lib/utils';
@@ -7,7 +8,9 @@ interface LastProcessedCellProps {
   lastProcessed?: Date | string | null;
 }
 
-export function LastProcessedCell({ lastProcessed }: LastProcessedCellProps) {
+export const LastProcessedCell = memo(function LastProcessedCell({
+  lastProcessed,
+}: LastProcessedCellProps) {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -23,4 +26,4 @@ export function LastProcessedCell({ lastProcessed }: LastProcessedCellProps) {
       </Tooltip>
     </TooltipProvider>
   );
-}
+});

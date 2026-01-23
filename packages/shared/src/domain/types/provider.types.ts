@@ -14,14 +14,14 @@ export const ProviderValues = {
   TRAKT_CHART: 'traktChart',
   STEVENLU: 'stevenlu',
   ANILIST: 'anilist',
-} as const;
+} as const satisfies Record<string, string>;
 
 export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 
-export const ProviderUrlPatterns: Record<ProviderType, RegExp[]> = {
+export const ProviderUrlPatterns = {
   trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?/i],
   traktChart: [TRAKT_CHART_URL_PATTERN],
   mdblist: [MDBLIST_URL_PATTERN],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],
   anilist: [/^anilist:[^:]+:(CURRENT|PLANNING|COMPLETED|DROPPED|PAUSED|REPEATING)$/i],
-};
+} as const satisfies Record<ProviderType, RegExp[]>;

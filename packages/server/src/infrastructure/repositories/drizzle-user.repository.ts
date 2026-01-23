@@ -39,6 +39,9 @@ export class DrizzleUserRepository implements IUserRepository {
         .where(eq(users.id, entity.id))
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to update user with id ${entity.id}`);
+      }
       return this.toDomain(row);
     } else {
       // Insert new entity
@@ -50,13 +53,16 @@ export class DrizzleUserRepository implements IUserRepository {
         })
         .returning();
 
+      if (!row) {
+        throw new Error(`Failed to insert user ${entity.username.getValue()}`);
+      }
       return this.toDomain(row);
     }
   }
 
   async count(): Promise<number> {
     const [result] = await this.db.select({ count: count() }).from(users);
-    return result.count;
+    return result?.count ?? 0;
   }
 
   /**

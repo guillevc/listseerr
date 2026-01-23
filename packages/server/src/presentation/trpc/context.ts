@@ -1,15 +1,54 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
+import { eq } from 'drizzle-orm';
 import { DomainError } from 'shared/domain/errors';
+import { db } from '@/server/infrastructure/db/client';
+import { sessions } from '@/server/infrastructure/db/schema';
+
+const SESSION_COOKIE_NAME = 'session_token';
+
+/**
+ * Parse cookies from Cookie header
+ */
+function parseCookies(cookieHeader: string | null): Record<string, string> {
+  if (!cookieHeader) return {};
+
+  return cookieHeader.split(';').reduce(
+    (cookies, cookie) => {
+      const [name, ...valueParts] = cookie.trim().split('=');
+      if (name) {
+        cookies[name] = valueParts.join('=');
+      }
+      return cookies;
+    },
+    {} as Record<string, string>
+  );
+}
 
 /**
  * Create tRPC context for each request.
+ * Extracts userId from session token cookie.
  * Database access is handled via DI containers, not context.
  */
-export function createContext(opts: FetchCreateContextFnOptions) {
-  // TODO: Extract from session when authentication is implemented
-  // For now, default to userId: 1
-  const userId = 1; // Future: opts.session?.user?.id ?? 1
+export async function createContext(opts: FetchCreateContextFnOptions) {
+  const cookieHeader = opts.req.headers.get('cookie');
+  const cookies = parseCookies(cookieHeader);
+  const sessionToken = cookies[SESSION_COOKIE_NAME];
+
+  let userId = 1; // Default fallback for unauthenticated requests
+
+  if (sessionToken) {
+    // Validate session and extract userId
+    const [session] = await db
+      .select({ userId: sessions.userId, expiresAt: sessions.expiresAt })
+      .from(sessions)
+      .where(eq(sessions.token, sessionToken))
+      .limit(1);
+
+    if (session && session.expiresAt > new Date()) {
+      userId = session.userId;
+    }
+  }
 
   return {
     req: opts.req,
@@ -52,7 +91,6 @@ type TRPCErrorCode =
 const errorCodeMap: Record<string, TRPCErrorCode> = {
   // Validation errors -> BAD_REQUEST
   InvalidProviderError: 'BAD_REQUEST',
-  InvalidProviderTypeError: 'BAD_REQUEST',
   InvalidProviderConfigError: 'BAD_REQUEST',
   InvalidListNameError: 'BAD_REQUEST',
   InvalidListUrlError: 'BAD_REQUEST',

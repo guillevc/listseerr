@@ -15,12 +15,14 @@ import { ListsContainer } from './di/lists-container';
 import { ProcessingContainer } from './di/processing-container';
 import { DashboardContainer } from './di/dashboard-container';
 import { LogsContainer } from './di/logs-container';
-import { SchedulerContainer } from './di/scheduler-container';
 import { GeneralSettingsContainer } from './di/general-settings-container';
 import { JellyseerrConfigContainer } from './di/jellyseerr-config-container';
 import { TraktConfigContainer } from './di/trakt-config-container';
 import { MdbListConfigContainer } from './di/mdblist-config-container';
 import { AuthContainer } from './di/auth-container';
+
+// Import scheduler container getter (created during scheduler initialization)
+import { getSchedulerContainer } from './scheduler';
 
 // Import router factories from presentation
 import { createListsRouter } from '@/server/presentation/trpc/routers/lists.router';
@@ -40,7 +42,6 @@ const listsContainer = new ListsContainer(db);
 const processingContainer = new ProcessingContainer(db);
 const dashboardContainer = new DashboardContainer(db);
 const logsContainer = new LogsContainer();
-const schedulerContainer = new SchedulerContainer();
 const generalSettingsContainer = new GeneralSettingsContainer(db);
 const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
 const traktConfigContainer = new TraktConfigContainer(db);
@@ -52,7 +53,8 @@ export const listsRouter = createListsRouter(listsContainer);
 export const processingRouter = createProcessingRouter(processingContainer);
 export const dashboardRouter = createDashboardRouter(dashboardContainer);
 export const logsRouter = createLogsRouter(logsContainer);
-export const schedulerRouter = createSchedulerRouter(schedulerContainer);
+// Scheduler router uses lazy getter to avoid circular dependency - container created during scheduler init
+export const schedulerRouter = createSchedulerRouter(getSchedulerContainer);
 export const generalSettingsRouter = createGeneralSettingsRouter(generalSettingsContainer);
 export const jellyseerrConfigRouter = createJellyseerrConfigRouter(jellyseerrConfigContainer);
 export const traktConfigRouter = createTraktConfigRouter(traktConfigContainer);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip';
 import { truncateTail } from '../formatters';
@@ -7,7 +8,7 @@ interface UrlCellProps {
   displayUrl?: string | null;
 }
 
-export function UrlCell({ url, displayUrl }: UrlCellProps) {
+export const UrlCell = memo(function UrlCell({ url, displayUrl }: UrlCellProps) {
   const urlToShow = displayUrl || url;
 
   return (
@@ -30,4 +31,4 @@ export function UrlCell({ url, displayUrl }: UrlCellProps) {
       </Tooltip>
     </TooltipProvider>
   );
-}
+});

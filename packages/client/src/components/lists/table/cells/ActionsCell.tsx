@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { RefreshCw, Trash2, MoreHorizontal, Pencil } from 'lucide-react';
 import { Button } from '../../../ui/button';
 import {
@@ -18,7 +19,7 @@ interface ActionsCellProps {
   onDelete: (id: number) => void;
 }
 
-export function ActionsCell({
+export const ActionsCell = memo(function ActionsCell({
   listId,
   isProcessing,
   isProviderConfigured,
@@ -60,4 +61,4 @@ export function ActionsCell({
       </DropdownMenu>
     </div>
   );
-}
+});

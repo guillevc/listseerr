@@ -64,6 +64,11 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
         const settledResult = chunkResults[j];
         const item = chunk[j];
 
+        // Skip if item is undefined (shouldn't happen, but satisfies noUncheckedIndexedAccess)
+        if (!settledResult || !item) {
+          continue;
+        }
+
         if (settledResult.status === 'fulfilled') {
           const availability = settledResult.value;
 

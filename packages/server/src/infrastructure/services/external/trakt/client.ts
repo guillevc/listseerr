@@ -95,41 +95,41 @@ export async function fetchTraktList(
 }
 
 function transformTraktItem(item: TraktListItem): MediaItemDTO | null {
-  // Handle movie items
-  if (item.type === 'movie' && item.movie) {
-    const tmdbId = item.movie.ids.tmdb;
-    if (!tmdbId) {
-      logger.debug(
-        { title: item.movie.title, year: item.movie.year },
-        'Skipping movie - no TMDB ID'
-      );
-      return null;
+  switch (item.type) {
+    case 'movie': {
+      const tmdbId = item.movie.ids.tmdb;
+      if (!tmdbId) {
+        logger.debug(
+          { title: item.movie.title, year: item.movie.year },
+          'Skipping movie - no TMDB ID'
+        );
+        return null;
+      }
+
+      return {
+        title: item.movie.title,
+        year: item.movie.year,
+        tmdbId,
+        mediaType: 'movie',
+      };
     }
 
-    return {
-      title: item.movie.title,
-      year: item.movie.year,
-      tmdbId,
-      mediaType: 'movie',
-    };
-  }
+    case 'show': {
+      const tmdbId = item.show.ids.tmdb;
+      if (!tmdbId) {
+        logger.debug(
+          { title: item.show.title, year: item.show.year },
+          'Skipping show - no TMDB ID'
+        );
+        return null;
+      }
 
-  // Handle show items
-  if (item.type === 'show' && item.show) {
-    const tmdbId = item.show.ids.tmdb;
-    if (!tmdbId) {
-      logger.debug({ title: item.show.title, year: item.show.year }, 'Skipping show - no TMDB ID');
-      return null;
+      return {
+        title: item.show.title,
+        year: item.show.year,
+        tmdbId,
+        mediaType: 'tv',
+      };
     }
-
-    return {
-      title: item.show.title,
-      year: item.show.year,
-      tmdbId,
-      mediaType: 'tv',
-    };
   }
-
-  logger.debug({ type: item.type }, 'Skipping unknown item type');
-  return null;
 }
