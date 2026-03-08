@@ -54,3 +54,5 @@ packages/client/stats.html
 .claude
 CLAUDE.md
 CLAUDE.draft.md
+/.agents/
+skills-lock.json
