@@ -9,28 +9,32 @@ function KofiIcon({ className }: { className?: string }) {
 export function Footer() {
   return (
     <footer className="border-t py-4 text-center">
-      <p className="font-mono text-sm text-muted">
-        Made by{' '}
-        <a
-          href="https://github.com/guillevc"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:text-primary hover:underline"
-        >
-          guillevc
-        </a>
-        {' · '}
-        <span>Support development via</span>{' '}
-        <a
-          href="https://ko-fi.com/guillevc"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group text-primary hover:text-[#FF5E5B]"
-        >
-          <KofiIcon className="-mt-px inline h-4 w-4" />{' '}
-          <span className="group-hover:underline">Ko-fi</span>
-        </a>
-      </p>
+      <div className="flex flex-col items-center gap-1 font-mono text-sm text-muted md:flex-row md:justify-center md:gap-1">
+        <span>
+          Made by{' '}
+          <a
+            href="https://github.com/guillevc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary hover:underline"
+          >
+            guillevc
+          </a>
+        </span>
+        <span className="hidden md:inline">{' · '}</span>
+        <span>
+          Support development via{' '}
+          <a
+            href="https://ko-fi.com/guillevc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group text-primary hover:text-[#FF5E5B]"
+          >
+            <KofiIcon className="-mt-px inline h-4 w-4" />{' '}
+            <span className="group-hover:underline">Ko-fi</span>
+          </a>
+        </span>
+      </div>
       <p className="mt-2 font-mono text-sm text-muted/70">
         <a
           href={`https://github.com/guillevc/listseerr/releases/tag/v${__APP_VERSION__}`}

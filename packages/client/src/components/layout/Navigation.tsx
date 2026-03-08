@@ -314,6 +314,24 @@ function MobileNav({
               Log out
             </Button>
           </div>
+          <div className="mt-4 border-t pt-4">
+            <Button
+              variant="ghost"
+              size="default"
+              asChild
+              className="w-full justify-start"
+              onClick={closeMenu}
+            >
+              <a
+                href="https://github.com/guillevc/listseerr"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Star className="mr-2 h-4 w-4 fill-ye text-ye" strokeWidth={1} />
+                Star on GitHub
+              </a>
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -338,7 +356,7 @@ export function Navigation() {
 
           {/* Right: Jellyseerr + Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="hidden md:inline-flex">
               <a
                 href="https://github.com/guillevc/listseerr"
                 target="_blank"
@@ -348,7 +366,7 @@ export function Navigation() {
                 <span className="text-foreground">Star on GitHub</span>
               </a>
             </Button>
-            <div>
+            <div className="hidden md:block">
               <JellyseerrSection
                 status={jellyseerrStatus}
                 url={jellyseerrUrl}
