@@ -176,9 +176,9 @@ export async function fetchTraktChart(
   } catch (error) {
     logger.error({ error, url }, 'Failed to fetch Trakt chart');
     if (error instanceof Error) {
-      throw new Error(`Failed to fetch Trakt chart: ${error.message}`);
+      throw new Error(`Failed to fetch Trakt chart: ${error.message}`, { cause: error });
     }
-    throw new Error('Failed to fetch Trakt chart: Unknown error');
+    throw new Error('Failed to fetch Trakt chart: Unknown error', { cause: error });
   }
 }
 

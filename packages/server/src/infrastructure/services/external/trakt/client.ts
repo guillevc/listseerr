@@ -88,9 +88,9 @@ export async function fetchTraktList(
   } catch (error) {
     logger.error({ error, url }, 'Failed to fetch Trakt list');
     if (error instanceof Error) {
-      throw new Error(`Failed to fetch Trakt list: ${error.message}`);
+      throw new Error(`Failed to fetch Trakt list: ${error.message}`, { cause: error });
     }
-    throw new Error('Failed to fetch Trakt list: Unknown error');
+    throw new Error('Failed to fetch Trakt list: Unknown error', { cause: error });
   }
 }
 

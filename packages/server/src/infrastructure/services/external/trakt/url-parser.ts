@@ -58,9 +58,9 @@ export function parseTraktUrl(url: string): TraktUrlParts {
     };
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to parse Trakt URL: ${error.message}`);
+      throw new Error(`Failed to parse Trakt URL: ${error.message}`, { cause: error });
     }
-    throw new Error('Failed to parse Trakt URL: Unknown error');
+    throw new Error('Failed to parse Trakt URL: Unknown error', { cause: error });
   }
 }
 

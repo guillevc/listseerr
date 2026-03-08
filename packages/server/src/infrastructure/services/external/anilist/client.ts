@@ -185,7 +185,8 @@ export async function fetchAnilistList(
   } catch (error) {
     logger.error({ error, username, status }, 'Error fetching AniList list');
     throw new Error(
-      `Failed to fetch AniList list for ${username}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to fetch AniList list for ${username}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      { cause: error }
     );
   } finally {
     clearTimeout(timeout);
