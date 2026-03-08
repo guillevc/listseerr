@@ -24,8 +24,8 @@ export const sessions = sqliteTable(
   (table) => [index('sessions_user_id_idx').on(table.userId)]
 );
 
-// Jellyseerr configuration
-export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
+// Seerr configuration
+export const seerrConfigs = sqliteTable('seerr_configs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id')
     .notNull()
@@ -34,7 +34,7 @@ export const jellyseerrConfigs = sqliteTable('jellyseerr_configs', {
   url: text('url').notNull(),
   externalUrl: text('external_url'), // User-facing URL for browser links (optional, falls back to url)
   apiKey: text('api_key').notNull(),
-  userIdJellyseerr: integer('user_id_jellyseerr').notNull(),
+  userIdSeerr: integer('user_id_seerr').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
@@ -144,7 +144,7 @@ export const providerCache = sqliteTable('provider_cache', {
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   sessions: many(sessions),
-  jellyseerrConfigs: many(jellyseerrConfigs),
+  seerrConfigs: many(seerrConfigs),
   providerConfigs: many(providerConfigs),
   generalSettings: one(generalSettings),
   mediaLists: many(mediaLists),
@@ -157,9 +157,9 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
-export const jellyseerrConfigsRelations = relations(jellyseerrConfigs, ({ one }) => ({
+export const seerrConfigsRelations = relations(seerrConfigs, ({ one }) => ({
   user: one(users, {
-    fields: [jellyseerrConfigs.userId],
+    fields: [seerrConfigs.userId],
     references: [users.id],
   }),
 }));
@@ -200,8 +200,8 @@ export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
 export type NewSession = typeof sessions.$inferInsert;
 
-export type JellyseerrConfig = typeof jellyseerrConfigs.$inferSelect;
-export type NewJellyseerrConfig = typeof jellyseerrConfigs.$inferInsert;
+export type SeerrConfig = typeof seerrConfigs.$inferSelect;
+export type NewSeerrConfig = typeof seerrConfigs.$inferInsert;
 
 export type ProviderConfig = typeof providerConfigs.$inferSelect;
 export type NewProviderConfig = typeof providerConfigs.$inferInsert;

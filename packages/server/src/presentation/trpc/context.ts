@@ -95,9 +95,9 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   InvalidListNameError: 'BAD_REQUEST',
   InvalidListUrlError: 'BAD_REQUEST',
   InvalidMaxItemsError: 'BAD_REQUEST',
-  InvalidJellyseerrUrlError: 'BAD_REQUEST',
-  InvalidJellyseerrApiKeyError: 'BAD_REQUEST',
-  InvalidJellyseerrUserIdError: 'BAD_REQUEST',
+  InvalidSeerrUrlError: 'BAD_REQUEST',
+  InvalidSeerrApiKeyError: 'BAD_REQUEST',
+  InvalidSeerrUserIdError: 'BAD_REQUEST',
   InvalidTraktClientIdError: 'BAD_REQUEST',
   InvalidMdbListApiKeyError: 'BAD_REQUEST',
   InvalidTriggerTypeError: 'BAD_REQUEST',
@@ -114,13 +114,13 @@ const errorCodeMap: Record<string, TRPCErrorCode> = {
   MediaListNotFoundError: 'NOT_FOUND',
   TraktConfigNotFoundError: 'NOT_FOUND',
   MdbListConfigNotFoundError: 'NOT_FOUND',
-  JellyseerrConfigNotFoundError: 'NOT_FOUND',
+  SeerrConfigNotFoundError: 'NOT_FOUND',
   GeneralSettingsNotFoundError: 'NOT_FOUND',
   ProviderConfigNotFoundError: 'NOT_FOUND',
   ExecutionNotFoundError: 'NOT_FOUND',
   // Business rule violations -> FORBIDDEN
   ProviderNotConfiguredError: 'FORBIDDEN',
-  JellyseerrNotConfiguredError: 'FORBIDDEN',
+  SeerrNotConfiguredError: 'FORBIDDEN',
   // Infrastructure errors -> INTERNAL_SERVER_ERROR
   EncryptionError: 'INTERNAL_SERVER_ERROR',
   // Auth errors

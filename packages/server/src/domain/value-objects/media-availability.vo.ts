@@ -2,14 +2,14 @@
  * Media Availability Value Object
  *
  * Server-only VO that handles media availability status.
- * Contains business logic for mapping Jellyseerr statuses.
+ * Contains business logic for mapping Seerr statuses.
  * Delegates validation logic to shared logic functions (DRY).
  */
 
 import { InvalidMediaAvailabilityError } from 'shared/domain/errors';
 import {
   MediaAvailabilityValues,
-  JellyseerrStatusValues,
+  SeerrStatusValues,
   type MediaAvailabilityType,
 } from 'shared/domain/types';
 import * as mediaAvailabilityLogic from 'shared/domain/logic';
@@ -37,13 +37,13 @@ export class MediaAvailabilityVO {
   }
 
   /**
-   * Creates a VO from Jellyseerr mediaInfo.status.
+   * Creates a VO from Seerr mediaInfo.status.
    * This is server-side business logic for external API mapping.
    *
    * @param status - The status code (1-6 known, >=7 undocumented, null = not found)
    * @param hasRequests - Whether mediaInfo.requests[] is non-empty (only affects UNDOCUMENTED_STATE)
    */
-  static fromJellyseerrStatus(
+  static fromSeerrStatus(
     status: number | null | undefined,
     hasRequests: boolean = false
   ): MediaAvailabilityVO {
@@ -52,19 +52,19 @@ export class MediaAvailabilityVO {
     }
 
     switch (status) {
-      case JellyseerrStatusValues.UNKNOWN:
-      case JellyseerrStatusValues.PENDING:
-      case JellyseerrStatusValues.PROCESSING:
-      case JellyseerrStatusValues.DELETED:
+      case SeerrStatusValues.UNKNOWN:
+      case SeerrStatusValues.PENDING:
+      case SeerrStatusValues.PROCESSING:
+      case SeerrStatusValues.DELETED:
         return this.previouslyRequested();
 
-      case JellyseerrStatusValues.PARTIALLY_AVAILABLE:
-      case JellyseerrStatusValues.AVAILABLE:
+      case SeerrStatusValues.PARTIALLY_AVAILABLE:
+      case SeerrStatusValues.AVAILABLE:
         return this.available();
 
       default:
         // Undocumented states (>= 7): check hasRequests
-        if (status >= JellyseerrStatusValues.UNDOCUMENTED_STATE) {
+        if (status >= SeerrStatusValues.UNDOCUMENTED_STATE) {
           return hasRequests ? this.previouslyRequested() : this.toBeRequested();
         }
         return this.toBeRequested();
@@ -79,13 +79,13 @@ export class MediaAvailabilityVO {
    * @param status4k - 4K status code (null/undefined treated as TO_BE_REQUESTED)
    * @param hasRequests - Whether mediaInfo.requests[] is non-empty
    */
-  static fromCombinedJellyseerrStatus(
+  static fromCombinedSeerrStatus(
     status: number | null | undefined,
     status4k: number | null | undefined,
     hasRequests: boolean = false
   ): MediaAvailabilityVO {
-    const standardAvailability = this.fromJellyseerrStatus(status, hasRequests);
-    const fourKAvailability = this.fromJellyseerrStatus(status4k, hasRequests);
+    const standardAvailability = this.fromSeerrStatus(status, hasRequests);
+    const fourKAvailability = this.fromSeerrStatus(status4k, hasRequests);
 
     // Only request if BOTH are TO_BE_REQUESTED
     if (standardAvailability.isToBeRequested() && fourKAvailability.isToBeRequested()) {

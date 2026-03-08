@@ -3,9 +3,9 @@ import * as schema from '@/server/infrastructure/db/schema';
 
 // Infrastructure
 import { DrizzleDashboardStatsRepository } from '@/server/infrastructure/repositories/drizzle-dashboard-stats.repository';
-import { JellyseerrStatsAdapter } from '@/server/infrastructure/services/adapters/jellyseerr-stats.adapter';
+import { SeerrStatsAdapter } from '@/server/infrastructure/services/adapters/seerr-stats.adapter';
 import { SchedulerInfoAdapter } from '@/server/infrastructure/services/adapters/scheduler-info.adapter';
-import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { DrizzleSeerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-seerr-config.repository';
 import { LoggingUseCaseDecorator } from '@/server/infrastructure/services/core/logging-usecase.decorator';
 import { LoggerService } from '@/server/infrastructure/services/core/logger.adapter';
 
@@ -35,13 +35,13 @@ import type { GetPendingRequestsResponse } from 'shared/application/dtos';
  * Complex Multi-Dependency Wiring:
  * - GetDashboardStatsUseCase needs: DashboardStatsRepository + SchedulerInfoService
  * - GetRecentActivityUseCase needs: DashboardStatsRepository
- * - GetPendingRequestsUseCase needs: JellyseerrConfigRepository + JellyseerrStatsService
+ * - GetPendingRequestsUseCase needs: SeerrConfigRepository + SeerrStatsService
  */
 export class DashboardContainer {
   // Infrastructure (private)
   private readonly dashboardStatsRepository: DrizzleDashboardStatsRepository;
-  private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
-  private readonly jellyseerrStatsService: JellyseerrStatsAdapter;
+  private readonly seerrConfigRepository: DrizzleSeerrConfigRepository;
+  private readonly seerrStatsService: SeerrStatsAdapter;
   private readonly schedulerInfoService: SchedulerInfoAdapter;
   private readonly logger: LoggerService;
 
@@ -62,8 +62,8 @@ export class DashboardContainer {
   constructor(db: BunSQLiteDatabase<typeof schema>) {
     // 1. Instantiate infrastructure layer
     this.dashboardStatsRepository = new DrizzleDashboardStatsRepository(db);
-    this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
-    this.jellyseerrStatsService = new JellyseerrStatsAdapter();
+    this.seerrConfigRepository = new DrizzleSeerrConfigRepository(db);
+    this.seerrStatsService = new SeerrStatsAdapter();
     this.schedulerInfoService = new SchedulerInfoAdapter();
     this.logger = new LoggerService('dashboard');
 
@@ -81,7 +81,7 @@ export class DashboardContainer {
     );
 
     this.getPendingRequestsUseCase = new LoggingUseCaseDecorator(
-      new GetPendingRequestsUseCase(this.jellyseerrConfigRepository, this.jellyseerrStatsService),
+      new GetPendingRequestsUseCase(this.seerrConfigRepository, this.seerrStatsService),
       this.logger,
       'GetPendingRequestsUseCase'
     );

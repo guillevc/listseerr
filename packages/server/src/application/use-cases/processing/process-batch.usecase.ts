@@ -1,5 +1,5 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
+import type { ISeerrConfigRepository } from '@/server/application/repositories/seerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { ITraktConfigRepository } from '@/server/application/repositories/trakt-config.repository.interface';
 import type { IMdbListConfigRepository } from '@/server/application/repositories/mdblist-config.repository.interface';
@@ -20,7 +20,7 @@ import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
 import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
+import { SeerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
 
 /**
  * ProcessBatchUseCase
@@ -29,14 +29,14 @@ import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared
  * 1. Load all enabled lists
  * 2. Fetch items from all lists (with executions created)
  * 3. Global deduplication by TMDB ID
- * 4. Check availability in Jellyseerr and categorize items
- * 5. Request only TO_BE_REQUESTED items to Jellyseerr
+ * 4. Check availability in Seerr and categorize items
+ * 5. Request only TO_BE_REQUESTED items to Seerr
  * 6. Update all execution records
  */
 export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, ProcessBatchResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
+    private readonly seerrConfigRepository: ISeerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
     private readonly traktConfigRepository: ITraktConfigRepository,
     private readonly mdbListConfigRepository: IMdbListConfigRepository,
@@ -112,9 +112,9 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
       'Global deduplication completed'
     );
 
-    // 4. Load Jellyseerr config and process items
-    const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
-    const result = await this.listProcessingService.processItems(uniqueItems, jellyseerrConfig);
+    // 4. Load Seerr config and process items
+    const seerrConfig = await this.loadSeerrConfig(command.userId);
+    const result = await this.listProcessingService.processItems(uniqueItems, seerrConfig);
 
     // 5. Update all execution histories
     const executions = await this.updateAllExecutions(listsWithItems, result);
@@ -274,12 +274,12 @@ export class ProcessBatchUseCase implements IUseCase<ProcessBatchCommand, Proces
   }
 
   /**
-   * Load Jellyseerr configuration for user
+   * Load Seerr configuration for user
    */
-  private async loadJellyseerrConfig(userId: number) {
-    const config = await this.jellyseerrConfigRepository.findByUserId(userId);
+  private async loadSeerrConfig(userId: number) {
+    const config = await this.seerrConfigRepository.findByUserId(userId);
     if (!config) {
-      throw new JellyseerrNotConfiguredError();
+      throw new SeerrNotConfiguredError();
     }
     return config;
   }

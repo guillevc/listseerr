@@ -2,22 +2,22 @@ import type {
   IMediaAvailabilityChecker,
   CategorizedMediaItems,
 } from '@/server/application/services/media-availability-checker.service.interface';
-import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
+import type { SeerrConfig } from '@/server/domain/entities/seerr-config.entity';
 import type { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
 import { MediaAvailabilityVO } from '@/server/domain/value-objects/media-availability.vo';
-import { getMediaAvailability } from '@/server/infrastructure/services/external/jellyseerr/client';
+import { getMediaAvailability } from '@/server/infrastructure/services/external/seerr/client';
 import type { ILogger } from '@/server/application/services/core/logger.interface';
 
 /**
  * Concurrency limit for parallel availability checks
- * Prevents overwhelming Jellyseerr API with too many requests
+ * Prevents overwhelming Seerr API with too many requests
  */
 const CONCURRENCY_LIMIT = 5;
 
 /**
  * HTTP Media Availability Checker Adapter
  *
- * Implements IMediaAvailabilityChecker by querying Jellyseerr GET endpoints.
+ * Implements IMediaAvailabilityChecker by querying Seerr GET endpoints.
  * Uses parallel requests with concurrency control to balance speed and API limits.
  */
 export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
@@ -25,7 +25,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
 
   async checkAndCategorize(
     items: MediaItemVO[],
-    config: JellyseerrConfig
+    config: SeerrConfig
   ): Promise<CategorizedMediaItems> {
     const result: CategorizedMediaItems = {
       toBeRequested: [],
@@ -46,7 +46,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       url: config.url.getValue(),
       externalUrl: config.externalUrl?.getValue() ?? null,
       apiKey: config.apiKey.getValue(),
-      userIdJellyseerr: config.userIdJellyseerr.getValue(),
+      userIdSeerr: config.userIdSeerr.getValue(),
       createdAt: config.createdAt,
       updatedAt: config.updatedAt,
     };
@@ -114,7 +114,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       url: string;
       externalUrl: string | null;
       apiKey: string;
-      userIdJellyseerr: number;
+      userIdSeerr: number;
       createdAt: Date;
       updatedAt: Date;
     }
@@ -126,6 +126,6 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
     const status4k = response?.mediaInfo?.status4k ?? null;
     const hasRequests = (response?.mediaInfo?.requests?.length ?? 0) > 0;
 
-    return MediaAvailabilityVO.fromCombinedJellyseerrStatus(status, status4k, hasRequests);
+    return MediaAvailabilityVO.fromCombinedSeerrStatus(status, status4k, hasRequests);
   }
 }

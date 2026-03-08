@@ -68,7 +68,7 @@ export async function fetchMdbListList(
 }
 
 function transformMdbListItem(item: MdbListApiItem): MediaItemDTO | null {
-  // Skip items without TMDB ID (required for Jellyseerr)
+  // Skip items without TMDB ID (required for Seerr)
   if (!item.id) {
     return null;
   }

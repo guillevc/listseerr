@@ -1,1 +1,1 @@
-export * from './jellyseerr-connection-test.dto';
+export * from './seerr-connection-test.dto';

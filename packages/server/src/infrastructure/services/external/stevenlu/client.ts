@@ -143,7 +143,7 @@ export async function fetchStevenLuList(maxItems: number | null): Promise<MediaI
 }
 
 function transformStevenLuItem(item: StevenLuItem): MediaItemDTO | null {
-  // Skip items without TMDB ID (required for Jellyseerr)
+  // Skip items without TMDB ID (required for Seerr)
   if (!item.tmdb_id) {
     return null;
   }

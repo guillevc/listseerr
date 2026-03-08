@@ -37,13 +37,13 @@ export class ProviderNotConfiguredError extends DomainError {
 }
 
 /**
- * Thrown when Jellyseerr is not configured
+ * Thrown when Seerr is not configured
  */
-export class JellyseerrNotConfiguredError extends DomainError {
-  readonly code = 'JELLYSEERR_NOT_CONFIGURED_ERROR' as const;
+export class SeerrNotConfiguredError extends DomainError {
+  readonly code = 'SEERR_NOT_CONFIGURED_ERROR' as const;
 
   constructor() {
-    super('Jellyseerr is not configured. Please configure in Settings → Jellyseerr.');
+    super('Seerr is not configured. Please configure in Settings → Seerr.');
   }
 }
 

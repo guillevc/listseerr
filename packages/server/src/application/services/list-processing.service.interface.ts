@@ -1,11 +1,11 @@
 import type { MediaItemVO } from '@/server/domain/value-objects/media-item.vo';
-import type { JellyseerrConfig } from '@/server/domain/entities/jellyseerr-config.entity';
+import type { SeerrConfig } from '@/server/domain/entities/seerr-config.entity';
 
 /**
- * Result of processing media items through Jellyseerr
+ * Result of processing media items through Seerr
  */
 export interface ListProcessingResult {
-  /** Items successfully requested to Jellyseerr */
+  /** Items successfully requested to Seerr */
   successful: MediaItemVO[];
   /** Items that failed to be requested */
   failed: Array<{ item: MediaItemVO; error: string }>;
@@ -19,7 +19,7 @@ export interface ListProcessingResult {
  * IListProcessingService
  *
  * Shared processing logic for media items:
- * 1. Check availability in Jellyseerr
+ * 1. Check availability in Seerr
  * 2. Categorize items (available, previously requested, to be requested)
  * 3. Request only items that need requesting
  *
@@ -27,14 +27,11 @@ export interface ListProcessingResult {
  */
 export interface IListProcessingService {
   /**
-   * Process media items: check availability and request to Jellyseerr
+   * Process media items: check availability and request to Seerr
    *
    * @param items - Media items to process
-   * @param jellyseerrConfig - Jellyseerr configuration
+   * @param seerrConfig - Seerr configuration
    * @returns Processing result with categorized items and request outcomes
    */
-  processItems(
-    items: MediaItemVO[],
-    jellyseerrConfig: JellyseerrConfig
-  ): Promise<ListProcessingResult>;
+  processItems(items: MediaItemVO[], seerrConfig: SeerrConfig): Promise<ListProcessingResult>;
 }

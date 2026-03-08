@@ -12,7 +12,7 @@ interface ActionsCellProps {
   listId: number;
   isProcessing: boolean;
   isProviderConfigured: boolean;
-  jellyseerrConfigured: boolean;
+  seerrConfigured: boolean;
   isDeleting: boolean;
   onProcess: (id: number) => void;
   onEdit: () => void;
@@ -23,7 +23,7 @@ export const ActionsCell = memo(function ActionsCell({
   listId,
   isProcessing,
   isProviderConfigured,
-  jellyseerrConfigured,
+  seerrConfigured,
   isDeleting,
   onProcess,
   onEdit,
@@ -40,7 +40,7 @@ export const ActionsCell = memo(function ActionsCell({
         <DropdownMenuContent align="end" avoidCollisions={true}>
           <DropdownMenuItem
             onClick={() => onProcess(listId)}
-            disabled={isProcessing || !isProviderConfigured || !jellyseerrConfigured}
+            disabled={isProcessing || !isProviderConfigured || !seerrConfigured}
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isProcessing ? 'animate-spin' : ''}`} />
             Process

@@ -29,17 +29,12 @@ interface Props {
   lists: MediaList[];
   onProcess: (id: number) => void;
   processingLists: Set<number>;
-  jellyseerrConfigured?: boolean;
+  seerrConfigured?: boolean;
 }
 
 const columnHelper = createColumnHelper<MediaList>();
 
-export function ListsTable({
-  lists,
-  onProcess,
-  processingLists,
-  jellyseerrConfigured = true,
-}: Props) {
+export function ListsTable({ lists, onProcess, processingLists, seerrConfigured = true }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
   const [mutatingListId, setMutatingListId] = useState<number | null>(null);
@@ -156,7 +151,7 @@ export function ListsTable({
               listId={list.id}
               isProcessing={processingLists.has(list.id)}
               isProviderConfigured={isProviderConfigured(list.provider)}
-              jellyseerrConfigured={jellyseerrConfigured}
+              seerrConfigured={seerrConfigured}
               isDeleting={deleteMutation.isPending}
               onProcess={onProcess}
               onEdit={() => setEditingList(list)}
@@ -177,7 +172,7 @@ export function ListsTable({
       isAutomaticProcessingEnabled,
       isProviderConfigured,
       mutatingListId,
-      jellyseerrConfigured,
+      seerrConfigured,
     ]
   );
 

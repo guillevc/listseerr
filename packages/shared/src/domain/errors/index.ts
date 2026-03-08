@@ -6,7 +6,7 @@
 
 export * from './domain.error';
 export * from './auth.errors';
-export * from './jellyseerr-config.errors';
+export * from './seerr-config.errors';
 export * from './provider-config.errors';
 export * from './mdblist-config.errors';
 export * from './trakt-config.errors';

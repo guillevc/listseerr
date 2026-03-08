@@ -14,6 +14,6 @@ export * from './trakt-media-type.logic';
 export * from './trakt-chart-url.logic';
 export * from './mdblist-url.logic';
 export * from './media-availability.logic';
-export * from './jellyseerr.logic';
+export * from './seerr.logic';
 export * from './auth.logic';
 export * from './anilist.logic';

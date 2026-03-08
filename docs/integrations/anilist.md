@@ -5,7 +5,7 @@
 
 ## Overview
 
-Integration of AniList into listseerr to allow users to sync their anime watchlists and request anime through Jellyseerr. This integration shares the anime ID cache with MAL integration.
+Integration of AniList into listseerr to allow users to sync their anime watchlists and request anime through Seerr. This integration shares the anime ID cache with MAL integration.
 
 ## API Research Summary
 
@@ -193,12 +193,12 @@ function mapAnilistFormat(format: string): 'tv' | 'movie' | null {
 
 ---
 
-### 3. Jellyseerr/Overseerr API
+### 3. Seerr API
 
 **Current Implementation in Listseerr:**
 
 - Uses `POST /api/v1/request` with `mediaId` (TMDB ID)
-- Same flow as MAL - AniList ID → TMDB ID → Jellyseerr request
+- Same flow as MAL - AniList ID → TMDB ID → Seerr request
 
 ---
 
@@ -237,7 +237,7 @@ TMDB IDs (themoviedb_id field)
     │
     ▼
 ┌─────────────────────────────────┐
-│ Jellyseerr                      │
+│ Seerr                      │
 │ POST /api/v1/request            │
 │ { mediaType: tv|movie, mediaId }│
 └─────────────────────────────────┘

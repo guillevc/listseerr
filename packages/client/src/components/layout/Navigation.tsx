@@ -5,7 +5,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { ChevronRight, LogOut, Menu, Settings, Star, User } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { getUserFacingUrl } from 'shared/domain/logic';
-import { JellyseerrStatusIndicator, StatusDot } from '../common/JellyseerrStatusIndicator';
+import { SeerrStatusIndicator, StatusDot } from '../common/SeerrStatusIndicator';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import {
@@ -19,14 +19,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { ThemeToggle } from '../ui/theme-toggle';
 
 // Types
-type JellyseerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
+type SeerrStatus = 'connected' | 'error' | 'not-configured' | 'loading';
 
 interface NavItem {
   name: string;
   path: string;
 }
 
-interface JellyseerrRequests {
+interface SeerrRequests {
   url: string;
   badge: number | null;
   isError: boolean;
@@ -38,14 +38,14 @@ function useNavigation() {
   const currentPath = router.location.pathname;
 
   const { data: configData } = trpc.config.get.useQuery();
-  const jellyseerrConfig = configData?.config;
+  const seerrConfig = configData?.config;
 
   const { data: pendingRequests, isLoading: isPendingRequestsLoading } =
     trpc.dashboard.getPendingRequests.useQuery(undefined, {
       refetchInterval: 60000,
     });
 
-  const jellyseerrStatus: JellyseerrStatus = useMemo(() => {
+  const seerrStatus: SeerrStatus = useMemo(() => {
     if (isPendingRequestsLoading) return 'loading';
     if (!pendingRequests?.configured) return 'not-configured';
     if (pendingRequests?.error) return 'error';
@@ -59,10 +59,10 @@ function useNavigation() {
     { name: 'Logs', path: '/logs' },
   ];
 
-  const jellyseerrRequests: JellyseerrRequests | null =
-    jellyseerrConfig?.url && pendingRequests?.configured
+  const seerrRequests: SeerrRequests | null =
+    seerrConfig?.url && pendingRequests?.configured
       ? {
-          url: `${getUserFacingUrl(jellyseerrConfig)}/requests`,
+          url: `${getUserFacingUrl(seerrConfig)}/requests`,
           badge: pendingRequests?.error ? null : (pendingRequests?.count ?? 0),
           isError: !!pendingRequests?.error,
         }
@@ -74,9 +74,9 @@ function useNavigation() {
   return {
     navItems,
     isActive,
-    jellyseerrStatus,
-    jellyseerrUrl: jellyseerrConfig?.url,
-    jellyseerrRequests,
+    seerrStatus,
+    seerrUrl: seerrConfig?.url,
+    seerrRequests,
   };
 }
 
@@ -111,16 +111,16 @@ function NavLink({
   );
 }
 
-function JellyseerrSection({
+function SeerrSection({
   status,
   url,
   requests,
   onClick,
   mobile = false,
 }: {
-  status: JellyseerrStatus;
+  status: SeerrStatus;
   url?: string;
-  requests: JellyseerrRequests | null;
+  requests: SeerrRequests | null;
   onClick?: () => void;
   mobile?: boolean;
 }) {
@@ -133,9 +133,9 @@ function JellyseerrSection({
         asChild
         className={cn(mobile && 'w-full justify-start')}
       >
-        <Link to="/settings/jellyseerr" onClick={onClick}>
+        <Link to="/settings/seerr" onClick={onClick}>
           <StatusDot status={status} />
-          <span>Set up Jellyseerr</span>
+          <span>Set up Seerr</span>
           <ChevronRight className="h-4 w-4" />
         </Link>
       </Button>
@@ -143,7 +143,7 @@ function JellyseerrSection({
   }
 
   return (
-    <JellyseerrStatusIndicator status={status} url={url} pendingRequests={requests?.badge} compact>
+    <SeerrStatusIndicator status={status} url={url} pendingRequests={requests?.badge} compact>
       <Button
         variant="outline"
         accent="purple"
@@ -163,10 +163,10 @@ function JellyseerrSection({
           ) : (
             <StatusDot status={status} />
           )}
-          <span>Jellyseerr</span>
+          <span>Seerr</span>
         </a>
       </Button>
-    </JellyseerrStatusIndicator>
+    </SeerrStatusIndicator>
   );
 }
 
@@ -232,17 +232,17 @@ function MobileNav({
   isActive,
   open,
   onOpenChange,
-  jellyseerrStatus,
-  jellyseerrUrl,
-  jellyseerrRequests,
+  seerrStatus,
+  seerrUrl,
+  seerrRequests,
 }: {
   navItems: NavItem[];
   isActive: (path: string) => boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  jellyseerrStatus: JellyseerrStatus;
-  jellyseerrUrl?: string;
-  jellyseerrRequests: JellyseerrRequests | null;
+  seerrStatus: SeerrStatus;
+  seerrUrl?: string;
+  seerrRequests: SeerrRequests | null;
 }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -271,10 +271,10 @@ function MobileNav({
               mobile
             />
           ))}
-          <JellyseerrSection
-            status={jellyseerrStatus}
-            url={jellyseerrUrl}
-            requests={jellyseerrRequests}
+          <SeerrSection
+            status={seerrStatus}
+            url={seerrUrl}
+            requests={seerrRequests}
             onClick={closeMenu}
             mobile
           />
@@ -341,8 +341,7 @@ function MobileNav({
 // Main Component
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { navItems, isActive, jellyseerrStatus, jellyseerrUrl, jellyseerrRequests } =
-    useNavigation();
+  const { navItems, isActive, seerrStatus, seerrUrl, seerrRequests } = useNavigation();
 
   return (
     <nav className="border-b">
@@ -354,7 +353,7 @@ export function Navigation() {
             <DesktopNav navItems={navItems} isActive={isActive} />
           </div>
 
-          {/* Right: Jellyseerr + Actions */}
+          {/* Right: Seerr + Actions */}
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild className="hidden md:inline-flex">
               <a
@@ -367,11 +366,7 @@ export function Navigation() {
               </a>
             </Button>
             <div className="hidden md:block">
-              <JellyseerrSection
-                status={jellyseerrStatus}
-                url={jellyseerrUrl}
-                requests={jellyseerrRequests}
-              />
+              <SeerrSection status={seerrStatus} url={seerrUrl} requests={seerrRequests} />
             </div>
             <ThemeToggle />
             <div className="hidden md:block">
@@ -396,9 +391,9 @@ export function Navigation() {
         isActive={isActive}
         open={mobileMenuOpen}
         onOpenChange={setMobileMenuOpen}
-        jellyseerrStatus={jellyseerrStatus}
-        jellyseerrUrl={jellyseerrUrl}
-        jellyseerrRequests={jellyseerrRequests}
+        seerrStatus={seerrStatus}
+        seerrUrl={seerrUrl}
+        seerrRequests={seerrRequests}
       />
     </nav>
   );

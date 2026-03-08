@@ -1,196 +1,194 @@
 import { describe, it, expect } from 'bun:test';
 import { MediaAvailabilityVO, MediaAvailabilityValues } from './media-availability.vo';
-import { JellyseerrStatusValues } from 'shared/domain/types';
+import { SeerrStatusValues } from 'shared/domain/types';
 
 describe('MediaAvailabilityVO', () => {
-  describe('fromJellyseerrStatus', () => {
+  describe('fromSeerrStatus', () => {
     it('returns TO_BE_REQUESTED for null status', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(null);
+      const result = MediaAvailabilityVO.fromSeerrStatus(null);
       expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
     });
 
     it('returns TO_BE_REQUESTED for undefined status', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(undefined);
+      const result = MediaAvailabilityVO.fromSeerrStatus(undefined);
       expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
     });
 
     it('returns PREVIOUSLY_REQUESTED for UNKNOWN (1)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(JellyseerrStatusValues.UNKNOWN);
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.UNKNOWN);
       expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
     });
 
     it('returns PREVIOUSLY_REQUESTED for PENDING (2)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(JellyseerrStatusValues.PENDING);
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.PENDING);
       expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
     });
 
     it('returns PREVIOUSLY_REQUESTED for PROCESSING (3)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(JellyseerrStatusValues.PROCESSING);
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.PROCESSING);
       expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
     });
 
     it('returns AVAILABLE for PARTIALLY_AVAILABLE (4)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(
-        JellyseerrStatusValues.PARTIALLY_AVAILABLE
-      );
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.PARTIALLY_AVAILABLE);
       expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
     });
 
     it('returns AVAILABLE for AVAILABLE (5)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(JellyseerrStatusValues.AVAILABLE);
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.AVAILABLE);
       expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
     });
 
     it('returns PREVIOUSLY_REQUESTED for DELETED (6)', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(JellyseerrStatusValues.DELETED);
+      const result = MediaAvailabilityVO.fromSeerrStatus(SeerrStatusValues.DELETED);
       expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
     });
 
     describe('undocumented states (>= 7)', () => {
       it('returns TO_BE_REQUESTED when hasRequests is false', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(7, false);
+        const result = MediaAvailabilityVO.fromSeerrStatus(7, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('returns PREVIOUSLY_REQUESTED when hasRequests is true', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(7, true);
+        const result = MediaAvailabilityVO.fromSeerrStatus(7, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('handles status 8 with hasRequests=false', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(8, false);
+        const result = MediaAvailabilityVO.fromSeerrStatus(8, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('handles status 8 with hasRequests=true', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(8, true);
+        const result = MediaAvailabilityVO.fromSeerrStatus(8, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('handles large status value (100) with hasRequests=false', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(100, false);
+        const result = MediaAvailabilityVO.fromSeerrStatus(100, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('handles large status value (100) with hasRequests=true', () => {
-        const result = MediaAvailabilityVO.fromJellyseerrStatus(100, true);
+        const result = MediaAvailabilityVO.fromSeerrStatus(100, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
     });
 
     describe('hasRequests does not affect known status codes', () => {
       it('UNKNOWN still returns PREVIOUSLY_REQUESTED regardless of hasRequests', () => {
-        expect(MediaAvailabilityVO.fromJellyseerrStatus(1, false).getValue()).toBe(
+        expect(MediaAvailabilityVO.fromSeerrStatus(1, false).getValue()).toBe(
           MediaAvailabilityValues.PREVIOUSLY_REQUESTED
         );
-        expect(MediaAvailabilityVO.fromJellyseerrStatus(1, true).getValue()).toBe(
+        expect(MediaAvailabilityVO.fromSeerrStatus(1, true).getValue()).toBe(
           MediaAvailabilityValues.PREVIOUSLY_REQUESTED
         );
       });
 
       it('AVAILABLE still returns AVAILABLE regardless of hasRequests', () => {
-        expect(MediaAvailabilityVO.fromJellyseerrStatus(5, false).getValue()).toBe(
+        expect(MediaAvailabilityVO.fromSeerrStatus(5, false).getValue()).toBe(
           MediaAvailabilityValues.AVAILABLE
         );
-        expect(MediaAvailabilityVO.fromJellyseerrStatus(5, true).getValue()).toBe(
+        expect(MediaAvailabilityVO.fromSeerrStatus(5, true).getValue()).toBe(
           MediaAvailabilityValues.AVAILABLE
         );
       });
     });
   });
 
-  describe('fromCombinedJellyseerrStatus', () => {
+  describe('fromCombinedSeerrStatus', () => {
     describe('both null/undefined', () => {
       it('returns TO_BE_REQUESTED when both are null', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(null, null);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(null, null);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('returns TO_BE_REQUESTED when both are null with hasRequests=true', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(null, null, true);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(null, null, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
     });
 
     describe('status with null status4k', () => {
       it('returns AVAILABLE when status is AVAILABLE and status4k is null', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(5, null);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(5, null);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
 
       it('returns PREVIOUSLY_REQUESTED when status is PENDING and status4k is null', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(2, null);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(2, null);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('returns PREVIOUSLY_REQUESTED when status is UNKNOWN and status4k is null', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(1, null);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(1, null);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
     });
 
     describe('null status with status4k', () => {
       it('returns AVAILABLE when status is null and status4k is AVAILABLE', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(null, 5);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(null, 5);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
 
       it('returns PREVIOUSLY_REQUESTED when status is null and status4k is PENDING', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(null, 2);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(null, 2);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
     });
 
     describe('mixed status combinations', () => {
       it('returns AVAILABLE when status is AVAILABLE and status4k is PENDING', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(5, 2);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(5, 2);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
 
       it('returns AVAILABLE when status is PENDING and status4k is AVAILABLE', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(2, 5);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(2, 5);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
 
       it('returns PREVIOUSLY_REQUESTED when both are PENDING', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(2, 2);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(2, 2);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('returns AVAILABLE when both are AVAILABLE', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(5, 5);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(5, 5);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
     });
 
     describe('undocumented states with combined logic', () => {
       it('returns TO_BE_REQUESTED when both are undocumented and hasRequests=false', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(7, 7, false);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(7, 7, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('returns PREVIOUSLY_REQUESTED when both are undocumented and hasRequests=true', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(7, 7, true);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(7, 7, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('returns TO_BE_REQUESTED when status is undocumented, status4k is null, hasRequests=false', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(7, null, false);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(7, null, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
       });
 
       it('returns PREVIOUSLY_REQUESTED when status is undocumented, status4k is null, hasRequests=true', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(7, null, true);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(7, null, true);
         expect(result.getValue()).toBe(MediaAvailabilityValues.PREVIOUSLY_REQUESTED);
       });
 
       it('returns AVAILABLE when status is undocumented and status4k is AVAILABLE', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(7, 5, false);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(7, 5, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
 
       it('returns AVAILABLE when status is AVAILABLE and status4k is undocumented', () => {
-        const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(5, 7, false);
+        const result = MediaAvailabilityVO.fromCombinedSeerrStatus(5, 7, false);
         expect(result.getValue()).toBe(MediaAvailabilityValues.AVAILABLE);
       });
     });
@@ -241,17 +239,17 @@ describe('MediaAvailabilityVO', () => {
 
   describe('edge cases', () => {
     it('returns TO_BE_REQUESTED for status 0', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(0);
+      const result = MediaAvailabilityVO.fromSeerrStatus(0);
       expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
     });
 
     it('returns TO_BE_REQUESTED for negative status', () => {
-      const result = MediaAvailabilityVO.fromJellyseerrStatus(-1);
+      const result = MediaAvailabilityVO.fromSeerrStatus(-1);
       expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
     });
 
     it('handles combined with status 0', () => {
-      const result = MediaAvailabilityVO.fromCombinedJellyseerrStatus(0, null);
+      const result = MediaAvailabilityVO.fromCombinedSeerrStatus(0, null);
       expect(result.getValue()).toBe(MediaAvailabilityValues.TO_BE_REQUESTED);
     });
   });

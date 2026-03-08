@@ -21,9 +21,9 @@ export type MediaAvailabilityType =
   (typeof MediaAvailabilityValues)[keyof typeof MediaAvailabilityValues];
 
 /**
- * Jellyseerr mediaInfo.status codes
+ * Seerr mediaInfo.status codes
  *
- * 1 = UNKNOWN - Media exists in Jellyseerr but status unclear (may have been requested & rejected)
+ * 1 = UNKNOWN - Media exists in Seerr but status unclear (may have been requested & rejected)
  * 2 = PENDING - Request is pending approval
  * 3 = PROCESSING - Request is being processed
  * 4 = PARTIALLY_AVAILABLE - Some content available (e.g., some seasons)
@@ -31,7 +31,7 @@ export type MediaAvailabilityType =
  * 6 = DELETED - Was requested but later deleted
  * 7+ = UNDOCUMENTED_STATE - Any value >= 7, treat based on hasRequests
  */
-export const JellyseerrStatusValues = {
+export const SeerrStatusValues = {
   UNKNOWN: 1,
   PENDING: 2,
   PROCESSING: 3,
@@ -41,4 +41,4 @@ export const JellyseerrStatusValues = {
   UNDOCUMENTED_STATE: 7, // Sentinel for values >= 7
 } as const;
 
-export type JellyseerrStatus = (typeof JellyseerrStatusValues)[keyof typeof JellyseerrStatusValues];
+export type SeerrStatus = (typeof SeerrStatusValues)[keyof typeof SeerrStatusValues];

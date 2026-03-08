@@ -8,7 +8,7 @@
 
 # Listseerr
 
-**Request movies & shows in Jellyseerr/Overseerr from your favorite lists**
+**Request movies & shows in Seerr from your favorite lists**
 
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
 [![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr)](https://github.com/guillevc/listseerr/releases)
@@ -29,7 +29,7 @@
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
 │  Trakt   │◀────│           │         │           │     │   *arr    │
-├──────────┤     │           │ request │ Jellyseerr│────▶│   stack   │
+├──────────┤     │           │ request │ Seerr│────▶│   stack   │
 │ StevenLu │◀────│ Listseerr │────────▶│           │     └───────────┘
 ├──────────┤     │           │         └───────────┘
 │  MDBList │◀────│           │               ▲
@@ -40,8 +40,8 @@
 ```
 
 1. **Listseerr fetches media from your lists** — Connect your favorite curated lists from Trakt, MDBList, StevenLu, and more
-2. **Requests are sent to Jellyseerr/Overseerr** — Movies and shows from your lists are automatically requested
-3. **You review and approve** — Requests appear in Jellyseerr/Overseerr for you to approve (create a dedicated user without auto-approve permissions to review before downloading)
+2. **Requests are sent to Seerr** — Movies and shows from your lists are automatically requested
+3. **You review and approve** — Requests appear in Seerr for you to approve (create a dedicated user without auto-approve permissions to review before downloading)
 4. **Your \*arr stack downloads the media** — Once approved, Sonarr/Radarr handle the rest
 
 Listseerr skips media that was previously rejected or is already available, so you won't see duplicate requests. Set it up once and let it run on a schedule.

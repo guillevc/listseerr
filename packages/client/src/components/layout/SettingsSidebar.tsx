@@ -19,10 +19,10 @@ const settingsCategories: SettingsCategory[] = [
     path: '/settings/general',
   },
   {
-    id: 'jellyseerr',
-    name: 'Jellyseerr',
+    id: 'seerr',
+    name: 'Seerr',
     icon: <Settings className="h-4 w-4" />,
-    path: '/settings/jellyseerr',
+    path: '/settings/seerr',
   },
   {
     id: 'api-keys',
@@ -50,14 +50,14 @@ interface SettingsSidebarProps {
 
 export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarProps) {
   const { data: configData, isLoading } = trpc.config.get.useQuery();
-  const jellyseerrConfigured = isLoading || !!configData?.config;
+  const seerrConfigured = isLoading || !!configData?.config;
 
   return (
     <aside className="w-full md:w-64">
       <nav className="space-y-1 p-2">
         {settingsCategories.map((category) => {
           const isActive = category.id === activeCategory;
-          const needsAttention = category.id === 'jellyseerr' && !jellyseerrConfigured;
+          const needsAttention = category.id === 'seerr' && !seerrConfigured;
 
           return (
             <Link

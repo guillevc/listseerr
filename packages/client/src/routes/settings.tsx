@@ -4,7 +4,7 @@ import { SettingsPage } from '../pages/settings/SettingsPage';
 import { settingsIndexRoute } from './settings.index';
 import { settingsAccountRoute } from './settings.account';
 import { settingsGeneralRoute } from './settings.general';
-import { settingsJellyseerrRoute } from './settings.jellyseerr';
+import { settingsSeerrRoute } from './settings.seerr';
 import { settingsApiKeysRoute } from './settings.api-keys';
 import { settingsAutomaticProcessingRoute } from './settings.automatic-processing';
 
@@ -17,7 +17,7 @@ export const settingsRoute = createRoute({
   settingsIndexRoute,
   settingsAccountRoute,
   settingsGeneralRoute,
-  settingsJellyseerrRoute,
+  settingsSeerrRoute,
   settingsApiKeysRoute,
   settingsAutomaticProcessingRoute,
 ]);

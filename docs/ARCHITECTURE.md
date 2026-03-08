@@ -171,7 +171,7 @@ packages/server/src/
 │   └── services/
 │       ├── core/           # Logger, Scheduler, Encryption
 │       ├── adapters/       # Interface implementations
-│       └── external/       # API clients (Jellyseerr, Trakt)
+│       └── external/       # API clients (Seerr, Trakt)
 ├── presentation/
 │   └── trpc/routers/       # tRPC routers
 └── bootstrap/              # DI wiring, startup

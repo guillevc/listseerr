@@ -1,5 +1,5 @@
 import type { IMediaListRepository } from '@/server/application/repositories/media-list.repository.interface';
-import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
+import type { ISeerrConfigRepository } from '@/server/application/repositories/seerr-config.repository.interface';
 import type { IExecutionHistoryRepository } from '@/server/application/repositories/execution-history.repository.interface';
 import type { IMediaFetcherFactory } from '@/server/application/services/media-fetcher-factory.service.interface';
 import type { IListProcessingService } from '@/server/application/services/list-processing.service.interface';
@@ -13,7 +13,7 @@ import { TriggerTypeVO } from '@/server/domain/value-objects/trigger-type.vo';
 import { BatchIdVO } from '@/server/domain/value-objects/batch-id.vo';
 import type { ProviderVO } from '@/server/domain/value-objects/provider.vo';
 import { MediaListNotFoundError } from 'shared/domain/errors';
-import { JellyseerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
+import { SeerrNotConfiguredError, ProviderNotConfiguredError } from 'shared/domain/errors';
 import type { IMediaFetcher } from '@/server/application/services/media-fetcher.service.interface';
 
 /**
@@ -23,14 +23,14 @@ import type { IMediaFetcher } from '@/server/application/services/media-fetcher.
  * 1. Load list and validate configs
  * 2. Create execution record (status: running)
  * 3. Fetch items from provider
- * 4. Check availability in Jellyseerr and categorize items
- * 5. Request only TO_BE_REQUESTED items to Jellyseerr
+ * 4. Check availability in Seerr and categorize items
+ * 5. Request only TO_BE_REQUESTED items to Seerr
  * 6. Update execution record (status: success/error)
  */
 export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessListResponse> {
   constructor(
     private readonly mediaListRepository: IMediaListRepository,
-    private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
+    private readonly seerrConfigRepository: ISeerrConfigRepository,
     private readonly executionHistoryRepository: IExecutionHistoryRepository,
     private readonly mediaFetcherFactory: IMediaFetcherFactory,
     private readonly listProcessingService: IListProcessingService,
@@ -63,7 +63,7 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
 
     try {
       // 4. Load configs
-      const jellyseerrConfig = await this.loadJellyseerrConfig(command.userId);
+      const seerrConfig = await this.loadSeerrConfig(command.userId);
       this.logger.debug(
         { provider: list.provider.getValue(), url: list.url.getValue() },
         'Fetching items from provider'
@@ -71,8 +71,8 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
       const items = await fetcher.fetchItems(list.url.getValue(), list.maxItems);
       this.logger.info({ itemCount: items.length }, 'Items fetched from provider');
 
-      // 5. Process items: check availability and request to Jellyseerr
-      const result = await this.listProcessingService.processItems(items, jellyseerrConfig);
+      // 5. Process items: check availability and request to Seerr
+      const result = await this.listProcessingService.processItems(items, seerrConfig);
 
       // 6. Mark execution as success
       savedExecution.markAsSuccess(
@@ -111,12 +111,12 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
   }
 
   /**
-   * Load Jellyseerr configuration for user
+   * Load Seerr configuration for user
    */
-  private async loadJellyseerrConfig(userId: number) {
-    const config = await this.jellyseerrConfigRepository.findByUserId(userId);
+  private async loadSeerrConfig(userId: number) {
+    const config = await this.seerrConfigRepository.findByUserId(userId);
     if (!config) {
-      throw new JellyseerrNotConfiguredError();
+      throw new SeerrNotConfiguredError();
     }
     return config;
   }

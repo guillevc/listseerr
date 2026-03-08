@@ -15,6 +15,13 @@
       "when": 1768772559380,
       "tag": "0001_freezing_shadow_king",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772937329517,
+      "tag": "0002_rename_jellyseerr_to_seerr",
+      "breakpoints": true
     }
   ]
 }

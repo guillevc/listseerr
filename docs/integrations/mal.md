@@ -5,7 +5,7 @@
 
 ## Overview
 
-Integration of MAL into listseerr to allow users to sync their anime watchlists and request anime through Jellyseerr.
+Integration of MAL into listseerr to allow users to sync their anime watchlists and request anime through Seerr.
 
 ## API Research Summary
 
@@ -177,7 +177,7 @@ Instead of using the ARM API at runtime, we cache the source data locally (same 
 
 ---
 
-### 3. Jellyseerr/Overseerr API
+### 3. Seerr API
 
 **Current Implementation in Listseerr:**
 
@@ -224,7 +224,7 @@ TMDB IDs (themoviedb_id field)
     │
     ▼
 ┌─────────────────────────────────┐
-│ Jellyseerr                      │
+│ Seerr                      │
 │ POST /api/v1/request            │
 │ { mediaType: tv|movie, mediaId }│
 └─────────────────────────────────┘
@@ -474,5 +474,5 @@ export type MalStatus = z.infer<typeof malStatusSchema>;
 - [Jikan User List Discontinuation Notice](https://jikan.moe/discontinued)
 - [Fribb/anime-lists Repository](https://github.com/Fribb/anime-lists) - ID mapping data source
 - [ARM API Documentation](https://arm.haglund.dev/docs) - Uses same Fribb data
-- [Overseerr Search by ID Discussion](https://github.com/sct/overseerr/discussions/1135)
-- [Jellyseerr TVDB Discussion](https://github.com/Fallenbagel/jellyseerr/discussions/371)
+- [Seerr Search by ID Discussion](https://github.com/sct/seerr/discussions/1135)
+- [Seerr TVDB Discussion](https://github.com/Fallenbagel/seerr/discussions/371)

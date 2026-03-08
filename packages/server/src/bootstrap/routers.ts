@@ -16,7 +16,7 @@ import { ProcessingContainer } from './di/processing-container';
 import { DashboardContainer } from './di/dashboard-container';
 import { LogsContainer } from './di/logs-container';
 import { GeneralSettingsContainer } from './di/general-settings-container';
-import { JellyseerrConfigContainer } from './di/jellyseerr-config-container';
+import { SeerrConfigContainer } from './di/seerr-config-container';
 import { TraktConfigContainer } from './di/trakt-config-container';
 import { MdbListConfigContainer } from './di/mdblist-config-container';
 import { AuthContainer } from './di/auth-container';
@@ -31,7 +31,7 @@ import { createDashboardRouter } from '@/server/presentation/trpc/routers/dashbo
 import { createLogsRouter } from '@/server/presentation/trpc/routers/logs.router';
 import { createSchedulerRouter } from '@/server/presentation/trpc/routers/scheduler.router';
 import { createGeneralSettingsRouter } from '@/server/presentation/trpc/routers/general-settings.router';
-import { createJellyseerrConfigRouter } from '@/server/presentation/trpc/routers/jellyseerr-config.router';
+import { createSeerrConfigRouter } from '@/server/presentation/trpc/routers/seerr-config.router';
 import { createTraktConfigRouter } from '@/server/presentation/trpc/routers/trakt-config.router';
 import { createMdbListConfigRouter } from '@/server/presentation/trpc/routers/mdblist-config.router';
 import { createProvidersRouter } from '@/server/presentation/trpc/routers/providers.router';
@@ -43,7 +43,7 @@ const processingContainer = new ProcessingContainer(db);
 const dashboardContainer = new DashboardContainer(db);
 const logsContainer = new LogsContainer();
 const generalSettingsContainer = new GeneralSettingsContainer(db);
-const jellyseerrConfigContainer = new JellyseerrConfigContainer(db);
+const seerrConfigContainer = new SeerrConfigContainer(db);
 const traktConfigContainer = new TraktConfigContainer(db);
 const mdbListConfigContainer = new MdbListConfigContainer(db);
 const authContainer = new AuthContainer(db, generalSettingsContainer.generalSettingsRepository);
@@ -56,7 +56,7 @@ export const logsRouter = createLogsRouter(logsContainer);
 // Scheduler router uses lazy getter to avoid circular dependency - container created during scheduler init
 export const schedulerRouter = createSchedulerRouter(getSchedulerContainer);
 export const generalSettingsRouter = createGeneralSettingsRouter(generalSettingsContainer);
-export const jellyseerrConfigRouter = createJellyseerrConfigRouter(jellyseerrConfigContainer);
+export const seerrConfigRouter = createSeerrConfigRouter(seerrConfigContainer);
 export const traktConfigRouter = createTraktConfigRouter(traktConfigContainer);
 export const mdblistConfigRouter = createMdbListConfigRouter(mdbListConfigContainer);
 export const providersRouter = createProvidersRouter({

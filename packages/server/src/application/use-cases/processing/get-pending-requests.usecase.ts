@@ -1,5 +1,5 @@
-import type { IJellyseerrConfigRepository } from '@/server/application/repositories/jellyseerr-config.repository.interface';
-import type { IJellyseerrStatsService } from '@/server/application/services/jellyseerr-stats.service.interface';
+import type { ISeerrConfigRepository } from '@/server/application/repositories/seerr-config.repository.interface';
+import type { ISeerrStatsService } from '@/server/application/services/seerr-stats.service.interface';
 import type { GetPendingRequestsCommand } from 'shared/application/dtos';
 import type { GetPendingRequestsResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
@@ -7,10 +7,10 @@ import type { IUseCase } from '@/server/application/use-cases/use-case.interface
 /**
  * GetPendingRequestsUseCase
  *
- * Fetches pending requests count from Jellyseerr API.
+ * Fetches pending requests count from Seerr API.
  *
  * Business Rules:
- * - Returns "not configured" state if no Jellyseerr config exists
+ * - Returns "not configured" state if no Seerr config exists
  * - Returns "error" state if API call fails (graceful degradation)
  * - Never throws errors to client (dashboard should show partial data)
  */
@@ -19,25 +19,25 @@ export class GetPendingRequestsUseCase implements IUseCase<
   GetPendingRequestsResponse
 > {
   constructor(
-    private readonly jellyseerrConfigRepository: IJellyseerrConfigRepository,
-    private readonly jellyseerrStatsService: IJellyseerrStatsService
+    private readonly seerrConfigRepository: ISeerrConfigRepository,
+    private readonly seerrStatsService: ISeerrStatsService
   ) {}
 
   async execute(command: GetPendingRequestsCommand): Promise<GetPendingRequestsResponse> {
-    // Get Jellyseerr config
-    const config = await this.jellyseerrConfigRepository.findByUserId(command.userId);
+    // Get Seerr config
+    const config = await this.seerrConfigRepository.findByUserId(command.userId);
 
     // If no config, return not configured state
     if (!config) {
       return { count: 0, configured: false, error: false };
     }
 
-    // Call Jellyseerr API
+    // Call Seerr API
     try {
-      const count = await this.jellyseerrStatsService.getPendingRequestsCount({
+      const count = await this.seerrStatsService.getPendingRequestsCount({
         url: config.url.getValue(),
         apiKey: config.apiKey.getValue(),
-        userIdJellyseerr: config.userIdJellyseerr.getValue(),
+        userIdSeerr: config.userIdSeerr.getValue(),
       });
 
       return { count, configured: true, error: false };

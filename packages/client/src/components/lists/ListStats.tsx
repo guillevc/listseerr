@@ -7,11 +7,11 @@ interface MediaList {
 
 interface ListStatsProps {
   lists: MediaList[];
-  jellyseerrConfigured?: boolean;
+  seerrConfigured?: boolean;
 }
 
-export function ListStats({ lists, jellyseerrConfigured = true }: ListStatsProps) {
-  const { total, enabled, disabled } = useListsStats(lists, { jellyseerrConfigured });
+export function ListStats({ lists, seerrConfigured = true }: ListStatsProps) {
+  const { total, enabled, disabled } = useListsStats(lists, { seerrConfigured });
 
   return (
     <div className="flex items-center gap-2 text-sm text-muted">

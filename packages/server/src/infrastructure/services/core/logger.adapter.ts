@@ -20,7 +20,7 @@ const logStream = pino.multistream([
             ignore: 'pid,hostname',
             singleLine: false,
           },
-        }) as NodeJS.WritableStream,
+        }) as unknown as NodeJS.WritableStream,
       }
     : { level: 'info', stream: process.stdout },
   // Capture for in-memory buffer (timestamps stored in UTC)

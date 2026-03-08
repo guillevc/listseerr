@@ -6,10 +6,10 @@ import { DrizzleExecutionHistoryRepository } from '@/server/infrastructure/repos
 import { DrizzleMediaListRepository } from '@/server/infrastructure/repositories/drizzle-media-list.repository';
 import { DrizzleTraktConfigRepository } from '@/server/infrastructure/repositories/drizzle-trakt-config.repository';
 import { DrizzleMdbListConfigRepository } from '@/server/infrastructure/repositories/drizzle-mdblist-config.repository';
-import { DrizzleJellyseerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-jellyseerr-config.repository';
+import { DrizzleSeerrConfigRepository } from '@/server/infrastructure/repositories/drizzle-seerr-config.repository';
 import { MediaFetcherFactory } from '@/server/infrastructure/services/adapters/media-fetcher-factory.adapter';
 import { animeIdCache } from '@/server/infrastructure/services/external/anime-id-cache/client';
-import { JellyseerrHttpClient } from '@/server/infrastructure/services/adapters/jellyseerr-http-client.adapter';
+import { SeerrHttpClient } from '@/server/infrastructure/services/adapters/seerr-http-client.adapter';
 import { HttpMediaAvailabilityChecker } from '@/server/infrastructure/services/adapters/http-media-availability-checker.adapter';
 import { ListProcessingService } from '@/server/infrastructure/services/adapters/list-processing.adapter';
 import { AesEncryptionService } from '@/server/infrastructure/services/core/aes-encryption.adapter';
@@ -50,7 +50,7 @@ export class ProcessingContainer {
   private readonly mediaListRepository: DrizzleMediaListRepository;
   private readonly traktConfigRepository: DrizzleTraktConfigRepository;
   private readonly mdbListConfigRepository: DrizzleMdbListConfigRepository;
-  private readonly jellyseerrConfigRepository: DrizzleJellyseerrConfigRepository;
+  private readonly seerrConfigRepository: DrizzleSeerrConfigRepository;
   private readonly mediaFetcherFactory: MediaFetcherFactory;
   private readonly listProcessingService: ListProcessingService;
   private readonly logger: LoggerService;
@@ -80,7 +80,7 @@ export class ProcessingContainer {
     this.mediaListRepository = new DrizzleMediaListRepository(db);
     this.traktConfigRepository = new DrizzleTraktConfigRepository(db, encryptionService);
     this.mdbListConfigRepository = new DrizzleMdbListConfigRepository(db, encryptionService);
-    this.jellyseerrConfigRepository = new DrizzleJellyseerrConfigRepository(db);
+    this.seerrConfigRepository = new DrizzleSeerrConfigRepository(db);
 
     // Media fetcher factory (creates fetchers on-demand with fresh credentials)
     this.mediaFetcherFactory = new MediaFetcherFactory(
@@ -92,7 +92,7 @@ export class ProcessingContainer {
     // List processing service (shared between ProcessListUseCase and ProcessBatchUseCase)
     this.listProcessingService = new ListProcessingService(
       new HttpMediaAvailabilityChecker(new LoggerService('availability-checker')),
-      new JellyseerrHttpClient(),
+      new SeerrHttpClient(),
       new LoggerService('list-processing')
     );
 
@@ -102,7 +102,7 @@ export class ProcessingContainer {
     this.processListUseCase = new LoggingUseCaseDecorator(
       new ProcessListUseCase(
         this.mediaListRepository,
-        this.jellyseerrConfigRepository,
+        this.seerrConfigRepository,
         this.executionHistoryRepository,
         this.mediaFetcherFactory,
         this.listProcessingService,
@@ -115,7 +115,7 @@ export class ProcessingContainer {
     this.processBatchUseCase = new LoggingUseCaseDecorator(
       new ProcessBatchUseCase(
         this.mediaListRepository,
-        this.jellyseerrConfigRepository,
+        this.seerrConfigRepository,
         this.executionHistoryRepository,
         this.traktConfigRepository,
         this.mdbListConfigRepository,

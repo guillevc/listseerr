@@ -14,9 +14,9 @@ export function useListProcessor() {
   const { toast } = useToast();
   const utils = trpc.useUtils();
 
-  // Get Jellyseerr config
+  // Get Seerr config
   const { data: configData, isLoading: isLoadingConfig } = trpc.config.get.useQuery();
-  const jellyseerrConfig = configData?.config;
+  const seerrConfig = configData?.config;
 
   // Process single list mutation
   const processMutation = trpc.processor.processList.useMutation({
@@ -114,10 +114,10 @@ export function useListProcessor() {
   });
 
   const handleProcess = (id: number, lists: MediaList[]) => {
-    if (!jellyseerrConfig) {
+    if (!seerrConfig) {
       toast({
         title: 'Configuration Required',
-        description: 'Please configure Jellyseerr before processing lists',
+        description: 'Please configure Seerr before processing lists',
         variant: 'destructive',
       });
       return;
@@ -135,10 +135,10 @@ export function useListProcessor() {
   };
 
   const handleProcessAll = (lists: MediaList[]) => {
-    if (!jellyseerrConfig) {
+    if (!seerrConfig) {
       toast({
         title: 'Configuration Required',
-        description: 'Please configure Jellyseerr before processing lists',
+        description: 'Please configure Seerr before processing lists',
         variant: 'destructive',
       });
       return;
@@ -163,7 +163,7 @@ export function useListProcessor() {
     processingLists,
     handleProcess,
     handleProcessAll,
-    jellyseerrConfig,
+    seerrConfig,
     isLoadingConfig,
   };
 }

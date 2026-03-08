@@ -7,14 +7,14 @@ interface ListsHeaderProps {
   onProcessAll: () => void;
   processingLists: Set<number>;
   hasLists: boolean;
-  jellyseerrConfigured: boolean;
+  seerrConfigured: boolean;
 }
 
 export function ListsHeader({
   onProcessAll,
   processingLists,
   hasLists,
-  jellyseerrConfigured,
+  seerrConfigured,
 }: ListsHeaderProps) {
   const isProcessing = useMinLoading(processingLists.size > 0);
 
@@ -31,13 +31,13 @@ export function ListsHeader({
                   variant="outline"
                   onClick={onProcessAll}
                   loading={isProcessing}
-                  disabled={!jellyseerrConfigured}
+                  disabled={!seerrConfigured}
                 >
                   Process All
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Check all lists for new items and request them to Jellyseerr</p>
+                <p>Check all lists for new items and request them to Seerr</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

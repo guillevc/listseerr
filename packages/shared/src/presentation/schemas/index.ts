@@ -6,7 +6,7 @@
 
 export * from './common.schema';
 export * from './provider.schema';
-export * from './jellyseerr.schema';
+export * from './seerr.schema';
 export * from './list.schema';
 export * from './trakt.schema';
 export * from './mdblist.schema';

@@ -30,7 +30,7 @@ const TV_FORMATS = new Set(['TV', 'OVA', 'ONA', 'SPECIAL', 'TV_SHORT']);
 const MOVIE_FORMATS = new Set(['MOVIE']);
 
 /**
- * AniList format values to skip (not requestable in Jellyseerr)
+ * AniList format values to skip (not requestable in Seerr)
  */
 const SKIP_FORMATS = new Set(['MUSIC']);
 

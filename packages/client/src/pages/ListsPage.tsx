@@ -10,7 +10,7 @@ import { useListProcessor } from '../hooks/use-list-processor';
 export function ListsPage() {
   const { data, isLoading: listsLoading } = trpc.lists.getAll.useQuery();
   const lists = data?.lists ?? [];
-  const { processingLists, handleProcess, handleProcessAll, jellyseerrConfig, isLoadingConfig } =
+  const { processingLists, handleProcess, handleProcessAll, seerrConfig, isLoadingConfig } =
     useListProcessor();
 
   if (listsLoading) {
@@ -27,8 +27,8 @@ export function ListsPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Configuration Alert */}
-      {!isLoadingConfig && !jellyseerrConfig && (
-        <Link to="/settings/jellyseerr">
+      {!isLoadingConfig && !seerrConfig && (
+        <Link to="/settings/seerr">
           <Card variant="warning">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -39,8 +39,7 @@ export function ListsPage() {
                 <ChevronRight className="h-5 w-5" />
               </CardTitle>
               <CardDescription>
-                Connect your Jellyseerr instance to start automatically requesting media from your
-                lists.
+                Connect your Seerr instance to start automatically requesting media from your lists.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -52,11 +51,11 @@ export function ListsPage() {
         onProcessAll={() => handleProcessAll(lists)}
         processingLists={processingLists}
         hasLists={lists.length > 0}
-        jellyseerrConfigured={!!jellyseerrConfig}
+        seerrConfigured={!!seerrConfig}
       />
 
       {/* Stats */}
-      {lists.length > 0 && <ListStats lists={lists} jellyseerrConfigured={!!jellyseerrConfig} />}
+      {lists.length > 0 && <ListStats lists={lists} seerrConfigured={!!seerrConfig} />}
 
       {/* Lists Table or Empty State */}
       {lists.length === 0 ? (
@@ -79,7 +78,7 @@ export function ListsPage() {
             lists={lists}
             onProcess={(id) => handleProcess(id, lists)}
             processingLists={processingLists}
-            jellyseerrConfigured={!!jellyseerrConfig}
+            seerrConfigured={!!seerrConfig}
           />
         </div>
       )}

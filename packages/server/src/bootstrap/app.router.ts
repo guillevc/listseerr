@@ -14,7 +14,7 @@ import {
   logsRouter,
   schedulerRouter,
   generalSettingsRouter,
-  jellyseerrConfigRouter,
+  seerrConfigRouter,
   traktConfigRouter,
   mdblistConfigRouter,
   providersRouter,
@@ -24,7 +24,7 @@ import {
 export const appRouter = router({
   auth: authRouter,
   lists: listsRouter,
-  config: jellyseerrConfigRouter,
+  config: seerrConfigRouter,
   traktConfig: traktConfigRouter,
   mdblistConfig: mdblistConfigRouter,
   providers: providersRouter,

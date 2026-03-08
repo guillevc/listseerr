@@ -12,7 +12,7 @@ export * from './auth';
 export * from './dashboard';
 export * from './diagnostics';
 export * from './general-settings';
-export * from './jellyseerr-config';
+export * from './seerr-config';
 export * from './logs';
 export * from './mdblist-config';
 export * from './media-list';
