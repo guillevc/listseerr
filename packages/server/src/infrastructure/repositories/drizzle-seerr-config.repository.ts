@@ -34,6 +34,7 @@ export class DrizzleSeerrConfigRepository implements ISeerrConfigRepository {
           externalUrl: entity.externalUrl?.getValue() ?? null,
           apiKey: entity.apiKey.getValue(),
           userIdSeerr: entity.userIdSeerr.getValue(),
+          tvSeasons: entity.tvSeasons,
           updatedAt: entity.updatedAt,
         })
         .where(eq(seerrConfigs.userId, entity.userId))
@@ -53,6 +54,7 @@ export class DrizzleSeerrConfigRepository implements ISeerrConfigRepository {
           externalUrl: entity.externalUrl?.getValue() ?? null,
           apiKey: entity.apiKey.getValue(),
           userIdSeerr: entity.userIdSeerr.getValue(),
+          tvSeasons: entity.tvSeasons,
         })
         .returning();
 
@@ -91,6 +93,7 @@ export class DrizzleSeerrConfigRepository implements ISeerrConfigRepository {
       externalUrl: row.externalUrl ? SeerrExternalUrlVO.fromPersistence(row.externalUrl) : null,
       apiKey: SeerrApiKeyVO.fromPersistence(row.apiKey),
       userIdSeerr: SeerrUserIdVO.fromPersistence(row.userIdSeerr),
+      tvSeasons: row.tvSeasons ?? 'first',
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date(),
     });

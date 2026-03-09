@@ -2,6 +2,7 @@ import { SeerrUrlVO } from '@/server/domain/value-objects/seerr-url.vo';
 import { SeerrExternalUrlVO } from '@/server/domain/value-objects/seerr-external-url.vo';
 import { SeerrApiKeyVO } from '@/server/domain/value-objects/seerr-api-key.vo';
 import { SeerrUserIdVO } from '@/server/domain/value-objects/seerr-user-id.vo';
+import type { TvSeasonsPrimitive } from 'shared/domain/types';
 /**
  * SeerrConfig Entity - Domain Model with Rich Behavior
  *
@@ -18,6 +19,7 @@ export class SeerrConfig {
   private _externalUrl: SeerrExternalUrlVO | null;
   private _apiKey: SeerrApiKeyVO;
   private _userIdSeerr: SeerrUserIdVO;
+  private _tvSeasons: TvSeasonsPrimitive;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -28,6 +30,7 @@ export class SeerrConfig {
     externalUrl: SeerrExternalUrlVO | null;
     apiKey: SeerrApiKeyVO;
     userIdSeerr: SeerrUserIdVO;
+    tvSeasons: TvSeasonsPrimitive;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -37,6 +40,7 @@ export class SeerrConfig {
     this._externalUrl = params.externalUrl;
     this._apiKey = params.apiKey;
     this._userIdSeerr = params.userIdSeerr;
+    this._tvSeasons = params.tvSeasons;
     this._createdAt = params.createdAt;
     this._updatedAt = params.updatedAt;
   }
@@ -64,6 +68,10 @@ export class SeerrConfig {
 
   get userIdSeerr(): SeerrUserIdVO {
     return this._userIdSeerr;
+  }
+
+  get tvSeasons(): TvSeasonsPrimitive {
+    return this._tvSeasons;
   }
 
   get createdAt(): Date {
@@ -109,6 +117,14 @@ export class SeerrConfig {
    */
   changeExternalUrl(newExternalUrl: string | null): void {
     this._externalUrl = newExternalUrl ? SeerrExternalUrlVO.create(newExternalUrl) : null;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Change the TV seasons request mode
+   */
+  changeTvSeasons(value: TvSeasonsPrimitive): void {
+    this._tvSeasons = value;
     this._updatedAt = new Date();
   }
 

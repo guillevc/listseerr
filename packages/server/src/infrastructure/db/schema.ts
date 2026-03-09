@@ -35,6 +35,9 @@ export const seerrConfigs = sqliteTable('seerr_configs', {
   externalUrl: text('external_url'), // User-facing URL for browser links (optional, falls back to url)
   apiKey: text('api_key').notNull(),
   userIdSeerr: integer('user_id_seerr').notNull(),
+  tvSeasons: text('tv_seasons', { enum: ['first', 'all'] })
+    .notNull()
+    .default('first'),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });

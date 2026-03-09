@@ -11,6 +11,7 @@ import type {
   SeerrExternalUrlPrimitive,
   SeerrApiKeyPrimitive,
   SeerrUserIdPrimitive,
+  TvSeasonsPrimitive,
   SeerrConfigPrimitive,
 } from '../../domain/types/seerr.types';
 import { createHttpUrlSchema, createApiKeySchema, createPositiveIntSchema } from './common.schema';
@@ -45,6 +46,12 @@ export const seerrUserIdSchema: z.ZodType<SeerrUserIdPrimitive> =
   createPositiveIntSchema('User ID');
 
 /**
+ * TV seasons request mode schema.
+ * Controls whether to request only the first season or all seasons for TV shows.
+ */
+export const tvSeasonsSchema: z.ZodType<TvSeasonsPrimitive> = z.enum(['first', 'all']);
+
+/**
  * Combined Seerr config schema for forms.
  * Output type matches SeerrConfigPrimitive.
  */
@@ -53,6 +60,7 @@ export const seerrConfigSchema: z.ZodType<SeerrConfigPrimitive> = z.object({
   externalUrl: seerrExternalUrlSchema,
   apiKey: seerrApiKeySchema,
   userIdSeerr: seerrUserIdSchema,
+  tvSeasons: tvSeasonsSchema,
 });
 
 /**

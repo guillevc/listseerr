@@ -1,0 +1,1 @@
+ALTER TABLE `seerr_configs` ADD `tv_seasons` text DEFAULT 'first' NOT NULL;

@@ -47,6 +47,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       externalUrl: config.externalUrl?.getValue() ?? null,
       apiKey: config.apiKey.getValue(),
       userIdSeerr: config.userIdSeerr.getValue(),
+      tvSeasons: config.tvSeasons,
       createdAt: config.createdAt,
       updatedAt: config.updatedAt,
     };
@@ -115,6 +116,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       externalUrl: string | null;
       apiKey: string;
       userIdSeerr: number;
+      tvSeasons: 'first' | 'all';
       createdAt: Date;
       updatedAt: Date;
     }

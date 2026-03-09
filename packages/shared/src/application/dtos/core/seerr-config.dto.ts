@@ -3,6 +3,7 @@ import type {
   SeerrExternalUrlPrimitive,
   SeerrApiKeyPrimitive,
   SeerrUserIdPrimitive,
+  TvSeasonsPrimitive,
 } from '../../../domain/types/seerr.types';
 
 /**
@@ -23,6 +24,7 @@ export interface SeerrConfigDTO {
   externalUrl?: SeerrExternalUrlPrimitive;
   apiKey: SeerrApiKeyPrimitive;
   userIdSeerr: SeerrUserIdPrimitive;
+  tvSeasons: TvSeasonsPrimitive;
   createdAt: Date;
   updatedAt: Date;
 }

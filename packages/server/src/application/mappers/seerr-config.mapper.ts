@@ -10,6 +10,7 @@ export class SeerrConfigMapper {
       externalUrl: entity.externalUrl?.getValue(),
       apiKey: entity.apiKey.getValue(),
       userIdSeerr: entity.userIdSeerr.getValue(),
+      tvSeasons: entity.tvSeasons,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

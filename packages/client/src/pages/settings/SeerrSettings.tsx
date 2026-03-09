@@ -3,6 +3,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { PasswordInput } from '../../components/ui/password-input';
 import { Label } from '../../components/ui/label';
+import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
 import { Separator } from '../../components/ui/separator';
 import { useToast } from '../../hooks/use-toast';
 import { useMinLoading } from '../../hooks/use-min-loading';
@@ -14,12 +15,14 @@ import {
   showSuccessToast,
 } from '../../lib/toast-helpers';
 import { seerrConfigSchema, seerrTestConnectionSchema } from 'shared/presentation/schemas';
+import type { TvSeasonsPrimitive } from 'shared/domain/types';
 
 export function SeerrSettings() {
   const [url, setUrl] = useState('');
   const [externalUrl, setExternalUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [userId, setUserId] = useState('');
+  const [tvSeasons, setTvSeasons] = useState<TvSeasonsPrimitive>('first');
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -62,6 +65,7 @@ export function SeerrSettings() {
       setExternalUrl(config.externalUrl || '');
       setApiKey(config.apiKey || '');
       setUserId(config.userIdSeerr.toString() || '');
+      setTvSeasons(config.tvSeasons || 'first');
     }
   }, [config]);
 
@@ -81,6 +85,7 @@ export function SeerrSettings() {
       externalUrl: externalUrl || undefined,
       apiKey,
       userIdSeerr: parseInt(userId) || 0,
+      tvSeasons,
     });
     if (!handleValidationResult(toast, result, 'Invalid configuration')) return;
 
@@ -89,6 +94,7 @@ export function SeerrSettings() {
       externalUrl: result.data.externalUrl,
       apiKey: result.data.apiKey,
       userIdSeerr: result.data.userIdSeerr,
+      tvSeasons: result.data.tvSeasons,
     });
   };
 
@@ -149,6 +155,30 @@ export function SeerrSettings() {
             Use a dedicated user without auto-approve so you can review requests first. Skip this if
             you prefer automatic approval.
           </p>
+        </div>
+
+        <div className="grid gap-2">
+          <Label>TV show seasons</Label>
+          <p className="text-xs text-muted">
+            Choose whether to request only the first season or all available seasons for TV shows.
+          </p>
+          <RadioGroup
+            value={tvSeasons}
+            onValueChange={(value) => setTvSeasons(value as TvSeasonsPrimitive)}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="first" id="tvSeasons-first" />
+              <Label htmlFor="tvSeasons-first" className="font-normal">
+                First season only
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all" id="tvSeasons-all" />
+              <Label htmlFor="tvSeasons-all" className="font-normal">
+                All seasons
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <div className="flex gap-2 pt-4">

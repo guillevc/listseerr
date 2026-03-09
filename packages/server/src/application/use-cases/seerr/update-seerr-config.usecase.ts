@@ -34,6 +34,7 @@ export class UpdateSeerrConfigUseCase implements IUseCase<
           : null,
         apiKey: SeerrApiKeyVO.create(command.data.apiKey),
         userIdSeerr: SeerrUserIdVO.create(command.data.userIdSeerr),
+        tvSeasons: command.data.tvSeasons,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -44,6 +45,7 @@ export class UpdateSeerrConfigUseCase implements IUseCase<
       config.changeExternalUrl(command.data.externalUrl ?? null);
       config.changeApiKey(command.data.apiKey);
       config.changeSeerrUserId(command.data.userIdSeerr);
+      config.changeTvSeasons(command.data.tvSeasons);
     }
 
     // 3. Save entity (repository handles insert vs update)
