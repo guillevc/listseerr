@@ -137,6 +137,7 @@ export function SeerrSettings() {
           <PasswordInput
             id="apiKey"
             placeholder="Your API key"
+            autoComplete="off"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
