@@ -30,11 +30,18 @@ interface Props {
   onProcess: (id: number) => void;
   processingLists: Set<number>;
   seerrConfigured?: boolean;
+  globalSeerrUserId?: number | null;
 }
 
 const columnHelper = createColumnHelper<MediaList>();
 
-export function ListsTable({ lists, onProcess, processingLists, seerrConfigured = true }: Props) {
+export function ListsTable({
+  lists,
+  onProcess,
+  processingLists,
+  seerrConfigured = true,
+  globalSeerrUserId,
+}: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingList, setEditingList] = useState<MediaList | null>(null);
   const [mutatingListId, setMutatingListId] = useState<number | null>(null);
@@ -109,6 +116,22 @@ export function ListsTable({ lists, onProcess, processingLists, seerrConfigured 
         },
         enableSorting: false,
       }),
+      columnHelper.accessor('seerrUserIdOverride', {
+        id: 'seerrUserId',
+        header: 'User ID',
+        cell: (info) => {
+          const override = info.getValue();
+          if (override) {
+            return <span className="text-sm">{override}</span>;
+          }
+          return (
+            <span className="text-sm">
+              {globalSeerrUserId ?? '—'} <span className="text-muted">(global)</span>
+            </span>
+          );
+        },
+        enableSorting: false,
+      }),
       columnHelper.accessor('lastProcessed', {
         header: 'Last processed',
         cell: (info) => <LastProcessedCell lastProcessed={info.getValue()} />,
@@ -173,6 +196,7 @@ export function ListsTable({ lists, onProcess, processingLists, seerrConfigured 
       isProviderConfigured,
       mutatingListId,
       seerrConfigured,
+      globalSeerrUserId,
     ]
   );
 

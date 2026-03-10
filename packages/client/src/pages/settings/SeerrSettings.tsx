@@ -144,7 +144,7 @@ export function SeerrSettings() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="userId">User ID</Label>
+          <Label htmlFor="userId">Default User ID</Label>
           <Input
             id="userId"
             type="number"
@@ -153,8 +153,8 @@ export function SeerrSettings() {
             onChange={(e) => setUserId(e.target.value)}
           />
           <p className="text-xs text-muted">
-            Use a dedicated user without auto-approve so you can review requests first. Skip this if
-            you prefer automatic approval.
+            Seerr user ID used for all requests. Tip: use a user without auto-approve to review
+            requests first. Can be overridden per list in list settings.
           </p>
         </div>
 

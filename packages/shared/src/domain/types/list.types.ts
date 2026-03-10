@@ -6,6 +6,7 @@
  */
 
 import type { ProviderType } from './provider.types';
+import type { SeerrUserIdPrimitive } from './seerr.types';
 
 export type ListNamePrimitive = string;
 export type ListUrlPrimitive = string;
@@ -18,6 +19,7 @@ export interface CreateListPrimitive {
   provider: ProviderType;
   enabled: boolean;
   maxItems: MaxItemsPrimitive;
+  seerrUserIdOverride?: SeerrUserIdPrimitive | null;
 }
 
 export type UpdateListPrimitive = Partial<CreateListPrimitive>;

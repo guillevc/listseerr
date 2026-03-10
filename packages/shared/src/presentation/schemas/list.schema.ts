@@ -16,6 +16,7 @@ import type {
 import { ProviderValues, type ProviderType } from '../../domain/types/provider.types';
 import { matchesProviderUrl, getProviderDisplayName } from '../../domain/logic/provider.logic';
 import { providerSchema } from './provider.schema';
+import { seerrUserIdSchema } from './seerr.schema';
 import { createNonEmptyStringSchema, createBoundedIntSchema } from './common.schema';
 
 /**
@@ -90,6 +91,7 @@ export const createListSchema = z
     provider: providerSchema.default('trakt'),
     enabled: z.boolean().default(true),
     maxItems: maxItemsSchema,
+    seerrUserIdOverride: seerrUserIdSchema.nullable().optional(),
   })
   .superRefine((data, ctx) => {
     validateUrlProviderMatch(data.url, data.provider, ctx);
@@ -113,6 +115,7 @@ export const updateListSchema = z
     provider: providerSchema.optional(),
     enabled: z.boolean().optional(),
     maxItems: maxItemsSchema.optional(),
+    seerrUserIdOverride: seerrUserIdSchema.nullable().optional(),
   })
   .superRefine((data, ctx) => {
     // Only validate URL-provider match when both are provided

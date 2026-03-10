@@ -55,6 +55,7 @@ export function AddListDialog() {
     TraktChartTypeValues.TRENDING
   );
   // AniList-specific state
+  const [seerrUserIdOverride, setSeerrUserIdOverride] = useState('');
   const [anilistUsername, setAnilistUsername] = useState('');
   const [anilistUsernameError, setAnilistUsernameError] = useState<string | null>(null);
   const [anilistStatus, setAnilistStatus] = useState<AnilistStatus>(AnilistStatusValues.PLANNING);
@@ -98,6 +99,7 @@ export function AddListDialog() {
       setName('');
       setUrl('');
       setMaxItems('20');
+      setSeerrUserIdOverride('');
       setUrlError(null);
       setUserEditedName(false);
       setAnilistUsername('');
@@ -182,6 +184,7 @@ export function AddListDialog() {
       setName('');
       setUrl('');
       setMaxItems('20');
+      setSeerrUserIdOverride('');
       setUrlError(null);
       setUserEditedName(false);
       setSelectedMediaType(TraktMediaTypeValues.MOVIES);
@@ -226,6 +229,7 @@ export function AddListDialog() {
     setName('');
     setUrl('');
     setMaxItems('20');
+    setSeerrUserIdOverride('');
     setUrlError(null);
     setUserEditedName(false);
     setSelectedMediaType(TraktMediaTypeValues.MOVIES);
@@ -295,6 +299,7 @@ export function AddListDialog() {
       provider: provider,
       enabled: isConfigured,
       maxItems: maxItemsResult.data, // Use validated maxItems
+      ...(seerrUserIdOverride ? { seerrUserIdOverride: parseInt(seerrUserIdOverride) } : {}),
     });
 
     // Show info message if provider not configured
@@ -371,6 +376,8 @@ export function AddListDialog() {
             anilistUsernameError={anilistUsernameError}
             anilistStatus={anilistStatus}
             onAnilistStatusChange={setAnilistStatus}
+            seerrUserIdOverride={seerrUserIdOverride}
+            onSeerrUserIdOverrideChange={setSeerrUserIdOverride}
             onBack={goToStep1}
             onSubmit={handleAdd}
             isLoading={isCreating}

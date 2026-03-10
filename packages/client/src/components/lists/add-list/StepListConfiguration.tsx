@@ -39,6 +39,8 @@ interface StepListConfigurationProps {
   anilistUsernameError: string | null;
   anilistStatus: AnilistStatus;
   onAnilistStatusChange: (status: AnilistStatus) => void;
+  seerrUserIdOverride: string;
+  onSeerrUserIdOverrideChange: (value: string) => void;
   onBack: () => void;
   onSubmit: () => void;
   isLoading: boolean;
@@ -62,6 +64,8 @@ export function StepListConfiguration({
   anilistUsernameError,
   anilistStatus,
   onAnilistStatusChange,
+  seerrUserIdOverride,
+  onSeerrUserIdOverrideChange,
   onBack,
   onSubmit,
   isLoading,
@@ -228,6 +232,21 @@ export function StepListConfiguration({
               disabled={isLoading}
             />
             <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
+          </div>
+
+          {/* Seerr User ID Override */}
+          <div className="grid gap-2">
+            <Label htmlFor="seerrUserIdOverride">Seerr User ID Override</Label>
+            <Input
+              id="seerrUserIdOverride"
+              type="number"
+              placeholder="Leave empty to use global setting"
+              value={seerrUserIdOverride}
+              onChange={(e) => onSeerrUserIdOverrideChange(e.target.value)}
+              min="1"
+              disabled={isLoading}
+            />
+            <p className="text-xs text-muted">Override the global Seerr user ID for this list</p>
           </div>
 
           {/* URL format info for Trakt List and MDBList */}

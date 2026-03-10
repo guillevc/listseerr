@@ -4,8 +4,6 @@ import type { ILogger } from '@/server/application/services/core/logger.interfac
 import { MediaList } from '@/server/domain/entities/media-list.entity';
 import { MediaListMapper } from '@/server/application/mappers/media-list.mapper';
 import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
-import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
-import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import type { CreateMediaListCommand } from 'shared/application/dtos';
 import type { CreateMediaListResponse } from 'shared/application/dtos';
 import type { IUseCase } from '@/server/application/use-cases/use-case.interface';
@@ -36,17 +34,15 @@ export class CreateMediaListUseCase implements IUseCase<
     );
 
     // 3. Create entity (with temporary ID 0, DB will assign real ID)
-    const list = new MediaList({
-      id: 0,
+    const list = MediaList.create({
       userId: command.userId,
-      name: ListNameVO.create(command.name),
-      url: ListUrlVO.create(apiUrl),
+      name: command.name,
+      url: apiUrl,
       displayUrl,
-      provider,
+      provider: command.provider,
       enabled: command.enabled,
       maxItems: command.maxItems,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      seerrUserIdOverride: command.seerrUserIdOverride,
     });
 
     // 4. Save entity to repository

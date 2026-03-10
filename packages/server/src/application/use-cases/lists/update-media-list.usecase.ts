@@ -76,6 +76,11 @@ export class UpdateMediaListUseCase implements IUseCase<
       list.changeMaxItems(command.data.maxItems);
     }
 
+    // Handle seerr user ID override change
+    if (command.data.seerrUserIdOverride !== undefined) {
+      list.changeSeerrUserIdOverride(command.data.seerrUserIdOverride);
+    }
+
     // 3. Save entity
     const updatedList = await this.mediaListRepository.save(list);
 

@@ -14,6 +14,7 @@ export interface MediaListWithLastProcessed {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
+  seerrUserIdOverride: number | null;
   createdAt: Date;
   updatedAt: Date;
   lastProcessed: Date | null;

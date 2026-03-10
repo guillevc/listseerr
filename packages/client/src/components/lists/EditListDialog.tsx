@@ -35,6 +35,9 @@ interface EditListDialogProps {
 export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps) {
   const [name, setName] = useState(list.name);
   const [maxItems, setMaxItems] = useState(list.maxItems?.toString() || '20');
+  const [seerrUserIdOverride, setSeerrUserIdOverride] = useState(
+    list.seerrUserIdOverride?.toString() || ''
+  );
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -71,6 +74,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       // Reset form when opening
       setName(list.name);
       setMaxItems(list.maxItems?.toString() || '20');
+      setSeerrUserIdOverride(list.seerrUserIdOverride?.toString() || '');
       setSelectedMediaType(parsedChartInfo.mediaType);
       setSelectedChartType(parsedChartInfo.chartType);
     }
@@ -128,6 +132,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       data: {
         name: nameResult.data, // Use validated & trimmed name
         maxItems: maxItemsResult.data, // Use validated maxItems
+        seerrUserIdOverride: seerrUserIdOverride ? parseInt(seerrUserIdOverride) : null,
       },
     });
   };
@@ -235,6 +240,20 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 required
               />
               <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
+            </div>
+
+            {/* Seerr User ID Override */}
+            <div className="grid gap-2">
+              <Label htmlFor="edit-seerrUserIdOverride">Seerr User ID Override</Label>
+              <Input
+                id="edit-seerrUserIdOverride"
+                type="number"
+                placeholder="Leave empty to use global setting"
+                value={seerrUserIdOverride}
+                onChange={(e) => setSeerrUserIdOverride(e.target.value)}
+                min="1"
+              />
+              <p className="text-xs text-muted">Override the global Seerr user ID for this list</p>
             </div>
           </div>
         </div>

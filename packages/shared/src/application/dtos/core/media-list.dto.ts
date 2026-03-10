@@ -21,6 +21,7 @@ export interface MediaListDTO {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number;
+  seerrUserIdOverride: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,5 +58,6 @@ export interface SerializedMediaList {
   provider: ProviderType;
   enabled: boolean;
   maxItems: number | null;
+  seerrUserIdOverride: number | null;
   lastProcessed: string | null;
 }

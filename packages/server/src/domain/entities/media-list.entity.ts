@@ -1,6 +1,7 @@
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import { ProviderVO } from '@/server/domain/value-objects/provider.vo';
+import { SeerrUserIdVO } from '@/server/domain/value-objects/seerr-user-id.vo';
 import { InvalidMaxItemsError } from 'shared/domain/errors';
 import type { ProviderType } from 'shared/domain/types';
 
@@ -26,6 +27,7 @@ export class MediaList {
   private _provider: ProviderVO;
   private _enabled: boolean;
   private _maxItems: number;
+  private _seerrUserIdOverride: SeerrUserIdVO | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -38,6 +40,7 @@ export class MediaList {
     provider: ProviderVO;
     enabled: boolean;
     maxItems: number;
+    seerrUserIdOverride: SeerrUserIdVO | null;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -49,6 +52,7 @@ export class MediaList {
     this._provider = params.provider;
     this._enabled = params.enabled;
     this._maxItems = params.maxItems;
+    this._seerrUserIdOverride = params.seerrUserIdOverride;
     this._createdAt = params.createdAt;
     this._updatedAt = params.updatedAt;
   }
@@ -65,6 +69,7 @@ export class MediaList {
     provider: ProviderType;
     enabled: boolean;
     maxItems: number;
+    seerrUserIdOverride?: number | null;
   }): MediaList {
     const now = new Date();
     return new MediaList({
@@ -76,6 +81,9 @@ export class MediaList {
       provider: ProviderVO.create(props.provider),
       enabled: props.enabled,
       maxItems: props.maxItems,
+      seerrUserIdOverride: props.seerrUserIdOverride
+        ? SeerrUserIdVO.create(props.seerrUserIdOverride)
+        : null,
       createdAt: now,
       updatedAt: now,
     });
@@ -112,6 +120,10 @@ export class MediaList {
 
   get maxItems(): number {
     return this._maxItems;
+  }
+
+  get seerrUserIdOverride(): SeerrUserIdVO | null {
+    return this._seerrUserIdOverride;
   }
 
   get createdAt(): Date {
@@ -192,6 +204,15 @@ export class MediaList {
       throw new InvalidMaxItemsError(newMaxItems);
     }
     this._maxItems = newMaxItems;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Change the Seerr user ID override
+   * Pass null to clear the override and use the global setting
+   */
+  changeSeerrUserIdOverride(newUserId: number | null): void {
+    this._seerrUserIdOverride = newUserId ? SeerrUserIdVO.create(newUserId) : null;
     this._updatedAt = new Date();
   }
 

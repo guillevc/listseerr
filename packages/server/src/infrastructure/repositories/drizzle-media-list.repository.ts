@@ -10,6 +10,7 @@ import type {
 import { ListNameVO } from '@/server/domain/value-objects/list-name.vo';
 import { ListUrlVO } from '@/server/domain/value-objects/list-url.vo';
 import { ProviderVO, type ProviderType } from '@/server/domain/value-objects/provider.vo';
+import { SeerrUserIdVO } from '@/server/domain/value-objects/seerr-user-id.vo';
 
 export class DrizzleMediaListRepository implements IMediaListRepository {
   constructor(private readonly db: BunSQLiteDatabase<typeof schema>) {}
@@ -85,6 +86,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
           provider: entity.provider.getValue(),
           enabled: entity.enabled,
           maxItems: entity.maxItems,
+          seerrUserIdOverride: entity.seerrUserIdOverride?.getValue() ?? null,
           updatedAt: entity.updatedAt,
         })
         .where(eq(mediaLists.id, entity.id))
@@ -106,6 +108,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
           provider: entity.provider.getValue(),
           enabled: entity.enabled,
           maxItems: entity.maxItems,
+          seerrUserIdOverride: entity.seerrUserIdOverride?.getValue() ?? null,
         })
         .returning();
 
@@ -156,6 +159,9 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       provider: ProviderVO.fromPersistence(params.provider),
       enabled: params.enabled,
       maxItems: params.maxItems,
+      seerrUserIdOverride: params.seerrUserIdOverride
+        ? SeerrUserIdVO.fromPersistence(params.seerrUserIdOverride)
+        : null,
       createdAt: params.createdAt,
       updatedAt: params.updatedAt,
     });
@@ -174,6 +180,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
     provider: ProviderType;
     enabled: boolean;
     maxItems: number;
+    seerrUserIdOverride: number | null;
     createdAt: Date;
     updatedAt: Date;
   } {
@@ -186,6 +193,7 @@ export class DrizzleMediaListRepository implements IMediaListRepository {
       provider: row.provider,
       enabled: row.enabled,
       maxItems: row.maxItems,
+      seerrUserIdOverride: row.seerrUserIdOverride ?? null,
       createdAt: row.createdAt || new Date(), // Fallback to current date if null
       updatedAt: row.updatedAt || new Date(), // Fallback to current date if null
     };

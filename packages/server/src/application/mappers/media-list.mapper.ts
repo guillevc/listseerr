@@ -12,6 +12,7 @@ export class MediaListMapper {
       provider: entity.provider.getValue(),
       enabled: entity.enabled,
       maxItems: entity.maxItems,
+      seerrUserIdOverride: entity.seerrUserIdOverride?.getValue() ?? null,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

@@ -1,0 +1,1 @@
+ALTER TABLE `media_lists` ADD `seerr_user_id_override` integer;

@@ -64,6 +64,9 @@ export class ProcessListUseCase implements IUseCase<ProcessListCommand, ProcessL
     try {
       // 4. Load configs
       const seerrConfig = await this.loadSeerrConfig(command.userId);
+      if (list.seerrUserIdOverride) {
+        seerrConfig.changeSeerrUserId(list.seerrUserIdOverride.getValue());
+      }
       this.logger.debug(
         { provider: list.provider.getValue(), url: list.url.getValue() },
         'Fetching items from provider'

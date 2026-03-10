@@ -79,6 +79,7 @@ export function ListsPage() {
             onProcess={(id) => handleProcess(id, lists)}
             processingLists={processingLists}
             seerrConfigured={!!seerrConfig}
+            globalSeerrUserId={seerrConfig?.userIdSeerr ?? null}
           />
         </div>
       )}

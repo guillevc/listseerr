@@ -96,6 +96,7 @@ export const mediaLists = sqliteTable(
     }).notNull(),
     enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
     maxItems: integer('max_items').notNull().default(50),
+    seerrUserIdOverride: integer('seerr_user_id_override'),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   },
