@@ -109,7 +109,9 @@ export function SeerrSettings() {
 
       <div className="space-y-4">
         <div className="grid gap-2">
-          <Label htmlFor="url">Internal URL</Label>
+          <Label htmlFor="url">
+            Internal URL <span className="text-re">*</span>
+          </Label>
           <Input
             id="url"
             placeholder="https://seerr.example.com"
@@ -133,7 +135,9 @@ export function SeerrSettings() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="apiKey">API Key</Label>
+          <Label htmlFor="apiKey">
+            API Key <span className="text-re">*</span>
+          </Label>
           <PasswordInput
             id="apiKey"
             placeholder="Your API key"
@@ -144,7 +148,9 @@ export function SeerrSettings() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="userId">Default User ID</Label>
+          <Label htmlFor="userId">
+            Default User ID <span className="text-re">*</span>
+          </Label>
           <Input
             id="userId"
             type="number"

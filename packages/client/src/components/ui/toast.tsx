@@ -31,6 +31,7 @@ const toastVariants = tv({
       default: 'bg-background text-foreground',
       destructive:
         'border-destructive-border bg-destructive-background text-destructive-foreground',
+      success: 'border-success-border bg-success-background text-success-foreground',
     },
   },
   defaultVariants: {

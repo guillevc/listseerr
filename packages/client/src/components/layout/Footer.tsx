@@ -16,7 +16,7 @@ export function Footer() {
             href="https://github.com/guillevc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary hover:text-primary hover:underline"
+            className="text-primary transition-colors duration-200 hover:text-primary hover:underline"
           >
             guillevc
           </a>
@@ -28,19 +28,19 @@ export function Footer() {
             href="https://ko-fi.com/guillevc"
             target="_blank"
             rel="noopener noreferrer"
-            className="group text-primary hover:text-[#FF5E5B]"
+            className="group text-primary transition-colors duration-200 hover:text-[#FF5E5B]"
           >
             <KofiIcon className="-mt-px inline h-4 w-4" />{' '}
             <span className="group-hover:underline">Ko-fi</span>
           </a>
         </span>
       </div>
-      <p className="mt-2 font-mono text-sm text-muted/70">
+      <p className="mt-2 font-mono text-sm text-muted">
         <a
           href={`https://github.com/guillevc/listseerr/releases/tag/v${__APP_VERSION__}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-muted hover:underline"
+          className="transition-colors duration-200 hover:text-foreground hover:underline"
         >
           v{__APP_VERSION__}
         </a>{' '}
@@ -48,7 +48,7 @@ export function Footer() {
           href={`https://github.com/guillevc/listseerr/commit/${__COMMIT_HASH__}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-muted hover:underline"
+          className="transition-colors duration-200 hover:text-foreground hover:underline"
         >
           [{__COMMIT_HASH__.slice(0, 7)}]
         </a>

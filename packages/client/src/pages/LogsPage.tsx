@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useMemo, type JSX } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, type JSX } from 'react';
 import { trpc, type RouterOutputs } from '../lib/trpc';
 import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
 import { Switch } from '../components/ui/switch';
 import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
@@ -20,19 +21,34 @@ import { useToast } from '../hooks/use-toast';
 
 type LogEntry = RouterOutputs['logs']['getLogs']['logs'][0];
 
+const LOG_LEVELS = ['debug', 'info', 'warn', 'error', 'fatal'] as const;
+
 const levelColors: Record<string, string> = {
-  debug: 'text-blue-400',
-  info: 'text-green-400',
-  warn: 'text-yellow-400',
-  error: 'text-red-400',
-  fatal: 'text-purple-400',
+  debug: 'text-bl',
+  info: 'text-gr',
+  warn: 'text-ye',
+  error: 'text-re',
+  fatal: 'text-pu',
 };
 
 export function LogsPage() {
   const [autoScroll, setAutoScroll] = useState(true);
+  const [hiddenLevels, setHiddenLevels] = useState<Set<string>>(new Set());
   const logsEndRef = useRef<HTMLDivElement>(null);
   const logsContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const toggleLevel = useCallback((level: string) => {
+    setHiddenLevels((prev) => {
+      const next = new Set(prev);
+      if (next.has(level)) {
+        next.delete(level);
+      } else {
+        next.add(level);
+      }
+      return next;
+    });
+  }, []);
 
   const { data, refetch } = trpc.logs.getLogs.useQuery(
     { limit: 1000, level: 'info' },
@@ -44,6 +60,13 @@ export function LogsPage() {
   const logs = useMemo(() => data?.logs ?? [], [data?.logs]);
   // Memoize reversed logs to avoid recreating array on each render
   const reversedLogs = useMemo(() => [...logs].reverse(), [logs]);
+  const filteredLogs = useMemo(
+    () =>
+      hiddenLevels.size === 0
+        ? reversedLogs
+        : reversedLogs.filter((log) => !hiddenLevels.has(log.level)),
+    [reversedLogs, hiddenLevels]
+  );
 
   const clearLogsMutation = trpc.logs.clearLogs.useMutation({
     onSuccess: () => {
@@ -176,7 +199,7 @@ export function LogsPage() {
         <div>
           <span className="text-muted">[{timestamp}]</span>{' '}
           <span className={`font-semibold ${levelColor}`}>{log.level.toUpperCase()}</span>
-          {log.module && <span className="text-cyan-400"> ({log.module})</span>}
+          {log.module && <span className="text-cy"> ({log.module})</span>}
           <span className="text-muted">:</span> <span className="text-foreground">{log.msg}</span>
         </div>
         {log.data && Object.keys(log.data).length > 0 && <div>{formatData(log.data)}</div>}
@@ -186,7 +209,7 @@ export function LogsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold">Server Logs</h1>
         <p className="mt-1 text-muted">Live updates every 2 seconds</p>
       </div>
@@ -194,12 +217,29 @@ export function LogsPage() {
       <Card className="border-light-ui bg-background dark:border-dark-ui">
         <CardContent className="p-0">
           {/* Controls Bar */}
-          <div className="flex items-center justify-between border-b border-light-ui px-4 py-3 dark:border-dark-ui">
-            <div className="flex items-center gap-2">
-              <Switch id="auto-scroll" checked={autoScroll} onCheckedChange={setAutoScroll} />
-              <Label htmlFor="auto-scroll" className="cursor-pointer text-sm text-muted">
-                Auto-scroll
-              </Label>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-light-ui px-4 py-3 dark:border-dark-ui">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Switch id="auto-scroll" checked={autoScroll} onCheckedChange={setAutoScroll} />
+                <Label htmlFor="auto-scroll" className="cursor-pointer text-sm text-muted">
+                  Auto-scroll
+                </Label>
+              </div>
+              <div className="flex items-center gap-1">
+                {LOG_LEVELS.map((level) => (
+                  <Badge
+                    key={level}
+                    variant={hiddenLevels.has(level) ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={hiddenLevels.has(level) ? 'cursor-pointer opacity-50' : ''}
+                    onClick={() => toggleLevel(level)}
+                  >
+                    <span className={hiddenLevels.has(level) ? '' : levelColors[level]}>
+                      {level.toUpperCase()}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -229,16 +269,13 @@ export function LogsPage() {
           <div
             ref={logsContainerRef}
             className="h-[calc(100vh-300px)] overflow-y-auto p-4 font-mono text-xs whitespace-pre md:h-[calc(100vh-400px)]"
-            style={{
-              fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace',
-            }}
           >
-            {reversedLogs.length === 0 ? (
+            {filteredLogs.length === 0 ? (
               <div className="text-muted">No logs available</div>
             ) : (
               <div>
                 {/* Logs are reversed so newest is at the bottom (like terminal) */}
-                {reversedLogs.map((log, index) => renderLogEntry(log, index))}
+                {filteredLogs.map((log, index) => renderLogEntry(log, index))}
                 <div ref={logsEndRef} />
               </div>
             )}

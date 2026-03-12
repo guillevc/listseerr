@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { HelpCircle, RefreshCw } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/components/ui/card';
 import { Input } from '@/client/components/ui/input';
 import { PasswordInput } from '@/client/components/ui/password-input';
@@ -99,7 +99,9 @@ export function LoginPage() {
               )}
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">
+                  Username <span className="text-re">*</span>
+                </Label>
                 <Input
                   id="username"
                   type="text"
@@ -112,7 +114,9 @@ export function LoginPage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">
+                  Password <span className="text-re">*</span>
+                </Label>
                 <PasswordInput
                   id="password"
                   value={password}
@@ -166,14 +170,7 @@ export function LoginPage() {
               </div>
 
               <Button type="submit" className="mt-2 w-full" loading={loginMutation.isPending}>
-                {loginMutation.isPending ? (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                    Signing In...
-                  </>
-                ) : (
-                  'Sign In'
-                )}
+                Sign In
               </Button>
             </form>
           </CardContent>

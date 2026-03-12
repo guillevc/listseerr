@@ -106,6 +106,7 @@ export function ListsTable({
           return <UrlCell url={info.getValue()} displayUrl={list.displayUrl} />;
         },
         enableSorting: false,
+        meta: { className: 'hidden md:table-cell' },
       }),
       columnHelper.accessor('maxItems', {
         id: 'maxItems',
@@ -115,6 +116,7 @@ export function ListsTable({
           return <span className="text-sm">{maxItems ?? '—'}</span>;
         },
         enableSorting: false,
+        meta: { className: 'hidden md:table-cell' },
       }),
       columnHelper.accessor('seerrUserIdOverride', {
         id: 'seerrUserId',
@@ -131,6 +133,7 @@ export function ListsTable({
           );
         },
         enableSorting: false,
+        meta: { className: 'hidden md:table-cell' },
       }),
       columnHelper.accessor('lastProcessed', {
         header: 'Last processed',
@@ -219,33 +222,38 @@ export function ListsTable({
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? 'flex cursor-pointer items-center gap-2 select-none hover:text-foreground'
-                              : ''
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanSort() && (
-                            <span className="text-muted">
-                              {header.column.getIsSorted() === 'asc' ? (
-                                <ArrowUp className="h-4 w-4" />
-                              ) : header.column.getIsSorted() === 'desc' ? (
-                                <ArrowDown className="h-4 w-4" />
-                              ) : (
-                                <ArrowUpDown className="h-4 w-4" />
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </TableHead>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const metaClassName =
+                      (header.column.columnDef.meta as { className?: string } | undefined)
+                        ?.className ?? '';
+                    return (
+                      <TableHead key={header.id} className={metaClassName}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? 'flex cursor-pointer items-center gap-2 select-none hover:text-foreground'
+                                : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getCanSort() && (
+                              <span className="text-muted">
+                                {header.column.getIsSorted() === 'asc' ? (
+                                  <ArrowUp className="h-4 w-4" />
+                                ) : header.column.getIsSorted() === 'desc' ? (
+                                  <ArrowDown className="h-4 w-4" />
+                                ) : (
+                                  <ArrowUpDown className="h-4 w-4" />
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
               ))}
             </TableHeader>
@@ -259,11 +267,16 @@ export function ListsTable({
                       : ''
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const metaClassName =
+                      (cell.column.columnDef.meta as { className?: string } | undefined)
+                        ?.className ?? '';
+                    return (
+                      <TableCell key={cell.id} className={metaClassName}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))}
             </TableBody>

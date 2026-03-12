@@ -1,10 +1,13 @@
+import { Link } from '@tanstack/react-router';
 import { Activity, AlertCircle, Calendar, CheckCircle, Clock, Inbox, XCircle } from 'lucide-react';
 import { getProviderDisplayName, isScheduled } from 'shared/domain/logic';
 import type { ProviderType } from 'shared/domain/types';
 import { trpc } from '../../lib/trpc';
 import { getRelativeTime } from '../../lib/utils';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import {
   Tooltip,
@@ -57,25 +60,25 @@ function ProcessingBar({
         <TooltipTrigger asChild>
           <div className="flex h-6 w-full cursor-help overflow-hidden rounded-md bg-card">
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-gr-2 text-xs font-medium text-foreground"
+              className="flex h-full min-w-6 items-center justify-center rounded-l-md bg-gr-2 text-xs font-medium text-foreground transition-all duration-300"
               style={{ width: `${requestedPercent}%` }}
             >
               <span>{requested}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-bl-2 text-xs font-medium text-foreground"
+              className="flex h-full min-w-6 items-center justify-center bg-bl-2 text-xs font-medium text-foreground transition-all duration-300"
               style={{ width: `${skippedPreviouslyRequestedPercent}%` }}
             >
               <span>{skippedPreviouslyRequested}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-pu-2 text-xs font-medium text-foreground"
+              className="flex h-full min-w-6 items-center justify-center bg-pu-2 text-xs font-medium text-foreground transition-all duration-300"
               style={{ width: `${skippedAvailablePercent}%` }}
             >
               <span>{skippedAvailable}</span>
             </div>
             <div
-              className="flex h-full min-w-6 items-center justify-center bg-re-2 text-xs font-medium text-foreground"
+              className="flex h-full min-w-6 items-center justify-center rounded-r-md bg-re-2 text-xs font-medium text-foreground transition-all duration-300"
               style={{ width: `${failedPercent}%` }}
             >
               <span>{failed}</span>
@@ -135,9 +138,21 @@ export function RecentActivity() {
           <CardDescription>Last 24 hours</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="py-8 text-center text-muted">
-            <Clock className="mx-auto mb-2 h-8 w-8 animate-spin" />
-            <p>Loading activity...</p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="rounded-lg border">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 border-b p-4 last:border-b-0">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="hidden h-5 w-16 rounded-full md:block" />
+                  <Skeleton className="ml-auto h-4 w-8" />
+                  <Skeleton className="h-6 w-1/4" />
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -157,10 +172,15 @@ export function RecentActivity() {
         <CardContent className="py-12">
           <div className="flex flex-col items-center text-center">
             <div className="mb-4 rounded-full bg-muted/10 p-4">
-              <Inbox className="h-8 w-8 text-muted" />
+              <Inbox className="h-10 w-10 text-muted" />
             </div>
             <h3 className="mb-2 text-lg font-medium text-foreground">No recent activity</h3>
-            <p className="max-w-sm text-sm text-muted">Activity will appear here</p>
+            <p className="mb-4 max-w-sm text-sm text-muted">
+              Process your lists to see activity here.
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/lists">Go to Lists</Link>
+            </Button>
           </div>
         </CardContent>
       </Card>

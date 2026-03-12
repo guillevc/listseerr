@@ -33,6 +33,7 @@ export function showSuccessToast(toast: ToastFn, title: string, description: str
   toast({
     title,
     description,
+    variant: 'success',
   });
 }
 

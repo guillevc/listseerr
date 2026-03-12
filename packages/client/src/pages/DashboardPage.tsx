@@ -1,21 +1,31 @@
-import { RefreshCw } from 'lucide-react';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
+import { Skeleton } from '../components/ui/skeleton';
 import { trpc } from '../lib/trpc';
+
+function DashboardSkeleton() {
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <Skeleton className="h-9 w-48" />
+        <Skeleton className="mt-2 h-5 w-72" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Skeleton className="h-[120px] rounded-lg" />
+        <Skeleton className="h-[120px] rounded-lg" />
+        <Skeleton className="h-[120px] rounded-lg md:col-span-2" />
+      </div>
+      <Skeleton className="h-[300px] rounded-lg" />
+    </div>
+  );
+}
 
 export function DashboardPage() {
   const { data, isLoading } = trpc.lists.getAll.useQuery();
   const lists = data?.lists ?? [];
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="text-center">
-          <RefreshCw className="mx-auto mb-4 h-8 w-8 animate-spin" />
-          <p className="text-muted">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

@@ -64,9 +64,9 @@ export function SettingsSidebar({ activeCategory = 'general' }: SettingsSidebarP
               key={category.id}
               to={category.path}
               className={cn(
-                'flex w-full items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-left text-sm font-medium transition-colors',
+                'flex w-full items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-left text-sm font-medium transition-colors duration-150',
                 isActive
-                  ? 'border-input bg-background/70 text-foreground dark:bg-background/50'
+                  ? 'border-input bg-card text-foreground'
                   : 'text-muted hover:bg-card/50 hover:text-foreground'
               )}
             >

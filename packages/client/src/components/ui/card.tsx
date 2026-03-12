@@ -18,7 +18,7 @@ function useCardContext(): CardContextValue {
 }
 
 const cardVariants = tv({
-  base: 'rounded-lg border text-foreground',
+  base: 'rounded-lg border text-foreground transition-colors duration-200',
   variants: {
     variant: {
       default: 'border-border bg-card',

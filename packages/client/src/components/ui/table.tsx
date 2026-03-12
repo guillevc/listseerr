@@ -41,7 +41,10 @@ function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
 function TableRow({ className, ...props }: ComponentProps<'tr'>) {
   return (
     <tr
-      className={cn('group border-b transition-colors [&:hover>td]:bg-card', className)}
+      className={cn(
+        'group border-b transition-colors duration-150 [&:hover>td]:bg-card',
+        className
+      )}
       {...props}
     />
   );

@@ -44,7 +44,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Lists */}
       <Link to="/lists" className="lg:col-span-1">
-        <Card className="h-full transition-colors hover:border-border-hover">
+        <Card className="h-full cursor-pointer hover:border-border-hover">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Lists</CardTitle>
             <div className="flex items-center gap-1">
@@ -75,7 +75,7 @@ export function DashboardStats({ lists }: DashboardStatsProps) {
 
       {/* Automatic Processing - Merged Card */}
       <Link to="/settings/automatic-processing" className="md:col-span-2 lg:col-span-2">
-        <Card className="h-full transition-colors hover:border-border-hover">
+        <Card className="h-full cursor-pointer hover:border-border-hover">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Automatic Processing</CardTitle>
             <div className="flex items-center gap-1">

@@ -27,6 +27,7 @@ const badgeVariants = tv({
     },
     size: {
       default: 'px-2.5 py-0.5 text-xs',
+      sm: 'px-2 py-0 text-[11px]',
     },
   },
   defaultVariants: {

@@ -12,7 +12,7 @@ const buttonVariants = tv({
       default: 'bg-primary hover:bg-primary-hover text-primary-foreground',
       destructive: 'bg-destructive hover:bg-destructive-hover text-destructive-foreground',
       outline: 'border-border bg-transparent hover:ring',
-      ghost: 'hover:bg-card',
+      ghost: 'transition-colors duration-150 hover:bg-card',
     },
     size: {
       default: 'h-10 px-4 py-2',

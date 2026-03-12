@@ -3,6 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+
   /* Disable default colors to prevent their use */
   --color-amber-*: initial;
   --color-lime-*: initial;
@@ -338,10 +341,10 @@
   --color-success-border: var(--color-green-300);
 
   --color-info: var(--color-light-bl-2);
-  --color-info-background: var(--color-green-150);
+  --color-info-background: var(--color-blue-150);
   --color-info-foreground: var(--color-light-tx);
   --color-info-muted: var(--color-light-tx-2);
-  --color-info-border: var(--color-green-00);
+  --color-info-border: var(--color-blue-300);
 
   --color-link: var(--color-light-bl);
 }
@@ -416,6 +419,7 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    line-height: 1.5;
   }
 
   html {
@@ -427,5 +431,16 @@
     padding-right: 0 !important;
     margin-right: 0 !important;
     overflow: auto !important;
+  }
+}
+
+/* Reduced motion: disable decorative animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
