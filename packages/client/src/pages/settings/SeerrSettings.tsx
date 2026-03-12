@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { PasswordInput } from '../../components/ui/password-input';
@@ -17,12 +17,52 @@ import {
 import { seerrConfigSchema, seerrTestConnectionSchema } from 'shared/presentation/schemas';
 import type { TvSeasonsPrimitive } from 'shared/domain/types';
 
+interface SeerrFormState {
+  url: string;
+  externalUrl: string;
+  apiKey: string;
+  userId: string;
+  tvSeasons: TvSeasonsPrimitive;
+}
+
+type SeerrFormAction =
+  | {
+      type: 'LOAD';
+      config: {
+        url?: string;
+        externalUrl?: string;
+        apiKey?: string;
+        userIdSeerr: number;
+        tvSeasons?: TvSeasonsPrimitive;
+      };
+    }
+  | { type: 'SET_FIELD'; field: keyof SeerrFormState; value: string };
+
+const initialState: SeerrFormState = {
+  url: '',
+  externalUrl: '',
+  apiKey: '',
+  userId: '',
+  tvSeasons: 'first',
+};
+
+function seerrFormReducer(state: SeerrFormState, action: SeerrFormAction): SeerrFormState {
+  switch (action.type) {
+    case 'LOAD':
+      return {
+        url: action.config.url || '',
+        externalUrl: action.config.externalUrl || '',
+        apiKey: action.config.apiKey || '',
+        userId: action.config.userIdSeerr.toString() || '',
+        tvSeasons: action.config.tvSeasons || 'first',
+      };
+    case 'SET_FIELD':
+      return { ...state, [action.field]: action.value };
+  }
+}
+
 export function SeerrSettings() {
-  const [url, setUrl] = useState('');
-  const [externalUrl, setExternalUrl] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [userId, setUserId] = useState('');
-  const [tvSeasons, setTvSeasons] = useState<TvSeasonsPrimitive>('first');
+  const [state, dispatch] = useReducer(seerrFormReducer, initialState);
   const { toast } = useToast();
 
   const utils = trpc.useUtils();
@@ -61,16 +101,12 @@ export function SeerrSettings() {
   // Load config when it changes - syncing with external API data
   useEffect(() => {
     if (config) {
-      setUrl(config.url || '');
-      setExternalUrl(config.externalUrl || '');
-      setApiKey(config.apiKey || '');
-      setUserId(config.userIdSeerr.toString() || '');
-      setTvSeasons(config.tvSeasons || 'first');
+      dispatch({ type: 'LOAD', config });
     }
   }, [config]);
 
   const handleTest = () => {
-    const result = seerrTestConnectionSchema.safeParse({ url, apiKey });
+    const result = seerrTestConnectionSchema.safeParse({ url: state.url, apiKey: state.apiKey });
     if (!handleValidationResult(toast, result, 'Invalid configuration')) return;
 
     testMutation.mutate({
@@ -81,11 +117,11 @@ export function SeerrSettings() {
 
   const handleSave = () => {
     const result = seerrConfigSchema.safeParse({
-      url,
-      externalUrl: externalUrl || undefined,
-      apiKey,
-      userIdSeerr: parseInt(userId) || 0,
-      tvSeasons,
+      url: state.url,
+      externalUrl: state.externalUrl || undefined,
+      apiKey: state.apiKey,
+      userIdSeerr: parseInt(state.userId) || 0,
+      tvSeasons: state.tvSeasons,
     });
     if (!handleValidationResult(toast, result, 'Invalid configuration')) return;
 
@@ -115,8 +151,8 @@ export function SeerrSettings() {
           <Input
             id="url"
             placeholder="https://seerr.example.com"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            value={state.url}
+            onChange={(e) => dispatch({ type: 'SET_FIELD', field: 'url', value: e.target.value })}
           />
           <p className="text-xs text-muted">Must be reachable from Listseerr.</p>
         </div>
@@ -126,8 +162,10 @@ export function SeerrSettings() {
           <Input
             id="externalUrl"
             placeholder="https://seerr.example.com"
-            value={externalUrl}
-            onChange={(e) => setExternalUrl(e.target.value)}
+            value={state.externalUrl}
+            onChange={(e) =>
+              dispatch({ type: 'SET_FIELD', field: 'externalUrl', value: e.target.value })
+            }
           />
           <p className="text-xs text-muted">
             Use when internal URL differs from public, e.g. Docker network URLs.
@@ -142,8 +180,10 @@ export function SeerrSettings() {
             id="apiKey"
             placeholder="Your API key"
             autoComplete="off"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            value={state.apiKey}
+            onChange={(e) =>
+              dispatch({ type: 'SET_FIELD', field: 'apiKey', value: e.target.value })
+            }
           />
         </div>
 
@@ -155,8 +195,10 @@ export function SeerrSettings() {
             id="userId"
             type="number"
             placeholder="1"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={state.userId}
+            onChange={(e) =>
+              dispatch({ type: 'SET_FIELD', field: 'userId', value: e.target.value })
+            }
           />
           <p className="text-xs text-muted">
             Seerr user ID used for all requests. Tip: use a user without auto-approve to review
@@ -170,8 +212,8 @@ export function SeerrSettings() {
             Choose whether to request only the first season or all available seasons for TV shows.
           </p>
           <RadioGroup
-            value={tvSeasons}
-            onValueChange={(value) => setTvSeasons(value as TvSeasonsPrimitive)}
+            value={state.tvSeasons}
+            onValueChange={(value) => dispatch({ type: 'SET_FIELD', field: 'tvSeasons', value })}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="first" id="tvSeasons-first" />

@@ -99,6 +99,7 @@ export function RegisterPage() {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter username"
                   autoComplete="username"
+                  // Intentional: registration page should focus the first field on mount
                   autoFocus
                 />
               </div>

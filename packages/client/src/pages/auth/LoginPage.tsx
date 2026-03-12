@@ -109,6 +109,7 @@ export function LoginPage() {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Username"
                   autoComplete="username"
+                  // Intentional: login page should focus the first field on mount
                   autoFocus
                 />
               </div>

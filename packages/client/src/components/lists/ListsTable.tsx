@@ -228,28 +228,25 @@ export function ListsTable({
                         ?.className ?? '';
                     return (
                       <TableHead key={header.id} className={metaClassName}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={
-                              header.column.getCanSort()
-                                ? 'flex cursor-pointer items-center gap-2 select-none hover:text-foreground'
-                                : ''
-                            }
+                        {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                          <button
+                            type="button"
+                            className="flex cursor-pointer items-center gap-2 border-none bg-transparent p-0 text-inherit select-none hover:text-foreground"
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanSort() && (
-                              <span className="text-muted">
-                                {header.column.getIsSorted() === 'asc' ? (
-                                  <ArrowUp className="h-4 w-4" />
-                                ) : header.column.getIsSorted() === 'desc' ? (
-                                  <ArrowDown className="h-4 w-4" />
-                                ) : (
-                                  <ArrowUpDown className="h-4 w-4" />
-                                )}
-                              </span>
-                            )}
-                          </div>
+                            <span className="text-muted">
+                              {header.column.getIsSorted() === 'asc' ? (
+                                <ArrowUp className="h-4 w-4" />
+                              ) : header.column.getIsSorted() === 'desc' ? (
+                                <ArrowDown className="h-4 w-4" />
+                              ) : (
+                                <ArrowUpDown className="h-4 w-4" />
+                              )}
+                            </span>
+                          </button>
+                        ) : (
+                          flexRender(header.column.columnDef.header, header.getContext())
                         )}
                       </TableHead>
                     );

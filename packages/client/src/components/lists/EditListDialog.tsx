@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -32,16 +32,38 @@ interface EditListDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface EditFormState {
+  name: string;
+  maxItems: string;
+  seerrUserIdOverride: string;
+  selectedMediaType: TraktMediaType;
+  selectedChartType: TraktChartType;
+}
+
+type EditFormAction =
+  | {
+      type: 'RESET';
+      list: SerializedMediaList;
+      parsedChartInfo: { mediaType: TraktMediaType; chartType: TraktChartType };
+    }
+  | { type: 'SET_FIELD'; field: keyof EditFormState; value: string };
+
+function editFormReducer(state: EditFormState, action: EditFormAction): EditFormState {
+  switch (action.type) {
+    case 'RESET':
+      return {
+        name: action.list.name,
+        maxItems: action.list.maxItems?.toString() || '20',
+        seerrUserIdOverride: action.list.seerrUserIdOverride?.toString() || '',
+        selectedMediaType: action.parsedChartInfo.mediaType,
+        selectedChartType: action.parsedChartInfo.chartType,
+      };
+    case 'SET_FIELD':
+      return { ...state, [action.field]: action.value };
+  }
+}
+
 export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps) {
-  const [name, setName] = useState(list.name);
-  const [maxItems, setMaxItems] = useState(list.maxItems?.toString() || '20');
-  const [seerrUserIdOverride, setSeerrUserIdOverride] = useState(
-    list.seerrUserIdOverride?.toString() || ''
-  );
-  const { toast } = useToast();
-
-  const utils = trpc.useUtils();
-
   // Parse traktChart URL to extract media type and chart type
   const parsedChartInfo = (() => {
     if (isTraktChart(list.provider)) {
@@ -61,22 +83,21 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
     };
   })();
 
-  const [selectedMediaType, setSelectedMediaType] = useState<TraktMediaType>(
-    parsedChartInfo.mediaType
-  );
-  const [selectedChartType, setSelectedChartType] = useState<TraktChartType>(
-    parsedChartInfo.chartType
-  );
+  const [state, dispatch] = useReducer(editFormReducer, {
+    name: list.name,
+    maxItems: list.maxItems?.toString() || '20',
+    seerrUserIdOverride: list.seerrUserIdOverride?.toString() || '',
+    selectedMediaType: parsedChartInfo.mediaType,
+    selectedChartType: parsedChartInfo.chartType,
+  });
+
+  const { toast } = useToast();
+  const utils = trpc.useUtils();
 
   // Reset form when dialog state changes
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
-      // Reset form when opening
-      setName(list.name);
-      setMaxItems(list.maxItems?.toString() || '20');
-      setSeerrUserIdOverride(list.seerrUserIdOverride?.toString() || '');
-      setSelectedMediaType(parsedChartInfo.mediaType);
-      setSelectedChartType(parsedChartInfo.chartType);
+      dispatch({ type: 'RESET', list, parsedChartInfo });
     }
     onOpenChange(newOpen);
   };
@@ -103,7 +124,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
 
   const handleSave = () => {
     // Validate name using shared schema
-    const nameResult = listNameSchema.safeParse(name);
+    const nameResult = listNameSchema.safeParse(state.name);
     if (!nameResult.success) {
       const firstIssue = nameResult.error.issues[0];
       toast({
@@ -115,7 +136,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
     }
 
     // Validate maxItems using shared schema
-    const maxItemsNum = parseInt(maxItems);
+    const maxItemsNum = parseInt(state.maxItems);
     const maxItemsResult = maxItemsSchema.safeParse(maxItemsNum);
     if (!maxItemsResult.success) {
       const firstIssue = maxItemsResult.error.issues[0];
@@ -132,7 +153,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
       data: {
         name: nameResult.data, // Use validated & trimmed name
         maxItems: maxItemsResult.data, // Use validated maxItems
-        seerrUserIdOverride: seerrUserIdOverride ? parseInt(seerrUserIdOverride) : null,
+        seerrUserIdOverride: state.seerrUserIdOverride ? parseInt(state.seerrUserIdOverride) : null,
       },
     });
   };
@@ -153,8 +174,10 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
               <Input
                 id="edit-name"
                 placeholder="My List"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={state.name}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_FIELD', field: 'name', value: e.target.value })
+                }
               />
             </div>
 
@@ -168,7 +191,9 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                     <Button
                       type="button"
                       variant={
-                        selectedMediaType === TraktMediaTypeValues.MOVIES ? 'default' : 'outline'
+                        state.selectedMediaType === TraktMediaTypeValues.MOVIES
+                          ? 'default'
+                          : 'outline'
                       }
                       className="flex-1 cursor-not-allowed opacity-60"
                       disabled
@@ -178,7 +203,9 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                     <Button
                       type="button"
                       variant={
-                        selectedMediaType === TraktMediaTypeValues.SHOWS ? 'default' : 'outline'
+                        state.selectedMediaType === TraktMediaTypeValues.SHOWS
+                          ? 'default'
+                          : 'outline'
                       }
                       className="flex-1 cursor-not-allowed opacity-60"
                       disabled
@@ -194,7 +221,7 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 {/* Chart Type Dropdown (Read-only) */}
                 <div className="grid gap-2">
                   <Label htmlFor="edit-chartType">Chart Type (Read-only)</Label>
-                  <Select value={selectedChartType} disabled>
+                  <Select value={state.selectedChartType} disabled>
                     <SelectTrigger className="cursor-not-allowed opacity-60">
                       <SelectValue placeholder="Select chart type" />
                     </SelectTrigger>
@@ -233,8 +260,10 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 id="edit-maxItems"
                 type="number"
                 placeholder="20"
-                value={maxItems}
-                onChange={(e) => setMaxItems(e.target.value)}
+                value={state.maxItems}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_FIELD', field: 'maxItems', value: e.target.value })
+                }
                 min="1"
                 max="500"
                 required
@@ -249,8 +278,14 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 id="edit-seerrUserIdOverride"
                 type="number"
                 placeholder="Leave empty to use global setting"
-                value={seerrUserIdOverride}
-                onChange={(e) => setSeerrUserIdOverride(e.target.value)}
+                value={state.seerrUserIdOverride}
+                onChange={(e) =>
+                  dispatch({
+                    type: 'SET_FIELD',
+                    field: 'seerrUserIdOverride',
+                    value: e.target.value,
+                  })
+                }
                 min="1"
               />
               <p className="text-xs text-muted">Override the global Seerr user ID for this list</p>

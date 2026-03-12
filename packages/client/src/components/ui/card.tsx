@@ -81,6 +81,7 @@ function CardHeader({ className, ...props }: ComponentProps<'header'>) {
 
 function CardTitle({ className, ...props }: ComponentProps<'h3'>) {
   const { variant } = useCardContext();
+  // Children are always passed via props spread (shadcn/ui pattern)
   return <h3 className={cn(cardTitleVariants({ variant }), className)} {...props} />;
 }
 
