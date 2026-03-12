@@ -8,7 +8,7 @@
 
 # Listseerr
 
-**Request movies & shows in Seerr from your favorite lists**
+**Sync curated movie & TV show lists to Seerr as automated requests.**
 
 [![CI](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml/badge.svg)](https://github.com/guillevc/listseerr/actions/workflows/ci.yaml)
 [![GitHub Release](https://img.shields.io/github/v/release/guillevc/listseerr)](https://github.com/guillevc/listseerr/releases)
@@ -20,52 +20,55 @@
   <a href="docs/screenshots/lists.png"><img src="docs/screenshots/lists.png" width="49%"></a>
 </p>
 
-[See more screenshots →](docs/screenshots)
+[More screenshots →](docs/screenshots)
 
 </div>
 
-## 🧩 How It Works
+## 🧩 Overview
+
+Listseerr bridges the gap between list providers (Trakt, MDBList, etc.) and your request manager (Seerr). Point it at your favorite curated lists, and it will automatically create requests for every movie and show — on a schedule, hands-free.
+
+Filtering and curation stay where they belong: in the list provider. Listseerr focuses on doing one thing well — syncing lists to requests.
 
 ```
 ┌──────────┐     ┌───────────┐         ┌───────────┐     ┌───────────┐
 │  Trakt   │◀────│           │         │           │     │   *arr    │
-├──────────┤     │           │ request │ Seerr│────▶│   stack   │
-│ StevenLu │◀────│ Listseerr │────────▶│           │     └───────────┘
-├──────────┤     │           │         └───────────┘
-│  MDBList │◀────│           │               ▲
-├──────────┤     └───────────┘               │ approve
-│  More... │◀────┘                     ┌─────┴─────┐
-└──────────┘                           │   User    │
+├──────────┤     │           │ request │           │────▶│   stack   │
+│ StevenLu │◀────│ Listseerr │────────▶│   Seerr   │     └───────────┘
+├──────────┤     │           │         │           │
+│  MDBList │◀────│           │         └───────────┘
+├──────────┤     └───────────┘               ▲
+│  AniList │◀────┘                           │ approve
+└──────────┘                           ┌─────┴─────┐
+                                       │   User    │
                                        └───────────┘
 ```
 
-1. **Listseerr fetches media from your lists** — Connect your favorite curated lists from Trakt, MDBList, StevenLu, and more
-2. **Requests are sent to Seerr** — Movies and shows from your lists are automatically requested
-3. **You review and approve** — Requests appear in Seerr for you to approve (create a dedicated user without auto-approve permissions to review before downloading)
-4. **Your \*arr stack downloads the media** — Once approved, Sonarr/Radarr handle the rest
+**How it works:** Listseerr fetches media from your lists → creates requests in Seerr → you review and approve → your \*arr stack downloads the media. Previously rejected or already-available media is automatically skipped.
 
-Listseerr skips media that was previously rejected or is already available, so you won't see duplicate requests. Set it up once and let it run on a schedule.
+> **Tip:** Create a dedicated Seerr user without auto-approve permissions so you can review requests before anything gets downloaded.
 
 ## 🔗 Supported Providers
 
-| Provider                | Status       | Requirements                                        |
-| ----------------------- | ------------ | --------------------------------------------------- |
-| **Trakt**               | ✅ Supported | [Free API key](https://trakt.tv/oauth/applications) |
-| **MDBList**             | ✅ Supported | [Free API key](https://mdblist.com/preferences/)    |
-| **StevenLu**            | ✅ Supported | None                                                |
-| **AniList**             | ✅ Supported | None                                                |
-| **StevenLu variations** | 🗓️ Planned   | None                                                |
-| **IMDB**                | 🗓️ Planned   | —                                                   |
-| **Letterboxd**          | 🗓️ Planned   | —                                                   |
-| **TheMovieDB**          | 🗓️ Planned   | —                                                   |
+| Provider                         |   Status   | Requirements                                        |
+| :------------------------------- | :--------: | :-------------------------------------------------- |
+| [Trakt](https://trakt.tv)        |     ✅     | [Free API key](https://trakt.tv/oauth/applications) |
+| [MDBList](https://mdblist.com)   |     ✅     | [Free API key](https://mdblist.com/preferences/)    |
+| [StevenLu](https://stevenlu.com) |     ✅     | None                                                |
+| [AniList](https://anilist.co)    |     ✅     | None                                                |
+| StevenLu variations              | 🗓️ Planned |                                                     |
+| IMDB                             | 🗓️ Planned |                                                     |
+| Letterboxd                       | 🗓️ Planned |                                                     |
+| TheMovieDB                       | 🗓️ Planned |                                                     |
+| MyAnimeList                      | 🗓️ Planned |                                                     |
 
-Listseerr uses official APIs for reliable integration and faster processing.
+All integrations use official APIs for reliability and speed.
 
-**Want another provider?** [Request or vote here](https://github.com/guillevc/listseerr/discussions/1)
+**Want another provider?** [Open an issue →](https://github.com/guillevc/listseerr/issues/new)
 
 ## 🚀 Quick Start
 
-### 1. Create a `compose.yaml`
+**1. Create `compose.yaml`**
 
 ```yaml
 services:
@@ -76,75 +79,60 @@ services:
       - 3000:3000
     environment:
       TZ: 'UTC'
-      # (REQUIRED) Generate with: openssl rand -hex 32
-      ENCRYPTION_KEY: ''
+      ENCRYPTION_KEY: '' # Required — generate with: openssl rand -hex 32
     volumes:
       - ./data:/app/data
     restart: unless-stopped
 ```
 
-> [!IMPORTANT]
-> Remember to include the `ENCRYPTION_KEY` environment variable, which has no default value.
->
-> Generate a value with `openssl rand -hex 32`
-
-### 2. Run the container
+**2. Start the container**
 
 ```bash
 docker compose up -d
 ```
 
-### 3. Start adding lists
+**3. Set up your lists**
 
-Open [http://localhost:3000](http://localhost:3000) and create your account.
+Open [http://localhost:3000](http://localhost:3000), create your account, and start adding lists.
 
 ## ⚙️ Configuration
 
-| Variable         | Description                                        | Default (Docker)         |
-| ---------------- | -------------------------------------------------- | ------------------------ |
-| `ENCRYPTION_KEY` | **Required.** Generate with `openssl rand -hex 32` | —                        |
-| `PORT`           | Server port                                        | `3000`                   |
-| `DATABASE_PATH`  | Path to SQLite database                            | `/app/data/listseerr.db` |
-| `LOG_LEVEL`      | Logging level (`debug`, `info`, `warn`, `error`)   | `info`                   |
-| `TZ`             | Timezone (IANA format)                             | `UTC`                    |
+All configuration is done via environment variables:
 
-Override defaults via Docker environment variables.
+| Variable         | Description                                                                            | Default                  |
+| :--------------- | :------------------------------------------------------------------------------------- | :----------------------- |
+| `ENCRYPTION_KEY` | **Required.** Encryption key for sensitive data. Generate with `openssl rand -hex 32`  | —                        |
+| `PORT`           | Server port                                                                            | `3000`                   |
+| `DATABASE_PATH`  | Path to SQLite database                                                                | `/app/data/listseerr.db` |
+| `LOG_LEVEL`      | `debug` · `info` · `warn` · `error`                                                    | `info`                   |
+| `TZ`             | Timezone ([IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) | `UTC`                    |
 
 ## 🔑 Password Recovery
 
-**Docker:**
-
 ```bash
+# Docker
 docker exec -it listseerr bun /app/dist/reset-password.js
-```
 
-**Local:**
-
-```bash
+# Local
 bun run password:reset
 ```
 
 ## 🗺️ Roadmap
 
-- [x] Multiple provider support (Trakt, MDBList, StevenLu)
+- [x] Multiple provider support (Trakt, MDBList, StevenLu, AniList)
 - [x] Scheduled automatic processing
 - [x] Dark/Light theme
 - [x] Docker support
 - [ ] More list providers
 - [ ] Notifications
 
-Have an idea? [Open an issue](https://github.com/guillevc/listseerr/issues/new)
+Have an idea? [Open an issue →](https://github.com/guillevc/listseerr/issues/new)
 
 ## 💜 Support
 
 If Listseerr is useful to you, consider supporting its development:
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/guillevc)
-
-## 🤝 Acknowledgments
-
-- Color scheme: [Flexoki](https://stephango.com/flexoki) by Steph Ango
-- Inspired by the amazing self-hosted community
 
 ## 📄 License
 
