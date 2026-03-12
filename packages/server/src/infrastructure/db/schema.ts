@@ -95,7 +95,7 @@ export const mediaLists = sqliteTable(
       enum: ['trakt', 'mdblist', 'traktChart', 'stevenlu', 'anilist'],
     }).notNull(),
     enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
-    maxItems: integer('max_items').notNull().default(50),
+    maxItems: integer('max_items').notNull().default(20),
     seerrUserIdOverride: integer('seerr_user_id_override'),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),

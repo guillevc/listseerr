@@ -197,10 +197,10 @@ export class MediaList {
 
   /**
    * Change max items
-   * Enforces business rule: 1 <= maxItems <= 50
+   * Enforces business rule: 1 <= maxItems <= 500
    */
   changeMaxItems(newMaxItems: number): void {
-    if (newMaxItems <= 0 || newMaxItems > 50) {
+    if (newMaxItems <= 0 || newMaxItems > 500) {
       throw new InvalidMaxItemsError(newMaxItems);
     }
     this._maxItems = newMaxItems;
@@ -230,6 +230,6 @@ export class MediaList {
    * Validate max items is within acceptable range
    */
   isMaxItemsValid(): boolean {
-    return this._maxItems > 0 && this._maxItems <= 50;
+    return this._maxItems > 0 && this._maxItems <= 500;
   }
 }

@@ -236,10 +236,10 @@ export function EditListDialog({ list, open, onOpenChange }: EditListDialogProps
                 value={maxItems}
                 onChange={(e) => setMaxItems(e.target.value)}
                 min="1"
-                max="50"
+                max="500"
                 required
               />
-              <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
+              <p className="text-xs text-muted">Items to fetch (1-500). Default: 20</p>
             </div>
 
             {/* Seerr User ID Override */}

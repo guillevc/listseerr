@@ -227,11 +227,11 @@ export function StepListConfiguration({
               value={maxItems}
               onChange={(e) => onMaxItemsChange(e.target.value)}
               min="1"
-              max="50"
+              max="500"
               required
               disabled={isLoading}
             />
-            <p className="text-xs text-muted">Items to fetch (1-50). Default: 20</p>
+            <p className="text-xs text-muted">Items to fetch (1-500). Default: 20</p>
           </div>
 
           {/* Seerr User ID Override */}

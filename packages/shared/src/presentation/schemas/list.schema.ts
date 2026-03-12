@@ -68,14 +68,14 @@ function validateUrlProviderMatch(
 
 /**
  * Max items schema.
- * Validates: positive integer between 1 and 50.
+ * Validates: positive integer between 1 and 500.
  */
 export const maxItemsSchema: z.ZodType<MaxItemsPrimitive> = createBoundedIntSchema({
   min: 1,
-  max: 50,
+  max: 500,
   default: 20,
   minMessage: 'Max items must be at least 1',
-  maxMessage: 'Max items cannot exceed 50',
+  maxMessage: 'Max items cannot exceed 500',
 });
 
 /**

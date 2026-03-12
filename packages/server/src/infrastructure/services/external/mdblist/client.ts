@@ -16,7 +16,7 @@ export async function fetchMdbListList(
     logger.debug({ urlParts }, 'Parsed MDBList URL');
 
     // Determine limit
-    const limit = maxItems ? Math.min(maxItems, 50) : 50; // Max 50 per API docs
+    const limit = maxItems || 500;
 
     // Build API URL
     const apiUrl = buildMdbListApiUrl(urlParts, limit, apiKey);

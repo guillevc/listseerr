@@ -32,6 +32,6 @@ export class InvalidMaxItemsError extends DomainError {
   readonly code = 'INVALID_MAX_ITEMS_ERROR' as const;
 
   constructor(value: number) {
-    super(`Invalid max items: ${value}. Must be between 1 and 50.`);
+    super(`Invalid max items: ${value}. Must be between 1 and 500.`);
   }
 }
