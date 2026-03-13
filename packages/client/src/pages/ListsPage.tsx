@@ -54,7 +54,7 @@ export function ListsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="animate-fade-in-up flex flex-col gap-6">
       {/* Configuration Alert */}
       {!isLoadingConfig && !seerrConfig && (
         <Link to="/settings/seerr">
@@ -76,14 +76,12 @@ export function ListsPage() {
       )}
 
       {/* Header with Actions */}
-      <div className="animate-fade-in-up">
-        <ListsHeader
-          onProcessAll={() => handleProcessAll(lists)}
-          processingLists={processingLists}
-          hasLists={lists.length > 0}
-          seerrConfigured={!!seerrConfig}
-        />
-      </div>
+      <ListsHeader
+        onProcessAll={() => handleProcessAll(lists)}
+        processingLists={processingLists}
+        hasLists={lists.length > 0}
+        seerrConfigured={!!seerrConfig}
+      />
 
       {/* Stats */}
       {lists.length > 0 && <ListStats lists={lists} seerrConfigured={!!seerrConfig} />}
@@ -105,15 +103,13 @@ export function ListsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="animate-fade-in-up">
-          <ListsTable
-            lists={lists}
-            onProcess={(id) => handleProcess(id, lists)}
-            processingLists={processingLists}
-            seerrConfigured={!!seerrConfig}
-            globalSeerrUserId={seerrConfig?.userIdSeerr ?? null}
-          />
-        </div>
+        <ListsTable
+          lists={lists}
+          onProcess={(id) => handleProcess(id, lists)}
+          processingLists={processingLists}
+          seerrConfigured={!!seerrConfig}
+          globalSeerrUserId={seerrConfig?.userIdSeerr ?? null}
+        />
       )}
     </div>
   );

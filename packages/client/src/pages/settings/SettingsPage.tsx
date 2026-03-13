@@ -11,7 +11,7 @@ export function SettingsPage() {
   const activeCategory = pathParts[pathParts.length - 1] || 'general';
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="animate-fade-in-up flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
         <p className="mt-1 text-muted">Manage your application configuration</p>
