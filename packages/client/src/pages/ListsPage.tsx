@@ -54,7 +54,7 @@ export function ListsPage() {
   }
 
   return (
-    <div className="animate-fade-in-up flex flex-col gap-6">
+    <div className="flex animate-fade-in-up flex-col gap-6">
       {/* Configuration Alert */}
       {!isLoadingConfig && !seerrConfig && (
         <Link to="/settings/seerr">
