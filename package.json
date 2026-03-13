@@ -3,7 +3,7 @@
   "name": "listseerr",
   "private": true,
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Request movies & shows in Seerr from your favorite lists",
   "author": "Guillermo Alfonso Varela Chouciño <guillevch@gmail.com>",
   "license": "MIT",
