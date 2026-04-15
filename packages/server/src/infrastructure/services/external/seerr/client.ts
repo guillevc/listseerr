@@ -313,7 +313,7 @@ export async function getMediaAvailability(
         { tmdbId, status: response.status },
         'Failed to fetch media availability from Seerr'
       );
-      return null;
+      throw new Error(`Seerr availability check failed with status ${response.status}`);
     }
 
     const data = (await response.json()) as SeerrMediaInfoResponse;
@@ -327,6 +327,6 @@ export async function getMediaAvailability(
       { tmdbId, error: error instanceof Error ? error.message : 'Unknown error' },
       'Error fetching media availability from Seerr'
     );
-    return null;
+    throw error;
   }
 }

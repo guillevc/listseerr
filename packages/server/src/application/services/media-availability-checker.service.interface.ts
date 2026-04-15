@@ -11,6 +11,8 @@ export interface CategorizedMediaItems {
   previouslyRequested: MediaItemVO[];
   /** Items already available in library - skip */
   available: MediaItemVO[];
+  /** Items whose availability check failed (e.g. Seerr API 500) - skip and report as failed */
+  errored: Array<{ item: MediaItemVO; error: string }>;
 }
 
 /**

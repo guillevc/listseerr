@@ -31,6 +31,7 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
       toBeRequested: [],
       previouslyRequested: [],
       available: [],
+      errored: [],
     };
 
     if (items.length === 0) {
@@ -81,16 +82,16 @@ export class HttpMediaAvailabilityChecker implements IMediaAvailabilityChecker {
             result.available.push(item);
           }
         } else {
-          // On error, default to TO_BE_REQUESTED (safer to try than skip)
+          // On error, treat as failed (skip requesting, report in dashboard)
           const errorMsg =
             settledResult.reason instanceof Error
               ? settledResult.reason.message
               : String(settledResult.reason);
           this.logger.warn(
             { tmdbId: item.tmdbId, error: errorMsg },
-            'Availability check failed, treating as TO_BE_REQUESTED'
+            'Availability check failed, treating as errored'
           );
-          result.toBeRequested.push(item);
+          result.errored.push({ item, error: errorMsg });
         }
       }
 

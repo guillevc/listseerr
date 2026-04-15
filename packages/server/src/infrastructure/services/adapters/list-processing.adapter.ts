@@ -34,6 +34,7 @@ export class ListProcessingService implements IListProcessingService {
         toBeRequested: categorized.toBeRequested.length,
         previouslyRequested: categorized.previouslyRequested.length,
         available: categorized.available.length,
+        errored: categorized.errored.length,
       },
       'Media availability check completed'
     );
@@ -46,10 +47,10 @@ export class ListProcessingService implements IListProcessingService {
       'Seerr requests completed'
     );
 
-    // 3. Return combined result
+    // 3. Return combined result (merge availability check errors into failed)
     return {
       successful: results.successful,
-      failed: results.failed,
+      failed: [...results.failed, ...categorized.errored],
       available: categorized.available,
       previouslyRequested: categorized.previouslyRequested,
     };
