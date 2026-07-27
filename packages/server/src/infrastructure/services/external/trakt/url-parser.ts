@@ -106,18 +106,31 @@ function buildFilteredDisplayUrl(parts: TraktUrlParts): string {
 export function convertDisplayUrlToApiUrl(displayUrl: string): TraktParsedUrls {
   const parts = parseTraktUrl(displayUrl);
 
-  // Build API URL with sort/display in PATH
+  // Build API URL
   let apiUrl = parts.isWatchlist
     ? `https://api.trakt.tv/users/${parts.username}/watchlist`
     : `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
 
-  // Add media filter (default 'all' if not specified)
-  const filter = parts.mediaFilter || 'all';
-  apiUrl += `/${filter}`;
+  if (parts.isWatchlist) {
+    // Trakt watchlist API expects plural types: movies, shows. Defaults to all if sorting.
+    let type = parts.mediaFilter === 'movie' ? 'movies' : parts.mediaFilter === 'show' ? 'shows' : 'all';
+    
+    // Append type if a filter is specified, or if sorting (since sort requires type in path)
+    if (parts.mediaFilter || (parts.sortField && parts.sortOrder)) {
+      apiUrl += `/${type}`;
+    }
+    
+    if (parts.sortField && parts.sortOrder) {
+      apiUrl += `/${parts.sortField}/${parts.sortOrder}`;
+    }
+  } else {
+    // Existing logic for custom lists
+    const filter = parts.mediaFilter || 'all';
+    apiUrl += `/${filter}`;
 
-  // Add sort if specified
-  if (parts.sortField && parts.sortOrder) {
-    apiUrl += `/${parts.sortField}/${parts.sortOrder}`;
+    if (parts.sortField && parts.sortOrder) {
+      apiUrl += `/${parts.sortField}/${parts.sortOrder}`;
+    }
   }
 
   // Build clean display URL (only sort/display params)
