@@ -18,7 +18,7 @@ export class TraktMediaFetcher implements IMediaFetcher {
     const clientIdValue = this.clientId.getValue();
 
     // Determine which client to use based on URL pattern
-    const isList = url.includes('/lists/');
+    const isList = url.includes('/lists/') || url.includes('/watchlist') || url.includes('/watchlist?');
     const rawItems = isList
       ? await fetchTraktList(url, maxItems, clientIdValue)
       : await fetchTraktChart(url, maxItems, clientIdValue);
