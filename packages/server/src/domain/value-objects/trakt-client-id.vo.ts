@@ -22,11 +22,11 @@ export class TraktClientIdVO {
    */
   static fromPersistence(value: string): TraktClientIdVO {
     const trimmed = value.trim();
-    const hexPattern = /^[0-9a-f]{64}$/;
+    const clientIdPattern = /^[0-9a-zA-Z_-]{20,}$/;
 
-    if (!hexPattern.test(trimmed)) {
+    if (!clientIdPattern.test(trimmed)) {
       throw new InvalidTraktClientIdError(
-        'Trakt Client ID must be exactly 64 hexadecimal characters (0-9, a-f). ' +
+        'Trakt Client ID must be at least 20 alphanumeric characters. ' +
           'Get your Client ID from https://trakt.tv/oauth/applications'
       );
     }

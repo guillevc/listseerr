@@ -10,15 +10,16 @@ import type { TraktClientIdPrimitive, TraktConfigPrimitive } from '../../domain/
 
 /**
  * Trakt Client ID schema.
- * Validates: 64 hexadecimal characters (lowercase).
+ * Validates: alphanumeric string (with underscores/hyphens), at least 20 characters.
+ * Accepts both legacy 64-char hex IDs and newer shorter alphanumeric IDs.
  */
 export const traktClientIdSchema: z.ZodType<TraktClientIdPrimitive> = z
   .string()
   .min(1, 'Client ID is required')
   .transform((id) => id.trim())
-  .refine((id) => /^[0-9a-f]{64}$/.test(id), {
+  .refine((id) => /^[0-9a-zA-Z_-]{20,}$/.test(id), {
     message:
-      'Trakt Client ID must be exactly 64 hexadecimal characters (0-9, a-f). Get your Client ID from https://trakt.tv/oauth/applications',
+      'Trakt Client ID must be at least 20 alphanumeric characters. Get your Client ID from https://trakt.tv/oauth/applications',
   });
 
 /**
