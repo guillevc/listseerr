@@ -19,7 +19,7 @@ export const ProviderValues = {
 export type ProviderType = (typeof ProviderValues)[keyof typeof ProviderValues];
 
 export const ProviderUrlPatterns = {
-  trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/lists\/[^/]+\/?/i],
+  trakt: [/^https?:\/\/(www\.)?trakt\.tv\/users\/[^/]+\/(lists\/[^/]+|watchlist)\/?/i],
   traktChart: [TRAKT_CHART_URL_PATTERN],
   mdblist: [MDBLIST_URL_PATTERN],
   stevenlu: [/^https?:\/\/movies\.stevenlu\.com\/?$/i],

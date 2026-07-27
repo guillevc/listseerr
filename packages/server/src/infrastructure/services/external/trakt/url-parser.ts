@@ -1,6 +1,7 @@
 export interface TraktUrlParts {
   username: string;
   listSlug: string;
+  isWatchlist?: boolean;
   sortField?: string;
   sortOrder?: string;
   mediaFilter?: string;
@@ -15,16 +16,28 @@ export function parseTraktUrl(url: string): TraktUrlParts {
   try {
     const urlObj = new URL(url);
 
-    // Extract path parts: /users/{username}/lists/{listSlug}
+    // Extract path parts: /users/{username}/lists/{listSlug} OR /users/{username}/watchlist
     const pathParts = urlObj.pathname.split('/').filter(Boolean);
 
-    if (pathParts.length < 4 || pathParts[0] !== 'users' || pathParts[2] !== 'lists') {
+    if (
+      pathParts.length < 3 ||
+      pathParts[0] !== 'users' ||
+      !(pathParts[2] === 'lists' || pathParts[2] === 'watchlist')
+    ) {
+      throw new Error(
+        'Invalid Trakt URL format. Expected: https://trakt.tv/users/{username}/lists/{listSlug} or https://trakt.tv/users/{username}/watchlist'
+      );
+    }
+
+    const username = pathParts[1] || '';
+    const isWatchlist = pathParts[2] === 'watchlist';
+    const listSlug = isWatchlist ? '' : pathParts[3] || '';
+
+    if (!isWatchlist && !listSlug) {
       throw new Error(
         'Invalid Trakt URL format. Expected: https://trakt.tv/users/{username}/lists/{listSlug}'
       );
     }
-
-    const [, username = '', , listSlug = ''] = pathParts;
 
     // Extract query parameters
     const searchParams = urlObj.searchParams;
@@ -52,6 +65,7 @@ export function parseTraktUrl(url: string): TraktUrlParts {
     return {
       username,
       listSlug,
+      isWatchlist,
       sortField,
       sortOrder,
       mediaFilter,
@@ -68,7 +82,9 @@ export function parseTraktUrl(url: string): TraktUrlParts {
  * Build a filtered display URL containing only sort and display params
  */
 function buildFilteredDisplayUrl(parts: TraktUrlParts): string {
-  const baseUrl = `https://trakt.tv/users/${parts.username}/lists/${parts.listSlug}`;
+  const baseUrl = parts.isWatchlist
+    ? `https://trakt.tv/users/${parts.username}/watchlist`
+    : `https://trakt.tv/users/${parts.username}/lists/${parts.listSlug}`;
   const queryParts: string[] = [];
 
   if (parts.mediaFilter) {
@@ -91,7 +107,9 @@ export function convertDisplayUrlToApiUrl(displayUrl: string): TraktParsedUrls {
   const parts = parseTraktUrl(displayUrl);
 
   // Build API URL with sort/display in PATH
-  let apiUrl = `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
+  let apiUrl = parts.isWatchlist
+    ? `https://api.trakt.tv/users/${parts.username}/watchlist`
+    : `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
 
   // Add media filter (default 'all' if not specified)
   const filter = parts.mediaFilter || 'all';
