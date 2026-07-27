@@ -3,6 +3,7 @@
 name: cd
 
 on:
+  workflow_dispatch:
   push:
     branches: [master, next, 'fix/relax-trakt-client-id-validation']
     tags: ['v*']
