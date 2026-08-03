@@ -5,7 +5,7 @@ name: cd
 on:
   workflow_dispatch:
   push:
-    branches: [master, next, 'fix/relax-trakt-client-id-validation']
+    branches: [master, next]
     tags: ['v*']
     paths-ignore:
       - '*.md'
@@ -69,7 +69,6 @@ jobs:
           tags: |
             type=raw,value=master,enable=${{ github.ref == 'refs/heads/master' }}
             type=raw,value=next,enable=${{ github.ref == 'refs/heads/next' }}
-            type=raw,value=fix-trakt,enable=${{ github.ref == 'refs/heads/fix/relax-trakt-client-id-validation' }}
             type=raw,value=latest,enable=${{ steps.stable.outputs.is_stable == 'true' }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}

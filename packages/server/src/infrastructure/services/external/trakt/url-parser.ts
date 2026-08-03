@@ -112,16 +112,12 @@ export function convertDisplayUrlToApiUrl(displayUrl: string): TraktParsedUrls {
     : `https://api.trakt.tv/users/${parts.username}/lists/${parts.listSlug}/items`;
 
   if (parts.isWatchlist) {
-    // Trakt watchlist API expects plural types: movies, shows. Defaults to all if sorting.
-    const type = parts.mediaFilter === 'movie' ? 'movies' : parts.mediaFilter === 'show' ? 'shows' : 'all';
-    
-    // Append type if a filter is specified, or if sorting (since sort requires type in path)
-    if (parts.mediaFilter || (parts.sortField && parts.sortOrder)) {
+    if (parts.mediaFilter) {
+      const type = parts.mediaFilter === 'movie' ? 'movies' : 'shows';
       apiUrl += `/${type}`;
-    }
-    
-    if (parts.sortField && parts.sortOrder) {
-      apiUrl += `/${parts.sortField}/${parts.sortOrder}`;
+      if (parts.sortField && parts.sortOrder) {
+        apiUrl += `/${parts.sortField}/${parts.sortOrder}`;
+      }
     }
   } else {
     // Existing logic for custom lists
