@@ -113,7 +113,7 @@ export function convertDisplayUrlToApiUrl(displayUrl: string): TraktParsedUrls {
 
   if (parts.isWatchlist) {
     // Trakt watchlist API expects plural types: movies, shows. Defaults to all if sorting.
-    let type = parts.mediaFilter === 'movie' ? 'movies' : parts.mediaFilter === 'show' ? 'shows' : 'all';
+    const type = parts.mediaFilter === 'movie' ? 'movies' : parts.mediaFilter === 'show' ? 'shows' : 'all';
     
     // Append type if a filter is specified, or if sorting (since sort requires type in path)
     if (parts.mediaFilter || (parts.sortField && parts.sortOrder)) {
